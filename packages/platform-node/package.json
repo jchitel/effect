@@ -58,12 +58,10 @@
     },
     "peerDependencies": {
         "@effect/platform": "workspace:^",
-        "@effect/sql": "workspace:^",
         "effect": "workspace:^"
     },
     "devDependencies": {
         "@effect/platform": "workspace:^",
-        "@effect/sql": "workspace:^",
         "@types/mime": "^3.0.4",
         "@types/ws": "^8.18.1",
         "effect": "workspace:^",

@@ -2,7 +2,6 @@ import type * as DocStream from "@effect/printer/DocStream";
 import * as Layout from "@effect/printer/Layout";
 import * as PageWidth from "@effect/printer/PageWidth";
 import * as Effect from "effect/Effect";
-import { dual } from "effect/Function";
 import * as List from "effect/List";
 import type * as Ansi from "../Ansi.js";
 import type * as AnsiDoc from "../AnsiDoc.js";
@@ -13,10 +12,10 @@ import * as InternalAnsi from "./ansi.js";
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const render = dual<
-    (config: AnsiDoc.AnsiDoc.RenderConfig) => (self: AnsiDoc.AnsiDoc) => string,
-    (self: AnsiDoc.AnsiDoc, config: AnsiDoc.AnsiDoc.RenderConfig) => string
->(2, (self, config) => {
+export const render = (
+    self: AnsiDoc.AnsiDoc,
+    config: AnsiDoc.AnsiDoc.RenderConfig,
+): string => {
     switch (config.style) {
         case "compact": {
             return renderStream(Layout.compact(self));
@@ -38,7 +37,7 @@ export const render = dual<
             return renderStream(Layout.smart(self, Layout.options(width)));
         }
     }
-});
+};
 
 /** @internal */
 export const renderStream = (self: DocStream.DocStream<Ansi.Ansi>): string =>

@@ -13,8 +13,6 @@
         "paths": {
             "effect": ["../../../effect/src/index.js"],
             "effect/*": ["../../../effect/src/*.js"],
-            "@effect/experimental": ["../../../experimental/src/index.js"],
-            "@effect/experimental/*": ["../../../experimental/src/*.js"],
             "@effect/platform": ["../../../platform/src/index.js"],
             "@effect/platform/*": ["../../../platform/src/*.js"],
             "@effect/platform-node": ["../../../platform-node/src/index.js"],
@@ -24,9 +22,7 @@
             ],
             "@effect/platform-node-shared/*": [
                 "../../../platform-node-shared/src/*.js"
-            ],
-            "@effect/sql": ["../../../sql/src/index.js"],
-            "@effect/sql/*": ["../../../sql/src/*.js"]
+            ]
         }
     }
 }

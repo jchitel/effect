@@ -4,7 +4,6 @@
     "references": [
         { "path": "packages/effect" },
         { "path": "packages/cli" },
-        { "path": "packages/experimental" },
         { "path": "packages/opentelemetry" },
         { "path": "packages/platform" },
         { "path": "packages/platform-browser" },
@@ -13,14 +12,6 @@
         { "path": "packages/platform-node-shared" },
         { "path": "packages/printer" },
         { "path": "packages/printer-ansi" },
-        { "path": "packages/sql" },
-        { "path": "packages/sql-d1" },
-        { "path": "packages/sql-drizzle" },
-        { "path": "packages/sql-libsql" },
-        { "path": "packages/sql-pg" },
-        { "path": "packages/sql-sqlite-bun" },
-        { "path": "packages/sql-sqlite-node" },
-        { "path": "packages/sql-sqlite-wasm" },
         { "path": "packages/typeclass" },
         { "path": "packages/vitest" }
     ]

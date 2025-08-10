@@ -275,10 +275,8 @@ export const eraseScreen: AnsiDoc = InternalAnsiDoc.eraseScreen;
  * @since 1.0.0
  * @category destructors
  */
-export const render: {
-    (config: AnsiDoc.RenderConfig): (self: AnsiDoc) => string;
-    (self: AnsiDoc, config: AnsiDoc.RenderConfig): string;
-} = InternalAnsiRender.render;
+export const render: (self: AnsiDoc, config: AnsiDoc.RenderConfig) => string =
+    InternalAnsiRender.render;
 
 // -----------------------------------------------------------------------------
 // Re-Exports

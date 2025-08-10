@@ -160,7 +160,11 @@ function renderNextFrame<A>(state: State, options: SelectOptions<A>) {
             Doc.cat(promptMsg),
             Doc.cat(Doc.hardLine),
             Doc.cat(choices),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }
@@ -178,7 +182,11 @@ function renderSubmission<A>(state: State, options: SelectOptions<A>) {
             Doc.cat(Doc.space),
             Doc.cat(Doc.annotate(selected, Ansi.white)),
             Doc.cat(Doc.hardLine),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }
@@ -234,7 +242,11 @@ export function handleClear<A>(options: SelectOptions<A>) {
         return clearOutput.pipe(
             Doc.cat(clearPrompt),
             Optimize.optimize(Optimize.Deep),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }

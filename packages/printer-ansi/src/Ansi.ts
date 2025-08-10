@@ -516,7 +516,4 @@ export const stringify: (self: Ansi) => string = InternalAnsi.stringify;
  * @since 1.0.0
  * @categrory combinators
  */
-export const combine: {
-    (that: Ansi): (self: Ansi) => Ansi;
-    (self: Ansi, that: Ansi): Ansi;
-} = InternalAnsi.combine;
+export const combine: (self: Ansi, that: Ansi) => Ansi = InternalAnsi.combine;

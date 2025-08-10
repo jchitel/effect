@@ -144,14 +144,7 @@ export const OtelTraceState: Tag<OtelTraceState, Otel.TraceState> =
  * @since 1.0.0
  * @category propagation
  */
-export const withSpanContext: {
-    (
-        spanContext: Otel.SpanContext,
-    ): <A, E, R>(
-        effect: Effect<A, E, R>,
-    ) => Effect<A, E, Exclude<R, ParentSpan>>;
-    <A, E, R>(
-        effect: Effect<A, E, R>,
-        spanContext: Otel.SpanContext,
-    ): Effect<A, E, Exclude<R, ParentSpan>>;
-} = internal.withSpanContext;
+export const withSpanContext: <A, E, R>(
+    effect: Effect<A, E, R>,
+    spanContext: Otel.SpanContext,
+) => Effect<A, E, Exclude<R, ParentSpan>> = internal.withSpanContext;

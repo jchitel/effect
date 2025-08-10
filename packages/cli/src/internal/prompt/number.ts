@@ -55,10 +55,11 @@ function handleClear(options: IntegerOptions) {
                 Doc.cat(clearOutput),
                 Doc.cat(resetCurrentLine),
                 Optimize.optimize(Optimize.Deep),
-                Doc.render({
-                    style: "pretty",
-                    options: { lineWidth: columns },
-                }),
+                (x) =>
+                    Doc.render(x, {
+                        style: "pretty",
+                        options: { lineWidth: columns },
+                    }),
             );
         });
     };
@@ -151,7 +152,11 @@ function renderNextFrame(state: State, options: IntegerOptions) {
         return promptMsg.pipe(
             Doc.cat(errorMsg),
             Optimize.optimize(Optimize.Deep),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }
@@ -173,7 +178,11 @@ function renderSubmission(nextState: State, options: IntegerOptions) {
         return promptMsg.pipe(
             Doc.cat(Doc.hardLine),
             Optimize.optimize(Optimize.Deep),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }

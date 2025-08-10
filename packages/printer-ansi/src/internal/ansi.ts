@@ -1,7 +1,6 @@
 import * as Monoid from "@effect/typeclass/Monoid";
 import * as Semigroup from "@effect/typeclass/Semigroup";
 import * as Arr from "effect/Array";
-import { dual } from "effect/Function";
 import * as Option from "effect/Option";
 import type * as Ansi from "../Ansi.js";
 import type * as Color from "../Color.js";
@@ -351,10 +350,8 @@ export const stringify = (self: Ansi.Ansi): string =>
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const combine = dual<
-    (that: Ansi.Ansi) => (self: Ansi.Ansi) => Ansi.Ansi,
-    (self: Ansi.Ansi, that: Ansi.Ansi) => Ansi.Ansi
->(2, (self, that) => combineInternal(self as AnsiImpl, that as AnsiImpl));
+export const combine = (self: Ansi.Ansi, that: Ansi.Ansi): Ansi.Ansi =>
+    combineInternal(self as AnsiImpl, that as AnsiImpl);
 
 // -----------------------------------------------------------------------------
 // Internal

@@ -119,10 +119,11 @@ function handleClear(options: FileOptions) {
                 Doc.cat(clearPath),
                 Doc.cat(clearPrompt),
                 Optimize.optimize(Optimize.Deep),
-                Doc.render({
-                    style: "pretty",
-                    options: { lineWidth: columns },
-                }),
+                (x) =>
+                    Doc.render(x, {
+                        style: "pretty",
+                        options: { lineWidth: columns },
+                    }),
             );
         });
     };
@@ -242,10 +243,11 @@ function renderNextFrame(state: State, options: FileOptions) {
                 Doc.cat(Doc.hardLine),
                 Doc.cat(resolvedPathMsg),
                 Optimize.optimize(Optimize.Deep),
-                Doc.render({
-                    style: "pretty",
-                    options: { lineWidth: columns },
-                }),
+                (x) =>
+                    Doc.render(x, {
+                        style: "pretty",
+                        options: { lineWidth: columns },
+                    }),
             );
         }
         const leadingSymbol = Doc.annotate(figures.tick, Ansi.green);
@@ -264,7 +266,11 @@ function renderNextFrame(state: State, options: FileOptions) {
             Doc.cat(Doc.hardLine),
             Doc.cat(files),
             Optimize.optimize(Optimize.Deep),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }
@@ -286,7 +292,11 @@ function renderSubmission(value: string, options: FileOptions) {
             Doc.cat(Doc.space),
             Doc.cat(Doc.annotate(Doc.text(value), Ansi.white)),
             Doc.cat(Doc.hardLine),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }

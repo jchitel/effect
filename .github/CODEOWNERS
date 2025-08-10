@@ -11,8 +11,6 @@
 
 /packages/cli/ @IMax153
 
-/packages/experimental/ @tim-smart
-
 /packages/opentelemetry/ @tim-smart
 
 /packages/platform/ @tim-smart
@@ -23,15 +21,6 @@
 
 /packages/printer/ @IMax153
 /packages/printer-ansi/ @IMax153
-
-/packages/sql/ @tim-smart
-/packages/sql-d1/ @tim-smart
-/packages/sql-drizzle/ @tim-smart
-/packages/sql-libsql/ @tim-smart
-/packages/sql-pg/ @tim-smart
-/packages/sql-sqlite-bun/ @tim-smart
-/packages/sql-sqlite-node/ @tim-smart
-/packages/sql-sqlite-wasm/ @tim-smart
 
 /packages/typeclass/ @gcanti
 

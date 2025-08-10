@@ -72,8 +72,8 @@ describe("Prompt", () => {
                 const unsubmittedValue = Doc.annotate(
                     Doc.text("default-value"),
                     Ansi.blackBright,
-                ).pipe(
-                    Doc.render({
+                ).pipe((x) =>
+                    Doc.render(x, {
                         style: "pretty",
                     }),
                 );
@@ -81,8 +81,8 @@ describe("Prompt", () => {
                 const submittedValue = Doc.annotate(
                     Doc.text("default-value"),
                     Ansi.white,
-                ).pipe(
-                    Doc.render({
+                ).pipe((x) =>
+                    Doc.render(x, {
                         style: "pretty",
                     }),
                 );
@@ -119,8 +119,8 @@ describe("Prompt", () => {
                 const unsubmittedValue = Doc.annotate(
                     Doc.text("default-value"),
                     Ansi.blackBright,
-                ).pipe(
-                    Doc.render({
+                ).pipe((x) =>
+                    Doc.render(x, {
                         style: "pretty",
                     }),
                 );
@@ -128,8 +128,8 @@ describe("Prompt", () => {
                 const enteredValue = Doc.annotate(
                     Doc.text("default-value"),
                     Ansi.combine(Ansi.underlined, Ansi.cyanBright),
-                ).pipe(
-                    Doc.render({
+                ).pipe((x) =>
+                    Doc.render(x, {
                         style: "pretty",
                     }),
                 );
@@ -244,8 +244,8 @@ describe("Prompt", () => {
                 const unsubmittedValue = Doc.annotate(
                     Doc.text("default-value"),
                     Ansi.blackBright,
-                ).pipe(
-                    Doc.render({
+                ).pipe((x) =>
+                    Doc.render(x, {
                         style: "pretty",
                     }),
                 );
@@ -253,8 +253,8 @@ describe("Prompt", () => {
                 const submittedValue = Doc.annotate(
                     Doc.text("default-value"),
                     Ansi.white,
-                ).pipe(
-                    Doc.render({
+                ).pipe((x) =>
+                    Doc.render(x, {
                         style: "pretty",
                     }),
                 );
@@ -320,8 +320,8 @@ describe("Prompt", () => {
                 const unsubmittedValue = Doc.annotate(
                     Doc.text(redactedValue),
                     Ansi.blackBright,
-                ).pipe(
-                    Doc.render({
+                ).pipe((x) =>
+                    Doc.render(x, {
                         style: "pretty",
                     }),
                 );
@@ -329,8 +329,8 @@ describe("Prompt", () => {
                 const submittedValue = Doc.annotate(
                     Doc.text(redactedValue),
                     Ansi.white,
-                ).pipe(
-                    Doc.render({
+                ).pipe((x) =>
+                    Doc.render(x, {
                         style: "pretty",
                     }),
                 );

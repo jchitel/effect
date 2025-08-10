@@ -40,7 +40,6 @@
                 "namespaceImportPackages": [
                     "effect",
                     "@effect/cli",
-                    "@effect/experimental",
                     "@effect/opentelemetry",
                     "@effect/platform",
                     "@effect/platform-browser",
@@ -49,14 +48,6 @@
                     "@effect/platform-node-shared",
                     "@effect/printer",
                     "@effect/printer-ansi",
-                    "@effect/sql",
-                    "@effect/sql-d1",
-                    "@effect/sql-drizzle",
-                    "@effect/sql-libsql",
-                    "@effect/sql-pg",
-                    "@effect/sql-sqlite-bun",
-                    "@effect/sql-sqlite-node",
-                    "@effect/sql-sqlite-wasm",
                     "@effect/typeclass",
                     "@effect/vitest"
                 ]

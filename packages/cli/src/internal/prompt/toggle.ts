@@ -27,7 +27,11 @@ function handleClear(options: ToggleOptions) {
         return clearOutput.pipe(
             Doc.cat(clearPrompt),
             Optimize.optimize(Optimize.Deep),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }
@@ -94,7 +98,11 @@ function renderNextFrame(state: State, options: ToggleOptions) {
         return Doc.cursorHide.pipe(
             Doc.cat(promptMsg),
             Optimize.optimize(Optimize.Deep),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }
@@ -116,7 +124,11 @@ function renderSubmission(value: boolean, options: ToggleOptions) {
         return promptMsg.pipe(
             Doc.cat(Doc.hardLine),
             Optimize.optimize(Optimize.Deep),
-            Doc.render({ style: "pretty", options: { lineWidth: columns } }),
+            (x) =>
+                Doc.render(x, {
+                    style: "pretty",
+                    options: { lineWidth: columns },
+                }),
         );
     });
 }

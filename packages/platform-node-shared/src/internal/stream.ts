@@ -7,7 +7,6 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import type { LazyArg } from "effect/Function";
-import { dual } from "effect/Function";
 import * as MutableRef from "effect/MutableRef";
 import * as Runtime from "effect/Runtime";
 import type * as AsyncInput from "effect/SingleProducerAsyncInput";
@@ -157,39 +156,19 @@ export const fromDuplex = <
     });
 
 /** @internal */
-export const pipeThroughDuplex = dual<
-    <E2, B = Uint8Array>(
-        duplex: LazyArg<Duplex>,
-        onError: (error: unknown) => E2,
-        options?: FromReadableOptions & FromWritableOptions,
-    ) => <R, E, A>(self: Stream.Stream<A, E, R>) => Stream.Stream<B, E | E2, R>,
-    <R, E, A, E2, B = Uint8Array>(
-        self: Stream.Stream<A, E, R>,
-        duplex: LazyArg<Duplex>,
-        onError: (error: unknown) => E2,
-        options?: FromReadableOptions & FromWritableOptions,
-    ) => Stream.Stream<B, E | E2, R>
->(
-    (args) => Stream.StreamTypeId in args[0],
-    (self, duplex, onError, options) =>
-        Stream.pipeThroughChannelOrFail(
-            self,
-            fromDuplex(duplex, onError, options),
-        ),
-);
+export const pipeThroughDuplex = <R, E, A, E2, B = Uint8Array>(
+    self: Stream.Stream<A, E, R>,
+    duplex: LazyArg<Duplex>,
+    onError: (error: unknown) => E2,
+    options?: FromReadableOptions & FromWritableOptions,
+): Stream.Stream<B, E | E2, R> =>
+    Stream.pipeThroughChannelOrFail(self, fromDuplex(duplex, onError, options));
 
 /** @internal */
-export const pipeThroughSimple = dual<
-    (
-        duplex: LazyArg<Duplex>,
-    ) => <R, E>(
-        self: Stream.Stream<string | Uint8Array, E, R>,
-    ) => Stream.Stream<Uint8Array, E | PlatformError, R>,
-    <R, E>(
-        self: Stream.Stream<string | Uint8Array, E, R>,
-        duplex: LazyArg<Duplex>,
-    ) => Stream.Stream<Uint8Array, E | PlatformError, R>
->(2, (self, duplex) =>
+export const pipeThroughSimple = <R, E>(
+    self: Stream.Stream<string | Uint8Array, E, R>,
+    duplex: LazyArg<Duplex>,
+): Stream.Stream<Uint8Array, E | PlatformError, R> =>
     Stream.pipeThroughChannelOrFail(
         self,
         fromDuplex(
@@ -202,8 +181,7 @@ export const pipeThroughSimple = dual<
                     cause,
                 }),
         ),
-    ),
-);
+    );
 
 /** @internal */
 export const fromReadableChannel = <E, A = Uint8Array>(

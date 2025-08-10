@@ -65,15 +65,20 @@ describe("Stream", () => {
         Effect.gen(function* (_) {
             const result = yield* _(
                 Stream.make("a", "b", "c"),
-                NodeStream.pipeThroughDuplex(
-                    () =>
-                        new Transform({
-                            transform(chunk, _encoding, callback) {
-                                callback(null, chunk.toString().toUpperCase());
-                            },
-                        }),
-                    () => "error" as const,
-                ),
+                (x) =>
+                    NodeStream.pipeThroughDuplex(
+                        x,
+                        () =>
+                            new Transform({
+                                transform(chunk, _encoding, callback) {
+                                    callback(
+                                        null,
+                                        chunk.toString().toUpperCase(),
+                                    );
+                                },
+                            }),
+                        () => "error" as const,
+                    ),
                 Stream.decodeText(),
                 Stream.mkString,
                 Stream.runCollect,
@@ -86,16 +91,18 @@ describe("Stream", () => {
         Effect.gen(function* (_) {
             const result = yield* _(
                 Stream.make("a", "b", "c"),
-                NodeStream.pipeThroughDuplex(
-                    () =>
-                        new Duplex({
-                            read() {},
-                            write(_chunk, _encoding, callback) {
-                                callback(new Error());
-                            },
-                        }),
-                    () => "error" as const,
-                ),
+                (x) =>
+                    NodeStream.pipeThroughDuplex(
+                        x,
+                        () =>
+                            new Duplex({
+                                read() {},
+                                write(_chunk, _encoding, callback) {
+                                    callback(new Error());
+                                },
+                            }),
+                        () => "error" as const,
+                    ),
                 Stream.runDrain,
                 Effect.flip,
             );
@@ -107,14 +114,19 @@ describe("Stream", () => {
         Effect.gen(function* (_) {
             const result = yield* _(
                 Stream.make("a", Buffer.from("b"), "c"),
-                NodeStream.pipeThroughSimple(
-                    () =>
-                        new Transform({
-                            transform(chunk, _encoding, callback) {
-                                callback(null, chunk.toString().toUpperCase());
-                            },
-                        }),
-                ),
+                (x) =>
+                    NodeStream.pipeThroughSimple(
+                        x,
+                        () =>
+                            new Transform({
+                                transform(chunk, _encoding, callback) {
+                                    callback(
+                                        null,
+                                        chunk.toString().toUpperCase(),
+                                    );
+                                },
+                            }),
+                    ),
                 Stream.decodeText(),
                 Stream.mkString,
                 Stream.runCollect,
