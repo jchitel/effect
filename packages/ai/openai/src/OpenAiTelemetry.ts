@@ -1,12 +1,12 @@
 /**
  * @since 1.0.0
  */
-import * as AiTelemetry from "@effect/ai/AiTelemetry"
-import { dual } from "effect/Function"
-import * as Predicate from "effect/Predicate"
-import * as String from "effect/String"
-import type { Span } from "effect/Tracer"
-import type { Simplify } from "effect/Types"
+import * as AiTelemetry from "@effect/ai/AiTelemetry";
+import { dual } from "effect/Function";
+import * as Predicate from "effect/Predicate";
+import * as String from "effect/String";
+import type { Span } from "effect/Tracer";
+import type { Simplify } from "effect/Types";
 
 /**
  * The attributes used to describe telemetry in the context of Generative
@@ -18,10 +18,16 @@ import type { Simplify } from "effect/Types"
  * @category Models
  */
 export type OpenAiTelemetryAttributes = Simplify<
-  & AiTelemetry.GenAITelemetryAttributes
-  & AiTelemetry.AttributesWithPrefix<RequestAttributes, "gen_ai.openai.request">
-  & AiTelemetry.AttributesWithPrefix<ResponseAttributes, "gen_ai.openai.request">
->
+    AiTelemetry.GenAITelemetryAttributes &
+        AiTelemetry.AttributesWithPrefix<
+            RequestAttributes,
+            "gen_ai.openai.request"
+        > &
+        AiTelemetry.AttributesWithPrefix<
+            ResponseAttributes,
+            "gen_ai.openai.request"
+        >
+>;
 
 /**
  * All telemetry attributes which are part of the GenAI specification,
@@ -30,7 +36,9 @@ export type OpenAiTelemetryAttributes = Simplify<
  * @since 1.0.0
  * @category Models
  */
-export type AllAttributes = AiTelemetry.AllAttributes & RequestAttributes & ResponseAttributes
+export type AllAttributes = AiTelemetry.AllAttributes &
+    RequestAttributes &
+    ResponseAttributes;
 
 /**
  * Telemetry attributes which are part of the GenAI specification and are
@@ -40,14 +48,22 @@ export type AllAttributes = AiTelemetry.AllAttributes & RequestAttributes & Resp
  * @category Models
  */
 export interface RequestAttributes {
-  /**
-   * The response format that is requested.
-   */
-  readonly responseFormat?: (string & {}) | WellKnownResponseFormat | null | undefined
-  /**
-   * The service tier requested. May be a specific tier, `default`, or `auto`.
-   */
-  readonly serviceTier?: (string & {}) | WellKnownServiceTier | null | undefined
+    /**
+     * The response format that is requested.
+     */
+    readonly responseFormat?:
+        | (string & {})
+        | WellKnownResponseFormat
+        | null
+        | undefined;
+    /**
+     * The service tier requested. May be a specific tier, `default`, or `auto`.
+     */
+    readonly serviceTier?:
+        | (string & {})
+        | WellKnownServiceTier
+        | null
+        | undefined;
 }
 
 /**
@@ -58,15 +74,15 @@ export interface RequestAttributes {
  * @category Models
  */
 export interface ResponseAttributes {
-  /**
-   * The service tier used for the response.
-   */
-  readonly serviceTier?: string | null | undefined
-  /**
-   * A fingerprint to track any eventual change in the Generative AI
-   * environment.
-   */
-  readonly systemFingerprint?: string | null | undefined
+    /**
+     * The service tier used for the response.
+     */
+    readonly serviceTier?: string | null | undefined;
+    /**
+     * A fingerprint to track any eventual change in the Generative AI
+     * environment.
+     */
+    readonly systemFingerprint?: string | null | undefined;
 }
 
 /**
@@ -79,7 +95,7 @@ export interface ResponseAttributes {
  * @since 1.0.0
  * @category Models
  */
-export type WellKnownResponseFormat = "json_object" | "json_schema" | "text"
+export type WellKnownResponseFormat = "json_object" | "json_schema" | "text";
 
 /**
  * The `gen_ai.openai.request.service_tier` attribute has the following
@@ -91,25 +107,30 @@ export type WellKnownResponseFormat = "json_object" | "json_schema" | "text"
  * @since 1.0.0
  * @category Models
  */
-export type WellKnownServiceTier = "auto" | "default"
+export type WellKnownServiceTier = "auto" | "default";
 
 /**
  * @since 1.0.0
  * @since Models
  */
-export type OpenAiTelemetryAttributeOptions = AiTelemetry.GenAITelemetryAttributeOptions & {
-  openai?: {
-    request?: RequestAttributes | undefined
-    response?: ResponseAttributes | undefined
-  } | undefined
-}
+export type OpenAiTelemetryAttributeOptions =
+    AiTelemetry.GenAITelemetryAttributeOptions & {
+        openai?:
+            | {
+                  request?: RequestAttributes | undefined;
+                  response?: ResponseAttributes | undefined;
+              }
+            | undefined;
+    };
 
-const addOpenAiRequestAttributes = AiTelemetry.addSpanAttributes("gen_ai.openai.request", String.camelToSnake)<
-  RequestAttributes
->
-const addOpenAiResponseAttributes = AiTelemetry.addSpanAttributes("gen_ai.openai.response", String.camelToSnake)<
-  ResponseAttributes
->
+const addOpenAiRequestAttributes = AiTelemetry.addSpanAttributes(
+    "gen_ai.openai.request",
+    String.camelToSnake,
+)<RequestAttributes>;
+const addOpenAiResponseAttributes = AiTelemetry.addSpanAttributes(
+    "gen_ai.openai.response",
+    String.camelToSnake,
+)<ResponseAttributes>;
 
 /**
  * Applies the specified OpenAi GenAI telemetry attributes to the provided
@@ -121,16 +142,16 @@ const addOpenAiResponseAttributes = AiTelemetry.addSpanAttributes("gen_ai.openai
  * @since Utilities
  */
 export const addGenAIAnnotations = dual<
-  (options: OpenAiTelemetryAttributeOptions) => (span: Span) => void,
-  (span: Span, options: OpenAiTelemetryAttributeOptions) => void
+    (options: OpenAiTelemetryAttributeOptions) => (span: Span) => void,
+    (span: Span, options: OpenAiTelemetryAttributeOptions) => void
 >(2, (span, options) => {
-  AiTelemetry.addGenAIAnnotations(span, options)
-  if (Predicate.isNotNullable(options.openai)) {
-    if (Predicate.isNotNullable(options.openai.request)) {
-      addOpenAiRequestAttributes(span, options.openai.request)
+    AiTelemetry.addGenAIAnnotations(span, options);
+    if (Predicate.isNotNullable(options.openai)) {
+        if (Predicate.isNotNullable(options.openai.request)) {
+            addOpenAiRequestAttributes(span, options.openai.request);
+        }
+        if (Predicate.isNotNullable(options.openai.response)) {
+            addOpenAiResponseAttributes(span, options.openai.response);
+        }
     }
-    if (Predicate.isNotNullable(options.openai.response)) {
-      addOpenAiResponseAttributes(span, options.openai.response)
-    }
-  }
-})
+});

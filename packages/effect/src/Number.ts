@@ -95,14 +95,14 @@
  * @see {@link module:BigDecimal} for more similar operations on `BigDecimal` types
  */
 
-import * as equivalence from "./Equivalence.js"
-import { dual } from "./Function.js"
-import * as option from "./internal/option.js"
-import * as _Iterable from "./Iterable.js"
-import type { Option } from "./Option.js"
-import * as order from "./Order.js"
-import type { Ordering } from "./Ordering.js"
-import * as predicate from "./Predicate.js"
+import * as equivalence from "./Equivalence.js";
+import { dual } from "./Function.js";
+import * as option from "./internal/option.js";
+import * as _Iterable from "./Iterable.js";
+import type { Option } from "./Option.js";
+import * as order from "./Order.js";
+import type { Ordering } from "./Ordering.js";
+import * as predicate from "./Predicate.js";
 
 /**
  * Type guard that tests if a value is a member of the set of JavaScript
@@ -157,7 +157,7 @@ import * as predicate from "./Predicate.js"
  *
  * @returns `true` if the input is a JavaScript number, `false` otherwise
  */
-export const isNumber: (input: unknown) => input is number = predicate.isNumber
+export const isNumber: (input: unknown) => input is number = predicate.isNumber;
 
 /**
  * Returns the additive inverse of a number, effectively negating it.
@@ -191,7 +191,7 @@ export const isNumber: (input: unknown) => input is number = predicate.isNumber
  *
  * @returns The negated number value.
  */
-export const negate = (n: number): number => multiply(n, -1)
+export const negate = (n: number): number => multiply(n, -1);
 
 /**
  * Performs addition in the set of JavaScript numbers.
@@ -239,26 +239,26 @@ export const negate = (n: number): number => multiply(n, -1)
  * ```
  */
 export const sum: {
-  /**
-   * Returns a function that adds a specified number to its argument.
-   *
-   * @param that - The number to add to the input of the resulting function
-   *
-   * @returns A function that takes a number and returns the sum of that number
-   *   and `that`
-   */
-  (that: number): (self: number) => number
+    /**
+     * Returns a function that adds a specified number to its argument.
+     *
+     * @param that - The number to add to the input of the resulting function
+     *
+     * @returns A function that takes a number and returns the sum of that number
+     *   and `that`
+     */
+    (that: number): (self: number) => number;
 
-  /**
-   * Adds two numbers together.
-   *
-   * @param self - The first addend
-   * @param that - The second addend
-   *
-   * @returns The sum of the two numbers
-   */
-  (self: number, that: number): number
-} = dual(2, (self: number, that: number): number => self + that)
+    /**
+     * Adds two numbers together.
+     *
+     * @param self - The first addend
+     * @param that - The second addend
+     *
+     * @returns The sum of the two numbers
+     */
+    (self: number, that: number): number;
+} = dual(2, (self: number, that: number): number => self + that);
 
 /**
  * Computes the sum of all elements in an iterable collection of numbers.
@@ -309,7 +309,8 @@ export const sum: {
  * @returns The sum of all numbers in the collection, or 0 if the collection is
  *   empty
  */
-export const sumAll = (collection: Iterable<number>): number => _Iterable.reduce(collection, 0, sum)
+export const sumAll = (collection: Iterable<number>): number =>
+    _Iterable.reduce(collection, 0, sum);
 
 /**
  * Performs subtraction in the set of JavaScript numbers.
@@ -364,30 +365,30 @@ export const sumAll = (collection: Iterable<number>): number => _Iterable.reduce
  * ```
  */
 export const subtract: {
-  /**
-   * Returns a function that subtracts a specified number from its argument.
-   *
-   * @param subtrahend - The number to subtract from the input of the resulting
-   *   function
-   *
-   * @returns A function that takes a minuend and returns the difference of
-   *   subtracting the subtrahend from it
-   */
-  (subtrahend: number): (minuend: number) => number
+    /**
+     * Returns a function that subtracts a specified number from its argument.
+     *
+     * @param subtrahend - The number to subtract from the input of the resulting
+     *   function
+     *
+     * @returns A function that takes a minuend and returns the difference of
+     *   subtracting the subtrahend from it
+     */
+    (subtrahend: number): (minuend: number) => number;
 
-  /**
-   * Subtracts the subtrahend from the minuend and returns the difference.
-   *
-   * @param minuend - The number from which another number is to be subtracted
-   * @param subtrahend - The number to subtract from the minuend
-   *
-   * @returns The difference of the minuend minus the subtrahend
-   */
-  (minuend: number, subtrahend: number): number
+    /**
+     * Subtracts the subtrahend from the minuend and returns the difference.
+     *
+     * @param minuend - The number from which another number is to be subtracted
+     * @param subtrahend - The number to subtract from the minuend
+     *
+     * @returns The difference of the minuend minus the subtrahend
+     */
+    (minuend: number, subtrahend: number): number;
 } = dual(
-  2,
-  (minuend: number, subtrahend: number): number => minuend - subtrahend
-)
+    2,
+    (minuend: number, subtrahend: number): number => minuend - subtrahend,
+);
 
 /**
  * Performs **multiplication** in the set of JavaScript numbers.
@@ -448,30 +449,31 @@ export const subtract: {
  * ```
  */
 export const multiply: {
-  /**
-   * Returns a function that multiplies a specified number with its argument.
-   *
-   * @param multiplicand - The number to multiply with the input of the
-   *   resulting function
-   *
-   * @returns A function that takes a multiplier and returns the product of that
-   *   multiplier and the multiplicand
-   */
-  (multiplicand: number): (multiplier: number) => number
+    /**
+     * Returns a function that multiplies a specified number with its argument.
+     *
+     * @param multiplicand - The number to multiply with the input of the
+     *   resulting function
+     *
+     * @returns A function that takes a multiplier and returns the product of that
+     *   multiplier and the multiplicand
+     */
+    (multiplicand: number): (multiplier: number) => number;
 
-  /**
-   * Multiplies two numbers together.
-   *
-   * @param multiplier - The first factor
-   * @param multiplicand - The second factor
-   *
-   * @returns The product of the two numbers
-   */
-  (multiplier: number, multiplicand: number): number
+    /**
+     * Multiplies two numbers together.
+     *
+     * @param multiplier - The first factor
+     * @param multiplicand - The second factor
+     *
+     * @returns The product of the two numbers
+     */
+    (multiplier: number, multiplicand: number): number;
 } = dual(
-  2,
-  (multiplier: number, multiplicand: number): number => multiplier * multiplicand
-)
+    2,
+    (multiplier: number, multiplicand: number): number =>
+        multiplier * multiplicand,
+);
 
 /**
  * Computes the product of all elements in an iterable collection of numbers.
@@ -520,15 +522,15 @@ export const multiply: {
  *   is empty
  */
 export const multiplyAll = (collection: Iterable<number>): number => {
-  let out = 1
-  for (const n of collection) {
-    if (n === 0) {
-      return 0
+    let out = 1;
+    for (const n of collection) {
+        if (n === 0) {
+            return 0;
+        }
+        out *= n;
     }
-    out *= n
-  }
-  return out
-}
+    return out;
+};
 
 /**
  * Performs division in the set of JavaScript numbers, returning the result
@@ -587,27 +589,29 @@ export const multiplyAll = (collection: Iterable<number>): number => {
  * ```
  */
 export const divide: {
-  /**
-   * Returns a function that divides its input by a specified divisor.
-   *
-   * @param divisor - The number to divide by
-   *
-   * @returns A function that takes a dividend and returns the quotient wrapped
-   *   in an Option (Option.none() if divisor is 0)
-   */
-  (divisor: number): (dividend: number) => Option<number>
+    /**
+     * Returns a function that divides its input by a specified divisor.
+     *
+     * @param divisor - The number to divide by
+     *
+     * @returns A function that takes a dividend and returns the quotient wrapped
+     *   in an Option (Option.none() if divisor is 0)
+     */
+    (divisor: number): (dividend: number) => Option<number>;
 
-  /**
-   * Divides the dividend by the divisor and returns the quotient wrapped in an
-   * Option.
-   *
-   * @param dividend - The number to be divided
-   * @param divisor - The number to divide by
-   *
-   * @returns Some(quotient) if the divisor is not 0, None otherwise
-   */
-  (dividend: number, divisor: number): Option<number>
-} = dual(2, (dividend: number, divisor: number) => divisor === 0 ? option.none : option.some(dividend / divisor))
+    /**
+     * Divides the dividend by the divisor and returns the quotient wrapped in an
+     * Option.
+     *
+     * @param dividend - The number to be divided
+     * @param divisor - The number to divide by
+     *
+     * @returns Some(quotient) if the divisor is not 0, None otherwise
+     */
+    (dividend: number, divisor: number): Option<number>;
+} = dual(2, (dividend: number, divisor: number) =>
+    divisor === 0 ? option.none : option.some(dividend / divisor),
+);
 
 /**
  * Performs division in the set of JavaScript numbers, but misbehaves for
@@ -668,29 +672,29 @@ export const divide: {
  * @see {@link module:Number.divide} - Safe division returning an Option
  */
 export const unsafeDivide: {
-  /**
-   * Returns a function that divides its input by a specified divisor.
-   *
-   * @param divisor - The number to divide by
-   *
-   * @returns A function that takes a dividend and returns the quotient
-   * @throws - An {@link module:Number.DivisionByZeroError} if the divisor is
-   *   zero
-   */
-  (divisor: number): (dividend: number) => number
+    /**
+     * Returns a function that divides its input by a specified divisor.
+     *
+     * @param divisor - The number to divide by
+     *
+     * @returns A function that takes a dividend and returns the quotient
+     * @throws - An {@link module:Number.DivisionByZeroError} if the divisor is
+     *   zero
+     */
+    (divisor: number): (dividend: number) => number;
 
-  /**
-   * Divides the dividend by the divisor and returns the quotient.
-   *
-   * If the divisor is zero, it returns Infinity.
-   *
-   * @param dividend - The number to be divided
-   * @param divisor - The number to divide by
-   *
-   * @returns The quotient of the division
-   */
-  (dividend: number, divisor: number): number
-} = dual(2, (dividend: number, divisor: number): number => dividend / divisor)
+    /**
+     * Divides the dividend by the divisor and returns the quotient.
+     *
+     * If the divisor is zero, it returns Infinity.
+     *
+     * @param dividend - The number to be divided
+     * @param divisor - The number to divide by
+     *
+     * @returns The quotient of the division
+     */
+    (dividend: number, divisor: number): number;
+} = dual(2, (dividend: number, divisor: number): number => dividend / divisor);
 
 /**
  * Returns the result of adding `1` to a given number.
@@ -707,7 +711,7 @@ export const unsafeDivide: {
  * assert.equal(increment(2), 3)
  * ```
  */
-export const increment = (n: number): number => sum(n, 1)
+export const increment = (n: number): number => sum(n, 1);
 
 /**
  * Decrements a number by `1`.
@@ -724,21 +728,21 @@ export const increment = (n: number): number => sum(n, 1)
  * assert.equal(decrement(3), 2)
  * ```
  */
-export const decrement = (n: number): number => subtract(n, 1)
+export const decrement = (n: number): number => subtract(n, 1);
 
 /**
  * @memberof Number
  * @since 2.0.0
  * @category instances
  */
-export const Equivalence: equivalence.Equivalence<number> = equivalence.number
+export const Equivalence: equivalence.Equivalence<number> = equivalence.number;
 
 /**
  * @memberof Number
  * @since 2.0.0
  * @category instances
  */
-export const Order: order.Order<number> = order.number
+export const Order: order.Order<number> = order.number;
 
 /**
  * Returns `true` if the first argument is less than the second, otherwise
@@ -759,9 +763,9 @@ export const Order: order.Order<number> = order.number
  * ```
  */
 export const lessThan: {
-  (that: number): (self: number) => boolean
-  (self: number, that: number): boolean
-} = order.lessThan(Order)
+    (that: number): (self: number) => boolean;
+    (self: number, that: number): boolean;
+} = order.lessThan(Order);
 
 /**
  * Returns a function that checks if a given `number` is less than or equal to
@@ -782,9 +786,9 @@ export const lessThan: {
  * ```
  */
 export const lessThanOrEqualTo: {
-  (that: number): (self: number) => boolean
-  (self: number, that: number): boolean
-} = order.lessThanOrEqualTo(Order)
+    (that: number): (self: number) => boolean;
+    (self: number, that: number): boolean;
+} = order.lessThanOrEqualTo(Order);
 
 /**
  * Returns `true` if the first argument is greater than the second, otherwise
@@ -805,9 +809,9 @@ export const lessThanOrEqualTo: {
  * ```
  */
 export const greaterThan: {
-  (that: number): (self: number) => boolean
-  (self: number, that: number): boolean
-} = order.greaterThan(Order)
+    (that: number): (self: number) => boolean;
+    (self: number, that: number): boolean;
+} = order.greaterThan(Order);
 
 /**
  * Returns a function that checks if a given `number` is greater than or equal
@@ -828,9 +832,9 @@ export const greaterThan: {
  * ```
  */
 export const greaterThanOrEqualTo: {
-  (that: number): (self: number) => boolean
-  (self: number, that: number): boolean
-} = order.greaterThanOrEqualTo(Order)
+    (that: number): (self: number) => boolean;
+    (self: number, that: number): boolean;
+} = order.greaterThanOrEqualTo(Order);
 
 /**
  * Checks if a `number` is between a `minimum` and `maximum` value (inclusive).
@@ -852,15 +856,15 @@ export const greaterThanOrEqualTo: {
  * ```
  */
 export const between: {
-  (options: { minimum: number; maximum: number }): (self: number) => boolean
-  (
-    self: number,
-    options: {
-      minimum: number
-      maximum: number
-    }
-  ): boolean
-} = order.between(Order)
+    (options: { minimum: number; maximum: number }): (self: number) => boolean;
+    (
+        self: number,
+        options: {
+            minimum: number;
+            maximum: number;
+        },
+    ): boolean;
+} = order.between(Order);
 
 /**
  * Restricts the given `number` to be within the range specified by the
@@ -888,15 +892,15 @@ export const between: {
  * ```
  */
 export const clamp: {
-  (options: { minimum: number; maximum: number }): (self: number) => number
-  (
-    self: number,
-    options: {
-      minimum: number
-      maximum: number
-    }
-  ): number
-} = order.clamp(Order)
+    (options: { minimum: number; maximum: number }): (self: number) => number;
+    (
+        self: number,
+        options: {
+            minimum: number;
+            maximum: number;
+        },
+    ): number;
+} = order.clamp(Order);
 
 /**
  * Returns the minimum between two `number`s.
@@ -913,9 +917,9 @@ export const clamp: {
  * ```
  */
 export const min: {
-  (that: number): (self: number) => number
-  (self: number, that: number): number
-} = order.min(Order)
+    (that: number): (self: number) => number;
+    (self: number, that: number): number;
+} = order.min(Order);
 
 /**
  * Returns the maximum between two `number`s.
@@ -932,9 +936,9 @@ export const min: {
  * ```
  */
 export const max: {
-  (that: number): (self: number) => number
-  (self: number, that: number): number
-} = order.max(Order)
+    (that: number): (self: number) => number;
+    (self: number, that: number): number;
+} = order.max(Order);
 
 /**
  * Determines the sign of a given `number`.
@@ -953,7 +957,7 @@ export const max: {
  * assert.equal(sign(5), 1)
  * ```
  */
-export const sign = (n: number): Ordering => Order(n, 0)
+export const sign = (n: number): Ordering => Order(n, 0);
 
 /**
  * Returns the remainder left over when one operand is divided by a second
@@ -976,17 +980,18 @@ export const sign = (n: number): Ordering => Order(n, 0)
  * ```
  */
 export const remainder: {
-  (divisor: number): (dividend: number) => number
-  (dividend: number, divisor: number): number
+    (divisor: number): (dividend: number) => number;
+    (dividend: number, divisor: number): number;
 } = dual(2, (dividend: number, divisor: number): number => {
-  // https://stackoverflow.com/questions/3966484/why-does-modulus-operator-return-fractional-number-in-javascript/31711034#31711034
-  const selfDecCount = (dividend.toString().split(".")[1] || "").length
-  const divisorDecCount = (divisor.toString().split(".")[1] || "").length
-  const decCount = selfDecCount > divisorDecCount ? selfDecCount : divisorDecCount
-  const selfInt = parseInt(dividend.toFixed(decCount).replace(".", ""))
-  const divisorInt = parseInt(divisor.toFixed(decCount).replace(".", ""))
-  return (selfInt % divisorInt) / Math.pow(10, decCount)
-})
+    // https://stackoverflow.com/questions/3966484/why-does-modulus-operator-return-fractional-number-in-javascript/31711034#31711034
+    const selfDecCount = (dividend.toString().split(".")[1] || "").length;
+    const divisorDecCount = (divisor.toString().split(".")[1] || "").length;
+    const decCount =
+        selfDecCount > divisorDecCount ? selfDecCount : divisorDecCount;
+    const selfInt = parseInt(dividend.toFixed(decCount).replace(".", ""));
+    const divisorInt = parseInt(divisor.toFixed(decCount).replace(".", ""));
+    return (selfInt % divisorInt) / Math.pow(10, decCount);
+});
 
 /**
  * Returns the next power of 2 greater than or equal to the given number.
@@ -1014,9 +1019,9 @@ export const remainder: {
  * ```
  */
 export const nextPow2 = (n: number): number => {
-  const nextPow = Math.ceil(Math.log(n) / Math.log(2))
-  return Math.max(Math.pow(2, nextPow), 2)
-}
+    const nextPow = Math.ceil(Math.log(n) / Math.log(2));
+    return Math.max(Math.pow(2, nextPow), 2);
+};
 
 /**
  * Tries to parse a `number` from a `string` using the `Number()` function. The
@@ -1028,23 +1033,23 @@ export const nextPow2 = (n: number): number => {
  * @category constructors
  */
 export const parse: {
-  (s: string): Option<number>
+    (s: string): Option<number>;
 } = (s) => {
-  if (s === "NaN") {
-    return option.some(NaN)
-  }
-  if (s === "Infinity") {
-    return option.some(Infinity)
-  }
-  if (s === "-Infinity") {
-    return option.some(-Infinity)
-  }
-  if (s.trim() === "") {
-    return option.none
-  }
-  const n = Number(s)
-  return Number.isNaN(n) ? option.none : option.some(n)
-}
+    if (s === "NaN") {
+        return option.some(NaN);
+    }
+    if (s === "Infinity") {
+        return option.some(Infinity);
+    }
+    if (s === "-Infinity") {
+        return option.some(-Infinity);
+    }
+    if (s.trim() === "") {
+        return option.none;
+    }
+    const n = Number(s);
+    return Number.isNaN(n) ? option.none : option.some(n);
+};
 
 /**
  * Returns the number rounded with the given precision.
@@ -1063,9 +1068,9 @@ export const parse: {
  * ```
  */
 export const round: {
-  (precision: number): (self: number) => number
-  (self: number, precision: number): number
+    (precision: number): (self: number) => number;
+    (self: number, precision: number): number;
 } = dual(2, (self: number, precision: number): number => {
-  const factor = Math.pow(10, precision)
-  return Math.round(self * factor) / factor
-})
+    const factor = Math.pow(10, precision);
+    return Math.round(self * factor) / factor;
+});

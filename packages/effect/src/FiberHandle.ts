@@ -1,83 +1,88 @@
 /**
  * @since 2.0.0
  */
-import type { NoSuchElementException } from "./Cause.js"
-import * as Cause from "./Cause.js"
-import * as Deferred from "./Deferred.js"
-import * as Effect from "./Effect.js"
-import * as Exit from "./Exit.js"
-import * as Fiber from "./Fiber.js"
-import * as FiberId from "./FiberId.js"
-import { constFalse, dual } from "./Function.js"
-import * as HashSet from "./HashSet.js"
-import * as Inspectable from "./Inspectable.js"
-import * as Option from "./Option.js"
-import { type Pipeable, pipeArguments } from "./Pipeable.js"
-import * as Predicate from "./Predicate.js"
-import * as Runtime from "./Runtime.js"
-import type * as Scope from "./Scope.js"
+import type { NoSuchElementException } from "./Cause.js";
+import * as Cause from "./Cause.js";
+import * as Deferred from "./Deferred.js";
+import * as Effect from "./Effect.js";
+import * as Exit from "./Exit.js";
+import * as Fiber from "./Fiber.js";
+import * as FiberId from "./FiberId.js";
+import { constFalse, dual } from "./Function.js";
+import * as HashSet from "./HashSet.js";
+import * as Inspectable from "./Inspectable.js";
+import * as Option from "./Option.js";
+import { type Pipeable, pipeArguments } from "./Pipeable.js";
+import * as Predicate from "./Predicate.js";
+import * as Runtime from "./Runtime.js";
+import type * as Scope from "./Scope.js";
 
 /**
  * @since 2.0.0
  * @categories type ids
  */
-export const TypeId: unique symbol = Symbol.for("effect/FiberHandle")
+export const TypeId: unique symbol = Symbol.for("effect/FiberHandle");
 
 /**
  * @since 2.0.0
  * @categories type ids
  */
-export type TypeId = typeof TypeId
+export type TypeId = typeof TypeId;
 
 /**
  * @since 2.0.0
  * @categories models
  */
-export interface FiberHandle<out A = unknown, out E = unknown> extends Pipeable, Inspectable.Inspectable {
-  readonly [TypeId]: TypeId
-  readonly deferred: Deferred.Deferred<void, unknown>
-  /** @internal */
-  state: {
-    readonly _tag: "Open"
-    fiber: Fiber.RuntimeFiber<A, E> | undefined
-  } | {
-    readonly _tag: "Closed"
-  }
+export interface FiberHandle<out A = unknown, out E = unknown>
+    extends Pipeable,
+        Inspectable.Inspectable {
+    readonly [TypeId]: TypeId;
+    readonly deferred: Deferred.Deferred<void, unknown>;
+    /** @internal */
+    state:
+        | {
+              readonly _tag: "Open";
+              fiber: Fiber.RuntimeFiber<A, E> | undefined;
+          }
+        | {
+              readonly _tag: "Closed";
+          };
 }
 
 /**
  * @since 2.0.0
  * @categories refinements
  */
-export const isFiberHandle = (u: unknown): u is FiberHandle => Predicate.hasProperty(u, TypeId)
+export const isFiberHandle = (u: unknown): u is FiberHandle =>
+    Predicate.hasProperty(u, TypeId);
 
 const Proto = {
-  [TypeId]: TypeId,
-  toString(this: FiberHandle) {
-    return Inspectable.format(this.toJSON())
-  },
-  toJSON(this: FiberHandle) {
-    return {
-      _id: "FiberHandle",
-      state: this.state
-    }
-  },
-  [Inspectable.NodeInspectSymbol](this: FiberHandle) {
-    return this.toJSON()
-  },
-  pipe() {
-    return pipeArguments(this, arguments)
-  }
-}
+    [TypeId]: TypeId,
+    toString(this: FiberHandle) {
+        return Inspectable.format(this.toJSON());
+    },
+    toJSON(this: FiberHandle) {
+        return {
+            _id: "FiberHandle",
+            state: this.state,
+        };
+    },
+    [Inspectable.NodeInspectSymbol](this: FiberHandle) {
+        return this.toJSON();
+    },
+    pipe() {
+        return pipeArguments(this, arguments);
+    },
+};
 
 const unsafeMake = <A = unknown, E = unknown>(
-  deferred: Deferred.Deferred<void, E>
+    deferred: Deferred.Deferred<void, E>,
 ): FiberHandle<A, E> => {
-  const self = Object.create(Proto)
-  self.state = { _tag: "Open", fiber: undefined }
-  self.deferred = deferred
-  return self
-}
+    const self = Object.create(Proto);
+    self.state = { _tag: "Open", fiber: undefined };
+    self.deferred = deferred;
+    return self;
+};
 
 /**
  * A FiberHandle can be used to store a single fiber.
@@ -107,22 +112,33 @@ const unsafeMake = <A = unknown, E = unknown>(
  * @since 2.0.0
  * @categories constructors
  */
-export const make = <A = unknown, E = unknown>(): Effect.Effect<FiberHandle<A, E>, never, Scope.Scope> =>
-  Effect.acquireRelease(
-    Effect.map(Deferred.make<void, E>(), (deferred) => unsafeMake<A, E>(deferred)),
-    (handle) =>
-      Effect.withFiberRuntime((parent) => {
-        const state = handle.state
-        if (state._tag === "Closed") return Effect.void
-        handle.state = { _tag: "Closed" }
-        return state.fiber ?
-          Effect.intoDeferred(
-            Effect.asVoid(Fiber.interruptAs(state.fiber, FiberId.combine(parent.id(), internalFiberId))),
-            handle.deferred
-          ) :
-          Deferred.done(handle.deferred, Exit.void)
-      })
-  )
+export const make = <A = unknown, E = unknown>(): Effect.Effect<
+    FiberHandle<A, E>,
+    never,
+    Scope.Scope
+> =>
+    Effect.acquireRelease(
+        Effect.map(Deferred.make<void, E>(), (deferred) =>
+            unsafeMake<A, E>(deferred),
+        ),
+        (handle) =>
+            Effect.withFiberRuntime((parent) => {
+                const state = handle.state;
+                if (state._tag === "Closed") return Effect.void;
+                handle.state = { _tag: "Closed" };
+                return state.fiber
+                    ? Effect.intoDeferred(
+                          Effect.asVoid(
+                              Fiber.interruptAs(
+                                  state.fiber,
+                                  FiberId.combine(parent.id(), internalFiberId),
+                              ),
+                          ),
+                          handle.deferred,
+                      )
+                    : Deferred.done(handle.deferred, Exit.void);
+            }),
+    );
 
 /**
  * Create an Effect run function that is backed by a FiberHandle.
@@ -131,21 +147,17 @@ export const make = <A = unknown, E = unknown>(): Effect.Effect<FiberHandle<A, E
  * @categories constructors
  */
 export const makeRuntime = <R, E = unknown, A = unknown>(): Effect.Effect<
-  <XE extends E, XA extends A>(
-    effect: Effect.Effect<XA, XE, R>,
-    options?:
-      | Runtime.RunForkOptions & {
-        readonly onlyIfMissing?: boolean | undefined
-      }
-      | undefined
-  ) => Fiber.RuntimeFiber<XA, XE>,
-  never,
-  Scope.Scope | R
-> =>
-  Effect.flatMap(
-    make<A, E>(),
-    (self) => runtime(self)<R>()
-  )
+    <XE extends E, XA extends A>(
+        effect: Effect.Effect<XA, XE, R>,
+        options?:
+            | (Runtime.RunForkOptions & {
+                  readonly onlyIfMissing?: boolean | undefined;
+              })
+            | undefined,
+    ) => Fiber.RuntimeFiber<XA, XE>,
+    never,
+    Scope.Scope | R
+> => Effect.flatMap(make<A, E>(), (self) => runtime(self)<R>());
 
 /**
  * Create an Effect run function that is backed by a FiberHandle.
@@ -153,29 +165,30 @@ export const makeRuntime = <R, E = unknown, A = unknown>(): Effect.Effect<
  * @since 3.13.0
  * @categories constructors
  */
-export const makeRuntimePromise = <R = never, A = unknown, E = unknown>(): Effect.Effect<
-  <XE extends E, XA extends A>(
-    effect: Effect.Effect<XA, XE, R>,
-    options?: Runtime.RunForkOptions | undefined
-  ) => Promise<XA>,
-  never,
-  Scope.Scope | R
-> =>
-  Effect.flatMap(
-    make<A, E>(),
-    (self) => runtimePromise(self)<R>()
-  )
+export const makeRuntimePromise = <
+    R = never,
+    A = unknown,
+    E = unknown,
+>(): Effect.Effect<
+    <XE extends E, XA extends A>(
+        effect: Effect.Effect<XA, XE, R>,
+        options?: Runtime.RunForkOptions | undefined,
+    ) => Promise<XA>,
+    never,
+    Scope.Scope | R
+> => Effect.flatMap(make<A, E>(), (self) => runtimePromise(self)<R>());
 
-const internalFiberIdId = -1
-const internalFiberId = FiberId.make(internalFiberIdId, 0)
+const internalFiberIdId = -1;
+const internalFiberId = FiberId.make(internalFiberIdId, 0);
 const isInternalInterruption = Cause.reduceWithContext(undefined, {
-  emptyCase: constFalse,
-  failCase: constFalse,
-  dieCase: constFalse,
-  interruptCase: (_, fiberId) => HashSet.has(FiberId.ids(fiberId), internalFiberIdId),
-  sequentialCase: (_, left, right) => left || right,
-  parallelCase: (_, left, right) => left || right
-})
+    emptyCase: constFalse,
+    failCase: constFalse,
+    dieCase: constFalse,
+    interruptCase: (_, fiberId) =>
+        HashSet.has(FiberId.ids(fiberId), internalFiberIdId),
+    sequentialCase: (_, left, right) => left || right,
+    parallelCase: (_, left, right) => left || right,
+});
 
 /**
  * Set the fiber in a FiberHandle. When the fiber completes, it will be removed from the FiberHandle.
@@ -185,63 +198,79 @@ const isInternalInterruption = Cause.reduceWithContext(undefined, {
  * @categories combinators
  */
 export const unsafeSet: {
-  <A, E, XE extends E, XA extends A>(
-    fiber: Fiber.RuntimeFiber<XA, XE>,
-    options?: {
-      readonly interruptAs?: FiberId.FiberId | undefined
-      readonly onlyIfMissing?: boolean | undefined
-      readonly propagateInterruption?: boolean | undefined
-    }
-  ): (self: FiberHandle<A, E>) => void
-  <A, E, XE extends E, XA extends A>(
-    self: FiberHandle<A, E>,
-    fiber: Fiber.RuntimeFiber<XA, XE>,
-    options?: {
-      readonly interruptAs?: FiberId.FiberId | undefined
-      readonly onlyIfMissing?: boolean | undefined
-      readonly propagateInterruption?: boolean | undefined
-    }
-  ): void
-} = dual((args) => isFiberHandle(args[0]), <A, E, XE extends E, XA extends A>(
-  self: FiberHandle<A, E>,
-  fiber: Fiber.RuntimeFiber<XA, XE>,
-  options?: {
-    readonly interruptAs?: FiberId.FiberId | undefined
-    readonly onlyIfMissing?: boolean | undefined
-    readonly propagateInterruption?: boolean | undefined
-  }
-): void => {
-  if (self.state._tag === "Closed") {
-    fiber.unsafeInterruptAsFork(FiberId.combine(options?.interruptAs ?? FiberId.none, internalFiberId))
-    return
-  } else if (self.state.fiber !== undefined) {
-    if (options?.onlyIfMissing === true) {
-      fiber.unsafeInterruptAsFork(FiberId.combine(options?.interruptAs ?? FiberId.none, internalFiberId))
-      return
-    } else if (self.state.fiber === fiber) {
-      return
-    }
-    self.state.fiber.unsafeInterruptAsFork(FiberId.combine(options?.interruptAs ?? FiberId.none, internalFiberId))
-    self.state.fiber = undefined
-  }
+    <A, E, XE extends E, XA extends A>(
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?: {
+            readonly interruptAs?: FiberId.FiberId | undefined;
+            readonly onlyIfMissing?: boolean | undefined;
+            readonly propagateInterruption?: boolean | undefined;
+        },
+    ): (self: FiberHandle<A, E>) => void;
+    <A, E, XE extends E, XA extends A>(
+        self: FiberHandle<A, E>,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?: {
+            readonly interruptAs?: FiberId.FiberId | undefined;
+            readonly onlyIfMissing?: boolean | undefined;
+            readonly propagateInterruption?: boolean | undefined;
+        },
+    ): void;
+} = dual(
+    (args) => isFiberHandle(args[0]),
+    <A, E, XE extends E, XA extends A>(
+        self: FiberHandle<A, E>,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?: {
+            readonly interruptAs?: FiberId.FiberId | undefined;
+            readonly onlyIfMissing?: boolean | undefined;
+            readonly propagateInterruption?: boolean | undefined;
+        },
+    ): void => {
+        if (self.state._tag === "Closed") {
+            fiber.unsafeInterruptAsFork(
+                FiberId.combine(
+                    options?.interruptAs ?? FiberId.none,
+                    internalFiberId,
+                ),
+            );
+            return;
+        } else if (self.state.fiber !== undefined) {
+            if (options?.onlyIfMissing === true) {
+                fiber.unsafeInterruptAsFork(
+                    FiberId.combine(
+                        options?.interruptAs ?? FiberId.none,
+                        internalFiberId,
+                    ),
+                );
+                return;
+            } else if (self.state.fiber === fiber) {
+                return;
+            }
+            self.state.fiber.unsafeInterruptAsFork(
+                FiberId.combine(
+                    options?.interruptAs ?? FiberId.none,
+                    internalFiberId,
+                ),
+            );
+            self.state.fiber = undefined;
+        }
 
-  self.state.fiber = fiber
-  fiber.addObserver((exit) => {
-    if (self.state._tag === "Open" && fiber === self.state.fiber) {
-      self.state.fiber = undefined
-    }
-    if (
-      Exit.isFailure(exit) &&
-      (
-        options?.propagateInterruption === true ?
-          !isInternalInterruption(exit.cause) :
-          !Cause.isInterruptedOnly(exit.cause)
-      )
-    ) {
-      Deferred.unsafeDone(self.deferred, exit as any)
-    }
-  })
-})
+        self.state.fiber = fiber;
+        fiber.addObserver((exit) => {
+            if (self.state._tag === "Open" && fiber === self.state.fiber) {
+                self.state.fiber = undefined;
+            }
+            if (
+                Exit.isFailure(exit) &&
+                (options?.propagateInterruption === true
+                    ? !isInternalInterruption(exit.cause)
+                    : !Cause.isInterruptedOnly(exit.cause))
+            ) {
+                Deferred.unsafeDone(self.deferred, exit as any);
+            }
+        });
+    },
+);
 
 /**
  * Set the fiber in the FiberHandle. When the fiber completes, it will be removed from the FiberHandle.
@@ -251,39 +280,54 @@ export const unsafeSet: {
  * @categories combinators
  */
 export const set: {
-  <A, E, XE extends E, XA extends A>(
-    fiber: Fiber.RuntimeFiber<XA, XE>,
-    options?: {
-      readonly onlyIfMissing?: boolean
-      readonly propagateInterruption?: boolean | undefined
-    }
-  ): (self: FiberHandle<A, E>) => Effect.Effect<void>
-  <A, E, XE extends E, XA extends A>(
+    <A, E, XE extends E, XA extends A>(
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?: {
+            readonly onlyIfMissing?: boolean;
+            readonly propagateInterruption?: boolean | undefined;
+        },
+    ): (self: FiberHandle<A, E>) => Effect.Effect<void>;
+    <A, E, XE extends E, XA extends A>(
+        self: FiberHandle<A, E>,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?: {
+            readonly onlyIfMissing?: boolean;
+            readonly propagateInterruption?: boolean | undefined;
+        },
+    ): Effect.Effect<void>;
+} = dual(
+    (args) => isFiberHandle(args[0]),
+    <A, E, XE extends E, XA extends A>(
+        self: FiberHandle<A, E>,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?: {
+            readonly onlyIfMissing?: boolean;
+            readonly propagateInterruption?: boolean | undefined;
+        },
+    ): Effect.Effect<void> =>
+        Effect.fiberIdWith((fiberId) =>
+            Effect.sync(() =>
+                unsafeSet(self, fiber, {
+                    interruptAs: fiberId,
+                    onlyIfMissing: options?.onlyIfMissing,
+                    propagateInterruption: options?.propagateInterruption,
+                }),
+            ),
+        ),
+);
+
+/**
+ * Retrieve the fiber from the FiberHandle.
+ *
+ * @since 2.0.0
+ * @categories combinators
+ */
+export const unsafeGet = <A, E>(
     self: FiberHandle<A, E>,
-    fiber: Fiber.RuntimeFiber<XA, XE>,
-    options?: {
-      readonly onlyIfMissing?: boolean
-      readonly propagateInterruption?: boolean | undefined
-    }
-  ): Effect.Effect<void>
-} = dual((args) => isFiberHandle(args[0]), <A, E, XE extends E, XA extends A>(
-  self: FiberHandle<A, E>,
-  fiber: Fiber.RuntimeFiber<XA, XE>,
-  options?: {
-    readonly onlyIfMissing?: boolean
-    readonly propagateInterruption?: boolean | undefined
-  }
-): Effect.Effect<void> =>
-  Effect.fiberIdWith(
-    (fiberId) =>
-      Effect.sync(() =>
-        unsafeSet(self, fiber, {
-          interruptAs: fiberId,
-          onlyIfMissing: options?.onlyIfMissing,
-          propagateInterruption: options?.propagateInterruption
-        })
-      )
-  ))
+): Option.Option<Fiber.RuntimeFiber<A, E>> =>
+    self.state._tag === "Closed"
+        ? Option.none()
+        : Option.fromNullable(self.state.fiber);
 
 /**
  * Retrieve the fiber from the FiberHandle.
@@ -291,48 +335,49 @@ export const set: {
  * @since 2.0.0
  * @categories combinators
  */
-export const unsafeGet = <A, E>(self: FiberHandle<A, E>): Option.Option<Fiber.RuntimeFiber<A, E>> =>
-  self.state._tag === "Closed" ? Option.none() : Option.fromNullable(self.state.fiber)
-
-/**
- * Retrieve the fiber from the FiberHandle.
- *
- * @since 2.0.0
- * @categories combinators
- */
-export const get = <A, E>(self: FiberHandle<A, E>): Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException> =>
-  Effect.suspend(() => unsafeGet(self))
+export const get = <A, E>(
+    self: FiberHandle<A, E>,
+): Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException> =>
+    Effect.suspend(() => unsafeGet(self));
 
 /**
  * @since 2.0.0
  * @categories combinators
  */
 export const clear = <A, E>(self: FiberHandle<A, E>): Effect.Effect<void> =>
-  Effect.uninterruptibleMask((restore) =>
-    Effect.withFiberRuntime((fiber) => {
-      if (self.state._tag === "Closed" || self.state.fiber === undefined) {
-        return Effect.void
-      }
-      return Effect.zipRight(
-        restore(Fiber.interruptAs(self.state.fiber, FiberId.combine(fiber.id(), internalFiberId))),
-        Effect.sync(() => {
-          if (self.state._tag === "Open") {
-            self.state.fiber = undefined
-          }
-        })
-      )
-    })
-  )
+    Effect.uninterruptibleMask((restore) =>
+        Effect.withFiberRuntime((fiber) => {
+            if (
+                self.state._tag === "Closed" ||
+                self.state.fiber === undefined
+            ) {
+                return Effect.void;
+            }
+            return Effect.zipRight(
+                restore(
+                    Fiber.interruptAs(
+                        self.state.fiber,
+                        FiberId.combine(fiber.id(), internalFiberId),
+                    ),
+                ),
+                Effect.sync(() => {
+                    if (self.state._tag === "Open") {
+                        self.state.fiber = undefined;
+                    }
+                }),
+            );
+        }),
+    );
 
-const constInterruptedFiber = (function() {
-  let fiber: Fiber.RuntimeFiber<never, never> | undefined = undefined
-  return () => {
-    if (fiber === undefined) {
-      fiber = Effect.runFork(Effect.interrupt)
-    }
-    return fiber
-  }
-})()
+const constInterruptedFiber = (function () {
+    let fiber: Fiber.RuntimeFiber<never, never> | undefined = undefined;
+    return () => {
+        if (fiber === undefined) {
+            fiber = Effect.runFork(Effect.interrupt);
+        }
+        return fiber;
+    };
+})();
 
 /**
  * Run an Effect and add the forked fiber to the FiberHandle.
@@ -342,51 +387,54 @@ const constInterruptedFiber = (function() {
  * @categories combinators
  */
 export const run: {
-  <A, E>(
-    self: FiberHandle<A, E>,
-    options?: {
-      readonly onlyIfMissing?: boolean
-      readonly propagateInterruption?: boolean | undefined
+    <A, E>(
+        self: FiberHandle<A, E>,
+        options?: {
+            readonly onlyIfMissing?: boolean;
+            readonly propagateInterruption?: boolean | undefined;
+        },
+    ): <R, XE extends E, XA extends A>(
+        effect: Effect.Effect<XA, XE, R>,
+    ) => Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R>;
+    <A, E, R, XE extends E, XA extends A>(
+        self: FiberHandle<A, E>,
+        effect: Effect.Effect<XA, XE, R>,
+        options?: {
+            readonly onlyIfMissing?: boolean;
+            readonly propagateInterruption?: boolean | undefined;
+        },
+    ): Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R>;
+} = function () {
+    const self = arguments[0] as FiberHandle;
+    if (Effect.isEffect(arguments[1])) {
+        return runImpl(self, arguments[1], arguments[2]) as any;
     }
-  ): <R, XE extends E, XA extends A>(
-    effect: Effect.Effect<XA, XE, R>
-  ) => Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R>
-  <A, E, R, XE extends E, XA extends A>(
+    const options = arguments[1];
+    return (effect: Effect.Effect<unknown, unknown, any>) =>
+        runImpl(self, effect, options);
+};
+
+const runImpl = <A, E, R, XE extends E, XA extends A>(
     self: FiberHandle<A, E>,
     effect: Effect.Effect<XA, XE, R>,
     options?: {
-      readonly onlyIfMissing?: boolean
-      readonly propagateInterruption?: boolean | undefined
-    }
-  ): Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R>
-} = function() {
-  const self = arguments[0] as FiberHandle
-  if (Effect.isEffect(arguments[1])) {
-    return runImpl(self, arguments[1], arguments[2]) as any
-  }
-  const options = arguments[1]
-  return (effect: Effect.Effect<unknown, unknown, any>) => runImpl(self, effect, options)
-}
-
-const runImpl = <A, E, R, XE extends E, XA extends A>(
-  self: FiberHandle<A, E>,
-  effect: Effect.Effect<XA, XE, R>,
-  options?: {
-    readonly onlyIfMissing?: boolean
-    readonly propagateInterruption?: boolean | undefined
-  }
+        readonly onlyIfMissing?: boolean;
+        readonly propagateInterruption?: boolean | undefined;
+    },
 ): Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R> =>
-  Effect.fiberIdWith((fiberId) => {
-    if (self.state._tag === "Closed") {
-      return Effect.interrupt
-    } else if (self.state.fiber !== undefined && options?.onlyIfMissing === true) {
-      return Effect.sync(constInterruptedFiber)
-    }
-    return Effect.tap(
-      Effect.forkDaemon(effect),
-      (fiber) => unsafeSet(self, fiber, { ...options, interruptAs: fiberId })
-    )
-  })
+    Effect.fiberIdWith((fiberId) => {
+        if (self.state._tag === "Closed") {
+            return Effect.interrupt;
+        } else if (
+            self.state.fiber !== undefined &&
+            options?.onlyIfMissing === true
+        ) {
+            return Effect.sync(constInterruptedFiber);
+        }
+        return Effect.tap(Effect.forkDaemon(effect), (fiber) =>
+            unsafeSet(self, fiber, { ...options, interruptAs: fiberId }),
+        );
+    });
 
 /**
  * Capture a Runtime and use it to fork Effect's, adding the forked fibers to the FiberHandle.
@@ -420,44 +468,46 @@ const runImpl = <A, E, R, XE extends E, XA extends A>(
  * @categories combinators
  */
 export const runtime: <A, E>(
-  self: FiberHandle<A, E>
+    self: FiberHandle<A, E>,
 ) => <R = never>() => Effect.Effect<
-  <XE extends E, XA extends A>(
-    effect: Effect.Effect<XA, XE, R>,
-    options?:
-      | Runtime.RunForkOptions & {
-        readonly onlyIfMissing?: boolean | undefined
-        readonly propagateInterruption?: boolean | undefined
-      }
-      | undefined
-  ) => Fiber.RuntimeFiber<XA, XE>,
-  never,
-  R
-> = <A, E>(self: FiberHandle<A, E>) => <R>() =>
-  Effect.map(
-    Effect.runtime<R>(),
-    (runtime) => {
-      const runFork = Runtime.runFork(runtime)
-      return <XE extends E, XA extends A>(
+    <XE extends E, XA extends A>(
         effect: Effect.Effect<XA, XE, R>,
         options?:
-          | Runtime.RunForkOptions & {
-            readonly onlyIfMissing?: boolean | undefined
-            readonly propagateInterruption?: boolean | undefined
-          }
-          | undefined
-      ) => {
-        if (self.state._tag === "Closed") {
-          return constInterruptedFiber()
-        } else if (self.state.fiber !== undefined && options?.onlyIfMissing === true) {
-          return constInterruptedFiber()
-        }
-        const fiber = runFork(effect, options)
-        unsafeSet(self, fiber, options)
-        return fiber
-      }
-    }
-  )
+            | (Runtime.RunForkOptions & {
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              })
+            | undefined,
+    ) => Fiber.RuntimeFiber<XA, XE>,
+    never,
+    R
+> =
+    <A, E>(self: FiberHandle<A, E>) =>
+    <R>() =>
+        Effect.map(Effect.runtime<R>(), (runtime) => {
+            const runFork = Runtime.runFork(runtime);
+            return <XE extends E, XA extends A>(
+                effect: Effect.Effect<XA, XE, R>,
+                options?:
+                    | (Runtime.RunForkOptions & {
+                          readonly onlyIfMissing?: boolean | undefined;
+                          readonly propagateInterruption?: boolean | undefined;
+                      })
+                    | undefined,
+            ) => {
+                if (self.state._tag === "Closed") {
+                    return constInterruptedFiber();
+                } else if (
+                    self.state.fiber !== undefined &&
+                    options?.onlyIfMissing === true
+                ) {
+                    return constInterruptedFiber();
+                }
+                const fiber = runFork(effect, options);
+                unsafeSet(self, fiber, options);
+                return fiber;
+            };
+        });
 
 /**
  * Capture a Runtime and use it to fork Effect's, adding the forked fibers to the FiberHandle.
@@ -468,36 +518,45 @@ export const runtime: <A, E>(
  * @since 3.13.0
  * @categories combinators
  */
-export const runtimePromise = <A, E>(self: FiberHandle<A, E>): <R = never>() => Effect.Effect<
-  <XE extends E, XA extends A>(
-    effect: Effect.Effect<XA, XE, R>,
-    options?:
-      | Runtime.RunForkOptions & { readonly propagateInterruption?: boolean | undefined }
-      | undefined
-  ) => Promise<XA>,
-  never,
-  R
-> =>
-<R>() =>
-  Effect.map(
-    runtime(self)<R>(),
-    (runFork) =>
-    <XE extends E, XA extends A>(
-      effect: Effect.Effect<XA, XE, R>,
-      options?:
-        | Runtime.RunForkOptions & { readonly propagateInterruption?: boolean | undefined }
-        | undefined
-    ): Promise<XA> =>
-      new Promise((resolve, reject) =>
-        runFork(effect, options).addObserver((exit) => {
-          if (Exit.isSuccess(exit)) {
-            resolve(exit.value)
-          } else {
-            reject(Cause.squash(exit.cause))
-          }
-        })
-      )
-  )
+export const runtimePromise =
+    <A, E>(
+        self: FiberHandle<A, E>,
+    ): (<R = never>() => Effect.Effect<
+        <XE extends E, XA extends A>(
+            effect: Effect.Effect<XA, XE, R>,
+            options?:
+                | (Runtime.RunForkOptions & {
+                      readonly propagateInterruption?: boolean | undefined;
+                  })
+                | undefined,
+        ) => Promise<XA>,
+        never,
+        R
+    >) =>
+    <R>() =>
+        Effect.map(
+            runtime(self)<R>(),
+            (runFork) =>
+                <XE extends E, XA extends A>(
+                    effect: Effect.Effect<XA, XE, R>,
+                    options?:
+                        | (Runtime.RunForkOptions & {
+                              readonly propagateInterruption?:
+                                  | boolean
+                                  | undefined;
+                          })
+                        | undefined,
+                ): Promise<XA> =>
+                    new Promise((resolve, reject) =>
+                        runFork(effect, options).addObserver((exit) => {
+                            if (Exit.isSuccess(exit)) {
+                                resolve(exit.value);
+                            } else {
+                                reject(Cause.squash(exit.cause));
+                            }
+                        }),
+                    ),
+        );
 
 /**
  * If any of the Fiber's in the handle terminate with a failure,
@@ -519,7 +578,7 @@ export const runtimePromise = <A, E>(self: FiberHandle<A, E>): <R = never>() => 
  * ```
  */
 export const join = <A, E>(self: FiberHandle<A, E>): Effect.Effect<void, E> =>
-  Deferred.await(self.deferred as Deferred.Deferred<void, E>)
+    Deferred.await(self.deferred as Deferred.Deferred<void, E>);
 
 /**
  * Wait for the fiber in the FiberHandle to complete.
@@ -527,10 +586,12 @@ export const join = <A, E>(self: FiberHandle<A, E>): Effect.Effect<void, E> =>
  * @since 3.13.0
  * @categories combinators
  */
-export const awaitEmpty = <A, E>(self: FiberHandle<A, E>): Effect.Effect<void, E> =>
-  Effect.suspend(() => {
-    if (self.state._tag === "Closed" || self.state.fiber === undefined) {
-      return Effect.void
-    }
-    return Fiber.await(self.state.fiber)
-  })
+export const awaitEmpty = <A, E>(
+    self: FiberHandle<A, E>,
+): Effect.Effect<void, E> =>
+    Effect.suspend(() => {
+        if (self.state._tag === "Closed" || self.state.fiber === undefined) {
+            return Effect.void;
+        }
+        return Fiber.await(self.state.fiber);
+    });

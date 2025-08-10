@@ -4,11 +4,11 @@
  * @since 2.0.0
  */
 
-import * as Equivalence from "./Equivalence.js"
-import { dual } from "./Function.js"
-import * as order from "./Order.js"
-import * as Predicate from "./Predicate.js"
-import type { MatchRecord, Simplify } from "./Types.js"
+import * as Equivalence from "./Equivalence.js";
+import { dual } from "./Function.js";
+import * as order from "./Order.js";
+import * as Predicate from "./Predicate.js";
+import type { MatchRecord, Simplify } from "./Types.js";
 
 /**
  * Create a new object by picking properties of an existing object.
@@ -25,27 +25,35 @@ import type { MatchRecord, Simplify } from "./Types.js"
  * @since 2.0.0
  */
 export const pick: {
-  <Keys extends Array<PropertyKey>>(
-    ...keys: Keys
-  ): <S extends { [K in Keys[number]]?: any }>(
-    s: S
-  ) => MatchRecord<S, { [K in Keys[number]]?: S[K] }, Simplify<Pick<S, Keys[number]>>>
-  <S extends object, Keys extends Array<keyof S>>(
-    s: S,
-    ...keys: Keys
-  ): MatchRecord<S, { [K in Keys[number]]?: S[K] }, Simplify<Pick<S, Keys[number]>>>
+    <Keys extends Array<PropertyKey>>(
+        ...keys: Keys
+    ): <S extends { [K in Keys[number]]?: any }>(
+        s: S,
+    ) => MatchRecord<
+        S,
+        { [K in Keys[number]]?: S[K] },
+        Simplify<Pick<S, Keys[number]>>
+    >;
+    <S extends object, Keys extends Array<keyof S>>(
+        s: S,
+        ...keys: Keys
+    ): MatchRecord<
+        S,
+        { [K in Keys[number]]?: S[K] },
+        Simplify<Pick<S, Keys[number]>>
+    >;
 } = dual(
-  (args) => Predicate.isObject(args[0]),
-  <S extends object, Keys extends Array<keyof S>>(s: S, ...keys: Keys) => {
-    const out: any = {}
-    for (const k of keys) {
-      if (k in s) {
-        out[k] = (s as any)[k]
-      }
-    }
-    return out
-  }
-)
+    (args) => Predicate.isObject(args[0]),
+    <S extends object, Keys extends Array<keyof S>>(s: S, ...keys: Keys) => {
+        const out: any = {};
+        for (const k of keys) {
+            if (k in s) {
+                out[k] = (s as any)[k];
+            }
+        }
+        return out;
+    },
+);
 
 /**
  * Create a new object by omitting properties of an existing object.
@@ -62,23 +70,25 @@ export const pick: {
  * @since 2.0.0
  */
 export const omit: {
-  <Keys extends Array<PropertyKey>>(
-    ...keys: Keys
-  ): <S extends { [K in Keys[number]]?: any }>(s: S) => Simplify<Omit<S, Keys[number]>>
-  <S extends object, Keys extends Array<keyof S>>(
-    s: S,
-    ...keys: Keys
-  ): Simplify<Omit<S, Keys[number]>>
+    <Keys extends Array<PropertyKey>>(
+        ...keys: Keys
+    ): <S extends { [K in Keys[number]]?: any }>(
+        s: S,
+    ) => Simplify<Omit<S, Keys[number]>>;
+    <S extends object, Keys extends Array<keyof S>>(
+        s: S,
+        ...keys: Keys
+    ): Simplify<Omit<S, Keys[number]>>;
 } = dual(
-  (args) => Predicate.isObject(args[0]),
-  <S extends object, Keys extends Array<keyof S>>(s: S, ...keys: Keys) => {
-    const out: any = { ...s }
-    for (const k of keys) {
-      delete out[k]
-    }
-    return out
-  }
-)
+    (args) => Predicate.isObject(args[0]),
+    <S extends object, Keys extends Array<keyof S>>(s: S, ...keys: Keys) => {
+        const out: any = { ...s };
+        for (const k of keys) {
+            delete out[k];
+        }
+        return out;
+    },
+);
 
 /**
  * Given a struct of `Equivalence`s returns a new `Equivalence` that compares values of a struct
@@ -109,11 +119,15 @@ export const omit: {
  * @category combinators
  * @since 2.0.0
  */
-export const getEquivalence: <R extends Record<string, Equivalence.Equivalence<any>>>(
-  isEquivalents: R
-) => Equivalence.Equivalence<
-  { readonly [K in keyof R]: [R[K]] extends [Equivalence.Equivalence<infer A>] ? A : never }
-> = Equivalence.struct
+export const getEquivalence: <
+    R extends Record<string, Equivalence.Equivalence<any>>,
+>(
+    isEquivalents: R,
+) => Equivalence.Equivalence<{
+    readonly [K in keyof R]: [R[K]] extends [Equivalence.Equivalence<infer A>]
+        ? A
+        : never;
+}> = Equivalence.struct;
 
 /**
  * This function creates and returns a new `Order` for a struct of values based on the given `Order`s
@@ -125,17 +139,23 @@ export const getEquivalence: <R extends Record<string, Equivalence.Equivalence<a
  * @since 2.0.0
  */
 export const getOrder: <R extends { readonly [x: string]: order.Order<any> }>(
-  fields: R
-) => order.Order<{ [K in keyof R]: [R[K]] extends [order.Order<infer A>] ? A : never }> = order.struct
+    fields: R,
+) => order.Order<{
+    [K in keyof R]: [R[K]] extends [order.Order<infer A>] ? A : never;
+}> = order.struct;
 
-type Transformed<O, T> =
-  & unknown
-  & {
-    [K in keyof O]: K extends keyof T ? (T[K] extends (...a: any) => any ? ReturnType<T[K]> : O[K]) : O[K]
-  }
+type Transformed<O, T> = unknown & {
+    [K in keyof O]: K extends keyof T
+        ? T[K] extends (...a: any) => any
+            ? ReturnType<T[K]>
+            : O[K]
+        : O[K];
+};
 type PartialTransform<O, T> = {
-  [K in keyof T]: T[K] extends (a: O[K & keyof O]) => any ? T[K] : (a: O[K & keyof O]) => unknown
-}
+    [K in keyof T]: T[K] extends (a: O[K & keyof O]) => any
+        ? T[K]
+        : (a: O[K & keyof O]) => unknown;
+};
 /**
  * Transforms the values of a Struct provided a transformation function for each key.
  * If no transformation function is provided for a key, it will return the origional value for that key.
@@ -160,21 +180,18 @@ type PartialTransform<O, T> = {
  * @since 2.0.0
  */
 export const evolve: {
-  <O, T>(t: PartialTransform<O, T>): (obj: O) => Transformed<O, T>
-  <O, T>(obj: O, t: PartialTransform<O, T>): Transformed<O, T>
-} = dual(
-  2,
-  <O, T>(obj: O, t: PartialTransform<O, T>): Transformed<O, T> => {
-    const out = { ...obj }
+    <O, T>(t: PartialTransform<O, T>): (obj: O) => Transformed<O, T>;
+    <O, T>(obj: O, t: PartialTransform<O, T>): Transformed<O, T>;
+} = dual(2, <O, T>(obj: O, t: PartialTransform<O, T>): Transformed<O, T> => {
+    const out = { ...obj };
     for (const k in t) {
-      if (Object.prototype.hasOwnProperty.call(obj, k)) {
-        // @ts-expect-error
-        out[k] = t[k](obj[k])
-      }
+        if (Object.prototype.hasOwnProperty.call(obj, k)) {
+            // @ts-expect-error
+            out[k] = t[k](obj[k]);
+        }
     }
-    return out as any
-  }
-)
+    return out as any;
+});
 
 /**
  * Retrieves the value associated with the specified key from a struct.
@@ -192,8 +209,11 @@ export const evolve: {
  * @since 2.0.0
  */
 export const get =
-  <K extends PropertyKey>(key: K) => <S extends { [P in K]?: any }>(s: S): MatchRecord<S, S[K] | undefined, S[K]> =>
-    s[key]
+    <K extends PropertyKey>(key: K) =>
+    <S extends { [P in K]?: any }>(
+        s: S,
+    ): MatchRecord<S, S[K] | undefined, S[K]> =>
+        s[key];
 
 /**
  * Retrieves the object keys that are strings in a typed manner
@@ -218,7 +238,8 @@ export const get =
  *
  * @since 3.6.0
  */
-export const keys = <T extends {}>(o: T): Array<(keyof T) & string> => Object.keys(o) as Array<(keyof T) & string>
+export const keys = <T extends {}>(o: T): Array<keyof T & string> =>
+    Object.keys(o) as Array<keyof T & string>;
 
 /**
  * Retrieves the entries (key-value pairs) of an object, where keys are strings,
@@ -239,5 +260,7 @@ export const keys = <T extends {}>(o: T): Array<(keyof T) & string> => Object.ke
  *
  * @since 3.17.0
  */
-export const entries = <const R>(obj: R): Array<[keyof R & string, R[keyof R & string]]> =>
-  Object.entries(obj as any) as any
+export const entries = <const R>(
+    obj: R,
+): Array<[keyof R & string, R[keyof R & string]]> =>
+    Object.entries(obj as any) as any;

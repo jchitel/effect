@@ -2,29 +2,29 @@
  * @since 3.14.0
  * @experimental
  */
-import * as Context from "./Context.js"
-import type * as Duration from "./Duration.js"
-import * as Effect from "./Effect.js"
-import * as FiberRefsPatch from "./FiberRefsPatch.js"
-import { identity } from "./Function.js"
-import * as core from "./internal/core.js"
-import * as Layer from "./Layer.js"
-import * as RcMap from "./RcMap.js"
-import * as Runtime from "./Runtime.js"
-import * as Scope from "./Scope.js"
-import type { Mutable } from "./Types.js"
+import * as Context from "./Context.js";
+import type * as Duration from "./Duration.js";
+import * as Effect from "./Effect.js";
+import * as FiberRefsPatch from "./FiberRefsPatch.js";
+import { identity } from "./Function.js";
+import * as core from "./internal/core.js";
+import * as Layer from "./Layer.js";
+import * as RcMap from "./RcMap.js";
+import * as Runtime from "./Runtime.js";
+import * as Scope from "./Scope.js";
+import type { Mutable } from "./Types.js";
 
 /**
  * @since 3.14.0
  * @category Symbols
  */
-export const TypeId: unique symbol = Symbol.for("effect/LayerMap")
+export const TypeId: unique symbol = Symbol.for("effect/LayerMap");
 
 /**
  * @since 3.14.0
  * @category Symbols
  */
-export type TypeId = typeof TypeId
+export type TypeId = typeof TypeId;
 
 /**
  * @since 3.14.0
@@ -32,30 +32,38 @@ export type TypeId = typeof TypeId
  * @experimental
  */
 export interface LayerMap<in K, in out I, out E = never> {
-  readonly [TypeId]: TypeId
+    readonly [TypeId]: TypeId;
 
-  /**
-   * The internal RcMap that stores the resources.
-   */
-  readonly rcMap: RcMap.RcMap<K, {
-    readonly layer: Layer.Layer<I, E>
-    readonly runtimeEffect: Effect.Effect<Runtime.Runtime<I>, E, Scope.Scope>
-  }, E>
+    /**
+     * The internal RcMap that stores the resources.
+     */
+    readonly rcMap: RcMap.RcMap<
+        K,
+        {
+            readonly layer: Layer.Layer<I, E>;
+            readonly runtimeEffect: Effect.Effect<
+                Runtime.Runtime<I>,
+                E,
+                Scope.Scope
+            >;
+        },
+        E
+    >;
 
-  /**
-   * Retrieves a Layer for the resources associated with the key.
-   */
-  get(key: K): Layer.Layer<I, E>
+    /**
+     * Retrieves a Layer for the resources associated with the key.
+     */
+    get(key: K): Layer.Layer<I, E>;
 
-  /**
-   * Retrieves a Runtime for the resources associated with the key.
-   */
-  runtime(key: K): Effect.Effect<Runtime.Runtime<I>, E, Scope.Scope>
+    /**
+     * Retrieves a Runtime for the resources associated with the key.
+     */
+    runtime(key: K): Effect.Effect<Runtime.Runtime<I>, E, Scope.Scope>;
 
-  /**
-   * Invalidates the resource associated with the key.
-   */
-  invalidate(key: K): Effect.Effect<void>
+    /**
+     * Invalidates the resource associated with the key.
+     */
+    invalidate(key: K): Effect.Effect<void>;
 }
 
 /**
@@ -111,77 +119,124 @@ export interface LayerMap<in K, in out I, out E = never> {
  * )
  * ```
  */
-export const make: <
-  K,
-  L extends Layer.Layer<any, any, any>
->(
-  lookup: (key: K) => L,
-  options?: {
-    readonly idleTimeToLive?: Duration.DurationInput | undefined
-  } | undefined
+export const make: <K, L extends Layer.Layer<any, any, any>>(
+    lookup: (key: K) => L,
+    options?:
+        | {
+              readonly idleTimeToLive?: Duration.DurationInput | undefined;
+          }
+        | undefined,
 ) => Effect.Effect<
-  LayerMap<
-    K,
-    L extends Layer.Layer<infer _A, infer _E, infer _R> ? _A : never,
-    L extends Layer.Layer<infer _A, infer _E, infer _R> ? _E : never
-  >,
-  never,
-  Scope.Scope | (L extends Layer.Layer<infer _A, infer _E, infer _R> ? _R : never)
-> = Effect.fnUntraced(function*<I, K, EL, RL>(
-  lookup: (key: K) => Layer.Layer<I, EL, RL>,
-  options?: {
-    readonly idleTimeToLive?: Duration.DurationInput | undefined
-  } | undefined
+    LayerMap<
+        K,
+        L extends Layer.Layer<infer _A, infer _E, infer _R> ? _A : never,
+        L extends Layer.Layer<infer _A, infer _E, infer _R> ? _E : never
+    >,
+    never,
+    | Scope.Scope
+    | (L extends Layer.Layer<infer _A, infer _E, infer _R> ? _R : never)
+> = Effect.fnUntraced(function* <I, K, EL, RL>(
+    lookup: (key: K) => Layer.Layer<I, EL, RL>,
+    options?:
+        | {
+              readonly idleTimeToLive?: Duration.DurationInput | undefined;
+          }
+        | undefined,
 ) {
-  const context = yield* Effect.context<never>()
+    const context = yield* Effect.context<never>();
 
-  // If we are inside another layer build, use the current memo map,
-  // otherwise create a new one.
-  const memoMap = context.unsafeMap.has(Layer.CurrentMemoMap.key)
-    ? Context.get(context, Layer.CurrentMemoMap)
-    : yield* Layer.makeMemoMap
+    // If we are inside another layer build, use the current memo map,
+    // otherwise create a new one.
+    const memoMap = context.unsafeMap.has(Layer.CurrentMemoMap.key)
+        ? Context.get(context, Layer.CurrentMemoMap)
+        : yield* Layer.makeMemoMap;
 
-  const rcMap = yield* RcMap.make({
-    lookup: (key: K) =>
-      Effect.scopeWith((scope) => Effect.diffFiberRefs(Layer.buildWithMemoMap(lookup(key), memoMap, scope))).pipe(
-        Effect.map(([patch, context]) => ({
-          layer: Layer.scopedContext(
-            core.withFiberRuntime<Context.Context<I>, any, Scope.Scope>((fiber) => {
-              const scope = Context.unsafeGet(fiber.currentContext, Scope.Scope)
-              const oldRefs = fiber.getFiberRefs()
-              const newRefs = FiberRefsPatch.patch(patch, fiber.id(), oldRefs)
-              const revert = FiberRefsPatch.diff(newRefs, oldRefs)
-              fiber.setFiberRefs(newRefs)
-              return Effect.as(
-                Scope.addFinalizerExit(scope, () => {
-                  fiber.setFiberRefs(FiberRefsPatch.patch(revert, fiber.id(), fiber.getFiberRefs()))
-                  return Effect.void
-                }),
-                context
-              )
-            })
-          ),
-          runtimeEffect: Effect.withFiberRuntime<Runtime.Runtime<I>, any, Scope.Scope>((fiber) => {
-            const fiberRefs = FiberRefsPatch.patch(patch, fiber.id(), fiber.getFiberRefs())
-            return Effect.succeed(Runtime.make({
-              context,
-              fiberRefs,
-              runtimeFlags: Runtime.defaultRuntime.runtimeFlags
-            }))
-          })
-        } as const))
-      ),
-    idleTimeToLive: options?.idleTimeToLive
-  })
+    const rcMap = yield* RcMap.make({
+        lookup: (key: K) =>
+            Effect.scopeWith((scope) =>
+                Effect.diffFiberRefs(
+                    Layer.buildWithMemoMap(lookup(key), memoMap, scope),
+                ),
+            ).pipe(
+                Effect.map(
+                    ([patch, context]) =>
+                        ({
+                            layer: Layer.scopedContext(
+                                core.withFiberRuntime<
+                                    Context.Context<I>,
+                                    any,
+                                    Scope.Scope
+                                >((fiber) => {
+                                    const scope = Context.unsafeGet(
+                                        fiber.currentContext,
+                                        Scope.Scope,
+                                    );
+                                    const oldRefs = fiber.getFiberRefs();
+                                    const newRefs = FiberRefsPatch.patch(
+                                        patch,
+                                        fiber.id(),
+                                        oldRefs,
+                                    );
+                                    const revert = FiberRefsPatch.diff(
+                                        newRefs,
+                                        oldRefs,
+                                    );
+                                    fiber.setFiberRefs(newRefs);
+                                    return Effect.as(
+                                        Scope.addFinalizerExit(scope, () => {
+                                            fiber.setFiberRefs(
+                                                FiberRefsPatch.patch(
+                                                    revert,
+                                                    fiber.id(),
+                                                    fiber.getFiberRefs(),
+                                                ),
+                                            );
+                                            return Effect.void;
+                                        }),
+                                        context,
+                                    );
+                                }),
+                            ),
+                            runtimeEffect: Effect.withFiberRuntime<
+                                Runtime.Runtime<I>,
+                                any,
+                                Scope.Scope
+                            >((fiber) => {
+                                const fiberRefs = FiberRefsPatch.patch(
+                                    patch,
+                                    fiber.id(),
+                                    fiber.getFiberRefs(),
+                                );
+                                return Effect.succeed(
+                                    Runtime.make({
+                                        context,
+                                        fiberRefs,
+                                        runtimeFlags:
+                                            Runtime.defaultRuntime.runtimeFlags,
+                                    }),
+                                );
+                            }),
+                        }) as const,
+                ),
+            ),
+        idleTimeToLive: options?.idleTimeToLive,
+    });
 
-  return identity<LayerMap<K, Exclude<I, Scope.Scope>, any>>({
-    [TypeId]: TypeId,
-    rcMap,
-    get: (key) => Layer.unwrapScoped(Effect.map(RcMap.get(rcMap, key), ({ layer }) => layer)),
-    runtime: (key) => Effect.flatMap(RcMap.get(rcMap, key), ({ runtimeEffect }) => runtimeEffect),
-    invalidate: (key) => RcMap.invalidate(rcMap, key)
-  })
-})
+    return identity<LayerMap<K, Exclude<I, Scope.Scope>, any>>({
+        [TypeId]: TypeId,
+        rcMap,
+        get: (key) =>
+            Layer.unwrapScoped(
+                Effect.map(RcMap.get(rcMap, key), ({ layer }) => layer),
+            ),
+        runtime: (key) =>
+            Effect.flatMap(
+                RcMap.get(rcMap, key),
+                ({ runtimeEffect }) => runtimeEffect,
+            ),
+        invalidate: (key) => RcMap.invalidate(rcMap, key),
+    });
+});
 
 /**
  * @since 3.14.0
@@ -189,64 +244,80 @@ export const make: <
  * @experimental
  */
 export const fromRecord = <
-  const Layers extends Record<string, Layer.Layer<any, any, any>>
+    const Layers extends Record<string, Layer.Layer<any, any, any>>,
 >(
-  layers: Layers,
-  options?: {
-    readonly idleTimeToLive?: Duration.DurationInput | undefined
-  } | undefined
+    layers: Layers,
+    options?:
+        | {
+              readonly idleTimeToLive?: Duration.DurationInput | undefined;
+          }
+        | undefined,
 ): Effect.Effect<
-  LayerMap<
-    keyof Layers,
-    Layers[keyof Layers] extends Layer.Layer<infer _A, infer _E, infer _R> ? _A : never,
-    Layers[keyof Layers] extends Layer.Layer<infer _A, infer _E, infer _R> ? _E : never
-  >,
-  never,
-  Scope.Scope | (Layers[keyof Layers] extends Layer.Layer<infer _A, infer _E, infer _R> ? _R : never)
-> => make((key: keyof Layers) => layers[key], options)
+    LayerMap<
+        keyof Layers,
+        Layers[keyof Layers] extends Layer.Layer<infer _A, infer _E, infer _R>
+            ? _A
+            : never,
+        Layers[keyof Layers] extends Layer.Layer<infer _A, infer _E, infer _R>
+            ? _E
+            : never
+    >,
+    never,
+    | Scope.Scope
+    | (Layers[keyof Layers] extends Layer.Layer<infer _A, infer _E, infer _R>
+          ? _R
+          : never)
+> => make((key: keyof Layers) => layers[key], options);
 
 /**
  * @since 3.14.0
  * @category Service
  */
 export interface TagClass<
-  in out Self,
-  in out Id extends string,
-  in out K,
-  in out I,
-  in out E,
-  in out R,
-  in out Deps extends Layer.Layer<any, any, any>
+    in out Self,
+    in out Id extends string,
+    in out K,
+    in out I,
+    in out E,
+    in out R,
+    in out Deps extends Layer.Layer<any, any, any>,
 > extends Context.TagClass<Self, Id, LayerMap<K, I, E>> {
-  /**
-   * A default layer for the `LayerMap` service.
-   */
-  readonly Default: Layer.Layer<
-    Self,
-    (Deps extends Layer.Layer<infer _A, infer _E, infer _R> ? _E : never),
-    | Exclude<R, (Deps extends Layer.Layer<infer _A, infer _E, infer _R> ? _A : never)>
-    | (Deps extends Layer.Layer<infer _A, infer _E, infer _R> ? _R : never)
-  >
+    /**
+     * A default layer for the `LayerMap` service.
+     */
+    readonly Default: Layer.Layer<
+        Self,
+        Deps extends Layer.Layer<infer _A, infer _E, infer _R> ? _E : never,
+        | Exclude<
+              R,
+              Deps extends Layer.Layer<infer _A, infer _E, infer _R>
+                  ? _A
+                  : never
+          >
+        | (Deps extends Layer.Layer<infer _A, infer _E, infer _R> ? _R : never)
+    >;
 
-  /**
-   * A default layer for the `LayerMap` service without the dependencies provided.
-   */
-  readonly DefaultWithoutDependencies: Layer.Layer<Self, never, R>
+    /**
+     * A default layer for the `LayerMap` service without the dependencies provided.
+     */
+    readonly DefaultWithoutDependencies: Layer.Layer<Self, never, R>;
 
-  /**
-   * Retrieves a Layer for the resources associated with the key.
-   */
-  readonly get: (key: K) => Layer.Layer<I, E, Self>
+    /**
+     * Retrieves a Layer for the resources associated with the key.
+     */
+    readonly get: (key: K) => Layer.Layer<I, E, Self>;
 
-  /**
-   * Retrieves a Runtime for the resources associated with the key.
-   */
-  readonly runtime: (key: K) => Effect.Effect<Runtime.Runtime<I>, E, Scope.Scope | Self>
+    /**
+     * Retrieves a Runtime for the resources associated with the key.
+     */
+    readonly runtime: (
+        key: K,
+    ) => Effect.Effect<Runtime.Runtime<I>, E, Scope.Scope | Self>;
 
-  /**
-   * Invalidates the resource associated with the key.
-   */
-  readonly invalidate: (key: K) => Effect.Effect<void, never, Self>
+    /**
+     * Invalidates the resource associated with the key.
+     */
+    readonly invalidate: (key: K) => Effect.Effect<void, never, Self>;
 }
 
 /**
@@ -302,64 +373,83 @@ export interface TagClass<
  * )
  * ```
  */
-export const Service = <Self>() =>
-<
-  const Id extends string,
-  Lookup extends {
-    readonly lookup: (key: any) => Layer.Layer<any, any, any>
-  } | {
-    readonly layers: Record<string, Layer.Layer<any, any, any>>
-  },
-  const Deps extends ReadonlyArray<Layer.Layer<any, any, any>> = []
->(
-  id: Id,
-  options: Lookup & {
-    readonly dependencies?: Deps | undefined
-    readonly idleTimeToLive?: Duration.DurationInput | undefined
-  }
-): TagClass<
-  Self,
-  Id,
-  Lookup extends { readonly lookup: (key: infer K) => any } ? K
-    : Lookup extends { readonly layers: infer Layers } ? keyof Layers
-    : never,
-  Service.Success<Lookup>,
-  Service.Error<Lookup>,
-  Service.Context<Lookup>,
-  Deps[number]
-> => {
-  const Err = globalThis.Error as any
-  const limit = Err.stackTraceLimit
-  Err.stackTraceLimit = 2
-  const creationError = new Err()
-  Err.stackTraceLimit = limit
+export const Service =
+    <Self>() =>
+    <
+        const Id extends string,
+        Lookup extends
+            | {
+                  readonly lookup: (key: any) => Layer.Layer<any, any, any>;
+              }
+            | {
+                  readonly layers: Record<string, Layer.Layer<any, any, any>>;
+              },
+        const Deps extends ReadonlyArray<Layer.Layer<any, any, any>> = [],
+    >(
+        id: Id,
+        options: Lookup & {
+            readonly dependencies?: Deps | undefined;
+            readonly idleTimeToLive?: Duration.DurationInput | undefined;
+        },
+    ): TagClass<
+        Self,
+        Id,
+        Lookup extends { readonly lookup: (key: infer K) => any }
+            ? K
+            : Lookup extends { readonly layers: infer Layers }
+              ? keyof Layers
+              : never,
+        Service.Success<Lookup>,
+        Service.Error<Lookup>,
+        Service.Context<Lookup>,
+        Deps[number]
+    > => {
+        const Err = globalThis.Error as any;
+        const limit = Err.stackTraceLimit;
+        Err.stackTraceLimit = 2;
+        const creationError = new Err();
+        Err.stackTraceLimit = limit;
 
-  function TagClass() {}
-  const TagClass_ = TagClass as any as Mutable<TagClass<Self, Id, string, any, any, any, any>>
-  Object.setPrototypeOf(TagClass, Object.getPrototypeOf(Context.GenericTag<Self, any>(id)))
-  TagClass.key = id
-  Object.defineProperty(TagClass, "stack", {
-    get() {
-      return creationError.stack
-    }
-  })
+        function TagClass() {}
+        const TagClass_ = TagClass as any as Mutable<
+            TagClass<Self, Id, string, any, any, any, any>
+        >;
+        Object.setPrototypeOf(
+            TagClass,
+            Object.getPrototypeOf(Context.GenericTag<Self, any>(id)),
+        );
+        TagClass.key = id;
+        Object.defineProperty(TagClass, "stack", {
+            get() {
+                return creationError.stack;
+            },
+        });
 
-  TagClass_.DefaultWithoutDependencies = Layer.scoped(
-    TagClass_,
-    "lookup" in options
-      ? make(options.lookup, options)
-      : fromRecord(options.layers as any, options)
-  )
-  TagClass_.Default = options.dependencies && options.dependencies.length > 0 ?
-    Layer.provide(TagClass_.DefaultWithoutDependencies, options.dependencies as any) :
-    TagClass_.DefaultWithoutDependencies
+        TagClass_.DefaultWithoutDependencies = Layer.scoped(
+            TagClass_,
+            "lookup" in options
+                ? make(options.lookup, options)
+                : fromRecord(options.layers as any, options),
+        );
+        TagClass_.Default =
+            options.dependencies && options.dependencies.length > 0
+                ? Layer.provide(
+                      TagClass_.DefaultWithoutDependencies,
+                      options.dependencies as any,
+                  )
+                : TagClass_.DefaultWithoutDependencies;
 
-  TagClass_.get = (key: string) => Layer.unwrapScoped(Effect.map(TagClass_, (layerMap) => layerMap.get(key)))
-  TagClass_.runtime = (key: string) => Effect.flatMap(TagClass_, (layerMap) => layerMap.runtime(key))
-  TagClass_.invalidate = (key: string) => Effect.flatMap(TagClass_, (layerMap) => layerMap.invalidate(key))
+        TagClass_.get = (key: string) =>
+            Layer.unwrapScoped(
+                Effect.map(TagClass_, (layerMap) => layerMap.get(key)),
+            );
+        TagClass_.runtime = (key: string) =>
+            Effect.flatMap(TagClass_, (layerMap) => layerMap.runtime(key));
+        TagClass_.invalidate = (key: string) =>
+            Effect.flatMap(TagClass_, (layerMap) => layerMap.invalidate(key));
 
-  return TagClass as any
-}
+        return TagClass as any;
+    };
 
 /**
  * @since 3.14.0
@@ -367,42 +457,59 @@ export const Service = <Self>() =>
  * @experimental
  */
 export declare namespace Service {
-  /**
-   * @since 3.14.0
-   * @category Service
-   * @experimental
-   */
-  export type Key<Options> = Options extends { readonly lookup: (key: infer K) => any } ? K
-    : Options extends { readonly layers: infer Layers } ? keyof Layers
-    : never
+    /**
+     * @since 3.14.0
+     * @category Service
+     * @experimental
+     */
+    export type Key<Options> = Options extends {
+        readonly lookup: (key: infer K) => any;
+    }
+        ? K
+        : Options extends { readonly layers: infer Layers }
+          ? keyof Layers
+          : never;
 
-  /**
-   * @since 3.14.0
-   * @category Service
-   * @experimental
-   */
-  export type Layers<Options> = Options extends { readonly lookup: (key: infer _K) => infer Layers } ? Layers
-    : Options extends { readonly layers: infer Layers } ? Layers[keyof Layers]
-    : never
+    /**
+     * @since 3.14.0
+     * @category Service
+     * @experimental
+     */
+    export type Layers<Options> = Options extends {
+        readonly lookup: (key: infer _K) => infer Layers;
+    }
+        ? Layers
+        : Options extends { readonly layers: infer Layers }
+          ? Layers[keyof Layers]
+          : never;
 
-  /**
-   * @since 3.14.0
-   * @category Service
-   * @experimental
-   */
-  export type Success<Options> = Layers<Options> extends Layer.Layer<infer _A, infer _E, infer _R> ? _A : never
+    /**
+     * @since 3.14.0
+     * @category Service
+     * @experimental
+     */
+    export type Success<Options> =
+        Layers<Options> extends Layer.Layer<infer _A, infer _E, infer _R>
+            ? _A
+            : never;
 
-  /**
-   * @since 3.14.0
-   * @category Service
-   * @experimental
-   */
-  export type Error<Options> = Layers<Options> extends Layer.Layer<infer _A, infer _E, infer _R> ? _E : never
+    /**
+     * @since 3.14.0
+     * @category Service
+     * @experimental
+     */
+    export type Error<Options> =
+        Layers<Options> extends Layer.Layer<infer _A, infer _E, infer _R>
+            ? _E
+            : never;
 
-  /**
-   * @since 3.14.0
-   * @category Service
-   * @experimental
-   */
-  export type Context<Options> = Layers<Options> extends Layer.Layer<infer _A, infer _E, infer _R> ? _R : never
+    /**
+     * @since 3.14.0
+     * @category Service
+     * @experimental
+     */
+    export type Context<Options> =
+        Layers<Options> extends Layer.Layer<infer _A, infer _E, infer _R>
+            ? _R
+            : never;
 }

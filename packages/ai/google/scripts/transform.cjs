@@ -1,7 +1,7 @@
 // transform_no_ts_morph.js
-const fs = require("fs")
+const fs = require("fs");
 
-const filePath = process.argv[2]
+const filePath = process.argv[2];
 
 // The ENTIRE new code block, including schemaFields, SchemaEncoded, and the new Schema class.
 const newCodeBlock = `
@@ -122,119 +122,130 @@ export class Schema extends S.Class<Schema>("Schema")({
    * Optional. Schema of the elements of Type.ARRAY.
    */
   "items": S.optionalWith(S.suspend((): S.Schema<Schema, SchemaEncoded> => Schema), { nullable: true })
-}) {}`
+}) {}`;
 
 try {
-  let fileContent = fs.readFileSync(filePath, "utf8")
-  const lines = fileContent.split(/\r?\n/)
+    let fileContent = fs.readFileSync(filePath, "utf8");
+    const lines = fileContent.split(/\r?\n/);
 
-  let inSchemaBlock = false
-  let braceLevel = 0 // Tracks braces within the S.Class({}) call
-  let schemaClassStartLine = -1 // The line index of "export class Schema..."
-  let schemaClassEndLine = -1 // The line index of the final "}) {}"
+    let inSchemaBlock = false;
+    let braceLevel = 0; // Tracks braces within the S.Class({}) call
+    let schemaClassStartLine = -1; // The line index of "export class Schema..."
+    let schemaClassEndLine = -1; // The line index of the final "}) {}"
 
-  // First pass: Identify the Schema class block
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
+    // First pass: Identify the Schema class block
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
 
-    if (line.includes("export class Schema extends S.Class<Schema>(\"Schema\")({")) {
-      inSchemaBlock = true
-      schemaClassStartLine = i
-      braceLevel++ // For the opening brace of the S.Class object
-      continue
-    }
-
-    if (inSchemaBlock) {
-      const openBraceCount = (line.match(/{/g) || []).length
-      const closeBraceCount = (line.match(/}/g) || []).length
-      braceLevel += openBraceCount - closeBraceCount
-
-      if (braceLevel === 0) {
-        schemaClassEndLine = i
-        break // Found the end of the Schema class block
-      }
-    }
-  }
-
-  if (schemaClassStartLine === -1 || schemaClassEndLine === -1) {
-    console.log(`'Schema' class not found or block structure is different in ${filePath}. No changes made.`)
-    process.exit(0) // Exit gracefully
-  }
-
-  // Determine the start of the JSDoc *before* the Schema class, if any
-  let jsDocStartToRemove = -1
-  for (let i = schemaClassStartLine - 1; i >= 0; i--) {
-    const line = lines[i].trim() // Trim for JSDoc detection
-
-    if (line === "*/") {
-      let tempDocStart = -1
-      for (let j = i - 1; j >= 0; j--) {
-        const prevLine = lines[j].trim()
-        if (prevLine === "/**") {
-          tempDocStart = j
-          break
-        } else if (!prevLine.startsWith("*") && prevLine !== "") {
-          // Found code/non-comment line before '/**', so this isn't contiguous JSDoc
-          break
+        if (
+            line.includes(
+                'export class Schema extends S.Class<Schema>("Schema")({',
+            )
+        ) {
+            inSchemaBlock = true;
+            schemaClassStartLine = i;
+            braceLevel++; // For the opening brace of the S.Class object
+            continue;
         }
-      }
-      if (tempDocStart !== -1) {
-        jsDocStartToRemove = tempDocStart
-      }
-      // If we found a '*/', whether it leads to a full JSDoc or not,
-      // we stop looking for *this* JSDoc.
-      break
-    } else if (line !== "") { // If we hit any non-blank line that's not '*/', there's no JSDoc directly above
-      break
+
+        if (inSchemaBlock) {
+            const openBraceCount = (line.match(/{/g) || []).length;
+            const closeBraceCount = (line.match(/}/g) || []).length;
+            braceLevel += openBraceCount - closeBraceCount;
+
+            if (braceLevel === 0) {
+                schemaClassEndLine = i;
+                break; // Found the end of the Schema class block
+            }
+        }
     }
-  }
 
-  // --- Build the new file content in parts ---
-  let parts = []
-
-  // 1. Content before the JSDoc/Schema class
-  if (jsDocStartToRemove !== -1) {
-    parts.push(lines.slice(0, jsDocStartToRemove).join("\n"))
-  } else {
-    parts.push(lines.slice(0, schemaClassStartLine).join("\n"))
-  }
-
-  // 2. The new code block (SchemaFields, SchemaEncoded, and new Schema class)
-  parts.push(newCodeBlock)
-
-  // 3. Content after the old Schema class
-  parts.push(lines.slice(schemaClassEndLine + 1).join("\n"))
-
-  // Join the parts with appropriate newlines
-  let newFileContent = parts.filter((p) => p.trim() !== "").join("\n\n")
-
-  // --- NOW, ADD ESLINT IGNORE COMMENT ---
-  const transformedLines = newFileContent.split(/\r?\n/)
-  const targetLineText = "  const decodeError ="
-  let insertionIndex = -1
-
-  for (let i = 0; i < transformedLines.length; i++) {
-    if (transformedLines[i].includes(targetLineText)) {
-      insertionIndex = i
-      break
+    if (schemaClassStartLine === -1 || schemaClassEndLine === -1) {
+        console.log(
+            `'Schema' class not found or block structure is different in ${filePath}. No changes made.`,
+        );
+        process.exit(0); // Exit gracefully
     }
-  }
 
-  if (insertionIndex !== -1) {
-    // Insert the comment at the found index
-    transformedLines.splice(
-      insertionIndex,
-      0,
-      "// @ts-expect-error\n// eslint-disable-next-line @typescript-eslint/no-unused-vars"
-    ) // trim() to remove the trailing \n for splice
-    newFileContent = transformedLines.join("\n")
-    console.log(`Inserted ESLint ignore comment above "${targetLineText.trim()}"`)
-  } else {
-    console.log(`Target line "${targetLineText.trim()}" not found for ESLint ignore comment. Skipping insertion.`)
-  }
+    // Determine the start of the JSDoc *before* the Schema class, if any
+    let jsDocStartToRemove = -1;
+    for (let i = schemaClassStartLine - 1; i >= 0; i--) {
+        const line = lines[i].trim(); // Trim for JSDoc detection
 
-  fs.writeFileSync(filePath, newFileContent, "utf8")
-  console.log(`Successfully transformed ${filePath}`)
+        if (line === "*/") {
+            let tempDocStart = -1;
+            for (let j = i - 1; j >= 0; j--) {
+                const prevLine = lines[j].trim();
+                if (prevLine === "/**") {
+                    tempDocStart = j;
+                    break;
+                } else if (!prevLine.startsWith("*") && prevLine !== "") {
+                    // Found code/non-comment line before '/**', so this isn't contiguous JSDoc
+                    break;
+                }
+            }
+            if (tempDocStart !== -1) {
+                jsDocStartToRemove = tempDocStart;
+            }
+            // If we found a '*/', whether it leads to a full JSDoc or not,
+            // we stop looking for *this* JSDoc.
+            break;
+        } else if (line !== "") {
+            // If we hit any non-blank line that's not '*/', there's no JSDoc directly above
+            break;
+        }
+    }
+
+    // --- Build the new file content in parts ---
+    let parts = [];
+
+    // 1. Content before the JSDoc/Schema class
+    if (jsDocStartToRemove !== -1) {
+        parts.push(lines.slice(0, jsDocStartToRemove).join("\n"));
+    } else {
+        parts.push(lines.slice(0, schemaClassStartLine).join("\n"));
+    }
+
+    // 2. The new code block (SchemaFields, SchemaEncoded, and new Schema class)
+    parts.push(newCodeBlock);
+
+    // 3. Content after the old Schema class
+    parts.push(lines.slice(schemaClassEndLine + 1).join("\n"));
+
+    // Join the parts with appropriate newlines
+    let newFileContent = parts.filter((p) => p.trim() !== "").join("\n\n");
+
+    // --- NOW, ADD ESLINT IGNORE COMMENT ---
+    const transformedLines = newFileContent.split(/\r?\n/);
+    const targetLineText = "  const decodeError =";
+    let insertionIndex = -1;
+
+    for (let i = 0; i < transformedLines.length; i++) {
+        if (transformedLines[i].includes(targetLineText)) {
+            insertionIndex = i;
+            break;
+        }
+    }
+
+    if (insertionIndex !== -1) {
+        // Insert the comment at the found index
+        transformedLines.splice(
+            insertionIndex,
+            0,
+            "// @ts-expect-error\n// eslint-disable-next-line @typescript-eslint/no-unused-vars",
+        ); // trim() to remove the trailing \n for splice
+        newFileContent = transformedLines.join("\n");
+        console.log(
+            `Inserted ESLint ignore comment above "${targetLineText.trim()}"`,
+        );
+    } else {
+        console.log(
+            `Target line "${targetLineText.trim()}" not found for ESLint ignore comment. Skipping insertion.`,
+        );
+    }
+
+    fs.writeFileSync(filePath, newFileContent, "utf8");
+    console.log(`Successfully transformed ${filePath}`);
 } catch (error) {
-  console.error(`Error transforming file ${filePath}:`, error)
+    console.error(`Error transforming file ${filePath}:`, error);
 }

@@ -8,20 +8,20 @@ Choose your preferred package manager and run one of the following commands in y
 
 - **Using npm:**
 
-  ```sh
-  npm install @effect/cli
-  ```
+    ```sh
+    npm install @effect/cli
+    ```
 
 - **Using pnpm:**
 
-  ```sh
-  pnpm add @effect/cli
-  ```
+    ```sh
+    pnpm add @effect/cli
+    ```
 
 - **Using yarn:**
-  ```sh
-  yarn add @effect/cli
-  ```
+    ```sh
+    yarn add @effect/cli
+    ```
 
 ### Step 2: Install Platform-Specific Packages
 
@@ -35,20 +35,20 @@ Run one of the following commands based on your package manager:
 
 - **Using npm:**
 
-  ```sh
-  npm install @effect/platform-node
-  ```
+    ```sh
+    npm install @effect/platform-node
+    ```
 
 - **Using pnpm:**
 
-  ```sh
-  pnpm add @effect/platform-node
-  ```
+    ```sh
+    pnpm add @effect/platform-node
+    ```
 
 - **Using yarn:**
-  ```sh
-  yarn add @effect/platform-node
-  ```
+    ```sh
+    yarn add @effect/platform-node
+    ```
 
 ### Step 3: Configure Your Application
 
@@ -57,7 +57,7 @@ After installing the necessary packages, you must configure your application to 
 Here's how you can incorporate `NodeContext.layer` into your application:
 
 ```ts
-import { NodeContext, NodeRuntime } from "@effect/platform-node"
+import { NodeContext, NodeRuntime } from "@effect/platform-node";
 // Your application's setup code here
 ```
 
@@ -74,33 +74,29 @@ For a more detailed walkthrough, take a read through the [Tutorial](#tutorial) b
 Here's a breakdown of the key built-in options available in `@effect/cli`:
 
 - **Log Level (`[--log-level]`)**:
-
-  - **Description**: Sets the **minimum** log level for a `Command`'s handler method
-  - **Usage**: `--log-level (all | trace | debug | info | warning | error | fatal | none)`
-  - **Functionality**: Allows you to specify the **minimum** log level for a `Command`'s handler method. By setting this option, you can control the verbosity of the log output, ensuring that only logs of a certain priority or higher are output by your program.
+    - **Description**: Sets the **minimum** log level for a `Command`'s handler method
+    - **Usage**: `--log-level (all | trace | debug | info | warning | error | fatal | none)`
+    - **Functionality**: Allows you to specify the **minimum** log level for a `Command`'s handler method. By setting this option, you can control the verbosity of the log output, ensuring that only logs of a certain priority or higher are output by your program.
 
 - **Shell Completions (`[--completions]`)**:
-
-  - **Description**: Automatically generates shell completion scripts to enhance user experience. Shell completions suggest possible command options when you type a command and hit the tab key.
-  - **Usage**: `--completions (bash | sh | fish | zsh)`
-  - **Functionality**: Depending on your shell environment (bash, sh, fish, or zsh), this option generates a script that, when sourced, provides tab completions for your CLI commands.
+    - **Description**: Automatically generates shell completion scripts to enhance user experience. Shell completions suggest possible command options when you type a command and hit the tab key.
+    - **Usage**: `--completions (bash | sh | fish | zsh)`
+    - **Functionality**: Depending on your shell environment (bash, sh, fish, or zsh), this option generates a script that, when sourced, provides tab completions for your CLI commands.
 
 - **Help (`[-h | --help]`)**:
-
-  - **Description**: Instantly generates and displays helpful documentation about your CLI application's commands and options.
-  - **Usage**: `-h` or `--help`
-  - **Functionality**: When this option is used, it displays all available commands and options along with descriptions, usage patterns, and examples if available. This is crucial for new users or when you need a quick reminder about the tool's capabilities.
+    - **Description**: Instantly generates and displays helpful documentation about your CLI application's commands and options.
+    - **Usage**: `-h` or `--help`
+    - **Functionality**: When this option is used, it displays all available commands and options along with descriptions, usage patterns, and examples if available. This is crucial for new users or when you need a quick reminder about the tool's capabilities.
 
 - **Version (`[--version]`)**:
-
-  - **Description**: Displays the current version number of your CLI application.
-  - **Usage**: `--version`
-  - **Functionality**: This is particularly useful for debugging and ensuring compatibility, as it lets you confirm the version of the CLI tool you are currently using.
+    - **Description**: Displays the current version number of your CLI application.
+    - **Usage**: `--version`
+    - **Functionality**: This is particularly useful for debugging and ensuring compatibility, as it lets you confirm the version of the CLI tool you are currently using.
 
 - **Wizard Mode (`[--wizard]`)**:
-  - **Description**: Activates a guided interface to help users construct commands.
-  - **Usage**: `--wizard`
-  - **Functionality**: This interactive mode takes users step-by-step through the process of building a command, making it ideal for newcomers or complex commands. It asks questions and uses the responses to form the correct command syntax, which can then be executed or edited further.
+    - **Description**: Activates a guided interface to help users construct commands.
+    - **Usage**: `--wizard`
+    - **Functionality**: This interactive mode takes users step-by-step through the process of building a command, making it ideal for newcomers or complex commands. It asks questions and uses the responses to form the correct command syntax, which can then be executed or edited further.
 
 ### Practical Applications
 
@@ -163,45 +159,42 @@ Now, let's write the code for your CLI. Open your `hello-world.ts` file in your 
 
 ```ts
 // Import necessary modules from the libraries
-import { Command } from "@effect/cli"
-import { NodeContext, NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+import { Command } from "@effect/cli";
+import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
 // Define the top-level command
 const command = Command.make("hello-world", {}, () =>
-  Console.log("Hello World")
-)
+    Console.log("Hello World"),
+);
 
 // Set up the CLI application
 const cli = Command.run(command, {
-  name: "Hello World CLI",
-  version: "v1.0.0"
-})
+    name: "Hello World CLI",
+    version: "v1.0.0",
+});
 
 // Prepare and run the CLI application
-cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain)
+cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain);
 ```
 
 **Explanation of Code:**
 
 - **Import Statements**:
-
-  - `Command` from `@effect/cli` allows you to define commands and subcommands.
-  - `NodeContext` and `NodeRuntime` from `@effect/platform-node` enable your CLI to interact and integrate seamlessly with the Node.js runtime environment. This setup is crucial for running your CLI on Node.js, as it ensures that all Node-specific APIs and functionalities are accessible.
-  - `Console` and `Effect` from `effect` provide utilities for logging and managing effects, which are essential for handling asynchronous operations and side effects in your CLI.
+    - `Command` from `@effect/cli` allows you to define commands and subcommands.
+    - `NodeContext` and `NodeRuntime` from `@effect/platform-node` enable your CLI to interact and integrate seamlessly with the Node.js runtime environment. This setup is crucial for running your CLI on Node.js, as it ensures that all Node-specific APIs and functionalities are accessible.
+    - `Console` and `Effect` from `effect` provide utilities for logging and managing effects, which are essential for handling asynchronous operations and side effects in your CLI.
 
 - **Command Definition**:
-
-  - The `Command.make` function creates a new command named "hello-world". This command is configured to print "Hello World" when executed, serving as the basic functionality of your CLI.
+    - The `Command.make` function creates a new command named "hello-world". This command is configured to print "Hello World" when executed, serving as the basic functionality of your CLI.
 
 - **CLI Configuration**:
-
-  - The `Command.run` function initializes your CLI application with a specific name and version, preparing it for execution.
+    - The `Command.run` function initializes your CLI application with a specific name and version, preparing it for execution.
 
 - **Execution Setup**:
-  - The `cli(process.argv)` call processes the command-line arguments.
-  - It uses `Effect.provide` to inject the `NodeContext.layer`, which integrates the CLI with the Node.js environment, allowing your application to utilize Node-specific features and settings.
-  - `NodeRuntime.runMain` ensures that your application is executed within the Node.js main runtime, handling any asynchronous tasks and managing the lifecycle of your CLI.
+    - The `cli(process.argv)` call processes the command-line arguments.
+    - It uses `Effect.provide` to inject the `NodeContext.layer`, which integrates the CLI with the Node.js environment, allowing your application to utilize Node-specific features and settings.
+    - `NodeRuntime.runMain` ensures that your application is executed within the Node.js main runtime, handling any asynchronous tasks and managing the lifecycle of your CLI.
 
 ### 3. Run Your CLI
 
@@ -331,24 +324,24 @@ Begin by creating a new TypeScript file named `echo.ts`. This file will contain 
 
 ```ts
 // Import the necessary modules from the Effect libraries
-import { Args, Command } from "@effect/cli"
-import { NodeContext, NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+import { Args, Command } from "@effect/cli";
+import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
 // Define a text argument
-const text = Args.text({ name: "text" })
+const text = Args.text({ name: "text" });
 
 // Create a command that logs the provided text argument to the console
-const command = Command.make("echo", { text }, ({ text }) => Console.log(text))
+const command = Command.make("echo", { text }, ({ text }) => Console.log(text));
 
 // Configure and initialize the CLI application
 const cli = Command.run(command, {
-  name: "Echo CLI",
-  version: "v0.0.1"
-})
+    name: "Echo CLI",
+    version: "v0.0.1",
+});
 
 // Prepare and run the CLI application, providing necessary context and runtime
-cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain)
+cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain);
 ```
 
 **Understanding the Code:**
@@ -402,26 +395,26 @@ First, open the TypeScript file (`echo.ts`) where your `echo` command is defined
 Below is the updated version of your code with the bold option included:
 
 ```ts
-import { Args, Command, Options } from "@effect/cli"
-import { NodeContext, NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+import { Args, Command, Options } from "@effect/cli";
+import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
-const text = Args.text({ name: "text" })
+const text = Args.text({ name: "text" });
 
 // Define the 'bold' option with an alias '-b'
-const bold = Options.boolean("bold").pipe(Options.withAlias("b"))
+const bold = Options.boolean("bold").pipe(Options.withAlias("b"));
 
 // Create the command that outputs the text with bold formatting if the bold option is used
 const command = Command.make("echo", { text, bold }, ({ bold, text }) =>
-  Console.log(bold ? `\x1b[1m${text}\x1b[0m` : text)
-)
+    Console.log(bold ? `\x1b[1m${text}\x1b[0m` : text),
+);
 
 const cli = Command.run(command, {
-  name: "Echo CLI",
-  version: "v0.0.2"
-})
+    name: "Echo CLI",
+    version: "v0.0.2",
+});
 
-cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain)
+cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain);
 ```
 
 ### Explanation of the Changes
@@ -473,62 +466,62 @@ Start by opening the TypeScript file where your `echo` command is defined. We wi
 Below is the modified version of your code, now including options for text color:
 
 ```ts
-import { Args, Command, Options } from "@effect/cli"
-import { NodeContext, NodeRuntime } from "@effect/platform-node"
-import { Console, Effect, Option } from "effect"
+import { Args, Command, Options } from "@effect/cli";
+import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { Console, Effect, Option } from "effect";
 
 // Define a text argument
-const text = Args.text({ name: "text" })
+const text = Args.text({ name: "text" });
 
 // Define the 'bold' option with an alias '-b'
-const bold = Options.boolean("bold").pipe(Options.withAlias("b"))
+const bold = Options.boolean("bold").pipe(Options.withAlias("b"));
 
 // Color codes for ANSI escape sequences
 const colorToAnsiSequence = {
-  red: "\x1b[31m",
-  green: "\x1b[32m",
-  blue: "\x1b[34m"
-} as const
-const resetCode = "\x1b[0m"
+    red: "\x1b[31m",
+    green: "\x1b[32m",
+    blue: "\x1b[34m",
+} as const;
+const resetCode = "\x1b[0m";
 
-type SupportedColor = keyof typeof colorToAnsiSequence
-const supportedColors = Object.keys(colorToAnsiSequence) as SupportedColor[]
+type SupportedColor = keyof typeof colorToAnsiSequence;
+const supportedColors = Object.keys(colorToAnsiSequence) as SupportedColor[];
 
 // Define the 'color' option with choices and an alias '-c'
 const color = Options.choice("color", supportedColors).pipe(
-  Options.withAlias("c"),
-  Options.optional
-)
+    Options.withAlias("c"),
+    Options.optional,
+);
 
 // Function to apply ANSI color codes based on user input
 const applyColor = (
-  text: string,
-  color: Option.Option<SupportedColor>
+    text: string,
+    color: Option.Option<SupportedColor>,
 ): string =>
-  Option.match(color, {
-    onNone: () => text,
-    onSome: (color) => `${colorToAnsiSequence[color]}${text}${resetCode}`
-  })
+    Option.match(color, {
+        onNone: () => text,
+        onSome: (color) => `${colorToAnsiSequence[color]}${text}${resetCode}`,
+    });
 
 // Create the command that outputs formatted text
 const command = Command.make(
-  "echo",
-  { text, bold, color },
-  ({ bold, color, text }) => {
-    let formattedText = applyColor(text, color)
-    if (bold) {
-      formattedText = `\x1b[1m${formattedText}\x1b[0m`
-    }
-    return Console.log(formattedText)
-  }
-)
+    "echo",
+    { text, bold, color },
+    ({ bold, color, text }) => {
+        let formattedText = applyColor(text, color);
+        if (bold) {
+            formattedText = `\x1b[1m${formattedText}\x1b[0m`;
+        }
+        return Console.log(formattedText);
+    },
+);
 
 const cli = Command.run(command, {
-  name: "Echo CLI",
-  version: "v0.0.3"
-})
+    name: "Echo CLI",
+    version: "v0.0.3",
+});
 
-cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain)
+cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain);
 ```
 
 ### Explanation of the Changes
@@ -563,70 +556,72 @@ Open the TypeScript file where your `echo` command is defined. We'll incorporate
 Here is how you can update your code to include the `repeat` subcommand:
 
 ```ts
-import { Args, Command, Options } from "@effect/cli"
-import { NodeContext, NodeRuntime } from "@effect/platform-node"
-import { Console, Effect, Option } from "effect"
+import { Args, Command, Options } from "@effect/cli";
+import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { Console, Effect, Option } from "effect";
 
-const text = Args.text({ name: "text" })
+const text = Args.text({ name: "text" });
 
-const bold = Options.boolean("bold").pipe(Options.withAlias("b"))
+const bold = Options.boolean("bold").pipe(Options.withAlias("b"));
 
 const colorToAnsiSequence = {
-  red: "\x1b[31m",
-  green: "\x1b[32m",
-  blue: "\x1b[34m"
-} as const
-const resetCode = "\x1b[0m"
+    red: "\x1b[31m",
+    green: "\x1b[32m",
+    blue: "\x1b[34m",
+} as const;
+const resetCode = "\x1b[0m";
 
-type SupportedColor = keyof typeof colorToAnsiSequence
-const supportedColors = Object.keys(colorToAnsiSequence) as SupportedColor[]
+type SupportedColor = keyof typeof colorToAnsiSequence;
+const supportedColors = Object.keys(colorToAnsiSequence) as SupportedColor[];
 
 const color = Options.choice("color", supportedColors).pipe(
-  Options.withAlias("c"),
-  Options.optional
-)
+    Options.withAlias("c"),
+    Options.optional,
+);
 
 const applyColor = (
-  text: string,
-  color: Option.Option<SupportedColor>
+    text: string,
+    color: Option.Option<SupportedColor>,
 ): string =>
-  Option.match(color, {
-    onNone: () => text,
-    onSome: (color) => `${colorToAnsiSequence[color]}${text}${resetCode}`
-  })
+    Option.match(color, {
+        onNone: () => text,
+        onSome: (color) => `${colorToAnsiSequence[color]}${text}${resetCode}`,
+    });
 
 // Argument for the number of repetitions
-const count = Args.integer().pipe(Args.withDefault(1))
+const count = Args.integer().pipe(Args.withDefault(1));
 
 // Creating the repeat subcommand
 const repeat = Command.make("repeat", { count }, ({ count }) =>
-  echo.pipe(
-    Effect.andThen((config) => Effect.repeatN(echo.handler(config), count - 1))
-  )
-)
+    echo.pipe(
+        Effect.andThen((config) =>
+            Effect.repeatN(echo.handler(config), count - 1),
+        ),
+    ),
+);
 
 // Main echo command
 const echo = Command.make(
-  "echo",
-  { text, bold, color },
-  ({ bold, color, text }) => {
-    let formattedText = applyColor(text, color)
-    if (bold) {
-      formattedText = `\x1b[1m${formattedText}\x1b[0m`
-    }
-    return Console.log(formattedText)
-  }
-)
+    "echo",
+    { text, bold, color },
+    ({ bold, color, text }) => {
+        let formattedText = applyColor(text, color);
+        if (bold) {
+            formattedText = `\x1b[1m${formattedText}\x1b[0m`;
+        }
+        return Console.log(formattedText);
+    },
+);
 
 // Combining commands
-const command = echo.pipe(Command.withSubcommands([repeat]))
+const command = echo.pipe(Command.withSubcommands([repeat]));
 
 const cli = Command.run(command, {
-  name: "Echo CLI",
-  version: "v0.0.4"
-})
+    name: "Echo CLI",
+    version: "v0.0.4",
+});
 
-cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain)
+cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain);
 ```
 
 ### Explanation of the Changes
@@ -674,25 +669,25 @@ Begin by creating a TypeScript file named `minigit.ts`. This file will host all 
 Let's start by setting up the primary command for our CLI, named `minigit`. To do this, we use the `Command.make` constructor which is pivotal for structuring commands in the `@effect/cli` framework.
 
 ```ts
-import { Command } from "@effect/cli"
-import { Effect } from "effect"
+import { Command } from "@effect/cli";
+import { Effect } from "effect";
 
 // Define the main 'minigit' command
 const minigit = Command.make(
-  "minigit",
-  // Configuration object for the command
-  {},
-  // Handler function that executes the command
-  (config) => Effect.succeed("Welcome to Minigit!")
-)
+    "minigit",
+    // Configuration object for the command
+    {},
+    // Handler function that executes the command
+    (config) => Effect.succeed("Welcome to Minigit!"),
+);
 ```
 
 #### Breakdown of Key Components
 
 - **`Command.make` Function:** This function constructs a new `Command`. It requires three parameters:
-  - **Name:** This is the command name, like 'minigit', which you use to call the command from the command line.
-  - **Configuration:** This object specifies the options (`Options`) and arguments (`Args`) that the command can accept.
-  - **Handler:** This function is executed when the command is called. It receives the parsed configuration and carries out the command's core functionalities.
+    - **Name:** This is the command name, like 'minigit', which you use to call the command from the command line.
+    - **Configuration:** This object specifies the options (`Options`) and arguments (`Args`) that the command can accept.
+    - **Handler:** This function is executed when the command is called. It receives the parsed configuration and carries out the command's core functionalities.
 
 #### Understanding the Command Type Signature
 
@@ -700,8 +695,8 @@ The `Command` interface in `@effect/cli` is structured as follows:
 
 ```ts
 export interface Command<Name extends string, R, E, A> {
-  readonly handler: (_: A) => Effect<void, E, R>
-  // Additional properties and methods...
+    readonly handler: (_: A) => Effect<void, E, R>;
+    // Additional properties and methods...
 }
 ```
 
@@ -733,45 +728,44 @@ This function is where the action happens. It takes the parsed configuration and
 Let's apply what we've learned from using the `Command.make` method by defining the primary command for our `minigit` CLI application. This command will include configurations that handle various options like version, help, and custom key-value pairs.
 
 ```ts
-import { Command, Options } from "@effect/cli"
-import { Console, Option } from "effect"
+import { Command, Options } from "@effect/cli";
+import { Console, Option } from "effect";
 
 // minigit [--version] [-h | --help] [-c <name>=<value>]
-const configs = Options.keyValueMap("c").pipe(Options.optional)
+const configs = Options.keyValueMap("c").pipe(Options.optional);
 
 // Define the main 'minigit' command
 const minigit = Command.make(
-  "minigit",
-  // Configuration object for the command
-  { configs },
-  // Handler function that executes the command
-  ({ configs }) =>
-    Option.match(configs, {
-      onNone: () => Console.log("Running 'minigit'"),
-      onSome: (configs) => {
-        const keyValuePairs = Array.from(
-          configs,
-          ([key, value]) => `${key}=${value}`
-        ).join(", ")
-        return Console.log(
-          `Running 'minigit' with the following configs: ${keyValuePairs}`
-        )
-      }
-    })
-)
+    "minigit",
+    // Configuration object for the command
+    { configs },
+    // Handler function that executes the command
+    ({ configs }) =>
+        Option.match(configs, {
+            onNone: () => Console.log("Running 'minigit'"),
+            onSome: (configs) => {
+                const keyValuePairs = Array.from(
+                    configs,
+                    ([key, value]) => `${key}=${value}`,
+                ).join(", ");
+                return Console.log(
+                    `Running 'minigit' with the following configs: ${keyValuePairs}`,
+                );
+            },
+        }),
+);
 ```
 
 #### Key Aspects of the Code:
 
 - **Options Configuration:**
-
-  - **`Options.keyValueMap("c")`:** This line sets up an option that accepts key-value pairs, allowing the user to input configurations in the format `-c key=value`.
-  - **`Options.optional`:** By chaining this combinator, the `-c` option becomes optional, meaning the CLI will operate correctly whether or not this option is provided.
+    - **`Options.keyValueMap("c")`:** This line sets up an option that accepts key-value pairs, allowing the user to input configurations in the format `-c key=value`.
+    - **`Options.optional`:** By chaining this combinator, the `-c` option becomes optional, meaning the CLI will operate correctly whether or not this option is provided.
 
 - **Command Execution:**
-  - The command handler utilizes the `Option.match` function to determine how to respond based on whether the user has provided any key-value configurations.
-  - If no configurations are provided (`onNone`), it simply logs "Running 'minigit'."
-  - If configurations are provided (`onSome`), it logs these configurations in a readable string format, enhancing user feedback and interaction.
+    - The command handler utilizes the `Option.match` function to determine how to respond based on whether the user has provided any key-value configurations.
+    - If no configurations are provided (`onNone`), it simply logs "Running 'minigit'."
+    - If configurations are provided (`onSome`), it logs these configurations in a readable string format, enhancing user feedback and interaction.
 
 #### Built-In Options:
 
@@ -786,76 +780,78 @@ Building on our basic `minigit` CLI, we'll now introduce two key subcommands: `a
 We'll continue our `minigit` CLI development by incorporating `add` and `clone` subcommands to handle specific actions, much like the original Git commands.
 
 ```ts
-import { Args, Command, Options } from "@effect/cli"
-import { Console, Option, Array } from "effect"
+import { Args, Command, Options } from "@effect/cli";
+import { Console, Option, Array } from "effect";
 
 // minigit [--version] [-h | --help] [-c <name>=<value>]
-const configs = Options.keyValueMap("c").pipe(Options.optional)
+const configs = Options.keyValueMap("c").pipe(Options.optional);
 
 const minigit = Command.make("minigit", { configs }, ({ configs }) =>
-  Option.match(configs, {
-    onNone: () => Console.log("Running 'minigit'"),
-    onSome: (configs) => {
-      const keyValuePairs = Array.fromIterable(configs)
-        .map(([key, value]) => `${key}=${value}`)
-        .join(", ")
-      return Console.log(
-        `Running 'minigit' with the following configs: ${keyValuePairs}`
-      )
-    }
-  })
-)
+    Option.match(configs, {
+        onNone: () => Console.log("Running 'minigit'"),
+        onSome: (configs) => {
+            const keyValuePairs = Array.fromIterable(configs)
+                .map(([key, value]) => `${key}=${value}`)
+                .join(", ");
+            return Console.log(
+                `Running 'minigit' with the following configs: ${keyValuePairs}`,
+            );
+        },
+    }),
+);
 
 // minigit add [-v | --verbose] [--] [<pathspec>...]
-const pathspec = Args.text({ name: "pathspec" }).pipe(Args.repeated)
-const verbose = Options.boolean("verbose").pipe(Options.withAlias("v"))
+const pathspec = Args.text({ name: "pathspec" }).pipe(Args.repeated);
+const verbose = Options.boolean("verbose").pipe(Options.withAlias("v"));
 const minigitAdd = Command.make(
-  "add",
-  { pathspec, verbose },
-  ({ pathspec, verbose }) => {
-    const paths = Array.match(pathspec, {
-      onEmpty: () => "",
-      onNonEmpty: (paths) => ` ${Array.join(paths, " ")}`
-    })
-    return Console.log(
-      `Running 'minigit add${paths}' with '--verbose ${verbose}'`
-    )
-  }
-)
+    "add",
+    { pathspec, verbose },
+    ({ pathspec, verbose }) => {
+        const paths = Array.match(pathspec, {
+            onEmpty: () => "",
+            onNonEmpty: (paths) => ` ${Array.join(paths, " ")}`,
+        });
+        return Console.log(
+            `Running 'minigit add${paths}' with '--verbose ${verbose}'`,
+        );
+    },
+);
 
 // minigit clone [--depth <depth>] [--] <repository> [<directory>]
-const repository = Args.text({ name: "repository" })
-const directory = Args.text({ name: "directory" }).pipe(Args.optional)
-const depth = Options.integer("depth").pipe(Options.optional)
+const repository = Args.text({ name: "repository" });
+const directory = Args.text({ name: "directory" }).pipe(Args.optional);
+const depth = Options.integer("depth").pipe(Options.optional);
 const minigitClone = Command.make(
-  "clone",
-  { repository, directory, depth },
-  (config) => {
-    const depth = Option.map(config.depth, (depth) => `--depth ${depth}`)
-    const repository = Option.some(config.repository)
-    const optionsAndArgs = Array.getSomes([depth, repository, config.directory])
-    return Console.log(
-      "Running 'minigit clone' with the following options and arguments: " +
-        `'${Array.join(optionsAndArgs, ", ")}'`
-    )
-  }
-)
+    "clone",
+    { repository, directory, depth },
+    (config) => {
+        const depth = Option.map(config.depth, (depth) => `--depth ${depth}`);
+        const repository = Option.some(config.repository);
+        const optionsAndArgs = Array.getSomes([
+            depth,
+            repository,
+            config.directory,
+        ]);
+        return Console.log(
+            "Running 'minigit clone' with the following options and arguments: " +
+                `'${Array.join(optionsAndArgs, ", ")}'`,
+        );
+    },
+);
 ```
 
 #### Key Points to Note:
 
 1. **Importing Modules:**
-
-   - The `Args` module from `@effect/cli` is utilized to define positional arguments for both `add` and `clone` subcommands.
-   - The `Array` module from `effect` is used to handle arrays and provide utility functions like `Array.match` and `Array.join`.
+    - The `Args` module from `@effect/cli` is utilized to define positional arguments for both `add` and `clone` subcommands.
+    - The `Array` module from `effect` is used to handle arrays and provide utility functions like `Array.match` and `Array.join`.
 
 2. **Configuring Commands:**
-
-   - Both subcommands utilize options and arguments that allow for detailed configuration, reflecting common use cases in command-line interfaces.
-   - The `Options.withAlias` method simplifies command usage by providing shorthand aliases like `-v` for `--verbose`.
+    - Both subcommands utilize options and arguments that allow for detailed configuration, reflecting common use cases in command-line interfaces.
+    - The `Options.withAlias` method simplifies command usage by providing shorthand aliases like `-v` for `--verbose`.
 
 3. **Command Handlers:**
-   - Each subcommand has a handler that logs execution details, which helps in understanding the flow and actions of the CLI commands.
+    - Each subcommand has a handler that logs execution details, which helps in understanding the flow and actions of the CLI commands.
 
 ### Assembling Your CLI Application
 
@@ -864,73 +860,77 @@ Now that you've defined all the necessary commands for your CLI application, it'
 Let's put together the `minigit` CLI:
 
 ```ts
-import { Args, Command, Options } from "@effect/cli"
-import { NodeContext, NodeRuntime } from "@effect/platform-node"
-import { Console, Effect, Option, Array } from "effect"
+import { Args, Command, Options } from "@effect/cli";
+import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { Console, Effect, Option, Array } from "effect";
 
 // minigit [--version] [-h | --help] [-c <name>=<value>]
-const configs = Options.keyValueMap("c").pipe(Options.optional)
+const configs = Options.keyValueMap("c").pipe(Options.optional);
 const minigit = Command.make("minigit", { configs }, ({ configs }) =>
-  Option.match(configs, {
-    onNone: () => Console.log("Running 'minigit'"),
-    onSome: (configs) => {
-      const keyValuePairs = Array.fromIterable(configs)
-        .map(([key, value]) => `${key}=${value}`)
-        .join(", ")
-      return Console.log(
-        `Running 'minigit' with the following configs: ${keyValuePairs}`
-      )
-    }
-  })
-)
+    Option.match(configs, {
+        onNone: () => Console.log("Running 'minigit'"),
+        onSome: (configs) => {
+            const keyValuePairs = Array.fromIterable(configs)
+                .map(([key, value]) => `${key}=${value}`)
+                .join(", ");
+            return Console.log(
+                `Running 'minigit' with the following configs: ${keyValuePairs}`,
+            );
+        },
+    }),
+);
 
 // minigit add [-v | --verbose] [--] [<pathspec>...]
-const pathspec = Args.text({ name: "pathspec" }).pipe(Args.repeated)
-const verbose = Options.boolean("verbose").pipe(Options.withAlias("v"))
+const pathspec = Args.text({ name: "pathspec" }).pipe(Args.repeated);
+const verbose = Options.boolean("verbose").pipe(Options.withAlias("v"));
 const minigitAdd = Command.make(
-  "add",
-  { pathspec, verbose },
-  ({ pathspec, verbose }) => {
-    const paths = Array.match(pathspec, {
-      onEmpty: () => "",
-      onNonEmpty: (paths) => ` ${Array.join(paths, " ")}`
-    })
-    return Console.log(
-      `Running 'minigit add${paths}' with '--verbose ${verbose}'`
-    )
-  }
-)
+    "add",
+    { pathspec, verbose },
+    ({ pathspec, verbose }) => {
+        const paths = Array.match(pathspec, {
+            onEmpty: () => "",
+            onNonEmpty: (paths) => ` ${Array.join(paths, " ")}`,
+        });
+        return Console.log(
+            `Running 'minigit add${paths}' with '--verbose ${verbose}'`,
+        );
+    },
+);
 
 // minigit clone [--depth <depth>] [--] <repository> [<directory>]
-const repository = Args.text({ name: "repository" })
-const directory = Args.text({ name: "directory" }).pipe(Args.optional)
-const depth = Options.integer("depth").pipe(Options.optional)
+const repository = Args.text({ name: "repository" });
+const directory = Args.text({ name: "directory" }).pipe(Args.optional);
+const depth = Options.integer("depth").pipe(Options.optional);
 const minigitClone = Command.make(
-  "clone",
-  { repository, directory, depth },
-  (config) => {
-    const depth = Option.map(config.depth, (depth) => `--depth ${depth}`)
-    const repository = Option.some(config.repository)
-    const optionsAndArgs = Array.getSomes([depth, repository, config.directory])
-    return Console.log(
-      "Running 'minigit clone' with the following options and arguments: " +
-        `'${Array.join(optionsAndArgs, ", ")}'`
-    )
-  }
-)
+    "clone",
+    { repository, directory, depth },
+    (config) => {
+        const depth = Option.map(config.depth, (depth) => `--depth ${depth}`);
+        const repository = Option.some(config.repository);
+        const optionsAndArgs = Array.getSomes([
+            depth,
+            repository,
+            config.directory,
+        ]);
+        return Console.log(
+            "Running 'minigit clone' with the following options and arguments: " +
+                `'${Array.join(optionsAndArgs, ", ")}'`,
+        );
+    },
+);
 
 // Combine all commands into the main 'minigit' command
 const command = minigit.pipe(
-  Command.withSubcommands([minigitAdd, minigitClone])
-)
+    Command.withSubcommands([minigitAdd, minigitClone]),
+);
 
 // Initialize and run the CLI application
 const cli = Command.run(command, {
-  name: "Minigit Distributed Version Control",
-  version: "v1.0.0"
-})
+    name: "Minigit Distributed Version Control",
+    version: "v1.0.0",
+});
 
-cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain)
+cli(process.argv).pipe(Effect.provide(NodeContext.layer), NodeRuntime.runMain);
 ```
 
 #### Key Features and Configuration:
@@ -1123,62 +1123,62 @@ Since `Command` is a subtype of `Effect`, you can use `Effect.flatMap` within a 
 For example, let's say our `minigit clone` subcommand needs access to the configuration parameters passed to the parent `minigit` command via `minigit -c key=value`. We can accomplish this by modifying the `clone` command's handler to use `Effect.flatMap` with the parent `minigit` command:
 
 ```ts
-const repository = Args.text({ name: "repository" })
-const directory = Args.directory().pipe(Args.optional)
-const depth = Options.integer("depth").pipe(Options.optional)
+const repository = Args.text({ name: "repository" });
+const directory = Args.directory().pipe(Args.optional);
+const depth = Options.integer("depth").pipe(Options.optional);
 const minigitClone = Command.make(
-  "clone",
-  { repository, directory, depth },
-  (subcommandConfig) =>
-    // By using `Effect.flatMap` on the parent command, we get access to its parsed config
-    Effect.flatMap(minigit, (parentConfig) => {
-      const depth = Option.map(
-        subcommandConfig.depth,
-        (depth) => `--depth ${depth}`
-      )
-      const repository = Option.some(subcommandConfig.repository)
-      const optionsAndArgs = Array.getSomes([
-        depth,
-        repository,
-        subcommandConfig.directory
-      ])
-      const configs = Option.match(parentConfig.configs, {
-        onNone: () => "",
-        onSome: (map) =>
-          Array.fromIterable(map)
-            .map(([key, value]) => `${key}=${value}`)
-            .join(", ")
-      })
-      return Console.log(
-        "Running 'minigit clone' with the following options and arguments: " +
-          `'${Array.join(optionsAndArgs, ", ")}'\n` +
-          `and the following configuration parameters: ${configs}`
-      )
-    })
-)
+    "clone",
+    { repository, directory, depth },
+    (subcommandConfig) =>
+        // By using `Effect.flatMap` on the parent command, we get access to its parsed config
+        Effect.flatMap(minigit, (parentConfig) => {
+            const depth = Option.map(
+                subcommandConfig.depth,
+                (depth) => `--depth ${depth}`,
+            );
+            const repository = Option.some(subcommandConfig.repository);
+            const optionsAndArgs = Array.getSomes([
+                depth,
+                repository,
+                subcommandConfig.directory,
+            ]);
+            const configs = Option.match(parentConfig.configs, {
+                onNone: () => "",
+                onSome: (map) =>
+                    Array.fromIterable(map)
+                        .map(([key, value]) => `${key}=${value}`)
+                        .join(", "),
+            });
+            return Console.log(
+                "Running 'minigit clone' with the following options and arguments: " +
+                    `'${Array.join(optionsAndArgs, ", ")}'\n` +
+                    `and the following configuration parameters: ${configs}`,
+            );
+        }),
+);
 ```
 
 By examining the type of `minigitClone` after incorporating the parent command, you can see the added context:
 
 ```ts
 const minigitClone: Command.Command<
-  "clone",
-  // The parent `minigit` command has been added to the environment required by
-  // the subcommand's handler
-  Command.Command.Context<"minigit">,
-  never,
-  {
-    readonly repository: string
-    readonly directory: Option.Option<string>
-    readonly depth: Option.Option<number>
-  }
->
+    "clone",
+    // The parent `minigit` command has been added to the environment required by
+    // the subcommand's handler
+    Command.Command.Context<"minigit">,
+    never,
+    {
+        readonly repository: string;
+        readonly directory: Option.Option<string>;
+        readonly depth: Option.Option<number>;
+    }
+>;
 ```
 
 The parent command's context will be "erased" from the subcommand's environment when using `Command.withSubcommands`:
 
 ```ts
-const command = minigit.pipe(Command.withSubcommands([minigitClone]))
+const command = minigit.pipe(Command.withSubcommands([minigitClone]));
 //    ^? Command<"minigit", never, ..., ...>
 ```
 
@@ -1204,17 +1204,17 @@ Options and arguments (collectively referred to as `Options` / `Args`) associate
 
 - **Correct Usage**:
 
-  ```sh
-  program -v subcommand
-  ```
+    ```sh
+    program -v subcommand
+    ```
 
-  In this example, the `-v` option applies to the main program before the subcommand is processed.
+    In this example, the `-v` option applies to the main program before the subcommand is processed.
 
 - **Incorrect Usage**:
-  ```sh
-  program subcommand -v
-  ```
-  Here, placing `-v` after the subcommand causes confusion as to whether `-v` applies to the main program or the subcommand.
+    ```sh
+    program subcommand -v
+    ```
+    Here, placing `-v` after the subcommand causes confusion as to whether `-v` applies to the main program or the subcommand.
 
 ### 2. Parsing Options Before Positional Arguments
 
@@ -1224,17 +1224,17 @@ The parser is designed to recognize options before any positional arguments. Thi
 
 - **Valid Command**:
 
-  ```sh
-  program --option arg
-  ```
+    ```sh
+    program --option arg
+    ```
 
-  This command correctly places the `--option` before the positional argument `arg`.
+    This command correctly places the `--option` before the positional argument `arg`.
 
 - **Invalid Command**:
-  ```sh
-  program arg --option
-  ```
-  Placing an argument before an option is not allowed and can lead to errors in command processing.
+    ```sh
+    program arg --option
+    ```
+    Placing an argument before an option is not allowed and can lead to errors in command processing.
 
 ### 3. Handling Excess Arguments
 

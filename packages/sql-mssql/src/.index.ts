@@ -3,8 +3,8 @@
  */
 
 export {
-  /**
-   * @since 1.0.0
-   */
-  TYPES as MssqlTypes
-} from "tedious"
+    /**
+     * @since 1.0.0
+     */
+    TYPES as MssqlTypes,
+} from "tedious";

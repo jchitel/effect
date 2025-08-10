@@ -5,37 +5,37 @@ A SQL toolkit for Effect.
 ## Basic example
 
 ```ts
-import { Effect, Struct, pipe } from "effect"
-import { PgClient } from "@effect/sql-pg"
-import { SqlClient } from "@effect/sql"
+import { Effect, Struct, pipe } from "effect";
+import { PgClient } from "@effect/sql-pg";
+import { SqlClient } from "@effect/sql";
 
 const SqlLive = PgClient.layer({
-  database: "effect_pg_dev"
-})
+    database: "effect_pg_dev",
+});
 
 const program = Effect.gen(function* () {
-  const sql = yield* SqlClient.SqlClient
+    const sql = yield* SqlClient.SqlClient;
 
-  const people = yield* sql<{
-    readonly id: number
-    readonly name: string
-  }>`SELECT id, name FROM people`
+    const people = yield* sql<{
+        readonly id: number;
+        readonly name: string;
+    }>`SELECT id, name FROM people`;
 
-  yield* Effect.log(`Got ${people.length} results!`)
-})
+    yield* Effect.log(`Got ${people.length} results!`);
+});
 
-pipe(program, Effect.provide(SqlLive), Effect.runPromise)
+pipe(program, Effect.provide(SqlLive), Effect.runPromise);
 ```
 
 Alternatively, you can also create the `SqlLive` layer using the `PgClient.layerConfig` constructor.
 
 ```ts
-import { Config } from "effect"
-import { PgClient } from "@effect/sql-pg"
+import { Config } from "effect";
+import { PgClient } from "@effect/sql-pg";
 
 const SqlLive = PgClient.layerConfig({
-  database: Config.string("DATABASE")
-})
+    database: Config.string("DATABASE"),
+});
 ```
 
 ## Migrating from `sqlfx`
@@ -47,22 +47,22 @@ If you are coming from the `sqlfx` package, here are some differences that shoul
 For example, to create the client Layer, instead of:
 
 ```ts
-import { Config } from "effect"
-import { PgClient } from "@sqlfx/pg"
+import { Config } from "effect";
+import { PgClient } from "@sqlfx/pg";
 
 const SqlLive = PgClient.makeLayer({
-  database: Config.succeed("effect_pg_dev")
-})
+    database: Config.succeed("effect_pg_dev"),
+});
 ```
 
 You now do:
 
 ```ts
-import { PgClient } from "@effect/sql-pg"
+import { PgClient } from "@effect/sql-pg";
 
 const SqlLive = PgClient.layer({
-  database: "effect_pg_dev"
-})
+    database: "effect_pg_dev",
+});
 ```
 
 #### The default table name for migrations has changed
@@ -70,17 +70,17 @@ const SqlLive = PgClient.layer({
 To continue using your `sqlfx` migrations table, you can setup your migrator Layer as below:
 
 ```ts
-import { PgMigrator } from "@effect/sql-pg"
+import { PgMigrator } from "@effect/sql-pg";
 
 const MigratorLive = Layer.provide(
-  PgMigrator.layer({
-    loader: PgMigrator.fromFileSystem(
-      fileURLToPath(new URL("migrations", import.meta.url))
-    ),
-    table: "sqlfx_migrations"
-  }),
-  SqlLive
-)
+    PgMigrator.layer({
+        loader: PgMigrator.fromFileSystem(
+            fileURLToPath(new URL("migrations", import.meta.url)),
+        ),
+        table: "sqlfx_migrations",
+    }),
+    SqlLive,
+);
 ```
 
 Or you can rename the `sqlfx_migrations` table to `effect_sql_migrations`.
@@ -104,68 +104,68 @@ In `sqlfx` you could pass an array to the `sql(array)` function to pass an list 
 ## INSERT resolver
 
 ```ts
-import { Effect, Schema, pipe } from "effect"
-import { SqlResolver, SqlClient } from "@effect/sql"
+import { Effect, Schema, pipe } from "effect";
+import { SqlResolver, SqlClient } from "@effect/sql";
 
 class Person extends Schema.Class<Person>("Person")({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateFromSelf,
-  updatedAt: Schema.DateFromSelf
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateFromSelf,
+    updatedAt: Schema.DateFromSelf,
 }) {}
 
 const InsertPersonSchema = Schema.Struct(
-  Struct.omit(Person.fields, "id", "createdAt", "updatedAt")
-)
+    Struct.omit(Person.fields, "id", "createdAt", "updatedAt"),
+);
 
 export const makePersonService = Effect.gen(function* () {
-  const sql = yield* SqlClient.SqlClient
+    const sql = yield* SqlClient.SqlClient;
 
-  const InsertPerson = yield* SqlResolver.ordered("InsertPerson", {
-    Request: InsertPersonSchema,
-    Result: Person,
-    execute: (requests) =>
-      sql`
+    const InsertPerson = yield* SqlResolver.ordered("InsertPerson", {
+        Request: InsertPersonSchema,
+        Result: Person,
+        execute: (requests) =>
+            sql`
         INSERT INTO people
         ${sql.insert(requests)}
         RETURNING people.*
-      `
-  })
+      `,
+    });
 
-  const insert = InsertPerson.execute
+    const insert = InsertPerson.execute;
 
-  return { insert }
-})
+    return { insert };
+});
 ```
 
 ## SELECT resolver
 
 ```ts
-import { Effect, Schema, pipe } from "effect"
-import { SqlResolver, SqlClient } from "@effect/sql"
+import { Effect, Schema, pipe } from "effect";
+import { SqlResolver, SqlClient } from "@effect/sql";
 
 class Person extends Schema.Class<Person>("Person")({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateFromSelf,
-  updatedAt: Schema.DateFromSelf
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateFromSelf,
+    updatedAt: Schema.DateFromSelf,
 }) {}
 
 export const makePersonService = Effect.gen(function* () {
-  const sql = yield* SqlClient.SqlClient
+    const sql = yield* SqlClient.SqlClient;
 
-  const GetById = yield* SqlResolver.findById("GetPersonById", {
-    Id: Schema.Number,
-    Result: Person,
-    ResultId: (_) => _.id,
-    execute: (ids) => sql`SELECT * FROM people WHERE ${sql.in("id", ids)}`
-  })
+    const GetById = yield* SqlResolver.findById("GetPersonById", {
+        Id: Schema.Number,
+        Result: Person,
+        ResultId: (_) => _.id,
+        execute: (ids) => sql`SELECT * FROM people WHERE ${sql.in("id", ids)}`,
+    });
 
-  const getById = (id: number) =>
-    Effect.withRequestCaching("on")(GetById.execute(id))
+    const getById = (id: number) =>
+        Effect.withRequestCaching("on")(GetById.execute(id));
 
-  return { getById }
-})
+    return { getById };
+});
 ```
 
 ## Building queries
@@ -173,51 +173,51 @@ export const makePersonService = Effect.gen(function* () {
 ### Safe interpolation
 
 ```ts
-import { Effect } from "effect"
-import { SqlClient } from "@effect/sql"
+import { Effect } from "effect";
+import { SqlClient } from "@effect/sql";
 
 export const make = (limit: number) =>
-  Effect.gen(function* () {
-    const sql = yield* SqlClient.SqlClient
+    Effect.gen(function* () {
+        const sql = yield* SqlClient.SqlClient;
 
-    const statement = sql`SELECT * FROM people LIMIT ${limit}`
-    // e.g. SELECT * FROM people LIMIT ?
-  })
+        const statement = sql`SELECT * FROM people LIMIT ${limit}`;
+        // e.g. SELECT * FROM people LIMIT ?
+    });
 ```
 
 ### Identifiers
 
 ```ts
-import { Effect } from "effect"
-import { SqlClient } from "@effect/sql"
+import { Effect } from "effect";
+import { SqlClient } from "@effect/sql";
 
-const table = "people"
+const table = "people";
 
 export const make = (limit: number) =>
-  Effect.gen(function* () {
-    const sql = yield* SqlClient.SqlClient
+    Effect.gen(function* () {
+        const sql = yield* SqlClient.SqlClient;
 
-    const statement = sql`SELECT * FROM ${sql(table)} LIMIT ${limit}`
-    // e.g. SELECT * FROM "people" LIMIT ?
-  })
+        const statement = sql`SELECT * FROM ${sql(table)} LIMIT ${limit}`;
+        // e.g. SELECT * FROM "people" LIMIT ?
+    });
 ```
 
 ### Unsafe interpolation
 
 ```ts
-import { Effect } from "effect"
-import { SqlClient } from "@effect/sql"
+import { Effect } from "effect";
+import { SqlClient } from "@effect/sql";
 
-type OrderBy = "id" | "created_at" | "updated_at"
-type SortOrder = "ASC" | "DESC"
+type OrderBy = "id" | "created_at" | "updated_at";
+type SortOrder = "ASC" | "DESC";
 
 export const make = (orderBy: OrderBy, sortOrder: SortOrder) =>
-  Effect.gen(function* () {
-    const sql = yield* SqlClient.SqlClient
+    Effect.gen(function* () {
+        const sql = yield* SqlClient.SqlClient;
 
-    const statement = sql`SELECT * FROM people ORDER BY ${sql(orderBy)} ${sql.unsafe(sortOrder)}`
-    // e.g. SELECT * FROM people ORDER BY `id` ASC
-  })
+        const statement = sql`SELECT * FROM people ORDER BY ${sql(orderBy)} ${sql.unsafe(sortOrder)}`;
+        // e.g. SELECT * FROM people ORDER BY `id` ASC
+    });
 ```
 
 ### Where clause combinators
@@ -225,55 +225,58 @@ export const make = (orderBy: OrderBy, sortOrder: SortOrder) =>
 #### AND
 
 ```ts
-import { Effect } from "effect"
-import { SqlClient } from "@effect/sql"
+import { Effect } from "effect";
+import { SqlClient } from "@effect/sql";
 
 export const make = (names: string[], cursor: string) =>
-  Effect.gen(function* () {
-    const sql = yield* SqlClient.SqlClient
+    Effect.gen(function* () {
+        const sql = yield* SqlClient.SqlClient;
 
-    const statement = sql`SELECT * FROM people WHERE ${sql.and([
-      sql.in("name", names),
-      sql`created_at < ${cursor}`
-    ])}`
-    // SELECT * FROM people WHERE ("name" IN (?,?,?) AND created_at < ?)
-  })
+        const statement = sql`SELECT * FROM people WHERE ${sql.and([
+            sql.in("name", names),
+            sql`created_at < ${cursor}`,
+        ])}`;
+        // SELECT * FROM people WHERE ("name" IN (?,?,?) AND created_at < ?)
+    });
 ```
 
 #### OR
 
 ```ts
-import { Effect } from "effect"
-import { SqlClient } from "@effect/sql"
+import { Effect } from "effect";
+import { SqlClient } from "@effect/sql";
 
 export const make = (names: string[], cursor: Date) =>
-  Effect.gen(function* () {
-    const sql = yield* SqlClient.SqlClient
+    Effect.gen(function* () {
+        const sql = yield* SqlClient.SqlClient;
 
-    const statement = sql`SELECT * FROM people WHERE ${sql.or([
-      sql.in("name", names),
-      sql`created_at < ${cursor}`
-    ])}`
-    // SELECT * FROM people WHERE ("name" IN (?,?,?) OR created_at < ?)
-  })
+        const statement = sql`SELECT * FROM people WHERE ${sql.or([
+            sql.in("name", names),
+            sql`created_at < ${cursor}`,
+        ])}`;
+        // SELECT * FROM people WHERE ("name" IN (?,?,?) OR created_at < ?)
+    });
 ```
 
 #### Mixed
 
 ```ts
-import { Effect } from "effect"
-import { SqlClient } from "@effect/sql"
+import { Effect } from "effect";
+import { SqlClient } from "@effect/sql";
 
 export const make = (names: string[], afterCursor: Date, beforeCursor: Date) =>
-  Effect.gen(function* () {
-    const sql = yield* SqlClient.SqlClient
+    Effect.gen(function* () {
+        const sql = yield* SqlClient.SqlClient;
 
-    const statement = sql`SELECT * FROM people WHERE ${sql.or([
-      sql.in("name", names),
-      sql.and([`created_at > ${afterCursor}`, `created_at < ${beforeCursor}`])
-    ])}`
-    // SELECT * FROM people WHERE ("name" IN (?,?,?) OR (created_at > ? AND created_at < ?))
-  })
+        const statement = sql`SELECT * FROM people WHERE ${sql.or([
+            sql.in("name", names),
+            sql.and([
+                `created_at > ${afterCursor}`,
+                `created_at < ${beforeCursor}`,
+            ]),
+        ])}`;
+        // SELECT * FROM people WHERE ("name" IN (?,?,?) OR (created_at > ? AND created_at < ?))
+    });
 ```
 
 ## Migrations
@@ -287,20 +290,20 @@ Here is an example migration:
 ```ts
 // src/migrations/0001_add_users.ts
 
-import { Effect } from "effect"
-import { SqlClient } from "@effect/sql"
+import { Effect } from "effect";
+import { SqlClient } from "@effect/sql";
 
 export default Effect.flatMap(
-  SqlClient.SqlClient,
-  (sql) => sql`
+    SqlClient.SqlClient,
+    (sql) => sql`
     CREATE TABLE users (
       id serial PRIMARY KEY,
       name varchar(255) NOT NULL,
       created_at TIMESTAMP NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMP NOT NULL DEFAULT NOW()
     )
-  `
-)
+  `,
+);
 ```
 
 To run your migrations:
@@ -308,30 +311,30 @@ To run your migrations:
 ```ts
 // src/main.ts
 
-import { Effect, Layer, pipe } from "effect"
-import { NodeContext, NodeRuntime } from "@effect/platform-node"
-import { PgClient, PgMigrator } from "@effect/sql-pg"
-import { fileURLToPath } from "node:url"
+import { Effect, Layer, pipe } from "effect";
+import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { PgClient, PgMigrator } from "@effect/sql-pg";
+import { fileURLToPath } from "node:url";
 
 const program = Effect.gen(function* () {
-  // ...
-})
+    // ...
+});
 
 const SqlLive = PgClient.layer({
-  database: "example_database"
-})
+    database: "example_database",
+});
 
 const MigratorLive = PgMigrator.layer({
-  loader: PgMigrator.fromFileSystem(
-    fileURLToPath(new URL("migrations", import.meta.url))
-  ),
-  // Where to put the `_schema.sql` file
-  schemaDirectory: "src/migrations"
-}).pipe(Layer.provide(SqlLive))
+    loader: PgMigrator.fromFileSystem(
+        fileURLToPath(new URL("migrations", import.meta.url)),
+    ),
+    // Where to put the `_schema.sql` file
+    schemaDirectory: "src/migrations",
+}).pipe(Layer.provide(SqlLive));
 
 const EnvLive = Layer.mergeAll(SqlLive, MigratorLive).pipe(
-  Layer.provide(NodeContext.layer)
-)
+    Layer.provide(NodeContext.layer),
+);
 
-pipe(program, Effect.provide(EnvLive), NodeRuntime.runMain)
+pipe(program, Effect.provide(EnvLive), NodeRuntime.runMain);
 ```

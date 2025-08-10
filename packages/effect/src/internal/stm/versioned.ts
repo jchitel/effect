@@ -1,4 +1,4 @@
 /** @internal */
 export class Versioned<out A> {
-  constructor(readonly value: A) {}
+    constructor(readonly value: A) {}
 }

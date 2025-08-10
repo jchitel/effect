@@ -252,20 +252,20 @@
  * @since 2.0.0
  */
 
-import type { Equal } from "./Equal.js"
-import type { Inspectable } from "./Inspectable.js"
-import * as HS from "./internal/hashSet.js"
-import type { Pipeable } from "./Pipeable.js"
-import type { Predicate, Refinement } from "./Predicate.js"
-import type { NoInfer } from "./Types.js"
+import type { Equal } from "./Equal.js";
+import type { Inspectable } from "./Inspectable.js";
+import * as HS from "./internal/hashSet.js";
+import type { Pipeable } from "./Pipeable.js";
+import type { Predicate, Refinement } from "./Predicate.js";
+import type { NoInfer } from "./Types.js";
 
-const TypeId: unique symbol = HS.HashSetTypeId as TypeId
+const TypeId: unique symbol = HS.HashSetTypeId as TypeId;
 
 /**
  * @since 2.0.0
  * @category symbol
  */
-export type TypeId = typeof TypeId
+export type TypeId = typeof TypeId;
 
 /**
  * @memberof HashSet
@@ -282,8 +282,12 @@ export type TypeId = typeof TypeId
  *
  * @interface
  */
-export interface HashSet<out A> extends Iterable<A>, Equal, Pipeable, Inspectable {
-  readonly [TypeId]: TypeId
+export interface HashSet<out A>
+    extends Iterable<A>,
+        Equal,
+        Pipeable,
+        Inspectable {
+    readonly [TypeId]: TypeId;
 }
 
 /**
@@ -292,58 +296,58 @@ export interface HashSet<out A> extends Iterable<A>, Equal, Pipeable, Inspectabl
  * @category refinements
  */
 export const isHashSet: {
-  /**
-   * Type guard function to determine if a given iterable is a `HashSet`.
-   *
-   * This overload preserves the type of the iterable's elements.
-   *
-   * @example
-   *
-   * ```ts
-   * import { HashSet } from "effect"
-   *
-   * const numberIterable: Iterable<1 | 2 | 3> = [1, 2, 3]
-   *
-   * if (
-   *   // if passed an Iterable<A> the type guard that preserves the type parameter <A>
-   *   HashSet.isHashSet(numberIterable)
-   * ) {
-   *   const HashSet: HashSet.HashSet<1 | 2 | 3> = numberIterable
-   * }
-   * ```
-   *
-   * @param u - The iterable input to be checked.
-   * @returns A boolean indicating whether the provided iterable is a `HashSet`.
-   */
-  <A>(u: Iterable<A>): u is HashSet<A>
+    /**
+     * Type guard function to determine if a given iterable is a `HashSet`.
+     *
+     * This overload preserves the type of the iterable's elements.
+     *
+     * @example
+     *
+     * ```ts
+     * import { HashSet } from "effect"
+     *
+     * const numberIterable: Iterable<1 | 2 | 3> = [1, 2, 3]
+     *
+     * if (
+     *   // if passed an Iterable<A> the type guard that preserves the type parameter <A>
+     *   HashSet.isHashSet(numberIterable)
+     * ) {
+     *   const HashSet: HashSet.HashSet<1 | 2 | 3> = numberIterable
+     * }
+     * ```
+     *
+     * @param u - The iterable input to be checked.
+     * @returns A boolean indicating whether the provided iterable is a `HashSet`.
+     */
+    <A>(u: Iterable<A>): u is HashSet<A>;
 
-  /**
-   * Type guard function that checks if the provided value is a `HashSet` of
-   * unknown type.
-   *
-   * @example
-   *
-   * ```ts
-   * import { HashSet } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * // Check if a value is a HashSet
-   * const set = HashSet.make(1, 2, 3)
-   *
-   * assert.equal(HashSet.isHashSet(set), true) // true
-   * assert.equal(HashSet.isHashSet(HashSet.empty()), true)
-   *
-   * // Works with any type
-   * assert.equal(HashSet.isHashSet(null), false) // false
-   * assert.equal(HashSet.isHashSet({}), false) // false
-   * assert.equal(HashSet.isHashSet([1, 2, 3]), false) // false
-   * ```
-   *
-   * @param u - The value to check.
-   * @returns A boolean indicating whether the value is a `HashSet<unknown>`.
-   */
-  (u: unknown): u is HashSet<unknown>
-} = HS.isHashSet
+    /**
+     * Type guard function that checks if the provided value is a `HashSet` of
+     * unknown type.
+     *
+     * @example
+     *
+     * ```ts
+     * import { HashSet } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * // Check if a value is a HashSet
+     * const set = HashSet.make(1, 2, 3)
+     *
+     * assert.equal(HashSet.isHashSet(set), true) // true
+     * assert.equal(HashSet.isHashSet(HashSet.empty()), true)
+     *
+     * // Works with any type
+     * assert.equal(HashSet.isHashSet(null), false) // false
+     * assert.equal(HashSet.isHashSet({}), false) // false
+     * assert.equal(HashSet.isHashSet([1, 2, 3]), false) // false
+     * ```
+     *
+     * @param u - The value to check.
+     * @returns A boolean indicating whether the value is a `HashSet<unknown>`.
+     */
+    (u: unknown): u is HashSet<unknown>;
+} = HS.isHashSet;
 
 /**
  * Creates an empty `HashSet`.
@@ -372,7 +376,7 @@ export const isHashSet: {
  *
  * @see Other `HashSet` constructors are {@link module:HashSet.make} {@link module:HashSet.fromIterable}
  */
-export const empty: <A = never>() => HashSet<A> = HS.empty
+export const empty: <A = never>() => HashSet<A> = HS.empty;
 
 /**
  * Creates a new `HashSet` from an iterable collection of values.
@@ -467,7 +471,8 @@ export const empty: <A = never>() => HashSet<A> = HS.empty
  *
  * @see Other `HashSet` constructors are {@link module:HashSet.empty} {@link module:HashSet.make}
  */
-export const fromIterable: <A>(elements: Iterable<A>) => HashSet<A> = HS.fromIterable
+export const fromIterable: <A>(elements: Iterable<A>) => HashSet<A> =
+    HS.fromIterable;
 
 /**
  * Construct a new `HashSet` from a variable number of values.
@@ -556,7 +561,9 @@ export const fromIterable: <A>(elements: Iterable<A>) => HashSet<A> = HS.fromIte
  *
  * @see Other `HashSet` constructors are {@link module:HashSet.fromIterable} {@link module:HashSet.empty}
  */
-export const make: <As extends ReadonlyArray<any>>(...elements: As) => HashSet<As[number]> = HS.make
+export const make: <As extends ReadonlyArray<any>>(
+    ...elements: As
+) => HashSet<As[number]> = HS.make;
 
 /**
  * Checks if the specified value exists in the `HashSet`.
@@ -586,42 +593,42 @@ export const make: <As extends ReadonlyArray<any>>(...elements: As) => HashSet<A
  * @see Other `HashSet` elements are {@link module:HashSet.some} {@link module:HashSet.every} {@link module:HashSet.isSubset}
  */
 export const has: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import * as assert from "node:assert/strict"
-   * import { HashSet, pipe } from "effect"
-   *
-   * const set = HashSet.make(0, 1, 2)
-   *
-   * assert.equal(pipe(set, HashSet.has(0)), true)
-   * assert.equal(pipe(set, HashSet.has(1)), true)
-   * assert.equal(pipe(set, HashSet.has(2)), true)
-   * assert.equal(pipe(set, HashSet.has(3)), false)
-   * ```
-   */
-  <A>(value: A): (self: HashSet<A>) => boolean
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import * as assert from "node:assert/strict"
+     * import { HashSet, pipe } from "effect"
+     *
+     * const set = HashSet.make(0, 1, 2)
+     *
+     * assert.equal(pipe(set, HashSet.has(0)), true)
+     * assert.equal(pipe(set, HashSet.has(1)), true)
+     * assert.equal(pipe(set, HashSet.has(2)), true)
+     * assert.equal(pipe(set, HashSet.has(3)), false)
+     * ```
+     */
+    <A>(value: A): (self: HashSet<A>) => boolean;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import * as assert from "node:assert/strict"
-   * import { HashSet, pipe } from "effect"
-   *
-   * const set = HashSet.make(0, 1, 2)
-   *
-   * assert.equal(HashSet.has(set, 0), true)
-   * assert.equal(HashSet.has(set, 1), true)
-   * assert.equal(HashSet.has(set, 2), true)
-   * assert.equal(HashSet.has(set, 3), false)
-   * ```
-   */
-  <A>(self: HashSet<A>, value: A): boolean
-} = HS.has
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import * as assert from "node:assert/strict"
+     * import { HashSet, pipe } from "effect"
+     *
+     * const set = HashSet.make(0, 1, 2)
+     *
+     * assert.equal(HashSet.has(set, 0), true)
+     * assert.equal(HashSet.has(set, 1), true)
+     * assert.equal(HashSet.has(set, 2), true)
+     * assert.equal(HashSet.has(set, 3), false)
+     * ```
+     */
+    <A>(self: HashSet<A>, value: A): boolean;
+} = HS.has;
 
 /**
  * Check if a predicate holds true for some `HashSet` element.
@@ -655,58 +662,58 @@ export const has: {
  * @see Other `HashSet` elements are {@link module:HashSet.has} {@link module:HashSet.every} {@link module:HashSet.isSubset}
  */
 export const some: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import * as assert from "node:assert/strict"
-   * import { HashSet, pipe } from "effect"
-   *
-   * const set = HashSet.make(0, 1, 2)
-   *
-   * assert.equal(
-   *   pipe(
-   *     set,
-   *     HashSet.some((n) => n > 0)
-   *   ),
-   *   true
-   * )
-   *
-   * assert.equal(
-   *   pipe(
-   *     set,
-   *     HashSet.some((n) => n > 2)
-   *   ),
-   *   false
-   * )
-   * ```
-   */
-  <A>(f: Predicate<A>): (self: HashSet<A>) => boolean
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import * as assert from "node:assert/strict"
+     * import { HashSet, pipe } from "effect"
+     *
+     * const set = HashSet.make(0, 1, 2)
+     *
+     * assert.equal(
+     *   pipe(
+     *     set,
+     *     HashSet.some((n) => n > 0)
+     *   ),
+     *   true
+     * )
+     *
+     * assert.equal(
+     *   pipe(
+     *     set,
+     *     HashSet.some((n) => n > 2)
+     *   ),
+     *   false
+     * )
+     * ```
+     */
+    <A>(f: Predicate<A>): (self: HashSet<A>) => boolean;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import * as assert from "node:assert/strict"
-   * import { HashSet } from "effect"
-   *
-   * const set = HashSet.make(0, 1, 2)
-   *
-   * assert.equal(
-   *   HashSet.some(set, (n) => n > 0),
-   *   true
-   * )
-   *
-   * assert.equal(
-   *   HashSet.some(set, (n) => n > 2),
-   *   false
-   * )
-   * ```
-   */
-  <A>(self: HashSet<A>, f: Predicate<A>): boolean
-} = HS.some
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import * as assert from "node:assert/strict"
+     * import { HashSet } from "effect"
+     *
+     * const set = HashSet.make(0, 1, 2)
+     *
+     * assert.equal(
+     *   HashSet.some(set, (n) => n > 0),
+     *   true
+     * )
+     *
+     * assert.equal(
+     *   HashSet.some(set, (n) => n > 2),
+     *   false
+     * )
+     * ```
+     */
+    <A>(self: HashSet<A>, f: Predicate<A>): boolean;
+} = HS.some;
 
 /**
  * Check if a predicate holds true for every `HashSet` element.
@@ -768,98 +775,98 @@ export const some: {
  * @see Other `HashSet` elements are {@link module:HashSet.has} {@link module:HashSet.some} {@link module:HashSet.isSubset}
  */
 export const every: {
-  /**
-   * @example
-   *
-   * ```ts
-   * import * as assert from "node:assert/strict"
-   * import { Effect, HashSet, pipe, Predicate } from "effect"
-   *
-   * const numberOrString: HashSet.HashSet<number | string> = HashSet.make(
-   *   1,
-   *   "1",
-   *   "one",
-   *   "uno"
-   * )
-   *
-   * assert.equal(
-   *   pipe(
-   *     numberOrString, // HashSet.HashSet<number | string>
-   *     HashSet.every(Predicate.isString)
-   *   ), // HashSet.HashSet<string>
-   *   false
-   * )
-   * ```
-   */
-  <A, B extends A>(
-    refinement: Refinement<NoInfer<A>, B>
-  ): (self: HashSet<A>) => self is HashSet<B>
+    /**
+     * @example
+     *
+     * ```ts
+     * import * as assert from "node:assert/strict"
+     * import { Effect, HashSet, pipe, Predicate } from "effect"
+     *
+     * const numberOrString: HashSet.HashSet<number | string> = HashSet.make(
+     *   1,
+     *   "1",
+     *   "one",
+     *   "uno"
+     * )
+     *
+     * assert.equal(
+     *   pipe(
+     *     numberOrString, // HashSet.HashSet<number | string>
+     *     HashSet.every(Predicate.isString)
+     *   ), // HashSet.HashSet<string>
+     *   false
+     * )
+     * ```
+     */
+    <A, B extends A>(
+        refinement: Refinement<NoInfer<A>, B>,
+    ): (self: HashSet<A>) => self is HashSet<B>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import * as assert from "node:assert/strict"
-   * import { HashSet, pipe } from "effect"
-   *
-   * const set = HashSet.make(0, 1, 2)
-   *
-   * assert.equal(
-   *   pipe(
-   *     set,
-   *     HashSet.every((n) => n >= 0)
-   *   ),
-   *   true
-   * )
-   * ```
-   */
-  <A>(predicate: Predicate<A>): (self: HashSet<A>) => boolean
+    /**
+     * @example
+     *
+     * ```ts
+     * import * as assert from "node:assert/strict"
+     * import { HashSet, pipe } from "effect"
+     *
+     * const set = HashSet.make(0, 1, 2)
+     *
+     * assert.equal(
+     *   pipe(
+     *     set,
+     *     HashSet.every((n) => n >= 0)
+     *   ),
+     *   true
+     * )
+     * ```
+     */
+    <A>(predicate: Predicate<A>): (self: HashSet<A>) => boolean;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import * as assert from "node:assert/strict"
-   * import { Effect, HashSet, pipe, Predicate } from "effect"
-   *
-   * const numberOrString: HashSet.HashSet<number | string> = HashSet.make(
-   *   1,
-   *   "1",
-   *   "one",
-   *   "uno"
-   * )
-   *
-   * assert.equal(
-   *   HashSet.every(
-   *     numberOrString, // HashSet.HashSet<number | string>
-   *     Predicate.isString
-   *   ), // HashSet.HashSet<string>
-   *   false
-   * )
-   * ```
-   */
-  <A, B extends A>(
-    self: HashSet<A>,
-    refinement: Refinement<A, B>
-  ): self is HashSet<B>
+    /**
+     * @example
+     *
+     * ```ts
+     * import * as assert from "node:assert/strict"
+     * import { Effect, HashSet, pipe, Predicate } from "effect"
+     *
+     * const numberOrString: HashSet.HashSet<number | string> = HashSet.make(
+     *   1,
+     *   "1",
+     *   "one",
+     *   "uno"
+     * )
+     *
+     * assert.equal(
+     *   HashSet.every(
+     *     numberOrString, // HashSet.HashSet<number | string>
+     *     Predicate.isString
+     *   ), // HashSet.HashSet<string>
+     *   false
+     * )
+     * ```
+     */
+    <A, B extends A>(
+        self: HashSet<A>,
+        refinement: Refinement<A, B>,
+    ): self is HashSet<B>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import * as assert from "node:assert/strict"
-   * import { HashSet } from "effect"
-   *
-   * const set = HashSet.make(0, 1, 2)
-   *
-   * assert.equal(
-   *   HashSet.every(set, (n) => n >= 0),
-   *   true
-   * )
-   * ```
-   */
-  <A>(self: HashSet<A>, predicate: Predicate<A>): boolean
-} = HS.every
+    /**
+     * @example
+     *
+     * ```ts
+     * import * as assert from "node:assert/strict"
+     * import { HashSet } from "effect"
+     *
+     * const set = HashSet.make(0, 1, 2)
+     *
+     * assert.equal(
+     *   HashSet.every(set, (n) => n >= 0),
+     *   true
+     * )
+     * ```
+     */
+    <A>(self: HashSet<A>, predicate: Predicate<A>): boolean;
+} = HS.every;
 
 /**
  * Returns `true` if and only if every element in the this `HashSet` is an
@@ -898,46 +905,46 @@ export const every: {
  * @see Other `HashSet` elements are {@link module:HashSet.has} {@link module:HashSet.some} {@link module:HashSet.every}
  */
 export const isSubset: {
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * assert.equal(
-   *   pipe(
-   *     HashSet.make(0, 1), //
-   *     HashSet.isSubset(HashSet.make(1, 2))
-   *   ),
-   *   false
-   * )
-   *
-   * assert.equal(
-   *   pipe(
-   *     HashSet.make(0, 1), //
-   *     HashSet.isSubset(HashSet.make(0, 1, 2))
-   *   ),
-   *   true
-   * )
-   * ```
-   */
-  <A>(that: HashSet<A>): (self: HashSet<A>) => boolean
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * assert.equal(
+     *   pipe(
+     *     HashSet.make(0, 1), //
+     *     HashSet.isSubset(HashSet.make(1, 2))
+     *   ),
+     *   false
+     * )
+     *
+     * assert.equal(
+     *   pipe(
+     *     HashSet.make(0, 1), //
+     *     HashSet.isSubset(HashSet.make(0, 1, 2))
+     *   ),
+     *   true
+     * )
+     * ```
+     */
+    <A>(that: HashSet<A>): (self: HashSet<A>) => boolean;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * assert.equal(HashSet.isSubset(set1, set2), false)
-   *
-   * assert.equal(HashSet.isSubset(set1, set3), true)
-   * ```
-   */
-  <A>(self: HashSet<A>, that: HashSet<A>): boolean
-} = HS.isSubset
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * assert.equal(HashSet.isSubset(set1, set2), false)
+     *
+     * assert.equal(HashSet.isSubset(set1, set3), true)
+     * ```
+     */
+    <A>(self: HashSet<A>, that: HashSet<A>): boolean;
+} = HS.isSubset;
 
 /**
  * Returns an `IterableIterator` of the values in the `HashSet`.
@@ -964,7 +971,7 @@ export const isSubset: {
  *
  * @see Other `HashSet` getters are {@link module:HashSet.toValues} {@link module:HashSet.size}
  */
-export const values: <A>(self: HashSet<A>) => IterableIterator<A> = HS.values
+export const values: <A>(self: HashSet<A>) => IterableIterator<A> = HS.values;
 
 /**
  * Returns an `Array` of the values within the `HashSet`.
@@ -991,7 +998,8 @@ export const values: <A>(self: HashSet<A>) => IterableIterator<A> = HS.values
  *
  * @see Other `HashSet` getters are {@link module:HashSet.values} {@link module:HashSet.size}
  */
-export const toValues = <A>(self: HashSet<A>): Array<A> => Array.from(values(self))
+export const toValues = <A>(self: HashSet<A>): Array<A> =>
+    Array.from(values(self));
 
 /**
  * Calculates the number of values in the `HashSet`.
@@ -1017,7 +1025,7 @@ export const toValues = <A>(self: HashSet<A>): Array<A> => Array.from(values(sel
  *
  * @see Other `HashSet` getters are {@link module:HashSet.values} {@link module:HashSet.toValues}
  */
-export const size: <A>(self: HashSet<A>) => number = HS.size
+export const size: <A>(self: HashSet<A>) => number = HS.size;
 
 /**
  * Creates a new mutable version of the `HashSet`
@@ -1065,7 +1073,8 @@ export const size: <A>(self: HashSet<A>) => number = HS.size
  *
  * @see Other `HashSet` mutations are {@link module:HashSet.add} {@link module:HashSet.remove} {@link module:HashSet.toggle} {@link module:HashSet.endMutation} {@link module:HashSet.mutate}
  */
-export const beginMutation: <A>(self: HashSet<A>) => HashSet<A> = HS.beginMutation
+export const beginMutation: <A>(self: HashSet<A>) => HashSet<A> =
+    HS.beginMutation;
 
 /**
  * Makes the `HashSet` immutable again.
@@ -1113,7 +1122,7 @@ export const beginMutation: <A>(self: HashSet<A>) => HashSet<A> = HS.beginMutati
  *
  * @see Other `HashSet` mutations are {@link module:HashSet.add} {@link module:HashSet.remove} {@link module:HashSet.toggle} {@link module:HashSet.beginMutation} {@link module:HashSet.mutate}
  */
-export const endMutation: <A>(self: HashSet<A>) => HashSet<A> = HS.endMutation
+export const endMutation: <A>(self: HashSet<A>) => HashSet<A> = HS.endMutation;
 
 /**
  * Mutates the `HashSet` within the context of the provided function.
@@ -1157,74 +1166,74 @@ export const endMutation: <A>(self: HashSet<A>) => HashSet<A> = HS.endMutation
  * @see Other `HashSet` mutations are {@link module:HashSet.add} {@link module:HashSet.remove} {@link module:HashSet.toggle} {@link module:HashSet.beginMutation} {@link module:HashSet.endMutation}
  */
 export const mutate: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import { HashSet, pipe } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * // Create a set with initial values
-   * const immutableSet = HashSet.make(1, 2, 3)
-   *
-   * // Use mutate to perform multiple operations efficiently
-   * const result = pipe(
-   *   immutableSet,
-   *   HashSet.mutate((set) => {
-   *     assert.equal(Object.is(immutableSet, set), false)
-   *
-   *     // The set is temporarily mutable inside this function
-   *     const mod1 = HashSet.add(set, 4)
-   *     const mod2 = HashSet.remove(set, 1)
-   *     assert.equal(Object.is(mod1, mod2), true) // they are the same object by reference
-   *   })
-   * )
-   *
-   * // The original set is unchanged
-   * assert.equal(Object.is(immutableSet, result), false)
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(immutableSet).sort(),
-   *   [1, 2, 3]
-   * )
-   *
-   * // The result contains the mutations
-   * assert.deepStrictEqual(HashSet.toValues(result).sort(), [2, 3, 4])
-   * ```
-   */
-  <A>(f: (set: HashSet<A>) => void): (self: HashSet<A>) => HashSet<A>
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import { HashSet, pipe } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * // Create a set with initial values
+     * const immutableSet = HashSet.make(1, 2, 3)
+     *
+     * // Use mutate to perform multiple operations efficiently
+     * const result = pipe(
+     *   immutableSet,
+     *   HashSet.mutate((set) => {
+     *     assert.equal(Object.is(immutableSet, set), false)
+     *
+     *     // The set is temporarily mutable inside this function
+     *     const mod1 = HashSet.add(set, 4)
+     *     const mod2 = HashSet.remove(set, 1)
+     *     assert.equal(Object.is(mod1, mod2), true) // they are the same object by reference
+     *   })
+     * )
+     *
+     * // The original set is unchanged
+     * assert.equal(Object.is(immutableSet, result), false)
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(immutableSet).sort(),
+     *   [1, 2, 3]
+     * )
+     *
+     * // The result contains the mutations
+     * assert.deepStrictEqual(HashSet.toValues(result).sort(), [2, 3, 4])
+     * ```
+     */
+    <A>(f: (set: HashSet<A>) => void): (self: HashSet<A>) => HashSet<A>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import { HashSet } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * // Create a set with initial values
-   * const immutableSet = HashSet.make(1, 2, 3)
-   *
-   * // Use mutate with data-first API
-   * const result = HashSet.mutate(immutableSet, (set) => {
-   *   // The set is temporarily mutable inside this function
-   *   HashSet.add(set, 4)
-   *   HashSet.remove(set, 1)
-   * })
-   *
-   * // The original set is unchanged
-   * assert.equal(Object.is(immutableSet, result), false)
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(immutableSet).sort(),
-   *   [1, 2, 3]
-   * )
-   *
-   * // The result contains the mutations
-   * assert.deepStrictEqual(HashSet.toValues(result).sort(), [2, 3, 4])
-   * ```
-   */
-  <A>(self: HashSet<A>, f: (set: HashSet<A>) => void): HashSet<A>
-} = HS.mutate
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import { HashSet } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * // Create a set with initial values
+     * const immutableSet = HashSet.make(1, 2, 3)
+     *
+     * // Use mutate with data-first API
+     * const result = HashSet.mutate(immutableSet, (set) => {
+     *   // The set is temporarily mutable inside this function
+     *   HashSet.add(set, 4)
+     *   HashSet.remove(set, 1)
+     * })
+     *
+     * // The original set is unchanged
+     * assert.equal(Object.is(immutableSet, result), false)
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(immutableSet).sort(),
+     *   [1, 2, 3]
+     * )
+     *
+     * // The result contains the mutations
+     * assert.deepStrictEqual(HashSet.toValues(result).sort(), [2, 3, 4])
+     * ```
+     */
+    <A>(self: HashSet<A>, f: (set: HashSet<A>) => void): HashSet<A>;
+} = HS.mutate;
 
 /**
  * Adds a value to the `HashSet`.
@@ -1259,48 +1268,48 @@ export const mutate: {
  * @see Other `HashSet` mutations are {@link module:HashSet.remove} {@link module:HashSet.toggle} {@link module:HashSet.beginMutation} {@link module:HashSet.endMutation} {@link module:HashSet.mutate}
  */
 export const add: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import { HashSet, pipe } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * assert.deepStrictEqual(
-   *   pipe(
-   *     HashSet.empty<number>(), // HashSet.HashSet<number>
-   *     HashSet.add(0),
-   *     HashSet.add(1),
-   *     HashSet.add(1),
-   *     HashSet.add(2),
-   *     HashSet.toValues
-   *   ),
-   *   Array.of(0, 1, 2)
-   * )
-   * ```
-   */
-  <A>(value: A): (self: HashSet<A>) => HashSet<A>
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import { HashSet, pipe } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * assert.deepStrictEqual(
+     *   pipe(
+     *     HashSet.empty<number>(), // HashSet.HashSet<number>
+     *     HashSet.add(0),
+     *     HashSet.add(1),
+     *     HashSet.add(1),
+     *     HashSet.add(2),
+     *     HashSet.toValues
+     *   ),
+     *   Array.of(0, 1, 2)
+     * )
+     * ```
+     */
+    <A>(value: A): (self: HashSet<A>) => HashSet<A>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import { HashSet, pipe } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * const empty = HashSet.empty<number>()
-   * const withZero = HashSet.add(empty, 0)
-   * const withOne = HashSet.add(withZero, 1)
-   * const withTwo = HashSet.add(withOne, 2)
-   * const withTwoTwo = HashSet.add(withTwo, 2)
-   *
-   * assert.deepStrictEqual(HashSet.toValues(withTwoTwo), Array.of(0, 1, 2))
-   * ```
-   */
-  <A>(self: HashSet<A>, value: A): HashSet<A>
-} = HS.add
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import { HashSet, pipe } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * const empty = HashSet.empty<number>()
+     * const withZero = HashSet.add(empty, 0)
+     * const withOne = HashSet.add(withZero, 1)
+     * const withTwo = HashSet.add(withOne, 2)
+     * const withTwoTwo = HashSet.add(withTwo, 2)
+     *
+     * assert.deepStrictEqual(HashSet.toValues(withTwoTwo), Array.of(0, 1, 2))
+     * ```
+     */
+    <A>(self: HashSet<A>, value: A): HashSet<A>;
+} = HS.add;
 
 /**
  * Removes a value from the `HashSet`.
@@ -1328,44 +1337,44 @@ export const add: {
  * @see Other `HashSet` mutations are {@link module:HashSet.add} {@link module:HashSet.toggle} {@link module:HashSet.beginMutation} {@link module:HashSet.endMutation} {@link module:HashSet.mutate}
  */
 export const remove: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const set = HashSet.make(0, 1, 2)
-   * const result = pipe(set, HashSet.remove(0))
-   *
-   * assert.equal(pipe(result, HashSet.has(0)), false) // it has correctly removed 0
-   * assert.equal(pipe(set, HashSet.has(0)), true) // it does not mutate the original set
-   * assert.equal(pipe(result, HashSet.has(1)), true)
-   * assert.equal(pipe(result, HashSet.has(2)), true)
-   * ```
-   */
-  <A>(value: A): (self: HashSet<A>) => HashSet<A>
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const set = HashSet.make(0, 1, 2)
+     * const result = pipe(set, HashSet.remove(0))
+     *
+     * assert.equal(pipe(result, HashSet.has(0)), false) // it has correctly removed 0
+     * assert.equal(pipe(set, HashSet.has(0)), true) // it does not mutate the original set
+     * assert.equal(pipe(result, HashSet.has(1)), true)
+     * assert.equal(pipe(result, HashSet.has(2)), true)
+     * ```
+     */
+    <A>(value: A): (self: HashSet<A>) => HashSet<A>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const set = HashSet.make(0, 1, 2)
-   * const result = HashSet.remove(set, 0)
-   *
-   * assert.equal(HashSet.has(result, 0), false) // it has correctly removed 0
-   * assert.equal(HashSet.has(set, 0), true) // it does not mutate the original set
-   * assert.equal(HashSet.has(result, 1), true)
-   * assert.equal(HashSet.has(result, 2), true)
-   * ```
-   */
-  <A>(self: HashSet<A>, value: A): HashSet<A>
-} = HS.remove
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const set = HashSet.make(0, 1, 2)
+     * const result = HashSet.remove(set, 0)
+     *
+     * assert.equal(HashSet.has(result, 0), false) // it has correctly removed 0
+     * assert.equal(HashSet.has(set, 0), true) // it does not mutate the original set
+     * assert.equal(HashSet.has(result, 1), true)
+     * assert.equal(HashSet.has(result, 2), true)
+     * ```
+     */
+    <A>(self: HashSet<A>, value: A): HashSet<A>;
+} = HS.remove;
 
 /**
  * Computes the set difference `(A - B)` between this `HashSet` and the
@@ -1399,70 +1408,70 @@ export const remove: {
  * @see Other `HashSet` operations are {@link module:HashSet.intersection} {@link module:HashSet.union}
  */
 export const difference: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * // Create two sets with some overlapping elements
-   * const thisSet = HashSet.make(1, 2, 3)
-   * const thatIterable = HashSet.make(3, 4, 5)
-   *
-   * // Compute the difference (elements in thisSet that are not in thatIterable)
-   * const result = pipe(thisSet, HashSet.difference(thatIterable))
-   *
-   * // The result contains only elements from thisSet that are not in thatIterable
-   * assert.deepStrictEqual(HashSet.toValues(result).sort(), [1, 2])
-   *
-   * // The original sets are unchanged
-   * assert.deepStrictEqual(HashSet.toValues(thisSet).sort(), [1, 2, 3])
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(thatIterable).sort(),
-   *   [3, 4, 5]
-   * )
-   *
-   * // You can also use arrays or other iterables
-   * const diffWithArray = pipe(thisSet, HashSet.difference([3, 4]))
-   * assert.deepStrictEqual(HashSet.toValues(diffWithArray).sort(), [1, 2])
-   * ```
-   */
-  <A>(that: Iterable<A>): (self: HashSet<A>) => HashSet<A>
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * // Create two sets with some overlapping elements
+     * const thisSet = HashSet.make(1, 2, 3)
+     * const thatIterable = HashSet.make(3, 4, 5)
+     *
+     * // Compute the difference (elements in thisSet that are not in thatIterable)
+     * const result = pipe(thisSet, HashSet.difference(thatIterable))
+     *
+     * // The result contains only elements from thisSet that are not in thatIterable
+     * assert.deepStrictEqual(HashSet.toValues(result).sort(), [1, 2])
+     *
+     * // The original sets are unchanged
+     * assert.deepStrictEqual(HashSet.toValues(thisSet).sort(), [1, 2, 3])
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(thatIterable).sort(),
+     *   [3, 4, 5]
+     * )
+     *
+     * // You can also use arrays or other iterables
+     * const diffWithArray = pipe(thisSet, HashSet.difference([3, 4]))
+     * assert.deepStrictEqual(HashSet.toValues(diffWithArray).sort(), [1, 2])
+     * ```
+     */
+    <A>(that: Iterable<A>): (self: HashSet<A>) => HashSet<A>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import { HashSet } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * // Create two sets with some overlapping elements
-   * const thisSet = HashSet.make(1, 2, 3)
-   * const thatIterable = HashSet.make(3, 4, 5)
-   *
-   * // Compute the difference using data-first API
-   * const result = HashSet.difference(thisSet, thatIterable)
-   *
-   * // The result contains only elements from thisSet that are not in thatIterable
-   * assert.deepStrictEqual(HashSet.toValues(result).sort(), [1, 2])
-   *
-   * // The original sets are unchanged
-   * assert.deepStrictEqual(HashSet.toValues(thisSet).sort(), [1, 2, 3])
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(thatIterable).sort(),
-   *   [3, 4, 5]
-   * )
-   *
-   * // You can also compute the difference in the other direction
-   * const reverseResult = HashSet.difference(thatIterable, thisSet)
-   * assert.deepStrictEqual(HashSet.toValues(reverseResult).sort(), [4, 5])
-   * ```
-   */
-  <A>(self: HashSet<A>, that: Iterable<A>): HashSet<A>
-} = HS.difference
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import { HashSet } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * // Create two sets with some overlapping elements
+     * const thisSet = HashSet.make(1, 2, 3)
+     * const thatIterable = HashSet.make(3, 4, 5)
+     *
+     * // Compute the difference using data-first API
+     * const result = HashSet.difference(thisSet, thatIterable)
+     *
+     * // The result contains only elements from thisSet that are not in thatIterable
+     * assert.deepStrictEqual(HashSet.toValues(result).sort(), [1, 2])
+     *
+     * // The original sets are unchanged
+     * assert.deepStrictEqual(HashSet.toValues(thisSet).sort(), [1, 2, 3])
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(thatIterable).sort(),
+     *   [3, 4, 5]
+     * )
+     *
+     * // You can also compute the difference in the other direction
+     * const reverseResult = HashSet.difference(thatIterable, thisSet)
+     * assert.deepStrictEqual(HashSet.toValues(reverseResult).sort(), [4, 5])
+     * ```
+     */
+    <A>(self: HashSet<A>, that: Iterable<A>): HashSet<A>;
+} = HS.difference;
 
 /**
  * Returns a `HashSet` of values which are present in both this set and that
@@ -1495,70 +1504,70 @@ export const difference: {
  * @see Other `HashSet` operations are {@link module:HashSet.difference} {@link module:HashSet.union}
  */
 export const intersection: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * // Create two sets with some overlapping elements
-   * const set1 = HashSet.make(1, 2, 3)
-   * const set2 = HashSet.make(2, 3, 4)
-   *
-   * // Compute the intersection (elements that are in both sets)
-   * const result = pipe(set1, HashSet.intersection(set2))
-   *
-   * // The result contains only elements that are in both sets
-   * assert.deepStrictEqual(HashSet.toValues(result).sort(), [2, 3])
-   *
-   * // The original sets are unchanged
-   * assert.deepStrictEqual(HashSet.toValues(set1).sort(), [1, 2, 3])
-   * assert.deepStrictEqual(HashSet.toValues(set2).sort(), [2, 3, 4])
-   *
-   * // You can also use arrays or other iterables
-   * const intersectWithArray = pipe(set1, HashSet.intersection([2, 3, 5]))
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(intersectWithArray).sort(),
-   *   [2, 3]
-   * )
-   * ```
-   */
-  <A>(that: Iterable<A>): (self: HashSet<A>) => HashSet<A>
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * // Create two sets with some overlapping elements
+     * const set1 = HashSet.make(1, 2, 3)
+     * const set2 = HashSet.make(2, 3, 4)
+     *
+     * // Compute the intersection (elements that are in both sets)
+     * const result = pipe(set1, HashSet.intersection(set2))
+     *
+     * // The result contains only elements that are in both sets
+     * assert.deepStrictEqual(HashSet.toValues(result).sort(), [2, 3])
+     *
+     * // The original sets are unchanged
+     * assert.deepStrictEqual(HashSet.toValues(set1).sort(), [1, 2, 3])
+     * assert.deepStrictEqual(HashSet.toValues(set2).sort(), [2, 3, 4])
+     *
+     * // You can also use arrays or other iterables
+     * const intersectWithArray = pipe(set1, HashSet.intersection([2, 3, 5]))
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(intersectWithArray).sort(),
+     *   [2, 3]
+     * )
+     * ```
+     */
+    <A>(that: Iterable<A>): (self: HashSet<A>) => HashSet<A>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import { HashSet } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * // Create two sets with some overlapping elements
-   * const set1 = HashSet.make(1, 2, 3)
-   * const set2 = HashSet.make(2, 3, 4)
-   *
-   * // Compute the intersection using data-first API
-   * const result = HashSet.intersection(set1, set2)
-   *
-   * // The result contains only elements that are in both sets
-   * assert.deepStrictEqual(HashSet.toValues(result).sort(), [2, 3])
-   *
-   * // The original sets are unchanged
-   * assert.deepStrictEqual(HashSet.toValues(set1).sort(), [1, 2, 3])
-   * assert.deepStrictEqual(HashSet.toValues(set2).sort(), [2, 3, 4])
-   *
-   * // You can also use arrays or other iterables
-   * const intersectWithArray = HashSet.intersection(set1, [2, 3, 5])
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(intersectWithArray).sort(),
-   *   [2, 3]
-   * )
-   * ```
-   */
-  <A>(self: HashSet<A>, that: Iterable<A>): HashSet<A>
-} = HS.intersection
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import { HashSet } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * // Create two sets with some overlapping elements
+     * const set1 = HashSet.make(1, 2, 3)
+     * const set2 = HashSet.make(2, 3, 4)
+     *
+     * // Compute the intersection using data-first API
+     * const result = HashSet.intersection(set1, set2)
+     *
+     * // The result contains only elements that are in both sets
+     * assert.deepStrictEqual(HashSet.toValues(result).sort(), [2, 3])
+     *
+     * // The original sets are unchanged
+     * assert.deepStrictEqual(HashSet.toValues(set1).sort(), [1, 2, 3])
+     * assert.deepStrictEqual(HashSet.toValues(set2).sort(), [2, 3, 4])
+     *
+     * // You can also use arrays or other iterables
+     * const intersectWithArray = HashSet.intersection(set1, [2, 3, 5])
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(intersectWithArray).sort(),
+     *   [2, 3]
+     * )
+     * ```
+     */
+    <A>(self: HashSet<A>, that: Iterable<A>): HashSet<A>;
+} = HS.intersection;
 
 /**
  * Computes the set union `( self ∪ that )` between this `HashSet` and the
@@ -1590,82 +1599,82 @@ export const intersection: {
  * @see Other `HashSet` operations are {@link module:HashSet.difference} {@link module:HashSet.intersection}
  */
 export const union: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * // Create two sets with some overlapping elements
-   * const selfSet = HashSet.make(1, 2, 3)
-   * const thatIterable = HashSet.make(3, 4, 5)
-   *
-   * // Compute the union (all elements from both sets)
-   * const result = pipe(selfSet, HashSet.union(thatIterable))
-   *
-   * // The result contains all elements from both sets (without duplicates)
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(result).sort(),
-   *   [1, 2, 3, 4, 5]
-   * )
-   *
-   * // The original sets are unchanged
-   * assert.deepStrictEqual(HashSet.toValues(selfSet).sort(), [1, 2, 3])
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(thatIterable).sort(),
-   *   [3, 4, 5]
-   * )
-   *
-   * // You can also use arrays or other iterables
-   * const unionWithArray = pipe(selfSet, HashSet.union([4, 5, 6]))
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(unionWithArray).sort(),
-   *   [1, 2, 3, 4, 5, 6]
-   * )
-   * ```
-   */
-  <A>(that: Iterable<A>): (self: HashSet<A>) => HashSet<A>
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * // Create two sets with some overlapping elements
+     * const selfSet = HashSet.make(1, 2, 3)
+     * const thatIterable = HashSet.make(3, 4, 5)
+     *
+     * // Compute the union (all elements from both sets)
+     * const result = pipe(selfSet, HashSet.union(thatIterable))
+     *
+     * // The result contains all elements from both sets (without duplicates)
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(result).sort(),
+     *   [1, 2, 3, 4, 5]
+     * )
+     *
+     * // The original sets are unchanged
+     * assert.deepStrictEqual(HashSet.toValues(selfSet).sort(), [1, 2, 3])
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(thatIterable).sort(),
+     *   [3, 4, 5]
+     * )
+     *
+     * // You can also use arrays or other iterables
+     * const unionWithArray = pipe(selfSet, HashSet.union([4, 5, 6]))
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(unionWithArray).sort(),
+     *   [1, 2, 3, 4, 5, 6]
+     * )
+     * ```
+     */
+    <A>(that: Iterable<A>): (self: HashSet<A>) => HashSet<A>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import { HashSet } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * // Create two sets with some overlapping elements
-   * const selfSet = HashSet.make(1, 2, 3)
-   * const thatIterable = HashSet.make(3, 4, 5)
-   *
-   * // Compute the union using data-first API
-   * const result = HashSet.union(selfSet, thatIterable)
-   *
-   * // The result contains all elements from both sets (without duplicates)
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(result).sort(),
-   *   [1, 2, 3, 4, 5]
-   * )
-   *
-   * // The original sets are unchanged
-   * assert.deepStrictEqual(HashSet.toValues(selfSet).sort(), [1, 2, 3])
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(thatIterable).sort(),
-   *   [3, 4, 5]
-   * )
-   *
-   * // You can also use arrays or other iterables
-   * const unionWithArray = HashSet.union(selfSet, [4, 5, 6])
-   * assert.deepStrictEqual(
-   *   HashSet.toValues(unionWithArray).sort(),
-   *   [1, 2, 3, 4, 5, 6]
-   * )
-   * ```
-   */
-  <A>(self: HashSet<A>, that: Iterable<A>): HashSet<A>
-} = HS.union
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import { HashSet } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * // Create two sets with some overlapping elements
+     * const selfSet = HashSet.make(1, 2, 3)
+     * const thatIterable = HashSet.make(3, 4, 5)
+     *
+     * // Compute the union using data-first API
+     * const result = HashSet.union(selfSet, thatIterable)
+     *
+     * // The result contains all elements from both sets (without duplicates)
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(result).sort(),
+     *   [1, 2, 3, 4, 5]
+     * )
+     *
+     * // The original sets are unchanged
+     * assert.deepStrictEqual(HashSet.toValues(selfSet).sort(), [1, 2, 3])
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(thatIterable).sort(),
+     *   [3, 4, 5]
+     * )
+     *
+     * // You can also use arrays or other iterables
+     * const unionWithArray = HashSet.union(selfSet, [4, 5, 6])
+     * assert.deepStrictEqual(
+     *   HashSet.toValues(unionWithArray).sort(),
+     *   [1, 2, 3, 4, 5, 6]
+     * )
+     * ```
+     */
+    <A>(self: HashSet<A>, that: Iterable<A>): HashSet<A>;
+} = HS.union;
 
 /**
  * Checks if a value is present in the `HashSet`. If it is present, the value
@@ -1697,64 +1706,64 @@ export const union: {
  * @see Other `HashSet` mutations are {@link module:HashSet.add} {@link module:HashSet.remove} {@link module:HashSet.beginMutation} {@link module:HashSet.endMutation} {@link module:HashSet.mutate}
  */
 export const toggle: {
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-last` a.k.a. `pipeable` API
-   * import { HashSet, pipe } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * // arrange
-   * let set = HashSet.make(0, 1, 2)
-   *
-   * // assert 1: 0 is in the set
-   * assert.equal(pipe(set, HashSet.has(0)), true)
-   *
-   * // act 2: toggle 0 once on the set
-   * set = pipe(set, HashSet.toggle(0))
-   *
-   * // assert 2: 0 is not in the set any longer
-   * assert.equal(pipe(set, HashSet.has(0)), false)
-   *
-   * // act 3: toggle 0 once again on the set
-   * set = pipe(set, HashSet.toggle(0))
-   *
-   * // assert 3: 0 in now back in the set
-   * assert.equal(pipe(set, HashSet.has(0)), true)
-   * ```
-   */
-  <A>(value: A): (self: HashSet<A>) => HashSet<A>
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-last` a.k.a. `pipeable` API
+     * import { HashSet, pipe } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * // arrange
+     * let set = HashSet.make(0, 1, 2)
+     *
+     * // assert 1: 0 is in the set
+     * assert.equal(pipe(set, HashSet.has(0)), true)
+     *
+     * // act 2: toggle 0 once on the set
+     * set = pipe(set, HashSet.toggle(0))
+     *
+     * // assert 2: 0 is not in the set any longer
+     * assert.equal(pipe(set, HashSet.has(0)), false)
+     *
+     * // act 3: toggle 0 once again on the set
+     * set = pipe(set, HashSet.toggle(0))
+     *
+     * // assert 3: 0 in now back in the set
+     * assert.equal(pipe(set, HashSet.has(0)), true)
+     * ```
+     */
+    <A>(value: A): (self: HashSet<A>) => HashSet<A>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * // `data-first` API
-   * import { HashSet, pipe } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * // arrange
-   * let set = HashSet.make(0, 1, 2)
-   *
-   * // assert 1: 0 is in the set
-   * assert.equal(HashSet.has(set, 0), true)
-   *
-   * // act 2: toggle 0 once on the set
-   * set = HashSet.toggle(set, 0)
-   *
-   * // assert 2: 0 is not in the set any longer
-   * assert.equal(HashSet.has(set, 0), false)
-   *
-   * // act 3: toggle 0 once again on the set
-   * set = HashSet.toggle(set, 0)
-   *
-   * // assert 3: 0 in now back in the set
-   * assert.equal(HashSet.has(set, 0), true)
-   * ```
-   */
-  <A>(self: HashSet<A>, value: A): HashSet<A>
-} = HS.toggle
+    /**
+     * @example
+     *
+     * ```ts
+     * // `data-first` API
+     * import { HashSet, pipe } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * // arrange
+     * let set = HashSet.make(0, 1, 2)
+     *
+     * // assert 1: 0 is in the set
+     * assert.equal(HashSet.has(set, 0), true)
+     *
+     * // act 2: toggle 0 once on the set
+     * set = HashSet.toggle(set, 0)
+     *
+     * // assert 2: 0 is not in the set any longer
+     * assert.equal(HashSet.has(set, 0), false)
+     *
+     * // act 3: toggle 0 once again on the set
+     * set = HashSet.toggle(set, 0)
+     *
+     * // assert 3: 0 in now back in the set
+     * assert.equal(HashSet.has(set, 0), true)
+     * ```
+     */
+    <A>(self: HashSet<A>, value: A): HashSet<A>;
+} = HS.toggle;
 
 /**
  * Maps over the values of the `HashSet` using the specified function.
@@ -1784,42 +1793,42 @@ export const toggle: {
  * ```
  */
 export const map: {
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * assert.deepStrictEqual(
-   *   pipe(
-   *     HashSet.make(0, 1, 2), //    HashSet.HashSet<number>
-   *     HashSet.map((n) => String(n + 1)) // HashSet.HashSet<String>
-   *   ),
-   *   HashSet.make("1", "2", "3")
-   * )
-   * ```
-   */
-  <A, B>(f: (a: A) => B): (self: HashSet<A>) => HashSet<B>
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * assert.deepStrictEqual(
+     *   pipe(
+     *     HashSet.make(0, 1, 2), //    HashSet.HashSet<number>
+     *     HashSet.map((n) => String(n + 1)) // HashSet.HashSet<String>
+     *   ),
+     *   HashSet.make("1", "2", "3")
+     * )
+     * ```
+     */
+    <A, B>(f: (a: A) => B): (self: HashSet<A>) => HashSet<B>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * assert.deepStrictEqual(
-   *   HashSet.map(
-   *     HashSet.make(0, 1, 2), //    HashSet.HashSet<number>
-   *     (n) => String(n + 1)
-   *   ), // HashSet.HashSet<String>
-   *   HashSet.make("1", "2", "3")
-   * )
-   * ```
-   */
-  <A, B>(self: HashSet<A>, f: (a: A) => B): HashSet<B>
-} = HS.map
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * assert.deepStrictEqual(
+     *   HashSet.map(
+     *     HashSet.make(0, 1, 2), //    HashSet.HashSet<number>
+     *     (n) => String(n + 1)
+     *   ), // HashSet.HashSet<String>
+     *   HashSet.make("1", "2", "3")
+     * )
+     * ```
+     */
+    <A, B>(self: HashSet<A>, f: (a: A) => B): HashSet<B>;
+} = HS.map;
 
 /**
  * Chains over the values of the `HashSet` using the specified function.
@@ -1852,41 +1861,41 @@ export const map: {
  * ```
  */
 export const flatMap: {
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe, List } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * assert.deepStrictEqual(
-   *   pipe(
-   *     HashSet.make(0, 1, 2),
-   *     HashSet.flatMap((n) => List.of(String(n * n))) // needs to return an Iterable
-   *   ),
-   *   HashSet.make("0", "1", "4")
-   * )
-   * ```
-   */
-  <A, B>(f: (a: A) => Iterable<B>): (self: HashSet<A>) => HashSet<B>
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe, List } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * assert.deepStrictEqual(
+     *   pipe(
+     *     HashSet.make(0, 1, 2),
+     *     HashSet.flatMap((n) => List.of(String(n * n))) // needs to return an Iterable
+     *   ),
+     *   HashSet.make("0", "1", "4")
+     * )
+     * ```
+     */
+    <A, B>(f: (a: A) => Iterable<B>): (self: HashSet<A>) => HashSet<B>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe, List } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * assert.deepStrictEqual(
-   *   HashSet.flatMap(HashSet.make(0, 1, 2), (n) =>
-   *     List.of(String(n * n * n))
-   *   ), // needs to return an Iterable
-   *   HashSet.make("0", "1", "8")
-   * )
-   * ```
-   */
-  <A, B>(self: HashSet<A>, f: (a: A) => Iterable<B>): HashSet<B>
-} = HS.flatMap
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe, List } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * assert.deepStrictEqual(
+     *   HashSet.flatMap(HashSet.make(0, 1, 2), (n) =>
+     *     List.of(String(n * n * n))
+     *   ), // needs to return an Iterable
+     *   HashSet.make("0", "1", "8")
+     * )
+     * ```
+     */
+    <A, B>(self: HashSet<A>, f: (a: A) => Iterable<B>): HashSet<B>;
+} = HS.flatMap;
 
 /**
  * Applies the specified function to the values of the `HashSet`.
@@ -1913,45 +1922,45 @@ export const flatMap: {
  * ```
  */
 export const forEach: {
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const result: Array<number> = []
-   *
-   * pipe(
-   *   HashSet.make(0, 1, 2),
-   *   HashSet.forEach((n): void => {
-   *     result.push(n)
-   *   })
-   * )
-   *
-   * assert.deepStrictEqual(result, [0, 1, 2])
-   * ```
-   */
-  <A>(f: (value: A) => void): (self: HashSet<A>) => void
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const result: Array<number> = []
+     *
+     * pipe(
+     *   HashSet.make(0, 1, 2),
+     *   HashSet.forEach((n): void => {
+     *     result.push(n)
+     *   })
+     * )
+     *
+     * assert.deepStrictEqual(result, [0, 1, 2])
+     * ```
+     */
+    <A>(f: (value: A) => void): (self: HashSet<A>) => void;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const result: Array<number> = []
-   *
-   * HashSet.forEach(HashSet.make(0, 1, 2), (n): void => {
-   *   result.push(n)
-   * })
-   *
-   * assert.deepStrictEqual(result, [0, 1, 2])
-   * ```
-   */
-  <A>(self: HashSet<A>, f: (value: A) => void): void
-} = HS.forEach
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const result: Array<number> = []
+     *
+     * HashSet.forEach(HashSet.make(0, 1, 2), (n): void => {
+     *   result.push(n)
+     * })
+     *
+     * assert.deepStrictEqual(result, [0, 1, 2])
+     * ```
+     */
+    <A>(self: HashSet<A>, f: (value: A) => void): void;
+} = HS.forEach;
 
 /**
  * Reduces the specified state over the values of the `HashSet`.
@@ -1980,43 +1989,46 @@ export const forEach: {
  * ```
  */
 export const reduce: {
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * assert.equal(
-   *   pipe(
-   *     HashSet.make(0, 1, 2),
-   *     HashSet.reduce(10, (accumulator, value) => accumulator + value)
-   *   ),
-   *   13
-   * )
-   * ```
-   */
-  <A, Z>(zero: Z, f: (accumulator: Z, value: A) => Z): (self: HashSet<A>) => Z
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * assert.equal(
+     *   pipe(
+     *     HashSet.make(0, 1, 2),
+     *     HashSet.reduce(10, (accumulator, value) => accumulator + value)
+     *   ),
+     *   13
+     * )
+     * ```
+     */
+    <A, Z>(
+        zero: Z,
+        f: (accumulator: Z, value: A) => Z,
+    ): (self: HashSet<A>) => Z;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * assert.equal(
-   *   HashSet.reduce(
-   *     HashSet.make(0, 1, 2),
-   *     -3,
-   *     (accumulator, value) => accumulator + value
-   *   ),
-   *   0
-   * )
-   * ```
-   */
-  <A, Z>(self: HashSet<A>, zero: Z, f: (accumulator: Z, value: A) => Z): Z
-} = HS.reduce
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * assert.equal(
+     *   HashSet.reduce(
+     *     HashSet.make(0, 1, 2),
+     *     -3,
+     *     (accumulator, value) => accumulator + value
+     *   ),
+     *   0
+     * )
+     * ```
+     */
+    <A, Z>(self: HashSet<A>, zero: Z, f: (accumulator: Z, value: A) => Z): Z;
+} = HS.reduce;
 
 /**
  * Filters values out of a `HashSet` using the specified predicate.
@@ -2074,101 +2086,101 @@ export const reduce: {
  * ```
  */
 export const filter: {
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe, Predicate } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const numbersAndStringsHashSet: HashSet.HashSet<number | string> =
-   *   HashSet.make(1, "unos", 2, "two", 3, "trois", 4, "vier")
-   *
-   * const stringRefinement: Predicate.Refinement<
-   *   string | number,
-   *   string
-   * > = (value) => typeof value === "string"
-   *
-   * const stringHashSet: HashSet.HashSet<string> = pipe(
-   *   numbersAndStringsHashSet,
-   *   HashSet.filter(stringRefinement)
-   * )
-   *
-   * assert.equal(
-   *   pipe(stringHashSet, HashSet.every(Predicate.isString)),
-   *   true
-   * )
-   * ```
-   */
-  <A, B extends A>(
-    refinement: Refinement<NoInfer<A>, B>
-  ): (self: HashSet<A>) => HashSet<B>
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe, Predicate } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const numbersAndStringsHashSet: HashSet.HashSet<number | string> =
+     *   HashSet.make(1, "unos", 2, "two", 3, "trois", 4, "vier")
+     *
+     * const stringRefinement: Predicate.Refinement<
+     *   string | number,
+     *   string
+     * > = (value) => typeof value === "string"
+     *
+     * const stringHashSet: HashSet.HashSet<string> = pipe(
+     *   numbersAndStringsHashSet,
+     *   HashSet.filter(stringRefinement)
+     * )
+     *
+     * assert.equal(
+     *   pipe(stringHashSet, HashSet.every(Predicate.isString)),
+     *   true
+     * )
+     * ```
+     */
+    <A, B extends A>(
+        refinement: Refinement<NoInfer<A>, B>,
+    ): (self: HashSet<A>) => HashSet<B>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe, type Predicate } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const filterPositiveNumbers: Predicate.Predicate<number> = (n) => n > 0
-   *
-   * assert.deepStrictEqual(
-   *   pipe(
-   *     HashSet.make(-2, -1, 0, 1, 2),
-   *     HashSet.filter(filterPositiveNumbers)
-   *   ),
-   *   HashSet.make(1, 2)
-   * )
-   * ```
-   */
-  <A>(predicate: Predicate<NoInfer<A>>): (self: HashSet<A>) => HashSet<A>
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe, type Predicate } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const filterPositiveNumbers: Predicate.Predicate<number> = (n) => n > 0
+     *
+     * assert.deepStrictEqual(
+     *   pipe(
+     *     HashSet.make(-2, -1, 0, 1, 2),
+     *     HashSet.filter(filterPositiveNumbers)
+     *   ),
+     *   HashSet.make(1, 2)
+     * )
+     * ```
+     */
+    <A>(predicate: Predicate<NoInfer<A>>): (self: HashSet<A>) => HashSet<A>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, Predicate } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const numbersAndStringsHashSet: HashSet.HashSet<number | string> =
-   *   HashSet.make(1, "unos", 2, "two", 3, "trois", 4, "vier")
-   *
-   * const stringRefinement: Predicate.Refinement<
-   *   string | number,
-   *   string
-   * > = (value) => typeof value === "string"
-   *
-   * const stringHashSet: HashSet.HashSet<string> = HashSet.filter(
-   *   numbersAndStringsHashSet,
-   *   stringRefinement
-   * )
-   *
-   * assert.equal(HashSet.every(stringHashSet, Predicate.isString), true)
-   * ```
-   */
-  <A, B extends A>(
-    self: HashSet<A>,
-    refinement: Refinement<A, B>
-  ): HashSet<B>
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, Predicate } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const numbersAndStringsHashSet: HashSet.HashSet<number | string> =
+     *   HashSet.make(1, "unos", 2, "two", 3, "trois", 4, "vier")
+     *
+     * const stringRefinement: Predicate.Refinement<
+     *   string | number,
+     *   string
+     * > = (value) => typeof value === "string"
+     *
+     * const stringHashSet: HashSet.HashSet<string> = HashSet.filter(
+     *   numbersAndStringsHashSet,
+     *   stringRefinement
+     * )
+     *
+     * assert.equal(HashSet.every(stringHashSet, Predicate.isString), true)
+     * ```
+     */
+    <A, B extends A>(
+        self: HashSet<A>,
+        refinement: Refinement<A, B>,
+    ): HashSet<B>;
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe, type Predicate } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const filterPositiveNumbers: Predicate.Predicate<number> = (n) => n > 0
-   *
-   * assert.deepStrictEqual(
-   *   HashSet.filter(HashSet.make(-2, -1, 0, 1, 2), filterPositiveNumbers),
-   *   HashSet.make(1, 2)
-   * )
-   * ```
-   */
-  <A>(self: HashSet<A>, predicate: Predicate<A>): HashSet<A>
-} = HS.filter
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe, type Predicate } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const filterPositiveNumbers: Predicate.Predicate<number> = (n) => n > 0
+     *
+     * assert.deepStrictEqual(
+     *   HashSet.filter(HashSet.make(-2, -1, 0, 1, 2), filterPositiveNumbers),
+     *   HashSet.make(1, 2)
+     * )
+     * ```
+     */
+    <A>(self: HashSet<A>, predicate: Predicate<A>): HashSet<A>;
+} = HS.filter;
 
 /**
  * Partition the values of a `HashSet` using the specified predicate.
@@ -2232,115 +2244,115 @@ export const filter: {
  * ```
  */
 export const partition: {
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe, Predicate } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const numbersAndStringsHashSet: HashSet.HashSet<number | string> =
-   *   HashSet.make(1, "unos", 2, "two", 3, "trois", 4, "vier")
-   *
-   * const stringRefinement: Predicate.Refinement<
-   *   string | number,
-   *   string
-   * > = (value) => typeof value === "string"
-   *
-   * const [
-   *   excluded, // HashSet.HashSet<number>
-   *   satisfying // HashSet.HashSet<string>
-   * ] = pipe(numbersAndStringsHashSet, HashSet.partition(stringRefinement))
-   *
-   * assert.equal(pipe(satisfying, HashSet.every(Predicate.isString)), true)
-   * assert.equal(pipe(excluded, HashSet.every(Predicate.isNumber)), true)
-   *
-   * assert.deepStrictEqual(excluded, HashSet.make(1, 2, 3, 4))
-   * assert.deepStrictEqual(
-   *   satisfying,
-   *   HashSet.make("unos", "two", "trois", "vier")
-   * )
-   * ```
-   */
-  <A, B extends A>(
-    refinement: Refinement<NoInfer<A>, B>
-  ): (
-    self: HashSet<A>
-  ) => [excluded: HashSet<Exclude<A, B>>, satisfying: HashSet<B>]
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe, Predicate } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const numbersAndStringsHashSet: HashSet.HashSet<number | string> =
+     *   HashSet.make(1, "unos", 2, "two", 3, "trois", 4, "vier")
+     *
+     * const stringRefinement: Predicate.Refinement<
+     *   string | number,
+     *   string
+     * > = (value) => typeof value === "string"
+     *
+     * const [
+     *   excluded, // HashSet.HashSet<number>
+     *   satisfying // HashSet.HashSet<string>
+     * ] = pipe(numbersAndStringsHashSet, HashSet.partition(stringRefinement))
+     *
+     * assert.equal(pipe(satisfying, HashSet.every(Predicate.isString)), true)
+     * assert.equal(pipe(excluded, HashSet.every(Predicate.isNumber)), true)
+     *
+     * assert.deepStrictEqual(excluded, HashSet.make(1, 2, 3, 4))
+     * assert.deepStrictEqual(
+     *   satisfying,
+     *   HashSet.make("unos", "two", "trois", "vier")
+     * )
+     * ```
+     */
+    <A, B extends A>(
+        refinement: Refinement<NoInfer<A>, B>,
+    ): (
+        self: HashSet<A>,
+    ) => [excluded: HashSet<Exclude<A, B>>, satisfying: HashSet<B>];
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const [excluded, satisfying] = pipe(
-   *   HashSet.make(0, 1, 2, 3, 4, 5),
-   *   HashSet.partition((n) => n % 2 === 0)
-   * )
-   *
-   * assert.deepStrictEqual(excluded, HashSet.make(1, 3, 5))
-   * assert.deepStrictEqual(satisfying, HashSet.make(0, 2, 4))
-   * ```
-   */
-  <A>(
-    predicate: Predicate<NoInfer<A>>
-  ): (self: HashSet<A>) => [excluded: HashSet<A>, satisfying: HashSet<A>]
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const [excluded, satisfying] = pipe(
+     *   HashSet.make(0, 1, 2, 3, 4, 5),
+     *   HashSet.partition((n) => n % 2 === 0)
+     * )
+     *
+     * assert.deepStrictEqual(excluded, HashSet.make(1, 3, 5))
+     * assert.deepStrictEqual(satisfying, HashSet.make(0, 2, 4))
+     * ```
+     */
+    <A>(
+        predicate: Predicate<NoInfer<A>>,
+    ): (self: HashSet<A>) => [excluded: HashSet<A>, satisfying: HashSet<A>];
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet, pipe, Predicate } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const numbersAndStringsHashSet: HashSet.HashSet<number | string> =
-   *   HashSet.make(1, "unos", 2, "two", 3, "trois", 4, "vier")
-   *
-   * const stringRefinement: Predicate.Refinement<
-   *   string | number,
-   *   string
-   * > = (value) => typeof value === "string"
-   *
-   * const [
-   *   excluded, // HashSet.HashSet<number>
-   *   satisfying // HashSet.HashSet<string>
-   * ] = HashSet.partition(numbersAndStringsHashSet, stringRefinement)
-   *
-   * assert.equal(HashSet.every(satisfying, Predicate.isString), true)
-   * assert.equal(HashSet.every(excluded, Predicate.isNumber), true)
-   *
-   * assert.deepStrictEqual(excluded, HashSet.make(1, 2, 3, 4))
-   * assert.deepStrictEqual(
-   *   satisfying,
-   *   HashSet.make("unos", "two", "trois", "vier")
-   * )
-   * ```
-   */
-  <A, B extends A>(
-    self: HashSet<A>,
-    refinement: Refinement<A, B>
-  ): [excluded: HashSet<Exclude<A, B>>, satisfying: HashSet<B>]
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet, pipe, Predicate } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const numbersAndStringsHashSet: HashSet.HashSet<number | string> =
+     *   HashSet.make(1, "unos", 2, "two", 3, "trois", 4, "vier")
+     *
+     * const stringRefinement: Predicate.Refinement<
+     *   string | number,
+     *   string
+     * > = (value) => typeof value === "string"
+     *
+     * const [
+     *   excluded, // HashSet.HashSet<number>
+     *   satisfying // HashSet.HashSet<string>
+     * ] = HashSet.partition(numbersAndStringsHashSet, stringRefinement)
+     *
+     * assert.equal(HashSet.every(satisfying, Predicate.isString), true)
+     * assert.equal(HashSet.every(excluded, Predicate.isNumber), true)
+     *
+     * assert.deepStrictEqual(excluded, HashSet.make(1, 2, 3, 4))
+     * assert.deepStrictEqual(
+     *   satisfying,
+     *   HashSet.make("unos", "two", "trois", "vier")
+     * )
+     * ```
+     */
+    <A, B extends A>(
+        self: HashSet<A>,
+        refinement: Refinement<A, B>,
+    ): [excluded: HashSet<Exclude<A, B>>, satisfying: HashSet<B>];
 
-  /**
-   * @example
-   *
-   * ```ts
-   * import { HashSet } from "effect"
-   * import * as assert from "node:assert/strict"
-   *
-   * const [excluded, satisfying] = HashSet.partition(
-   *   HashSet.make(0, 1, 2, 3, 4, 5),
-   *   (n) => n % 2 === 0
-   * )
-   *
-   * assert.deepStrictEqual(excluded, HashSet.make(1, 3, 5))
-   * assert.deepStrictEqual(satisfying, HashSet.make(0, 2, 4))
-   * ```
-   */
-  <A>(
-    self: HashSet<A>,
-    predicate: Predicate<A>
-  ): [excluded: HashSet<A>, satisfying: HashSet<A>]
-} = HS.partition
+    /**
+     * @example
+     *
+     * ```ts
+     * import { HashSet } from "effect"
+     * import * as assert from "node:assert/strict"
+     *
+     * const [excluded, satisfying] = HashSet.partition(
+     *   HashSet.make(0, 1, 2, 3, 4, 5),
+     *   (n) => n % 2 === 0
+     * )
+     *
+     * assert.deepStrictEqual(excluded, HashSet.make(1, 3, 5))
+     * assert.deepStrictEqual(satisfying, HashSet.make(0, 2, 4))
+     * ```
+     */
+    <A>(
+        self: HashSet<A>,
+        predicate: Predicate<A>,
+    ): [excluded: HashSet<A>, satisfying: HashSet<A>];
+} = HS.partition;

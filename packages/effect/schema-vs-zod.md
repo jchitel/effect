@@ -28,21 +28,21 @@ For instance, `Schema.URL` transforms a string into a `URL` object, enabling dir
 **Example** (Parsing URL strings into `URL` objects)
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 //                   ┌─── The output type
 //                   │      ┌─── The input type
 //                   ▼      ▼
 //      ┌─── Schema<URL, string, never>
 //      ▼
-const schema = Schema.URL
+const schema = Schema.URL;
 
 // Parse a valid URL string
-console.log(Schema.decodeUnknownSync(Schema.URL)("https://example.com"))
+console.log(Schema.decodeUnknownSync(Schema.URL)("https://example.com"));
 // Output: URL { href: 'https://example.com/', ... } (instance of URL)
 
 // Attempt to parse an invalid URL
-console.log(Schema.decodeUnknownSync(Schema.URL)("example.com"))
+console.log(Schema.decodeUnknownSync(Schema.URL)("example.com"));
 /*
 throws:
 ParseError: URL
@@ -62,35 +62,35 @@ While both libraries provide similar parsing features, `effect/Schema` uses [Eit
 Zod
 
 ```ts
-import { z } from "zod"
+import { z } from "zod";
 
 // creating a schema for strings
-const mySchema = z.string()
+const mySchema = z.string();
 
 // parsing
-mySchema.parse("tuna") // => "tuna"
-mySchema.parse(12) // => throws ZodError
+mySchema.parse("tuna"); // => "tuna"
+mySchema.parse(12); // => throws ZodError
 
 // "safe" parsing (doesn't throw error if validation fails)
-mySchema.safeParse("tuna") // => { success: true; data: "tuna" }
-mySchema.safeParse(12) // => { success: false; error: ZodError }
+mySchema.safeParse("tuna"); // => { success: true; data: "tuna" }
+mySchema.safeParse(12); // => { success: false; error: ZodError }
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 // creating a schema for strings
-const mySchema = Schema.String
+const mySchema = Schema.String;
 
 // parsing
-Schema.decodeUnknownSync(mySchema)("tuna") // => "tuna"
-Schema.decodeUnknownSync(mySchema)(12) // => throws ParseError
+Schema.decodeUnknownSync(mySchema)("tuna"); // => "tuna"
+Schema.decodeUnknownSync(mySchema)(12); // => throws ParseError
 
 // "safe" parsing (doesn't throw error if validation fails)
-Schema.decodeUnknownEither(mySchema)("tuna") // => Either.right("tuna")
-Schema.decodeUnknownEither(mySchema)(12) // => Either.left(ParseError)
+Schema.decodeUnknownEither(mySchema)("tuna"); // => Either.right("tuna")
+Schema.decodeUnknownEither(mySchema)(12); // => Either.left(ParseError)
 ```
 
 **Example** (Creating and using a schema for objects)
@@ -98,32 +98,32 @@ Schema.decodeUnknownEither(mySchema)(12) // => Either.left(ParseError)
 Zod
 
 ```ts
-import { z } from "zod"
+import { z } from "zod";
 
 const User = z.object({
-  username: z.string()
-})
+    username: z.string(),
+});
 
-User.parse({ username: "Ludwig" })
+User.parse({ username: "Ludwig" });
 
 // extract the inferred type
-type User = z.infer<typeof User>
+type User = z.infer<typeof User>;
 // { username: string }
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  username: Schema.String
-})
+    username: Schema.String,
+});
 
-Schema.decodeUnknownSync(User)({ username: "Ludwig" })
+Schema.decodeUnknownSync(User)({ username: "Ludwig" });
 
 // extract the inferred type
-type User = typeof User.Type
+type User = typeof User.Type;
 // { readonly username: string }
 ```
 
@@ -257,20 +257,20 @@ Zod
 
 ```ts
 const name = z.string({
-  required_error: "Name is required",
-  invalid_type_error: "Name must be a string"
-})
+    required_error: "Name is required",
+    invalid_type_error: "Name must be a string",
+});
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const name = Schema.String.annotations({
-  // No direct equivalent for required error
-  message: () => "Name must be a string"
-})
+    // No direct equivalent for required error
+    message: () => "Name must be a string",
+});
 ```
 
 **Example** (Custom error messages for string length)
@@ -280,15 +280,15 @@ When using validation methods, you can pass in an additional argument to provide
 Zod
 
 ```ts
-z.string().min(5, { message: "Must be 5 or more characters long" })
+z.string().min(5, { message: "Must be 5 or more characters long" });
 ```
 
 Schema
 
 ```ts
 Schema.String.pipe(
-  Schema.minLength(5, { message: () => "Must be 5 or more characters long" })
-)
+    Schema.minLength(5, { message: () => "Must be 5 or more characters long" }),
+);
 ```
 
 ## URLs
@@ -298,14 +298,14 @@ In `zod`, the `z.string().url()` method validates string URLs. In `effect/Schema
 **Example** (Parsing URL strings into `URL` objects)
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 // Parse a valid URL string
-console.log(Schema.decodeUnknownSync(Schema.URL)("https://example.com"))
+console.log(Schema.decodeUnknownSync(Schema.URL)("https://example.com"));
 // Output: URL { href: 'https://example.com/', ... }
 
 // Attempt to parse an invalid URL
-console.log(Schema.decodeUnknownSync(Schema.URL)("example.com"))
+console.log(Schema.decodeUnknownSync(Schema.URL)("example.com"));
 /*
 throws:
 ParseError: URL
@@ -321,18 +321,18 @@ In `zod`, the `z.string().datetime()` method validates ISO 8601 datetime strings
 **Example** (Parsing date strings into `Date` objects)
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 // Parse a valid ISO 8601 date string
-console.log(Schema.decodeUnknownSync(Schema.Date)("2020-01-01"))
+console.log(Schema.decodeUnknownSync(Schema.Date)("2020-01-01"));
 // Output: 2020-01-01T00:00:00.000Z (as Date object)
 
 // Parse a less strict date format
-console.log(Schema.decodeUnknownSync(Schema.Date)("2020-1-1"))
+console.log(Schema.decodeUnknownSync(Schema.Date)("2020-1-1"));
 // Output: 2019-12-31T23:00:00.000Z (as Date object)
 
 // Attempt to parse an invalid date
-console.log(Schema.decodeUnknownSync(Schema.Date)("2020-01-32"))
+console.log(Schema.decodeUnknownSync(Schema.Date)("2020-01-32"));
 /*
 throws:
 ParseError: Date
@@ -373,15 +373,17 @@ The following tables provide a detailed comparison of number validations and cus
 Zod
 
 ```ts
-z.number().lte(5, { message: "my message" })
+z.number().lte(5, { message: "my message" });
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-Schema.Number.pipe(Schema.lessThanOrEqualTo(5, { message: () => "my message" }))
+Schema.Number.pipe(
+    Schema.lessThanOrEqualTo(5, { message: () => "my message" }),
+);
 ```
 
 ## BigInts
@@ -410,19 +412,19 @@ The table below summarizes the differences between `zod` and `effect/Schema` for
 **Example** (Creating an enum schema)
 
 ```ts
-const FishEnum = z.enum(["Salmon", "Tuna", "Trout"])
+const FishEnum = z.enum(["Salmon", "Tuna", "Trout"]);
 
-FishEnum.options // ["Salmon", "Tuna", "Trout"];
+FishEnum.options; // ["Salmon", "Tuna", "Trout"];
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const FishEnum = Schema.Literal("Salmon", "Tuna", "Trout")
+const FishEnum = Schema.Literal("Salmon", "Tuna", "Trout");
 
-FishEnum.literals // readonly ["Salmon", "Tuna", "Trout"]
+FishEnum.literals; // readonly ["Salmon", "Tuna", "Trout"]
 ```
 
 ## Native enums
@@ -439,40 +441,40 @@ Zod
 
 ```ts
 enum Fruits {
-  Apple,
-  Banana
+    Apple,
+    Banana,
 }
 
-const FruitEnum = z.nativeEnum(Fruits)
+const FruitEnum = z.nativeEnum(Fruits);
 
-type FruitEnum = z.infer<typeof FruitEnum> // Fruits
+type FruitEnum = z.infer<typeof FruitEnum>; // Fruits
 
-FruitEnum.parse(Fruits.Apple) // passes
-FruitEnum.parse(Fruits.Banana) // passes
-FruitEnum.parse(0) // passes
-FruitEnum.parse(1) // passes
-FruitEnum.parse(3) // fails
+FruitEnum.parse(Fruits.Apple); // passes
+FruitEnum.parse(Fruits.Banana); // passes
+FruitEnum.parse(0); // passes
+FruitEnum.parse(1); // passes
+FruitEnum.parse(3); // fails
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 enum Fruits {
-  Apple,
-  Banana
+    Apple,
+    Banana,
 }
 
-const FruitEnum = Schema.Enums(Fruits)
+const FruitEnum = Schema.Enums(Fruits);
 
-type FruitEnum = typeof FruitEnum.Type // Fruits
+type FruitEnum = typeof FruitEnum.Type; // Fruits
 
-Schema.decodeUnknownSync(FruitEnum)(Fruits.Apple) // passes
-Schema.decodeUnknownSync(FruitEnum)(Fruits.Banana) // passes
-Schema.decodeUnknownSync(FruitEnum)(0) // passes
-Schema.decodeUnknownSync(FruitEnum)(1) // passes
-Schema.decodeUnknownSync(FruitEnum)(3) // fails
+Schema.decodeUnknownSync(FruitEnum)(Fruits.Apple); // passes
+Schema.decodeUnknownSync(FruitEnum)(Fruits.Banana); // passes
+Schema.decodeUnknownSync(FruitEnum)(0); // passes
+Schema.decodeUnknownSync(FruitEnum)(1); // passes
+Schema.decodeUnknownSync(FruitEnum)(3); // fails
 ```
 
 ## Optionals
@@ -485,22 +487,22 @@ Zod
 
 ```ts
 const user = z.object({
-  username: z.string().optional()
-})
+    username: z.string().optional(),
+});
 
-type Type = z.infer<typeof user> // { username?: string | undefined };
+type Type = z.infer<typeof user>; // { username?: string | undefined };
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const user = Schema.Struct({
-  username: Schema.optional(Schema.String)
-})
+    username: Schema.optional(Schema.String),
+});
 
-type Type = typeof user.Type // { readonly username?: string | undefined };
+type Type = typeof user.Type; // { readonly username?: string | undefined };
 ```
 
 ## Nullables
@@ -512,21 +514,21 @@ Both `zod` and `effect/Schema` allow you to define nullable fields, meaning a va
 Zod
 
 ```ts
-const nullableString = z.nullable(z.string())
+const nullableString = z.nullable(z.string());
 
-nullableString.parse("asdf") // => "asdf"
-nullableString.parse(null) // => null
+nullableString.parse("asdf"); // => "asdf"
+nullableString.parse(null); // => null
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const nullableString = Schema.NullOr(Schema.String)
+const nullableString = Schema.NullOr(Schema.String);
 
-Schema.decodeUnknownSync(nullableString)("asdf") // => "asdf"
-Schema.decodeUnknownSync(nullableString)(null) // => null
+Schema.decodeUnknownSync(nullableString)("asdf"); // => "asdf"
+Schema.decodeUnknownSync(nullableString)(null); // => null
 ```
 
 ## Objects
@@ -540,39 +542,39 @@ Zod
 ```ts
 // all properties are required by default
 const Dog = z.object({
-  name: z.string(),
-  age: z.number()
-})
+    name: z.string(),
+    age: z.number(),
+});
 
 // extract the inferred type like this
-type Dog = z.infer<typeof Dog>
+type Dog = z.infer<typeof Dog>;
 
 // equivalent to:
 type Dog = {
-  name: string
-  age: number
-}
+    name: string;
+    age: number;
+};
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 // all properties are required by default
 const Dog = Schema.Struct({
-  name: Schema.String,
-  age: Schema.Number
-})
+    name: Schema.String,
+    age: Schema.Number,
+});
 
 // extract the inferred type like this
-type Dog = typeof Dog.Type
+type Dog = typeof Dog.Type;
 
 // equivalent to:
 type Dog = {
-  readonly name: string
-  readonly age: number
-}
+    readonly name: string;
+    readonly age: number;
+};
 ```
 
 ### shape
@@ -584,15 +586,15 @@ Both libraries allow access to the individual schemas of object fields.
 Zod
 
 ```ts
-Dog.shape.name // => string schema
-Dog.shape.age // => number schema
+Dog.shape.name; // => string schema
+Dog.shape.age; // => number schema
 ```
 
 Schema
 
 ```ts
-Dog.fields.name // => String schema
-Dog.fields.age // => Number schema
+Dog.fields.name; // => String schema
+Dog.fields.age; // => Number schema
 ```
 
 ### keyof
@@ -604,8 +606,8 @@ Both libraries allow extracting the keys of an object schema as a new schema.
 Zod
 
 ```ts
-const keySchema = Dog.keyof()
-keySchema // ZodEnum<["name", "age"]>
+const keySchema = Dog.keyof();
+keySchema; // ZodEnum<["name", "age"]>
 ```
 
 Schema
@@ -613,7 +615,7 @@ Schema
 ```ts
 //      ┌─── Schema<"name" | "age", "name" | "age", never>
 //      ▼
-const keySchema = Schema.keyof(Dog)
+const keySchema = Schema.keyof(Dog);
 ```
 
 ### extend
@@ -626,26 +628,26 @@ Zod
 
 ```ts
 const DogWithBreed = Dog.extend({
-  breed: z.string()
-})
+    breed: z.string(),
+});
 ```
 
 Schema
 
 ```ts
 const DogWithBreed = Dog.pipe(
-  Schema.extend(
-    Schema.Struct({
-      breed: Schema.String
-    })
-  )
-)
+    Schema.extend(
+        Schema.Struct({
+            breed: Schema.String,
+        }),
+    ),
+);
 
 // Recommended alternative when working with structs
 const DogWithBreed = Schema.Struct({
-  ...Dog.fields,
-  breed: Schema.String
-})
+    ...Dog.fields,
+    breed: Schema.String,
+});
 ```
 
 ### pick / omit
@@ -658,30 +660,30 @@ Zod
 
 ```ts
 const Recipe = z.object({
-  id: z.string(),
-  name: z.string(),
-  ingredients: z.array(z.string())
-})
+    id: z.string(),
+    name: z.string(),
+    ingredients: z.array(z.string()),
+});
 
-const JustTheName = Recipe.pick({ name: true })
+const JustTheName = Recipe.pick({ name: true });
 
-const NoIDRecipe = Recipe.omit({ id: true })
+const NoIDRecipe = Recipe.omit({ id: true });
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const Recipe = Schema.Struct({
-  id: Schema.String,
-  name: Schema.String,
-  ingredients: Schema.Array(Schema.String)
-})
+    id: Schema.String,
+    name: Schema.String,
+    ingredients: Schema.Array(Schema.String),
+});
 
-const JustTheName = Recipe.pick("name")
+const JustTheName = Recipe.pick("name");
 
-const NoIDRecipe = Recipe.omit("id")
+const NoIDRecipe = Recipe.omit("id");
 ```
 
 ### partial
@@ -694,24 +696,24 @@ Zod
 
 ```ts
 const user = z.object({
-  email: z.string(),
-  username: z.string()
-})
+    email: z.string(),
+    username: z.string(),
+});
 
-const partialUser = user.partial()
+const partialUser = user.partial();
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const user = Schema.Struct({
-  email: Schema.String,
-  username: Schema.String
-})
+    email: Schema.String,
+    username: Schema.String,
+});
 
-const partialUser = Schema.partial(user)
+const partialUser = Schema.partial(user);
 ```
 
 ### deepPartial
@@ -728,26 +730,26 @@ Zod
 
 ```ts
 const user = z
-  .object({
-    email: z.string(),
-    username: z.string()
-  })
-  .partial() // Makes all fields optional
+    .object({
+        email: z.string(),
+        username: z.string(),
+    })
+    .partial(); // Makes all fields optional
 
-const requiredUser = user.required() // Converts all fields back to required
+const requiredUser = user.required(); // Converts all fields back to required
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const user = Schema.Struct({
-  email: Schema.String,
-  username: Schema.String
-}).pipe(Schema.partial) // Makes all fields optional
+    email: Schema.String,
+    username: Schema.String,
+}).pipe(Schema.partial); // Makes all fields optional
 
-const requiredUser = Schema.required(user) // Converts all fields back to required
+const requiredUser = Schema.required(user); // Converts all fields back to required
 ```
 
 ### passthrough
@@ -763,39 +765,39 @@ Zod
 
 ```ts
 const person = z.object({
-  name: z.string()
-})
+    name: z.string(),
+});
 
 person.parse({
-  name: "bob dylan",
-  extraKey: 61
-})
+    name: "bob dylan",
+    extraKey: 61,
+});
 // => { name: "bob dylan" }
 // extraKey has been stripped
 
 person.passthrough().parse({
-  name: "bob dylan",
-  extraKey: 61
-})
+    name: "bob dylan",
+    extraKey: 61,
+});
 // => { name: "bob dylan", extraKey: 61 }
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const person = Schema.Struct({
-  name: Schema.String
-})
+    name: Schema.String,
+});
 
 Schema.decodeUnknownSync(person)(
-  {
-    name: "bob dylan",
-    extraKey: 61
-  },
-  { onExcessProperty: "preserve" }
-)
+    {
+        name: "bob dylan",
+        extraKey: 61,
+    },
+    { onExcessProperty: "preserve" },
+);
 // => { name: "bob dylan", extraKey: 61 }
 ```
 
@@ -812,34 +814,34 @@ Zod
 
 ```ts
 const person = z
-  .object({
-    name: z.string()
-  })
-  .strict()
+    .object({
+        name: z.string(),
+    })
+    .strict();
 
 person.parse({
-  name: "bob dylan",
-  extraKey: 61
-})
+    name: "bob dylan",
+    extraKey: 61,
+});
 // => throws ZodError
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const person = Schema.Struct({
-  name: Schema.String
-})
+    name: Schema.String,
+});
 
 Schema.decodeUnknownSync(person)(
-  {
-    name: "bob dylan",
-    extraKey: 61
-  },
-  { onExcessProperty: "error" }
-)
+    {
+        name: "bob dylan",
+        extraKey: 61,
+    },
+    { onExcessProperty: "error" },
+);
 // => throws ParseError
 ```
 
@@ -855,25 +857,25 @@ Both `zod` and `effect/Schema` allow you to define fallback values when parsing 
 Zod
 
 ```ts
-import { z } from "zod"
+import { z } from "zod";
 
-const schema = z.number().catch(42)
+const schema = z.number().catch(42);
 
-console.log(schema.parse(5)) // => 5
-console.log(schema.parse("tuna")) // => 42
+console.log(schema.parse(5)); // => 5
+console.log(schema.parse("tuna")); // => 42
 ```
 
 Schema
 
 ```ts
-import { Either, Schema } from "effect"
+import { Either, Schema } from "effect";
 
 const schema = Schema.Number.annotations({
-  decodingFallback: () => Either.right(42)
-})
+    decodingFallback: () => Either.right(42),
+});
 
-console.log(Schema.decodeUnknownSync(schema)(5)) // => 5
-console.log(Schema.decodeUnknownSync(schema)("tuna")) // => 42
+console.log(Schema.decodeUnknownSync(schema)(5)); // => 5
+console.log(Schema.decodeUnknownSync(schema)("tuna")); // => 42
 ```
 
 ### catchall
@@ -889,44 +891,44 @@ Zod
 
 ````ts
 const person = z
-  .object({
-    name: z.string()
-  })
-  .catchall(z.string())
+    .object({
+        name: z.string(),
+    })
+    .catchall(z.string());
 
 person.parse({
-  name: "bob dylan",
-  validExtraKey: "foo" // works fine
-})
+    name: "bob dylan",
+    validExtraKey: "foo", // works fine
+});
 
 person.parse({
-  name: "bob dylan",
-  validExtraKey: false // fails
-})
+    name: "bob dylan",
+    validExtraKey: false, // fails
+});
 // => throws ZodError```
 ````
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const person = Schema.Struct(
-  {
-    name: Schema.String
-  },
-  Schema.Record({ key: Schema.String, value: Schema.String })
-)
+    {
+        name: Schema.String,
+    },
+    Schema.Record({ key: Schema.String, value: Schema.String }),
+);
 
 Schema.decodeUnknownSync(person)({
-  name: "bob dylan",
-  validExtraKey: "foo" // works fine
-})
+    name: "bob dylan",
+    validExtraKey: "foo", // works fine
+});
 
 Schema.decodeUnknownSync(person)({
-  name: "bob dylan",
-  validExtraKey: true // fails
-})
+    name: "bob dylan",
+    validExtraKey: true, // fails
+});
 // => throws ParseError
 ```
 
@@ -942,15 +944,15 @@ Both `zod` and `effect/Schema` provide tools for defining schemas for arrays. Th
 Zod
 
 ```ts
-const stringArray = z.array(z.string())
+const stringArray = z.array(z.string());
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const stringArray = Schema.Array(Schema.String)
+const stringArray = Schema.Array(Schema.String);
 ```
 
 ### Accessing the Element Schema
@@ -963,13 +965,13 @@ const stringArray = Schema.Array(Schema.String)
 Zod
 
 ```ts
-stringArray.element // => string schema
+stringArray.element; // => string schema
 ```
 
 Schema
 
 ```ts
-stringArray.value // => String schema
+stringArray.value; // => String schema
 ```
 
 ### Defining Non-Empty Arrays
@@ -982,30 +984,30 @@ stringArray.value // => String schema
 Zod
 
 ```ts
-const nonEmptyStrings = z.string().array().nonempty()
+const nonEmptyStrings = z.string().array().nonempty();
 // the inferred type is now
 // [string, ...string[]]
 
-nonEmptyStrings.parse([]) // throws: "Array cannot be empty"
-nonEmptyStrings.parse(["Ariana Grande"]) // passes
+nonEmptyStrings.parse([]); // throws: "Array cannot be empty"
+nonEmptyStrings.parse(["Ariana Grande"]); // passes
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const nonEmptyStrings = Schema.NonEmptyArray(Schema.String)
+const nonEmptyStrings = Schema.NonEmptyArray(Schema.String);
 // the inferred type is now
 // [string, ...string[]]
 
-Schema.decodeUnknownSync(nonEmptyStrings)([])
+Schema.decodeUnknownSync(nonEmptyStrings)([]);
 /* throws:
 Error: readonly [string, ...string[]]
 └─ [0]
    └─ is missing
 */
-Schema.decodeUnknownSync(nonEmptyStrings)(["Ariana Grande"]) // passes
+Schema.decodeUnknownSync(nonEmptyStrings)(["Ariana Grande"]); // passes
 ```
 
 ### Array Length Validations
@@ -1018,19 +1020,19 @@ Schema.decodeUnknownSync(nonEmptyStrings)(["Ariana Grande"]) // passes
 Zod
 
 ```ts
-z.string().array().min(5) // must contain 5 or more items
-z.string().array().max(5) // must contain 5 or fewer items
-z.string().array().length(5) // must contain 5 items exactly
+z.string().array().min(5); // must contain 5 or more items
+z.string().array().max(5); // must contain 5 or fewer items
+z.string().array().length(5); // must contain 5 items exactly
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-Schema.Array(Schema.String).pipe(Schema.minItems(5)) // must contain 5 or more items
-Schema.Array(Schema.String).pipe(Schema.maxItems(5)) // must contain 5 or fewer items
-Schema.Array(Schema.String).pipe(Schema.itemsCount(5)) // must contain 5 items exactly
+Schema.Array(Schema.String).pipe(Schema.minItems(5)); // must contain 5 or more items
+Schema.Array(Schema.String).pipe(Schema.maxItems(5)); // must contain 5 or fewer items
+Schema.Array(Schema.String).pipe(Schema.itemsCount(5)); // must contain 5 items exactly
 ```
 
 ## Tuples
@@ -1048,32 +1050,32 @@ Zod
 
 ```ts
 const athleteSchema = z.tuple([
-  z.string(), // name
-  z.number(), // jersey number
-  z.object({
-    pointsScored: z.number()
-  }) // statistics
-])
+    z.string(), // name
+    z.number(), // jersey number
+    z.object({
+        pointsScored: z.number(),
+    }), // statistics
+]);
 
-type Athlete = z.infer<typeof athleteSchema>
+type Athlete = z.infer<typeof athleteSchema>;
 // type Athlete = [string, number, { pointsScored: number }]
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const athleteSchema = Schema.Tuple(
-  Schema.String, // name
-  Schema.Number, // jersey number
-  Schema.Struct({
-    pointsScored: Schema.Number
-  }) // statistics
-)
+    Schema.String, // name
+    Schema.Number, // jersey number
+    Schema.Struct({
+        pointsScored: Schema.Number,
+    }), // statistics
+);
 
 // type Athlete = readonly [string, number, { readonly pointsScored: number }]
-type Athlete = typeof athleteSchema.Type
+type Athlete = typeof athleteSchema.Type;
 ```
 
 ### Variadic Tuples
@@ -1086,19 +1088,19 @@ type Athlete = typeof athleteSchema.Type
 Zod
 
 ```ts
-const variadicTuple = z.tuple([z.string()]).rest(z.number())
-const result = variadicTuple.parse(["hello", 1, 2, 3])
+const variadicTuple = z.tuple([z.string()]).rest(z.number());
+const result = variadicTuple.parse(["hello", 1, 2, 3]);
 // => [string, ...number[]];
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const variadicTuple = Schema.Tuple([Schema.String], Schema.Number)
+const variadicTuple = Schema.Tuple([Schema.String], Schema.Number);
 
-const result = Schema.decodeUnknownSync(variadicTuple)(["hello", 1, 2, 3])
+const result = Schema.decodeUnknownSync(variadicTuple)(["hello", 1, 2, 3]);
 // => readonly [string, ...number[]];
 ```
 
@@ -1119,21 +1121,21 @@ Both `zod` and `effect/Schema` support unions, which allow you to define a schem
 Zod
 
 ```ts
-const stringOrNumber = z.union([z.string(), z.number()])
+const stringOrNumber = z.union([z.string(), z.number()]);
 
-stringOrNumber.parse("foo") // passes
-stringOrNumber.parse(14) // passes
+stringOrNumber.parse("foo"); // passes
+stringOrNumber.parse(14); // passes
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const stringOrNumber = Schema.Union(Schema.String, Schema.Number)
+const stringOrNumber = Schema.Union(Schema.String, Schema.Number);
 
-Schema.decodeUnknownSync(stringOrNumber)("foo") // passes
-Schema.decodeUnknownSync(stringOrNumber)(14) // passes
+Schema.decodeUnknownSync(stringOrNumber)("foo"); // passes
+Schema.decodeUnknownSync(stringOrNumber)(14); // passes
 ```
 
 ## Discriminated unions
@@ -1152,25 +1154,25 @@ Both `zod` and `effect/Schema` support record schemas, which are used to validat
 Zod
 
 ```ts
-const User = z.object({ name: z.string() })
+const User = z.object({ name: z.string() });
 
-const UserStore = z.record(z.string(), User)
+const UserStore = z.record(z.string(), User);
 
 // type UserStore = Record<string, { name: string }>
-type UserStore = z.infer<typeof UserStore>
+type UserStore = z.infer<typeof UserStore>;
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const User = Schema.Struct({ name: Schema.String })
+const User = Schema.Struct({ name: Schema.String });
 
-const UserStore = Schema.Record({ key: Schema.String, value: User })
+const UserStore = Schema.Record({ key: Schema.String, value: User });
 
 // type UserStore = { readonly [x: string]: { readonly name: string; }; }
-type UserStore = typeof UserStore.Type
+type UserStore = typeof UserStore.Type;
 ```
 
 ## Maps
@@ -1187,26 +1189,26 @@ Both `zod` and `effect/Schema` support schemas for `Map` objects, where keys and
 Zod
 
 ```ts
-const stringNumberMap = z.map(z.string(), z.number())
+const stringNumberMap = z.map(z.string(), z.number());
 
-type StringNumberMap = z.infer<typeof stringNumberMap>
+type StringNumberMap = z.infer<typeof stringNumberMap>;
 // type StringNumberMap = Map<string, number>
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const map1 = Schema.Map({ key: Schema.String, value: Schema.Number })
+const map1 = Schema.Map({ key: Schema.String, value: Schema.Number });
 
 // type Map1 = Map<string, number>
-type Map1 = typeof map1.Type
+type Map1 = typeof map1.Type;
 
-const map2 = Schema.ReadonlyMap({ key: Schema.String, value: Schema.Number })
+const map2 = Schema.ReadonlyMap({ key: Schema.String, value: Schema.Number });
 
 // type Map2 = ReadonlyMap<string, number>
-type Map2 = typeof map2.Type
+type Map2 = typeof map2.Type;
 ```
 
 ## Sets
@@ -1223,25 +1225,25 @@ Both `zod` and `effect/Schema` support schemas for `Set` objects, allowing you t
 Zod
 
 ```ts
-const numberSet = z.set(z.number())
-type NumberSet = z.infer<typeof numberSet>
+const numberSet = z.set(z.number());
+type NumberSet = z.infer<typeof numberSet>;
 // type NumberSet = Set<number>
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const set1 = Schema.Set(Schema.Number)
+const set1 = Schema.Set(Schema.Number);
 
 // type Set1 = Set<number>
-type Set1 = typeof set1.Type
+type Set1 = typeof set1.Type;
 
-const set2 = Schema.ReadonlySet(Schema.Number)
+const set2 = Schema.ReadonlySet(Schema.Number);
 
 // type Set2 = ReadonlySet<number>
-type Set2 = typeof set2.Type
+type Set2 = typeof set2.Type;
 ```
 
 ## Intersections
@@ -1263,35 +1265,35 @@ Zod
 
 ```ts
 const baseCategorySchema = z.object({
-  name: z.string()
-})
+    name: z.string(),
+});
 
 type Category = z.infer<typeof baseCategorySchema> & {
-  subcategories: Category[]
-}
+    subcategories: Category[];
+};
 
 const categorySchema: z.ZodType<Category> = baseCategorySchema.extend({
-  subcategories: z.lazy(() => categorySchema.array())
-})
+    subcategories: z.lazy(() => categorySchema.array()),
+});
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 const baseCategorySchema = Schema.Struct({
-  name: Schema.String
-})
+    name: Schema.String,
+});
 
 type Category = Schema.Schema.Type<typeof baseCategorySchema> & {
-  readonly subcategories: ReadonlyArray<Category>
-}
+    readonly subcategories: ReadonlyArray<Category>;
+};
 
 const categorySchema: Schema.Schema<Category> = Schema.Struct({
-  ...baseCategorySchema.fields,
-  subcategories: Schema.suspend(() => Schema.Array(categorySchema))
-})
+    ...baseCategorySchema.fields,
+    subcategories: Schema.suspend(() => Schema.Array(categorySchema)),
+});
 ```
 
 ## Promises
@@ -1311,31 +1313,31 @@ Zod
 
 ```ts
 class Test {
-  name: string = "name"
+    name: string = "name";
 }
 
-const TestSchema = z.instanceof(Test)
+const TestSchema = z.instanceof(Test);
 
-const blob: any = "whatever"
-TestSchema.parse(new Test()) // passes
-TestSchema.parse(blob) // throws
+const blob: any = "whatever";
+TestSchema.parse(new Test()); // passes
+TestSchema.parse(blob); // throws
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
 class Test {
-  name: string = "name"
+    name: string = "name";
 }
 
-const TestSchema = Schema.instanceOf(Test)
+const TestSchema = Schema.instanceOf(Test);
 
-const blob: any = "whatever"
+const blob: any = "whatever";
 
-Schema.decodeUnknownSync(TestSchema)(new Test()) // passes
-Schema.decodeUnknownSync(TestSchema)(blob) // throws
+Schema.decodeUnknownSync(TestSchema)(new Test()); // passes
+Schema.decodeUnknownSync(TestSchema)(blob); // throws
 ```
 
 ## Functions
@@ -1386,21 +1388,21 @@ Zod
 
 ```ts
 const documentedString = z
-  .string()
-  .describe("A useful bit of text, if you know what to do with it.")
-documentedString.description // A useful bit of text…
+    .string()
+    .describe("A useful bit of text, if you know what to do with it.");
+documentedString.description; // A useful bit of text…
 ```
 
 Schema
 
 ```ts
-import { Schema, SchemaAST } from "effect"
+import { Schema, SchemaAST } from "effect";
 
 const documentedString = Schema.String.annotations({
-  description: "A useful bit of text, if you know what to do with it."
-})
+    description: "A useful bit of text, if you know what to do with it.",
+});
 
-console.log(SchemaAST.getDescriptionAnnotation(documentedString.ast))
+console.log(SchemaAST.getDescriptionAnnotation(documentedString.ast));
 /*
 Output:
 {
@@ -1423,15 +1425,15 @@ Both `zod` and `effect/Schema` provide support for schemas that allow values to 
 Zod
 
 ```ts
-const nullishString = z.string().nullish() // string | null | undefined
+const nullishString = z.string().nullish(); // string | null | undefined
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const nullishString = Schema.NullishOr(Schema.String) // string | null | undefined
+const nullishString = Schema.NullishOr(Schema.String); // string | null | undefined
 ```
 
 ## brand
@@ -1446,15 +1448,15 @@ Both `zod` and `effect/Schema` support branding, a feature that allows you to ta
 Zod
 
 ```ts
-const Cat = z.object({ name: z.string() }).brand<"Cat">()
+const Cat = z.object({ name: z.string() }).brand<"Cat">();
 ```
 
 Schema
 
 ```ts
-import { Schema } from "effect"
+import { Schema } from "effect";
 
-const Cat = Schema.Struct({ name: Schema.String }).pipe(Schema.brand("Cat"))
+const Cat = Schema.Struct({ name: Schema.String }).pipe(Schema.brand("Cat"));
 ```
 
 ## readonly

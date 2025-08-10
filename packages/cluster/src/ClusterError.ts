@@ -1,25 +1,25 @@
 /**
  * @since 1.0.0
  */
-import * as Cause from "effect/Cause"
-import * as Effect from "effect/Effect"
-import { hasProperty, isTagged } from "effect/Predicate"
-import * as Schema from "effect/Schema"
-import { EntityAddress } from "./EntityAddress.js"
-import { RunnerAddress } from "./RunnerAddress.js"
-import { SnowflakeFromString } from "./Snowflake.js"
+import * as Cause from "effect/Cause";
+import * as Effect from "effect/Effect";
+import { hasProperty, isTagged } from "effect/Predicate";
+import * as Schema from "effect/Schema";
+import { EntityAddress } from "./EntityAddress.js";
+import { RunnerAddress } from "./RunnerAddress.js";
+import { SnowflakeFromString } from "./Snowflake.js";
 
 /**
  * @since 1.0.0
  * @category Symbols
  */
-export const TypeId: unique symbol = Symbol.for("@effect/cluster/ClusterError")
+export const TypeId: unique symbol = Symbol.for("@effect/cluster/ClusterError");
 
 /**
  * @since 1.0.0
  * @category Symbols
  */
-export type TypeId = typeof TypeId
+export type TypeId = typeof TypeId;
 
 /**
  * Represents an error that occurs when a Runner receives a message for an entity
@@ -29,20 +29,22 @@ export type TypeId = typeof TypeId
  * @category errors
  */
 export class EntityNotAssignedToRunner extends Schema.TaggedError<EntityNotAssignedToRunner>()(
-  "EntityNotAssignedToRunner",
-  { address: EntityAddress }
+    "EntityNotAssignedToRunner",
+    { address: EntityAddress },
 ) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 
-  /**
-   * @since 1.0.0
-   */
-  static is(u: unknown): u is EntityNotAssignedToRunner {
-    return hasProperty(u, TypeId) && isTagged(u, "EntityNotAssignedToRunner")
-  }
+    /**
+     * @since 1.0.0
+     */
+    static is(u: unknown): u is EntityNotAssignedToRunner {
+        return (
+            hasProperty(u, TypeId) && isTagged(u, "EntityNotAssignedToRunner")
+        );
+    }
 }
 
 /**
@@ -53,20 +55,22 @@ export class EntityNotAssignedToRunner extends Schema.TaggedError<EntityNotAssig
  * @category errors
  */
 export class EntityNotManagedByRunner extends Schema.TaggedError<EntityNotManagedByRunner>()(
-  "EntityNotManagedByRunner",
-  { address: EntityAddress }
+    "EntityNotManagedByRunner",
+    { address: EntityAddress },
 ) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 
-  /**
-   * @since 1.0.0
-   */
-  static is(u: unknown): u is EntityNotManagedByRunner {
-    return hasProperty(u, TypeId) && isTagged(u, "EntityNotManagedByRunner")
-  }
+    /**
+     * @since 1.0.0
+     */
+    static is(u: unknown): u is EntityNotManagedByRunner {
+        return (
+            hasProperty(u, TypeId) && isTagged(u, "EntityNotManagedByRunner")
+        );
+    }
 }
 
 /**
@@ -77,29 +81,29 @@ export class EntityNotManagedByRunner extends Schema.TaggedError<EntityNotManage
  * @category errors
  */
 export class MalformedMessage extends Schema.TaggedError<MalformedMessage>()(
-  "MalformedMessage",
-  { cause: Schema.Defect }
+    "MalformedMessage",
+    { cause: Schema.Defect },
 ) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 
-  /**
-   * @since 1.0.0
-   */
-  static is(u: unknown): u is MalformedMessage {
-    return hasProperty(u, TypeId) && isTagged(u, "MalformedMessage")
-  }
+    /**
+     * @since 1.0.0
+     */
+    static is(u: unknown): u is MalformedMessage {
+        return hasProperty(u, TypeId) && isTagged(u, "MalformedMessage");
+    }
 
-  /**
-   * @since 1.0.0
-   */
-  static refail: <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<
-    A,
-    MalformedMessage,
-    R
-  > = Effect.mapError((cause) => new MalformedMessage({ cause }))
+    /**
+     * @since 1.0.0
+     */
+    static refail: <A, E, R>(
+        effect: Effect.Effect<A, E, R>,
+    ) => Effect.Effect<A, MalformedMessage, R> = Effect.mapError(
+        (cause) => new MalformedMessage({ cause }),
+    );
 }
 
 /**
@@ -110,20 +114,24 @@ export class MalformedMessage extends Schema.TaggedError<MalformedMessage>()(
  * @category errors
  */
 export class PersistenceError extends Schema.TaggedError<PersistenceError>()(
-  "PersistenceError",
-  { cause: Schema.Defect }
+    "PersistenceError",
+    { cause: Schema.Defect },
 ) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 
-  /**
-   * @since 1.0.0
-   */
-  static refail<A, E, R>(effect: Effect.Effect<A, E, R>): Effect.Effect<A, PersistenceError, R> {
-    return Effect.catchAllCause(effect, (cause) => Effect.fail(new PersistenceError({ cause: Cause.squash(cause) })))
-  }
+    /**
+     * @since 1.0.0
+     */
+    static refail<A, E, R>(
+        effect: Effect.Effect<A, E, R>,
+    ): Effect.Effect<A, PersistenceError, R> {
+        return Effect.catchAllCause(effect, (cause) =>
+            Effect.fail(new PersistenceError({ cause: Cause.squash(cause) })),
+        );
+    }
 }
 
 /**
@@ -134,13 +142,13 @@ export class PersistenceError extends Schema.TaggedError<PersistenceError>()(
  * @category errors
  */
 export class RunnerNotRegistered extends Schema.TaggedError<RunnerNotRegistered>()(
-  "RunnerNotRegistered",
-  { address: RunnerAddress }
+    "RunnerNotRegistered",
+    { address: RunnerAddress },
 ) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 }
 
 /**
@@ -150,20 +158,20 @@ export class RunnerNotRegistered extends Schema.TaggedError<RunnerNotRegistered>
  * @category errors
  */
 export class RunnerUnavailable extends Schema.TaggedError<RunnerUnavailable>()(
-  "RunnerUnavailable",
-  { address: RunnerAddress }
+    "RunnerUnavailable",
+    { address: RunnerAddress },
 ) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 
-  /**
-   * @since 1.0.0
-   */
-  static is(u: unknown): u is RunnerUnavailable {
-    return hasProperty(u, TypeId) && isTagged(u, "RunnerUnavailable")
-  }
+    /**
+     * @since 1.0.0
+     */
+    static is(u: unknown): u is RunnerUnavailable {
+        return hasProperty(u, TypeId) && isTagged(u, "RunnerUnavailable");
+    }
 }
 
 /**
@@ -173,20 +181,20 @@ export class RunnerUnavailable extends Schema.TaggedError<RunnerUnavailable>()(
  * @category errors
  */
 export class MailboxFull extends Schema.TaggedError<MailboxFull>()(
-  "MailboxFull",
-  { address: EntityAddress }
+    "MailboxFull",
+    { address: EntityAddress },
 ) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 
-  /**
-   * @since 1.0.0
-   */
-  static is(u: unknown): u is MailboxFull {
-    return hasProperty(u, TypeId) && isTagged(u, "MailboxFull")
-  }
+    /**
+     * @since 1.0.0
+     */
+    static is(u: unknown): u is MailboxFull {
+        return hasProperty(u, TypeId) && isTagged(u, "MailboxFull");
+    }
 }
 
 /**
@@ -197,21 +205,23 @@ export class MailboxFull extends Schema.TaggedError<MailboxFull>()(
  * @category errors
  */
 export class AlreadyProcessingMessage extends Schema.TaggedError<AlreadyProcessingMessage>()(
-  "AlreadyProcessingMessage",
-  {
-    envelopeId: SnowflakeFromString,
-    address: EntityAddress
-  }
+    "AlreadyProcessingMessage",
+    {
+        envelopeId: SnowflakeFromString,
+        address: EntityAddress,
+    },
 ) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 
-  /**
-   * @since 1.0.0
-   */
-  static is(u: unknown): u is AlreadyProcessingMessage {
-    return hasProperty(u, TypeId) && isTagged(u, "AlreadyProcessingMessage")
-  }
+    /**
+     * @since 1.0.0
+     */
+    static is(u: unknown): u is AlreadyProcessingMessage {
+        return (
+            hasProperty(u, TypeId) && isTagged(u, "AlreadyProcessingMessage")
+        );
+    }
 }

@@ -58,38 +58,38 @@ HttpApi ("MyApi)
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Effect, Layer, Schema } from "effect"
-import { createServer } from "node:http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Effect, Layer, Schema } from "effect";
+import { createServer } from "node:http";
 
 // Define our API with one group named "Greetings" and one endpoint called "hello-world"
 const MyApi = HttpApi.make("MyApi").add(
-  HttpApiGroup.make("Greetings").add(
-    HttpApiEndpoint.get("hello-world")`/`.addSuccess(Schema.String)
-  )
-)
+    HttpApiGroup.make("Greetings").add(
+        HttpApiEndpoint.get("hello-world")`/`.addSuccess(Schema.String),
+    ),
+);
 
 // Implement the "Greetings" group
 const GreetingsLive = HttpApiBuilder.group(MyApi, "Greetings", (handlers) =>
-  handlers.handle("hello-world", () => Effect.succeed("Hello, World!"))
-)
+    handlers.handle("hello-world", () => Effect.succeed("Hello, World!")),
+);
 
 // Provide the implementation for the API
-const MyApiLive = HttpApiBuilder.api(MyApi).pipe(Layer.provide(GreetingsLive))
+const MyApiLive = HttpApiBuilder.api(MyApi).pipe(Layer.provide(GreetingsLive));
 
 // Set up the server using NodeHttpServer on port 3000
 const ServerLive = HttpApiBuilder.serve().pipe(
-  Layer.provide(MyApiLive),
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    Layer.provide(MyApiLive),
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
 // Launch the server
-Layer.launch(ServerLive).pipe(NodeRuntime.runMain)
+Layer.launch(ServerLive).pipe(NodeRuntime.runMain);
 ```
 
 After running the code, open a browser and navigate to http://localhost:3000. The server will respond with:
@@ -108,36 +108,36 @@ To include Swagger in your server setup, provide the `HttpApiSwagger.layer` when
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSwagger
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Effect, Layer, Schema } from "effect"
-import { createServer } from "node:http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSwagger,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Effect, Layer, Schema } from "effect";
+import { createServer } from "node:http";
 
 const MyApi = HttpApi.make("MyApi").add(
-  HttpApiGroup.make("Greetings").add(
-    HttpApiEndpoint.get("hello-world")`/`.addSuccess(Schema.String)
-  )
-)
+    HttpApiGroup.make("Greetings").add(
+        HttpApiEndpoint.get("hello-world")`/`.addSuccess(Schema.String),
+    ),
+);
 
 const GreetingsLive = HttpApiBuilder.group(MyApi, "Greetings", (handlers) =>
-  handlers.handle("hello-world", () => Effect.succeed("Hello, World!"))
-)
+    handlers.handle("hello-world", () => Effect.succeed("Hello, World!")),
+);
 
-const MyApiLive = HttpApiBuilder.api(MyApi).pipe(Layer.provide(GreetingsLive))
+const MyApiLive = HttpApiBuilder.api(MyApi).pipe(Layer.provide(GreetingsLive));
 
 const ServerLive = HttpApiBuilder.serve().pipe(
-  // Provide the Swagger layer so clients can access auto-generated docs
-  Layer.provide(HttpApiSwagger.layer()),
-  Layer.provide(MyApiLive),
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    // Provide the Swagger layer so clients can access auto-generated docs
+    Layer.provide(HttpApiSwagger.layer()),
+    Layer.provide(MyApiLive),
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
-Layer.launch(ServerLive).pipe(NodeRuntime.runMain)
+Layer.launch(ServerLive).pipe(NodeRuntime.runMain);
 ```
 
 After running the server, open your browser and navigate to http://localhost:3000/docs.
@@ -154,51 +154,51 @@ Once you have defined your API, you can generate a client to interact with it us
 
 ```ts
 import {
-  FetchHttpClient,
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiClient,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSwagger
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Effect, Layer, Schema } from "effect"
-import { createServer } from "node:http"
+    FetchHttpClient,
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiClient,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSwagger,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Effect, Layer, Schema } from "effect";
+import { createServer } from "node:http";
 
 const MyApi = HttpApi.make("MyApi").add(
-  HttpApiGroup.make("Greetings").add(
-    HttpApiEndpoint.get("hello-world")`/`.addSuccess(Schema.String)
-  )
-)
+    HttpApiGroup.make("Greetings").add(
+        HttpApiEndpoint.get("hello-world")`/`.addSuccess(Schema.String),
+    ),
+);
 
 const GreetingsLive = HttpApiBuilder.group(MyApi, "Greetings", (handlers) =>
-  handlers.handle("hello-world", () => Effect.succeed("Hello, World!"))
-)
+    handlers.handle("hello-world", () => Effect.succeed("Hello, World!")),
+);
 
-const MyApiLive = HttpApiBuilder.api(MyApi).pipe(Layer.provide(GreetingsLive))
+const MyApiLive = HttpApiBuilder.api(MyApi).pipe(Layer.provide(GreetingsLive));
 
 const ServerLive = HttpApiBuilder.serve().pipe(
-  Layer.provide(HttpApiSwagger.layer()),
-  Layer.provide(MyApiLive),
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    Layer.provide(HttpApiSwagger.layer()),
+    Layer.provide(MyApiLive),
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
-Layer.launch(ServerLive).pipe(NodeRuntime.runMain)
+Layer.launch(ServerLive).pipe(NodeRuntime.runMain);
 
 // Create a program that derives and uses the client
 const program = Effect.gen(function* () {
-  // Derive the client
-  const client = yield* HttpApiClient.make(MyApi, {
-    baseUrl: "http://localhost:3000"
-  })
-  // Call the "hello-world" endpoint
-  const hello = yield* client.Greetings["hello-world"]()
-  console.log(hello)
-})
+    // Derive the client
+    const client = yield* HttpApiClient.make(MyApi, {
+        baseUrl: "http://localhost:3000",
+    });
+    // Call the "hello-world" endpoint
+    const hello = yield* client.Greetings["hello-world"]();
+    console.log(hello);
+});
 
 // Provide a Fetch-based HTTP client and run the program
-Effect.runFork(program.pipe(Effect.provide(FetchHttpClient.layer)))
+Effect.runFork(program.pipe(Effect.provide(FetchHttpClient.layer)));
 // Output: Hello, World!
 ```
 
@@ -223,25 +223,25 @@ To define the structure of successful responses, use the `.addSuccess` method. I
 **Example** (Defining a GET Endpoint to Retrieve All Users)
 
 ```ts
-import { HttpApiEndpoint } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint } from "@effect/platform";
+import { Schema } from "effect";
 
 // Define a schema representing a User entity
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
 // Define the "getUsers" endpoint, returning a list of users
 const getUsers = HttpApiEndpoint
-  //      ┌─── Endpoint name
-  //      │            ┌─── Endpoint path
-  //      ▼            ▼
-  .get("getUsers", "/users")
-  // Define the success schema for the response (optional).
-  // If no response schema is specified, the default response is `204 No Content`.
-  .addSuccess(Schema.Array(User))
+    //      ┌─── Endpoint name
+    //      │            ┌─── Endpoint path
+    //      ▼            ▼
+    .get("getUsers", "/users")
+    // Define the success schema for the response (optional).
+    // If no response schema is specified, the default response is `204 No Content`.
+    .addSuccess(Schema.Array(User));
 ```
 
 ### Path Parameters
@@ -255,24 +255,24 @@ The `setPath` method allows you to explicitly define path parameters by associat
 **Example** (Defining Parameters with setPath)
 
 ```ts
-import { HttpApiEndpoint } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint } from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
 // Define a GET endpoint with a path parameter ":id"
 const getUser = HttpApiEndpoint.get("getUser", "/user/:id")
-  .setPath(
-    Schema.Struct({
-      // Define a schema for the "id" path parameter
-      id: Schema.NumberFromString
-    })
-  )
-  .addSuccess(User)
+    .setPath(
+        Schema.Struct({
+            // Define a schema for the "id" path parameter
+            id: Schema.NumberFromString,
+        }),
+    )
+    .addSuccess(User);
 ```
 
 #### Using Template Strings
@@ -282,22 +282,22 @@ You can also define path parameters by embedding them in a template string with 
 **Example** (Defining Parameters using a Template String)
 
 ```ts
-import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
 // Create a path parameter using HttpApiSchema.param
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 // Define the GET endpoint using a template string
 const getUser = HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(
-  User
-)
+    User,
+);
 ```
 
 ### POST
@@ -307,26 +307,26 @@ The `HttpApiEndpoint.post` method is used to define an endpoint for creating res
 **Example** (Defining a POST Endpoint with Payload and Success Schemas)
 
 ```ts
-import { HttpApiEndpoint } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint } from "@effect/platform";
+import { Schema } from "effect";
 
 // Define a schema for the user object
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
 // Define a POST endpoint for creating a new user
 const createUser = HttpApiEndpoint.post("createUser", "/users")
-  // Define the request body schema (payload)
-  .setPayload(
-    Schema.Struct({
-      name: Schema.String
-    })
-  )
-  // Define the schema for a successful response
-  .addSuccess(User)
+    // Define the request body schema (payload)
+    .setPayload(
+        Schema.Struct({
+            name: Schema.String,
+        }),
+    )
+    // Define the schema for a successful response
+    .addSuccess(User);
 ```
 
 ### DELETE
@@ -336,14 +336,14 @@ The `HttpApiEndpoint.del` method is used to define an endpoint for deleting a re
 **Example** (Defining a DELETE Endpoint with Path Parameters)
 
 ```ts
-import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 // Define a path parameter for the user ID
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 // Define a DELETE endpoint to delete a user by ID
-const deleteUser = HttpApiEndpoint.del("deleteUser")`/users/${idParam}`
+const deleteUser = HttpApiEndpoint.del("deleteUser")`/users/${idParam}`;
 ```
 
 ### PATCH
@@ -353,29 +353,29 @@ The `HttpApiEndpoint.patch` method is used to define an endpoint for partially u
 **Example** (Defining a PATCH Endpoint for Updating a User)
 
 ```ts
-import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 // Define a schema for the user object
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
 // Define a path parameter for the user ID
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 // Define a PATCH endpoint to update a user's name by ID
 const updateUser = HttpApiEndpoint.patch("updateUser")`/users/${idParam}`
-  // Specify the schema for the request payload
-  .setPayload(
-    Schema.Struct({
-      name: Schema.String // Only the name can be updated
-    })
-  )
-  // Specify the schema for a successful response
-  .addSuccess(User)
+    // Specify the schema for the request payload
+    .setPayload(
+        Schema.Struct({
+            name: Schema.String, // Only the name can be updated
+        }),
+    )
+    // Specify the schema for a successful response
+    .addSuccess(User);
 ```
 
 ### Catch-All Endpoints
@@ -385,9 +385,9 @@ The path can also be `"*"` to match any incoming path. This is useful for defini
 **Example** (Defining a Catch-All Endpoint)
 
 ```ts
-import { HttpApiEndpoint } from "@effect/platform"
+import { HttpApiEndpoint } from "@effect/platform";
 
-const catchAll = HttpApiEndpoint.get("catchAll", "*")
+const catchAll = HttpApiEndpoint.get("catchAll", "*");
 ```
 
 ### Setting URL Parameters
@@ -397,28 +397,28 @@ The `setUrlParams` method allows you to define the structure of URL parameters f
 **Example** (Defining URL Parameters with Metadata)
 
 ```ts
-import { HttpApiEndpoint } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint } from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
 const getUsers = HttpApiEndpoint.get("getUsers", "/users")
-  // Specify the URL parameters schema
-  .setUrlParams(
-    Schema.Struct({
-      // Parameter "page" for pagination
-      page: Schema.NumberFromString,
-      // Parameter "sort" for sorting options with an added description
-      sort: Schema.String.annotations({
-        description: "Sorting criteria (e.g., 'name', 'date')"
-      })
-    })
-  )
-  .addSuccess(Schema.Array(User))
+    // Specify the URL parameters schema
+    .setUrlParams(
+        Schema.Struct({
+            // Parameter "page" for pagination
+            page: Schema.NumberFromString,
+            // Parameter "sort" for sorting options with an added description
+            sort: Schema.String.annotations({
+                description: "Sorting criteria (e.g., 'name', 'date')",
+            }),
+        }),
+    )
+    .addSuccess(Schema.Array(User));
 ```
 
 #### Defining an Array of Values for a URL Parameter
@@ -428,21 +428,21 @@ When defining a URL parameter that accepts multiple values, you can use the `Sch
 **Example** (Defining an Array of String Values for a URL Parameter)
 
 ```ts
-import { HttpApi, HttpApiEndpoint, HttpApiGroup } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApi, HttpApiEndpoint, HttpApiGroup } from "@effect/platform";
+import { Schema } from "effect";
 
 const api = HttpApi.make("myApi").add(
-  HttpApiGroup.make("group").add(
-    HttpApiEndpoint.get("get", "/")
-      .setUrlParams(
-        Schema.Struct({
-          // Define "a" as an array of strings
-          a: Schema.Array(Schema.String)
-        })
-      )
-      .addSuccess(Schema.String)
-  )
-)
+    HttpApiGroup.make("group").add(
+        HttpApiEndpoint.get("get", "/")
+            .setUrlParams(
+                Schema.Struct({
+                    // Define "a" as an array of strings
+                    a: Schema.Array(Schema.String),
+                }),
+            )
+            .addSuccess(Schema.String),
+    ),
+);
 ```
 
 You can test this endpoint by passing an array of values in the query string. For example:
@@ -460,18 +460,18 @@ By default, the success status code is `200 OK`. You can change it by annotating
 **Example** (Defining a GET Endpoint with a custom status code)
 
 ```ts
-import { HttpApiEndpoint } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint } from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
 const getUsers = HttpApiEndpoint.get("getUsers", "/users")
-  // Override the default success status
-  .addSuccess(Schema.Array(User), { status: 206 })
+    // Override the default success status
+    .addSuccess(Schema.Array(User), { status: 206 });
 ```
 
 ### Handling Multipart Requests
@@ -483,18 +483,18 @@ To support file uploads, you can use the `HttpApiSchema.Multipart` API. This all
 In this example, the `HttpApiSchema.Multipart` function marks the payload as a multipart request. The `files` field uses `Multipart.FilesSchema` to handle uploaded file data automatically.
 
 ```ts
-import { HttpApiEndpoint, HttpApiSchema, Multipart } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiSchema, Multipart } from "@effect/platform";
+import { Schema } from "effect";
 
 const upload = HttpApiEndpoint.post("upload", "/users/upload").setPayload(
-  // Specify that the payload is a multipart request
-  HttpApiSchema.Multipart(
-    Schema.Struct({
-      // Define a "files" field to handle file uploads
-      files: Multipart.FilesSchema
-    })
-  ).addSuccess(Schema.String)
-)
+    // Specify that the payload is a multipart request
+    HttpApiSchema.Multipart(
+        Schema.Struct({
+            // Define a "files" field to handle file uploads
+            files: Multipart.FilesSchema,
+        }),
+    ).addSuccess(Schema.String),
+);
 ```
 
 You can test this endpoint by sending a multipart request with a file upload. For example:
@@ -510,18 +510,18 @@ By default, API requests are encoded as JSON. If your application requires a dif
 **Example** (Customizing Request Encoding)
 
 ```ts
-import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 const createUser = HttpApiEndpoint.post("createUser", "/users")
-  // Set the request payload as a string encoded with URL parameters
-  .setPayload(
-    Schema.Struct({
-      a: Schema.String // Parameter "a" must be a string
-    })
-      // Specify the encoding as URL parameters
-      .pipe(HttpApiSchema.withEncoding({ kind: "UrlParams" }))
-  )
+    // Set the request payload as a string encoded with URL parameters
+    .setPayload(
+        Schema.Struct({
+            a: Schema.String, // Parameter "a" must be a string
+        })
+            // Specify the encoding as URL parameters
+            .pipe(HttpApiSchema.withEncoding({ kind: "UrlParams" })),
+    );
 ```
 
 ### Changing the Response Encoding
@@ -531,21 +531,21 @@ By default, API responses are encoded as JSON. If your application requires a di
 **Example** (Returning Data as `text/csv`)
 
 ```ts
-import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 const csv = HttpApiEndpoint.get("csv")`/users/csv`
-  // Set the success response as a string with CSV encoding
-  .addSuccess(
-    Schema.String.pipe(
-      HttpApiSchema.withEncoding({
-        // Specify the type of the response
-        kind: "Text",
-        // Define the content type as text/csv
-        contentType: "text/csv"
-      })
-    )
-  )
+    // Set the success response as a string with CSV encoding
+    .addSuccess(
+        Schema.String.pipe(
+            HttpApiSchema.withEncoding({
+                // Specify the type of the response
+                kind: "Text",
+                // Define the content type as text/csv
+                contentType: "text/csv",
+            }),
+        ),
+    );
 ```
 
 ### Setting Request Headers
@@ -555,28 +555,28 @@ The `HttpApiEndpoint.setHeaders` method allows you to define the expected struct
 **Example** (Defining Request Headers with Metadata)
 
 ```ts
-import { HttpApiEndpoint } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint } from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
 const getUsers = HttpApiEndpoint.get("getUsers", "/users")
-  // Specify the headers schema
-  .setHeaders(
-    Schema.Struct({
-      // Header must be a string
-      "X-API-Key": Schema.String,
-      // Header must be a string with an added description
-      "X-Request-ID": Schema.String.annotations({
-        description: "Unique identifier for the request"
-      })
-    })
-  )
-  .addSuccess(Schema.Array(User))
+    // Specify the headers schema
+    .setHeaders(
+        Schema.Struct({
+            // Header must be a string
+            "X-API-Key": Schema.String,
+            // Header must be a string with an added description
+            "X-Request-ID": Schema.String.annotations({
+                description: "Unique identifier for the request",
+            }),
+        }),
+    )
+    .addSuccess(Schema.Array(User));
 ```
 
 ## Defining a HttpApiGroup
@@ -586,50 +586,50 @@ You can group related endpoints under a single entity by using `HttpApiGroup.mak
 **Example** (Creating a Group for User-Related Endpoints)
 
 ```ts
-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const getUsers = HttpApiEndpoint.get("getUsers", "/users").addSuccess(
-  Schema.Array(User)
-)
+    Schema.Array(User),
+);
 
 const getUser = HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(
-  User
-)
+    User,
+);
 
 const createUser = HttpApiEndpoint.post("createUser", "/users")
-  .setPayload(
-    Schema.Struct({
-      name: Schema.String
-    })
-  )
-  .addSuccess(User)
+    .setPayload(
+        Schema.Struct({
+            name: Schema.String,
+        }),
+    )
+    .addSuccess(User);
 
-const deleteUser = HttpApiEndpoint.del("deleteUser")`/users/${idParam}`
+const deleteUser = HttpApiEndpoint.del("deleteUser")`/users/${idParam}`;
 
 const updateUser = HttpApiEndpoint.patch("updateUser")`/users/${idParam}`
-  .setPayload(
-    Schema.Struct({
-      name: Schema.String
-    })
-  )
-  .addSuccess(User)
+    .setPayload(
+        Schema.Struct({
+            name: Schema.String,
+        }),
+    )
+    .addSuccess(User);
 
 // Group all user-related endpoints
 const usersGroup = HttpApiGroup.make("users")
-  .add(getUsers)
-  .add(getUser)
-  .add(createUser)
-  .add(deleteUser)
-  .add(updateUser)
+    .add(getUsers)
+    .add(getUser)
+    .add(createUser)
+    .add(deleteUser)
+    .add(updateUser);
 ```
 
 If you would like to create a more opaque type for the group, you can extend `HttpApiGroup` with a class.
@@ -639,7 +639,7 @@ If you would like to create a more opaque type for the group, you can extend `Ht
 ```ts
 // Create an opaque class extending HttpApiGroup
 class UsersGroup extends HttpApiGroup.make("users").add(getUsers).add(getUser) {
-  // Additional endpoints or methods can be added here
+    // Additional endpoints or methods can be added here
 }
 ```
 
@@ -651,56 +651,56 @@ After defining your groups, you can combine them into one `HttpApi` representing
 
 ```ts
 import {
-  HttpApi,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema
-} from "@effect/platform"
-import { Schema } from "effect"
+    HttpApi,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+} from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const getUsers = HttpApiEndpoint.get("getUsers", "/users").addSuccess(
-  Schema.Array(User)
-)
+    Schema.Array(User),
+);
 
 const getUser = HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(
-  User
-)
+    User,
+);
 
 const createUser = HttpApiEndpoint.post("createUser", "/users")
-  .setPayload(
-    Schema.Struct({
-      name: Schema.String
-    })
-  )
-  .addSuccess(User)
+    .setPayload(
+        Schema.Struct({
+            name: Schema.String,
+        }),
+    )
+    .addSuccess(User);
 
-const deleteUser = HttpApiEndpoint.del("deleteUser")`/users/${idParam}`
+const deleteUser = HttpApiEndpoint.del("deleteUser")`/users/${idParam}`;
 
 const updateUser = HttpApiEndpoint.patch("updateUser")`/users/${idParam}`
-  .setPayload(
-    Schema.Struct({
-      name: Schema.String
-    })
-  )
-  .addSuccess(User)
+    .setPayload(
+        Schema.Struct({
+            name: Schema.String,
+        }),
+    )
+    .addSuccess(User);
 
 const usersGroup = HttpApiGroup.make("users")
-  .add(getUsers)
-  .add(getUser)
-  .add(createUser)
-  .add(deleteUser)
-  .add(updateUser)
+    .add(getUsers)
+    .add(getUser)
+    .add(createUser)
+    .add(deleteUser)
+    .add(updateUser);
 
 // Combine the groups into one API
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 
 // Alternatively, create an opaque class for your API
 class MyApi extends HttpApi.make("myApi").add(usersGroup) {}
@@ -719,43 +719,43 @@ Group-level and API-level errors are useful for handling shared issues like auth
 **Example** (Defining Error Responses for Endpoints and Groups)
 
 ```ts
-import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 // Define error schemas
 class UserNotFound extends Schema.TaggedError<UserNotFound>()(
-  "UserNotFound",
-  {}
+    "UserNotFound",
+    {},
 ) {}
 
 class Unauthorized extends Schema.TaggedError<Unauthorized>()(
-  "Unauthorized",
-  {}
+    "Unauthorized",
+    {},
 ) {}
 
 const getUsers = HttpApiEndpoint.get("getUsers", "/users").addSuccess(
-  Schema.Array(User)
-)
+    Schema.Array(User),
+);
 
 const getUser = HttpApiEndpoint.get("getUser")`/user/${idParam}`
-  .addSuccess(User)
-  // Add a 404 error response for this endpoint
-  .addError(UserNotFound, { status: 404 })
+    .addSuccess(User)
+    // Add a 404 error response for this endpoint
+    .addError(UserNotFound, { status: 404 });
 
 const usersGroup = HttpApiGroup.make("users")
-  .add(getUsers)
-  .add(getUser)
-  // ...etc...
-  // Add a 401 error response for the entire group
-  .addError(Unauthorized, { status: 401 })
+    .add(getUsers)
+    .add(getUser)
+    // ...etc...
+    // Add a 401 error response for the entire group
+    .addError(Unauthorized, { status: 401 });
 ```
 
 You can assign multiple error responses to a single endpoint by calling `HttpApiEndpoint.addError` multiple times. This is useful when different types of errors might occur for a single operation.
@@ -764,10 +764,10 @@ You can assign multiple error responses to a single endpoint by calling `HttpApi
 
 ```ts
 const deleteUser = HttpApiEndpoint.del("deleteUser")`/users/${idParam}`
-  // Add a 404 error response for when the user is not found
-  .addError(UserNotFound, { status: 404 })
-  // Add a 401 error response for unauthorized access
-  .addError(Unauthorized, { status: 401 })
+    // Add a 404 error response for when the user is not found
+    .addError(UserNotFound, { status: 404 })
+    // Add a 401 error response for unauthorized access
+    .addError(Unauthorized, { status: 401 });
 ```
 
 ### Predefined Empty Error Types
@@ -777,20 +777,20 @@ The `HttpApiError` module provides a set of predefined empty error types that yo
 **Example** (Adding a Predefined Error to an Endpoint)
 
 ```ts
-import { HttpApiEndpoint, HttpApiError, HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApiEndpoint, HttpApiError, HttpApiSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const getUser = HttpApiEndpoint.get("getUser")`/user/${idParam}`
-  .addSuccess(User)
-  .addError(HttpApiError.NotFound)
+    .addSuccess(User)
+    .addError(HttpApiError.NotFound);
 ```
 
 | Name                  | Status | Description                                                                                        |
@@ -816,24 +816,24 @@ Prefixes can be added to endpoints, groups, or an entire API to simplify the man
 **Example** (Using Prefixes for Common Path Management)
 
 ```ts
-import { HttpApi, HttpApiEndpoint, HttpApiGroup } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApi, HttpApiEndpoint, HttpApiGroup } from "@effect/platform";
+import { Schema } from "effect";
 
 const api = HttpApi.make("api")
-  .add(
-    HttpApiGroup.make("group")
-      .add(
-        HttpApiEndpoint.get("getRoot", "/")
-          .addSuccess(Schema.String)
-          // Prefix for this endpoint
-          .prefix("/endpointPrefix")
-      )
-      .add(HttpApiEndpoint.get("getA", "/a").addSuccess(Schema.String))
-      // Prefix for all endpoints in the group
-      .prefix("/groupPrefix")
-  )
-  // Prefix for the entire API
-  .prefix("/apiPrefix")
+    .add(
+        HttpApiGroup.make("group")
+            .add(
+                HttpApiEndpoint.get("getRoot", "/")
+                    .addSuccess(Schema.String)
+                    // Prefix for this endpoint
+                    .prefix("/endpointPrefix"),
+            )
+            .add(HttpApiEndpoint.get("getA", "/a").addSuccess(Schema.String))
+            // Prefix for all endpoints in the group
+            .prefix("/groupPrefix"),
+    )
+    // Prefix for the entire API
+    .prefix("/apiPrefix");
 ```
 
 ## Implementing a Server
@@ -846,26 +846,26 @@ Here, we will create a simple example with a `getUser` endpoint organized within
 
 ```ts
 import {
-  HttpApi,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema
-} from "@effect/platform"
-import { Schema } from "effect"
+    HttpApi,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+} from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users").add(
-  HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User)
-)
+    HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User),
+);
 
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 ```
 
 ### Implementing a HttpApiGroup
@@ -886,27 +886,27 @@ The `HttpApiBuilder.group` API produces a `Layer` that can later be provided to 
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema
-} from "@effect/platform"
-import { DateTime, Effect, Schema } from "effect"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+} from "@effect/platform";
+import { DateTime, Effect, Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users").add(
-  HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User)
-)
+    HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User),
+);
 
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 
 // --------------------------------------------
 // Implementation
@@ -915,27 +915,27 @@ const api = HttpApi.make("myApi").add(usersGroup)
 //      ┌─── Layer<HttpApiGroup.ApiGroup<"myApi", "users">>
 //      ▼
 const usersGroupLive =
-  //                    ┌─── The Whole API
-  //                    │      ┌─── The Group you are implementing
-  //                    ▼      ▼
-  HttpApiBuilder.group(api, "users", (handlers) =>
-    handlers.handle(
-      //  ┌─── The Endpoint you are implementing
-      //  ▼
-      "getUser",
-      // Provide the handler logic for the endpoint.
-      // The parameters & payload are passed to the handler function.
-      ({ path: { id } }) =>
-        Effect.succeed(
-          // Return a mock user object with the provided ID
-          {
-            id,
-            name: "John Doe",
-            createdAt: DateTime.unsafeNow()
-          }
-        )
-    )
-  )
+    //                    ┌─── The Whole API
+    //                    │      ┌─── The Group you are implementing
+    //                    ▼      ▼
+    HttpApiBuilder.group(api, "users", (handlers) =>
+        handlers.handle(
+            //  ┌─── The Endpoint you are implementing
+            //  ▼
+            "getUser",
+            // Provide the handler logic for the endpoint.
+            // The parameters & payload are passed to the handler function.
+            ({ path: { id } }) =>
+                Effect.succeed(
+                    // Return a mock user object with the provided ID
+                    {
+                        id,
+                        name: "John Doe",
+                        createdAt: DateTime.unsafeNow(),
+                    },
+                ),
+        ),
+    );
 ```
 
 Using `HttpApiBuilder.group`, you connect the structure of your API to its logic, enabling you to focus on each endpoint's functionality in isolation. Each handler receives the parameters and payload for the request, making it easy to process input and generate a response.
@@ -948,40 +948,40 @@ If your handlers need to use services, you can easily integrate them because the
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema
-} from "@effect/platform"
-import { Context, Effect, Schema } from "effect"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+} from "@effect/platform";
+import { Context, Effect, Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users").add(
-  HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User)
-)
+    HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User),
+);
 
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 
 // --------------------------------------------
 // Implementation
 // --------------------------------------------
 
-type User = typeof User.Type
+type User = typeof User.Type;
 
 // Define the UsersRepository service
 class UsersRepository extends Context.Tag("UsersRepository")<
-  UsersRepository,
-  {
-    readonly findById: (id: number) => Effect.Effect<User>
-  }
+    UsersRepository,
+    {
+        readonly findById: (id: number) => Effect.Effect<User>;
+    }
 >() {}
 
 // Implement the `users` group with access to the UsersRepository service
@@ -989,14 +989,14 @@ class UsersRepository extends Context.Tag("UsersRepository")<
 //      ┌─── Layer<HttpApiGroup.ApiGroup<"myApi", "users">, never, UsersRepository>
 //      ▼
 const usersGroupLive = HttpApiBuilder.group(api, "users", (handlers) =>
-  Effect.gen(function* () {
-    // Access the UsersRepository service
-    const repository = yield* UsersRepository
-    return handlers.handle("getUser", ({ path: { id } }) =>
-      repository.findById(id)
-    )
-  })
-)
+    Effect.gen(function* () {
+        // Access the UsersRepository service
+        const repository = yield* UsersRepository;
+        return handlers.handle("getUser", ({ path: { id } }) =>
+            repository.findById(id),
+        );
+    }),
+);
 ```
 
 ### Implementing a HttpApi
@@ -1007,43 +1007,43 @@ Once all your groups are implemented, you can create a top-level implementation 
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema
-} from "@effect/platform"
-import { DateTime, Effect, Layer, Schema } from "effect"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+} from "@effect/platform";
+import { DateTime, Effect, Layer, Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users").add(
-  HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User)
-)
+    HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User),
+);
 
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 
 const usersGroupLive = HttpApiBuilder.group(api, "users", (handlers) =>
-  handlers.handle("getUser", ({ path: { id } }) =>
-    Effect.succeed({
-      id,
-      name: "John Doe",
-      createdAt: DateTime.unsafeNow()
-    })
-  )
-)
+    handlers.handle("getUser", ({ path: { id } }) =>
+        Effect.succeed({
+            id,
+            name: "John Doe",
+            createdAt: DateTime.unsafeNow(),
+        }),
+    ),
+);
 
 // Combine all group implementations into the top-level API
 //
 //      ┌─── Layer<HttpApi.Api, never, never>
 //      ▼
-const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(usersGroupLive))
+const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(usersGroupLive));
 ```
 
 ### Serving the API
@@ -1054,58 +1054,58 @@ You can serve your API using the `HttpApiBuilder.serve` function. This utility b
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema,
-  HttpMiddleware,
-  HttpServer
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { DateTime, Effect, Layer, Schema } from "effect"
-import { createServer } from "node:http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+    HttpMiddleware,
+    HttpServer,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { DateTime, Effect, Layer, Schema } from "effect";
+import { createServer } from "node:http";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users").add(
-  HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User)
-)
+    HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User),
+);
 
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 
 const usersGroupLive = HttpApiBuilder.group(api, "users", (handlers) =>
-  handlers.handle("getUser", ({ path: { id } }) =>
-    Effect.succeed({
-      id,
-      name: "John Doe",
-      createdAt: DateTime.unsafeNow()
-    })
-  )
-)
+    handlers.handle("getUser", ({ path: { id } }) =>
+        Effect.succeed({
+            id,
+            name: "John Doe",
+            createdAt: DateTime.unsafeNow(),
+        }),
+    ),
+);
 
-const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(usersGroupLive))
+const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(usersGroupLive));
 
 // Configure and serve the API
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
-  // Add CORS middleware to handle cross-origin requests
-  Layer.provide(HttpApiBuilder.middlewareCors()),
-  // Provide the API implementation
-  Layer.provide(MyApiLive),
-  // Log the server's listening address
-  HttpServer.withLogAddress,
-  // Set up the Node.js HTTP server
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    // Add CORS middleware to handle cross-origin requests
+    Layer.provide(HttpApiBuilder.middlewareCors()),
+    // Provide the API implementation
+    Layer.provide(MyApiLive),
+    // Log the server's listening address
+    HttpServer.withLogAddress,
+    // Set up the Node.js HTTP server
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
 // Launch the server
-Layer.launch(HttpLive).pipe(NodeRuntime.runMain)
+Layer.launch(HttpLive).pipe(NodeRuntime.runMain);
 ```
 
 ### Accessing the HttpServerRequest
@@ -1116,45 +1116,45 @@ In some cases, you may need to access details about the incoming `HttpServerRequ
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpMiddleware,
-  HttpServer
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Effect, Layer, Schema } from "effect"
-import { createServer } from "node:http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpMiddleware,
+    HttpServer,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Effect, Layer, Schema } from "effect";
+import { createServer } from "node:http";
 
 const api = HttpApi.make("myApi").add(
-  HttpApiGroup.make("group").add(
-    HttpApiEndpoint.get("get", "/").addSuccess(Schema.String)
-  )
-)
+    HttpApiGroup.make("group").add(
+        HttpApiEndpoint.get("get", "/").addSuccess(Schema.String),
+    ),
+);
 
 const groupLive = HttpApiBuilder.group(api, "group", (handlers) =>
-  handlers.handle("get", ({ request }) =>
-    Effect.gen(function* () {
-      // Log the HTTP method for demonstration purposes
-      console.log(request.method)
+    handlers.handle("get", ({ request }) =>
+        Effect.gen(function* () {
+            // Log the HTTP method for demonstration purposes
+            console.log(request.method);
 
-      // Return a response
-      return "Hello, World!"
-    })
-  )
-)
+            // Return a response
+            return "Hello, World!";
+        }),
+    ),
+);
 
-const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(groupLive))
+const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(groupLive));
 
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
-  Layer.provide(HttpApiBuilder.middlewareCors()),
-  Layer.provide(MyApiLive),
-  HttpServer.withLogAddress,
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    Layer.provide(HttpApiBuilder.middlewareCors()),
+    Layer.provide(MyApiLive),
+    HttpServer.withLogAddress,
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
-Layer.launch(HttpLive).pipe(NodeRuntime.runMain)
+Layer.launch(HttpLive).pipe(NodeRuntime.runMain);
 ```
 
 ### Streaming Requests
@@ -1165,51 +1165,51 @@ Streaming requests allow you to send large or continuous data streams to the ser
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema,
-  HttpMiddleware,
-  HttpServer
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Effect, Layer, Schema } from "effect"
-import { createServer } from "node:http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+    HttpMiddleware,
+    HttpServer,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Effect, Layer, Schema } from "effect";
+import { createServer } from "node:http";
 
 const api = HttpApi.make("myApi").add(
-  HttpApiGroup.make("group").add(
-    HttpApiEndpoint.post("acceptStream", "/stream")
-      // Define the payload as a Uint8Array with a specific encoding
-      .setPayload(
-        Schema.Uint8ArrayFromSelf.pipe(
-          HttpApiSchema.withEncoding({
-            kind: "Uint8Array",
-            contentType: "application/octet-stream"
-          })
-        )
-      )
-      .addSuccess(Schema.String)
-  )
-)
+    HttpApiGroup.make("group").add(
+        HttpApiEndpoint.post("acceptStream", "/stream")
+            // Define the payload as a Uint8Array with a specific encoding
+            .setPayload(
+                Schema.Uint8ArrayFromSelf.pipe(
+                    HttpApiSchema.withEncoding({
+                        kind: "Uint8Array",
+                        contentType: "application/octet-stream",
+                    }),
+                ),
+            )
+            .addSuccess(Schema.String),
+    ),
+);
 
 const groupLive = HttpApiBuilder.group(api, "group", (handlers) =>
-  handlers.handle("acceptStream", (req) =>
-    // Decode the incoming binary data into a string
-    Effect.succeed(new TextDecoder().decode(req.payload))
-  )
-)
+    handlers.handle("acceptStream", (req) =>
+        // Decode the incoming binary data into a string
+        Effect.succeed(new TextDecoder().decode(req.payload)),
+    ),
+);
 
-const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(groupLive))
+const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(groupLive));
 
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
-  Layer.provide(HttpApiBuilder.middlewareCors()),
-  Layer.provide(MyApiLive),
-  HttpServer.withLogAddress,
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    Layer.provide(HttpApiBuilder.middlewareCors()),
+    Layer.provide(MyApiLive),
+    HttpServer.withLogAddress,
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
-Layer.launch(HttpLive).pipe(NodeRuntime.runMain)
+Layer.launch(HttpLive).pipe(NodeRuntime.runMain);
 ```
 
 You can test the streaming request using `curl` or any tool that supports sending binary data. For example:
@@ -1227,53 +1227,53 @@ To handle streaming responses in your API, you can return a raw `HttpServerRespo
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema,
-  HttpMiddleware,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Layer, Schedule, Schema, Stream } from "effect"
-import { createServer } from "node:http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+    HttpMiddleware,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Layer, Schedule, Schema, Stream } from "effect";
+import { createServer } from "node:http";
 
 // Define the API with a single streaming endpoint
 const api = HttpApi.make("myApi").add(
-  HttpApiGroup.make("group").add(
-    HttpApiEndpoint.get("getStream", "/stream").addSuccess(
-      Schema.String.pipe(
-        HttpApiSchema.withEncoding({
-          kind: "Text",
-          contentType: "application/octet-stream"
-        })
-      )
-    )
-  )
-)
+    HttpApiGroup.make("group").add(
+        HttpApiEndpoint.get("getStream", "/stream").addSuccess(
+            Schema.String.pipe(
+                HttpApiSchema.withEncoding({
+                    kind: "Text",
+                    contentType: "application/octet-stream",
+                }),
+            ),
+        ),
+    ),
+);
 
 // Simulate a stream of data
 const stream = Stream.make("a", "b", "c").pipe(
-  Stream.schedule(Schedule.spaced("500 millis")),
-  Stream.map((s) => new TextEncoder().encode(s))
-)
+    Stream.schedule(Schedule.spaced("500 millis")),
+    Stream.map((s) => new TextEncoder().encode(s)),
+);
 
 const groupLive = HttpApiBuilder.group(api, "group", (handlers) =>
-  handlers.handle("getStream", () => HttpServerResponse.stream(stream))
-)
+    handlers.handle("getStream", () => HttpServerResponse.stream(stream)),
+);
 
-const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(groupLive))
+const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(groupLive));
 
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
-  Layer.provide(HttpApiBuilder.middlewareCors()),
-  Layer.provide(MyApiLive),
-  HttpServer.withLogAddress,
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    Layer.provide(HttpApiBuilder.middlewareCors()),
+    Layer.provide(MyApiLive),
+    HttpServer.withLogAddress,
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
-Layer.launch(HttpLive).pipe(NodeRuntime.runMain)
+Layer.launch(HttpLive).pipe(NodeRuntime.runMain);
 ```
 
 You can test the streaming response using `curl` or any similar HTTP client that supports streaming:
@@ -1303,42 +1303,42 @@ You can define middleware using the `HttpApiMiddleware.Tag` class, which lets yo
 
 ```ts
 import {
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiMiddleware,
-  HttpApiSchema
-} from "@effect/platform"
-import { Schema } from "effect"
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiMiddleware,
+    HttpApiSchema,
+} from "@effect/platform";
+import { Schema } from "effect";
 
 // Define a schema for errors returned by the logger middleware
 class LoggerError extends Schema.TaggedError<LoggerError>()(
-  "LoggerError",
-  {}
+    "LoggerError",
+    {},
 ) {}
 
 // Extend the HttpApiMiddleware.Tag class to define the logger middleware tag
 class Logger extends HttpApiMiddleware.Tag<Logger>()("Http/Logger", {
-  // Optionally define the error schema for the middleware
-  failure: LoggerError
+    // Optionally define the error schema for the middleware
+    failure: LoggerError,
 }) {}
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users")
-  .add(
-    HttpApiEndpoint.get("getUser")`/user/${idParam}`
-      .addSuccess(User)
-      // Apply the middleware to a single endpoint
-      .middleware(Logger)
-  )
-  // Or apply the middleware to the entire group
-  .middleware(Logger)
+    .add(
+        HttpApiEndpoint.get("getUser")`/user/${idParam}`
+            .addSuccess(User)
+            // Apply the middleware to a single endpoint
+            .middleware(Logger),
+    )
+    // Or apply the middleware to the entire group
+    .middleware(Logger);
 ```
 
 ### Implementing HttpApiMiddleware
@@ -1348,98 +1348,98 @@ Once you have defined your `HttpApiMiddleware`, you can implement it as a `Layer
 **Example** (Implementing and Using Logger Middleware)
 
 ```ts
-import { HttpApiMiddleware, HttpServerRequest } from "@effect/platform"
-import { Effect, Layer } from "effect"
+import { HttpApiMiddleware, HttpServerRequest } from "@effect/platform";
+import { Effect, Layer } from "effect";
 
 class Logger extends HttpApiMiddleware.Tag<Logger>()("Http/Logger") {}
 
 const LoggerLive = Layer.effect(
-  Logger,
-  Effect.gen(function* () {
-    yield* Effect.log("creating Logger middleware")
+    Logger,
+    Effect.gen(function* () {
+        yield* Effect.log("creating Logger middleware");
 
-    // Middleware implementation as an Effect
-    // that can access the `HttpServerRequest` context.
-    return Effect.gen(function* () {
-      const request = yield* HttpServerRequest.HttpServerRequest
-      yield* Effect.log(`Request: ${request.method} ${request.url}`)
-    })
-  })
-)
+        // Middleware implementation as an Effect
+        // that can access the `HttpServerRequest` context.
+        return Effect.gen(function* () {
+            const request = yield* HttpServerRequest.HttpServerRequest;
+            yield* Effect.log(`Request: ${request.method} ${request.url}`);
+        });
+    }),
+);
 ```
 
 After implementing the middleware, you can attach it to your API groups or specific endpoints using the `Layer` APIs.
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiMiddleware,
-  HttpApiSchema,
-  HttpServerRequest
-} from "@effect/platform"
-import { DateTime, Effect, Layer, Schema } from "effect"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiMiddleware,
+    HttpApiSchema,
+    HttpServerRequest,
+} from "@effect/platform";
+import { DateTime, Effect, Layer, Schema } from "effect";
 
 // Define a schema for errors returned by the logger middleware
 class LoggerError extends Schema.TaggedError<LoggerError>()(
-  "LoggerError",
-  {}
+    "LoggerError",
+    {},
 ) {}
 
 // Extend the HttpApiMiddleware.Tag class to define the logger middleware tag
 class Logger extends HttpApiMiddleware.Tag<Logger>()("Http/Logger", {
-  // Optionally define the error schema for the middleware
-  failure: LoggerError
+    // Optionally define the error schema for the middleware
+    failure: LoggerError,
 }) {}
 
 const LoggerLive = Layer.effect(
-  Logger,
-  Effect.gen(function* () {
-    yield* Effect.log("creating Logger middleware")
+    Logger,
+    Effect.gen(function* () {
+        yield* Effect.log("creating Logger middleware");
 
-    // Middleware implementation as an Effect
-    // that can access the `HttpServerRequest` context.
-    return Effect.gen(function* () {
-      const request = yield* HttpServerRequest.HttpServerRequest
-      yield* Effect.log(`Request: ${request.method} ${request.url}`)
-    })
-  })
-)
+        // Middleware implementation as an Effect
+        // that can access the `HttpServerRequest` context.
+        return Effect.gen(function* () {
+            const request = yield* HttpServerRequest.HttpServerRequest;
+            yield* Effect.log(`Request: ${request.method} ${request.url}`);
+        });
+    }),
+);
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users")
-  .add(
-    HttpApiEndpoint.get("getUser")`/user/${idParam}`
-      .addSuccess(User)
-      // Apply the middleware to a single endpoint
-      .middleware(Logger)
-  )
-  // Or apply the middleware to the entire group
-  .middleware(Logger)
+    .add(
+        HttpApiEndpoint.get("getUser")`/user/${idParam}`
+            .addSuccess(User)
+            // Apply the middleware to a single endpoint
+            .middleware(Logger),
+    )
+    // Or apply the middleware to the entire group
+    .middleware(Logger);
 
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 
 const usersGroupLive = HttpApiBuilder.group(api, "users", (handlers) =>
-  handlers.handle("getUser", (req) =>
-    Effect.succeed({
-      id: req.path.id,
-      name: "John Doe",
-      createdAt: DateTime.unsafeNow()
-    })
-  )
+    handlers.handle("getUser", (req) =>
+        Effect.succeed({
+            id: req.path.id,
+            name: "John Doe",
+            createdAt: DateTime.unsafeNow(),
+        }),
+    ),
 ).pipe(
-  // Provide the Logger middleware to the group
-  Layer.provide(LoggerLive)
-)
+    // Provide the Logger middleware to the group
+    Layer.provide(LoggerLive),
+);
 ```
 
 ### Defining security middleware
@@ -1460,24 +1460,24 @@ These security annotations can be used alongside `HttpApiMiddleware` to create m
 
 ```ts
 import {
-  HttpApi,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiMiddleware,
-  HttpApiSchema,
-  HttpApiSecurity
-} from "@effect/platform"
-import { Context, Schema } from "effect"
+    HttpApi,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiMiddleware,
+    HttpApiSchema,
+    HttpApiSecurity,
+} from "@effect/platform";
+import { Context, Schema } from "effect";
 
 // Define a schema for the "User"
 class User extends Schema.Class<User>("User")({ id: Schema.Number }) {}
 
 // Define a schema for the "Unauthorized" error
 class Unauthorized extends Schema.TaggedError<Unauthorized>()(
-  "Unauthorized",
-  {},
-  // Specify the HTTP status code for unauthorized errors
-  HttpApiSchema.annotations({ status: 401 })
+    "Unauthorized",
+    {},
+    // Specify the HTTP status code for unauthorized errors
+    HttpApiSchema.annotations({ status: 401 }),
 ) {}
 
 // Define a Context.Tag for the authenticated user
@@ -1485,37 +1485,37 @@ class CurrentUser extends Context.Tag("CurrentUser")<CurrentUser, User>() {}
 
 // Create the Authorization middleware
 class Authorization extends HttpApiMiddleware.Tag<Authorization>()(
-  "Authorization",
-  {
-    // Define the error schema for unauthorized access
-    failure: Unauthorized,
-    // Specify the resource this middleware will provide
-    provides: CurrentUser,
-    // Add security definitions
-    security: {
-      // ┌─── Custom name for the security definition
-      // ▼
-      myBearer: HttpApiSecurity.bearer
-      // Additional security definitions can be added here.
-      // They will attempt to be resolved in the order they are defined.
-    }
-  }
+    "Authorization",
+    {
+        // Define the error schema for unauthorized access
+        failure: Unauthorized,
+        // Specify the resource this middleware will provide
+        provides: CurrentUser,
+        // Add security definitions
+        security: {
+            // ┌─── Custom name for the security definition
+            // ▼
+            myBearer: HttpApiSecurity.bearer,
+            // Additional security definitions can be added here.
+            // They will attempt to be resolved in the order they are defined.
+        },
+    },
 ) {}
 
 const api = HttpApi.make("api")
-  .add(
-    HttpApiGroup.make("group")
-      .add(
-        HttpApiEndpoint.get("get", "/")
-          .addSuccess(Schema.String)
-          // Apply the middleware to a single endpoint
-          .middleware(Authorization)
-      )
-      // Or apply the middleware to the entire group
-      .middleware(Authorization)
-  )
-  // Or apply the middleware to the entire API
-  .middleware(Authorization)
+    .add(
+        HttpApiGroup.make("group")
+            .add(
+                HttpApiEndpoint.get("get", "/")
+                    .addSuccess(Schema.String)
+                    // Apply the middleware to a single endpoint
+                    .middleware(Authorization),
+            )
+            // Or apply the middleware to the entire group
+            .middleware(Authorization),
+    )
+    // Or apply the middleware to the entire API
+    .middleware(Authorization);
 ```
 
 ### Implementing HttpApiSecurity middleware
@@ -1526,54 +1526,54 @@ When using `HttpApiSecurity` in your middleware, the implementation involves cre
 
 ```ts
 import {
-  HttpApiMiddleware,
-  HttpApiSchema,
-  HttpApiSecurity
-} from "@effect/platform"
-import { Context, Effect, Layer, Redacted, Schema } from "effect"
+    HttpApiMiddleware,
+    HttpApiSchema,
+    HttpApiSecurity,
+} from "@effect/platform";
+import { Context, Effect, Layer, Redacted, Schema } from "effect";
 
 class User extends Schema.Class<User>("User")({ id: Schema.Number }) {}
 
 class Unauthorized extends Schema.TaggedError<Unauthorized>()(
-  "Unauthorized",
-  {},
-  HttpApiSchema.annotations({ status: 401 })
+    "Unauthorized",
+    {},
+    HttpApiSchema.annotations({ status: 401 }),
 ) {}
 
 class CurrentUser extends Context.Tag("CurrentUser")<CurrentUser, User>() {}
 
 class Authorization extends HttpApiMiddleware.Tag<Authorization>()(
-  "Authorization",
-  {
-    failure: Unauthorized,
-    provides: CurrentUser,
-    security: {
-      myBearer: HttpApiSecurity.bearer
-    }
-  }
+    "Authorization",
+    {
+        failure: Unauthorized,
+        provides: CurrentUser,
+        security: {
+            myBearer: HttpApiSecurity.bearer,
+        },
+    },
 ) {}
 
 const AuthorizationLive = Layer.effect(
-  Authorization,
-  Effect.gen(function* () {
-    yield* Effect.log("creating Authorization middleware")
+    Authorization,
+    Effect.gen(function* () {
+        yield* Effect.log("creating Authorization middleware");
 
-    // Return the security handlers for the middleware
-    return {
-      // Define the handler for the Bearer token
-      // The Bearer token is redacted for security
-      myBearer: (bearerToken) =>
-        Effect.gen(function* () {
-          yield* Effect.log(
-            "checking bearer token",
-            Redacted.value(bearerToken)
-          )
-          // Return a mock User object as the CurrentUser
-          return new User({ id: 1 })
-        })
-    }
-  })
-)
+        // Return the security handlers for the middleware
+        return {
+            // Define the handler for the Bearer token
+            // The Bearer token is redacted for security
+            myBearer: (bearerToken) =>
+                Effect.gen(function* () {
+                    yield* Effect.log(
+                        "checking bearer token",
+                        Redacted.value(bearerToken),
+                    );
+                    // Return a mock User object as the CurrentUser
+                    return new User({ id: 1 });
+                }),
+        };
+    }),
+);
 ```
 
 ### Adding Descriptions to Security Definitions
@@ -1584,35 +1584,35 @@ The `HttpApiSecurity.annotate` function allows you to add metadata, such as a de
 
 ```ts
 import {
-  HttpApiMiddleware,
-  HttpApiSchema,
-  HttpApiSecurity,
-  OpenApi
-} from "@effect/platform"
-import { Context, Schema } from "effect"
+    HttpApiMiddleware,
+    HttpApiSchema,
+    HttpApiSecurity,
+    OpenApi,
+} from "@effect/platform";
+import { Context, Schema } from "effect";
 
 class User extends Schema.Class<User>("User")({ id: Schema.Number }) {}
 
 class Unauthorized extends Schema.TaggedError<Unauthorized>()(
-  "Unauthorized",
-  {},
-  HttpApiSchema.annotations({ status: 401 })
+    "Unauthorized",
+    {},
+    HttpApiSchema.annotations({ status: 401 }),
 ) {}
 
 class CurrentUser extends Context.Tag("CurrentUser")<CurrentUser, User>() {}
 
 class Authorization extends HttpApiMiddleware.Tag<Authorization>()(
-  "Authorization",
-  {
-    failure: Unauthorized,
-    provides: CurrentUser,
-    security: {
-      myBearer: HttpApiSecurity.bearer.pipe(
-        // Add a description to the security definition
-        HttpApiSecurity.annotate(OpenApi.Description, "my description")
-      )
-    }
-  }
+    "Authorization",
+    {
+        failure: Unauthorized,
+        provides: CurrentUser,
+        security: {
+            myBearer: HttpApiSecurity.bearer.pipe(
+                // Add a description to the security definition
+                HttpApiSecurity.annotate(OpenApi.Description, "my description"),
+            ),
+        },
+    },
 ) {}
 ```
 
@@ -1647,61 +1647,61 @@ You can add Swagger documentation to your API using the `HttpApiSwagger` module.
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema,
-  HttpApiSwagger,
-  HttpMiddleware,
-  HttpServer
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { DateTime, Effect, Layer, Schema } from "effect"
-import { createServer } from "node:http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+    HttpApiSwagger,
+    HttpMiddleware,
+    HttpServer,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { DateTime, Effect, Layer, Schema } from "effect";
+import { createServer } from "node:http";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users").add(
-  HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User)
-)
+    HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User),
+);
 
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 
 const usersGroupLive = HttpApiBuilder.group(api, "users", (handlers) =>
-  handlers.handle("getUser", ({ path: { id } }) =>
-    Effect.succeed({
-      id,
-      name: "John Doe",
-      createdAt: DateTime.unsafeNow()
-    })
-  )
-)
+    handlers.handle("getUser", ({ path: { id } }) =>
+        Effect.succeed({
+            id,
+            name: "John Doe",
+            createdAt: DateTime.unsafeNow(),
+        }),
+    ),
+);
 
-const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(usersGroupLive))
+const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(usersGroupLive));
 
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
-  // Add the Swagger documentation layer
-  Layer.provide(
-    HttpApiSwagger.layer({
-      // Specify the Swagger documentation path.
-      // "/docs" is the default path.
-      path: "/docs"
-    })
-  ),
-  Layer.provide(HttpApiBuilder.middlewareCors()),
-  Layer.provide(MyApiLive),
-  HttpServer.withLogAddress,
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    // Add the Swagger documentation layer
+    Layer.provide(
+        HttpApiSwagger.layer({
+            // Specify the Swagger documentation path.
+            // "/docs" is the default path.
+            path: "/docs",
+        }),
+    ),
+    Layer.provide(HttpApiBuilder.middlewareCors()),
+    Layer.provide(MyApiLive),
+    HttpServer.withLogAddress,
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
-Layer.launch(HttpLive).pipe(NodeRuntime.runMain)
+Layer.launch(HttpLive).pipe(NodeRuntime.runMain);
 ```
 
 ![Swagger Documentation](./images/swagger-myapi.png)
@@ -1727,42 +1727,42 @@ Below is a list of available annotations for a top-level `HttpApi`. They can be 
 **Example** (Annotating the Top-Level API)
 
 ```ts
-import { HttpApi, OpenApi } from "@effect/platform"
-import { Schema } from "effect"
+import { HttpApi, OpenApi } from "@effect/platform";
+import { Schema } from "effect";
 
 const api = HttpApi.make("api")
-  // Provide additional schemas
-  .annotate(HttpApi.AdditionalSchemas, [
-    Schema.String.annotations({ identifier: "MyString" })
-  ])
-  // Add a description
-  .annotate(OpenApi.Description, "my description")
-  // Set license information
-  .annotate(OpenApi.License, { name: "MIT", url: "http://example.com" })
-  // Provide a summary
-  .annotate(OpenApi.Summary, "my summary")
-  // Define servers
-  .annotate(OpenApi.Servers, [
-    {
-      url: "http://example.com",
-      description: "example",
-      variables: { a: { default: "b", enum: ["c"], description: "d" } }
-    }
-  ])
-  // Override parts of the generated specification
-  .annotate(OpenApi.Override, {
-    tags: [{ name: "a", description: "a-description" }]
-  })
-  // Apply a transform function to the final specification
-  .annotate(OpenApi.Transform, (spec) => ({
-    ...spec,
-    tags: [...spec.tags, { name: "b", description: "b-description" }]
-  }))
+    // Provide additional schemas
+    .annotate(HttpApi.AdditionalSchemas, [
+        Schema.String.annotations({ identifier: "MyString" }),
+    ])
+    // Add a description
+    .annotate(OpenApi.Description, "my description")
+    // Set license information
+    .annotate(OpenApi.License, { name: "MIT", url: "http://example.com" })
+    // Provide a summary
+    .annotate(OpenApi.Summary, "my summary")
+    // Define servers
+    .annotate(OpenApi.Servers, [
+        {
+            url: "http://example.com",
+            description: "example",
+            variables: { a: { default: "b", enum: ["c"], description: "d" } },
+        },
+    ])
+    // Override parts of the generated specification
+    .annotate(OpenApi.Override, {
+        tags: [{ name: "a", description: "a-description" }],
+    })
+    // Apply a transform function to the final specification
+    .annotate(OpenApi.Transform, (spec) => ({
+        ...spec,
+        tags: [...spec.tags, { name: "b", description: "b-description" }],
+    }));
 
 // Generate the OpenAPI specification from the annotated API
-const spec = OpenApi.fromApi(api)
+const spec = OpenApi.fromApi(api);
 
-console.log(JSON.stringify(spec, null, 2))
+console.log(JSON.stringify(spec, null, 2));
 /*
 Output:
 {
@@ -1825,36 +1825,36 @@ The following annotations can be added to an `HttpApiGroup`:
 **Example** (Annotating a Group)
 
 ```ts
-import { HttpApi, HttpApiGroup, OpenApi } from "@effect/platform"
+import { HttpApi, HttpApiGroup, OpenApi } from "@effect/platform";
 
 const api = HttpApi.make("api")
-  .add(
-    HttpApiGroup.make("group")
-      // Add a description for the group
-      .annotate(OpenApi.Description, "my description")
-      // Provide external documentation links
-      .annotate(OpenApi.ExternalDocs, {
-        url: "http://example.com",
-        description: "example"
-      })
-      // Override parts of the final output
-      .annotate(OpenApi.Override, { name: "my name" })
-      // Transform the final specification for this group
-      .annotate(OpenApi.Transform, (spec) => ({
-        ...spec,
-        name: spec.name + "-transformed"
-      }))
-  )
-  .add(
-    HttpApiGroup.make("excluded")
-      // Exclude the group from the final specification
-      .annotate(OpenApi.Exclude, true)
-  )
+    .add(
+        HttpApiGroup.make("group")
+            // Add a description for the group
+            .annotate(OpenApi.Description, "my description")
+            // Provide external documentation links
+            .annotate(OpenApi.ExternalDocs, {
+                url: "http://example.com",
+                description: "example",
+            })
+            // Override parts of the final output
+            .annotate(OpenApi.Override, { name: "my name" })
+            // Transform the final specification for this group
+            .annotate(OpenApi.Transform, (spec) => ({
+                ...spec,
+                name: spec.name + "-transformed",
+            })),
+    )
+    .add(
+        HttpApiGroup.make("excluded")
+            // Exclude the group from the final specification
+            .annotate(OpenApi.Exclude, true),
+    );
 
 // Generate the OpenAPI spec
-const spec = OpenApi.fromApi(api)
+const spec = OpenApi.fromApi(api);
 
-console.log(JSON.stringify(spec, null, 2))
+console.log(JSON.stringify(spec, null, 2));
 /*
 Output:
 {
@@ -1901,42 +1901,42 @@ For an `HttpApiEndpoint`, you can use the following annotations:
 
 ```ts
 import {
-  HttpApi,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  OpenApi
-} from "@effect/platform"
-import { Schema } from "effect"
+    HttpApi,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    OpenApi,
+} from "@effect/platform";
+import { Schema } from "effect";
 
 const api = HttpApi.make("api").add(
-  HttpApiGroup.make("group")
-    .add(
-      HttpApiEndpoint.get("get", "/")
-        .addSuccess(Schema.String)
-        // Add a description
-        .annotate(OpenApi.Description, "my description")
-        // Provide a summary
-        .annotate(OpenApi.Summary, "my summary")
-        // Mark the endpoint as deprecated
-        .annotate(OpenApi.Deprecated, true)
-        // Provide external documentation
-        .annotate(OpenApi.ExternalDocs, {
-          url: "http://example.com",
-          description: "example"
-        })
-    )
-    .add(
-      HttpApiEndpoint.get("excluded", "/excluded")
-        .addSuccess(Schema.String)
-        // Exclude this endpoint from the final specification
-        .annotate(OpenApi.Exclude, true)
-    )
-)
+    HttpApiGroup.make("group")
+        .add(
+            HttpApiEndpoint.get("get", "/")
+                .addSuccess(Schema.String)
+                // Add a description
+                .annotate(OpenApi.Description, "my description")
+                // Provide a summary
+                .annotate(OpenApi.Summary, "my summary")
+                // Mark the endpoint as deprecated
+                .annotate(OpenApi.Deprecated, true)
+                // Provide external documentation
+                .annotate(OpenApi.ExternalDocs, {
+                    url: "http://example.com",
+                    description: "example",
+                }),
+        )
+        .add(
+            HttpApiEndpoint.get("excluded", "/excluded")
+                .addSuccess(Schema.String)
+                // Exclude this endpoint from the final specification
+                .annotate(OpenApi.Exclude, true),
+        ),
+);
 
 // Generate the OpenAPI spec
-const spec = OpenApi.fromApi(api)
+const spec = OpenApi.fromApi(api);
 
-console.log(JSON.stringify(spec, null, 2))
+console.log(JSON.stringify(spec, null, 2));
 /*
 Output:
 {
@@ -1997,32 +1997,32 @@ The default response description is "Success". You can override this by annotati
 
 ```ts
 import {
-  HttpApi,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  OpenApi
-} from "@effect/platform"
-import { Schema } from "effect"
+    HttpApi,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    OpenApi,
+} from "@effect/platform";
+import { Schema } from "effect";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-}).annotations({ identifier: "User" })
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+}).annotations({ identifier: "User" });
 
 const api = HttpApi.make("api").add(
-  HttpApiGroup.make("group").add(
-    HttpApiEndpoint.get("getUsers", "/users").addSuccess(
-      Schema.Array(User).annotations({
-        description: "Returns an array of users"
-      })
-    )
-  )
-)
+    HttpApiGroup.make("group").add(
+        HttpApiEndpoint.get("getUsers", "/users").addSuccess(
+            Schema.Array(User).annotations({
+                description: "Returns an array of users",
+            }),
+        ),
+    ),
+);
 
-const spec = OpenApi.fromApi(api)
+const spec = OpenApi.fromApi(api);
 
-console.log(JSON.stringify(spec.paths, null, 2))
+console.log(JSON.stringify(spec.paths, null, 2));
 /*
 Output:
 {
@@ -2074,24 +2074,24 @@ When a group is marked as `topLevel`, the operation IDs of its endpoints do not 
 
 ```ts
 import {
-  HttpApi,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  OpenApi
-} from "@effect/platform"
-import { Schema } from "effect"
+    HttpApi,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    OpenApi,
+} from "@effect/platform";
+import { Schema } from "effect";
 
 const api = HttpApi.make("api").add(
-  // Mark the group as top-level
-  HttpApiGroup.make("group", { topLevel: true }).add(
-    HttpApiEndpoint.get("get", "/").addSuccess(Schema.String)
-  )
-)
+    // Mark the group as top-level
+    HttpApiGroup.make("group", { topLevel: true }).add(
+        HttpApiEndpoint.get("get", "/").addSuccess(Schema.String),
+    ),
+);
 
 // Generate the OpenAPI spec
-const spec = OpenApi.fromApi(api)
+const spec = OpenApi.fromApi(api);
 
-console.log(JSON.stringify(spec.paths, null, 2))
+console.log(JSON.stringify(spec.paths, null, 2));
 /*
 Output:
 {
@@ -2141,70 +2141,70 @@ This example demonstrates how to create a client for an API and use it to call a
 
 ```ts
 import {
-  FetchHttpClient,
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiClient,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSchema,
-  HttpApiSwagger,
-  HttpMiddleware,
-  HttpServer
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { DateTime, Effect, Layer, Schema } from "effect"
-import { createServer } from "node:http"
+    FetchHttpClient,
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiClient,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSchema,
+    HttpApiSwagger,
+    HttpMiddleware,
+    HttpServer,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { DateTime, Effect, Layer, Schema } from "effect";
+import { createServer } from "node:http";
 
 const User = Schema.Struct({
-  id: Schema.Number,
-  name: Schema.String,
-  createdAt: Schema.DateTimeUtc
-})
+    id: Schema.Number,
+    name: Schema.String,
+    createdAt: Schema.DateTimeUtc,
+});
 
-const idParam = HttpApiSchema.param("id", Schema.NumberFromString)
+const idParam = HttpApiSchema.param("id", Schema.NumberFromString);
 
 const usersGroup = HttpApiGroup.make("users").add(
-  HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User)
-)
+    HttpApiEndpoint.get("getUser")`/user/${idParam}`.addSuccess(User),
+);
 
-const api = HttpApi.make("myApi").add(usersGroup)
+const api = HttpApi.make("myApi").add(usersGroup);
 
 const usersGroupLive = HttpApiBuilder.group(api, "users", (handlers) =>
-  handlers.handle("getUser", ({ path: { id } }) =>
-    Effect.succeed({
-      id,
-      name: "John Doe",
-      createdAt: DateTime.unsafeNow()
-    })
-  )
-)
+    handlers.handle("getUser", ({ path: { id } }) =>
+        Effect.succeed({
+            id,
+            name: "John Doe",
+            createdAt: DateTime.unsafeNow(),
+        }),
+    ),
+);
 
-const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(usersGroupLive))
+const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(usersGroupLive));
 
 const HttpLive = HttpApiBuilder.serve(HttpMiddleware.logger).pipe(
-  Layer.provide(HttpApiSwagger.layer()),
-  Layer.provide(HttpApiBuilder.middlewareCors()),
-  Layer.provide(MyApiLive),
-  HttpServer.withLogAddress,
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 }))
-)
+    Layer.provide(HttpApiSwagger.layer()),
+    Layer.provide(HttpApiBuilder.middlewareCors()),
+    Layer.provide(MyApiLive),
+    HttpServer.withLogAddress,
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+);
 
-Layer.launch(HttpLive).pipe(NodeRuntime.runMain)
+Layer.launch(HttpLive).pipe(NodeRuntime.runMain);
 
 // Create a program that derives and uses the client
 const program = Effect.gen(function* () {
-  // Derive the client
-  const client = yield* HttpApiClient.make(api, {
-    baseUrl: "http://localhost:3000"
-  })
-  // Call the `getUser` endpoint
-  const user = yield* client.users.getUser({ path: { id: 1 } })
-  console.log(user)
-})
+    // Derive the client
+    const client = yield* HttpApiClient.make(api, {
+        baseUrl: "http://localhost:3000",
+    });
+    // Call the `getUser` endpoint
+    const user = yield* client.users.getUser({ path: { id: 1 } });
+    console.log(user);
+});
 
 // Provide a Fetch-based HTTP client and run the program
-Effect.runFork(program.pipe(Effect.provide(FetchHttpClient.layer)))
+Effect.runFork(program.pipe(Effect.provide(FetchHttpClient.layer)));
 /*
 Example Output:
 User {
@@ -2223,28 +2223,28 @@ When a group is marked as `topLevel`, the methods on the client are not nested u
 
 ```ts
 import {
-  HttpApi,
-  HttpApiClient,
-  HttpApiEndpoint,
-  HttpApiGroup
-} from "@effect/platform"
-import { Effect, Schema } from "effect"
+    HttpApi,
+    HttpApiClient,
+    HttpApiEndpoint,
+    HttpApiGroup,
+} from "@effect/platform";
+import { Effect, Schema } from "effect";
 
 const api = HttpApi.make("api").add(
-  // Mark the group as top-level
-  HttpApiGroup.make("group", { topLevel: true }).add(
-    HttpApiEndpoint.get("get", "/").addSuccess(Schema.String)
-  )
-)
+    // Mark the group as top-level
+    HttpApiGroup.make("group", { topLevel: true }).add(
+        HttpApiEndpoint.get("get", "/").addSuccess(Schema.String),
+    ),
+);
 
 const program = Effect.gen(function* () {
-  const client = yield* HttpApiClient.make(api, {
-    baseUrl: "http://localhost:3000"
-  })
-  // The `get` method is not nested under the "group" name
-  const user = yield* client.get()
-  console.log(user)
-})
+    const client = yield* HttpApiClient.make(api, {
+        baseUrl: "http://localhost:3000",
+    });
+    // The `get` method is not nested under the "group" name
+    const user = yield* client.get();
+    console.log(user);
+});
 ```
 
 ## Converting to a Web Handler
@@ -2255,59 +2255,58 @@ You can convert your `HttpApi` implementation into a web handler using the `Http
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiSwagger,
-  HttpServer
-} from "@effect/platform"
-import { Effect, Layer, Schema } from "effect"
-import * as http from "node:http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiSwagger,
+    HttpServer,
+} from "@effect/platform";
+import { Effect, Layer, Schema } from "effect";
+import * as http from "node:http";
 
 const api = HttpApi.make("myApi").add(
-  HttpApiGroup.make("group").add(
-    HttpApiEndpoint.get("get", "/").addSuccess(Schema.String)
-  )
-)
+    HttpApiGroup.make("group").add(
+        HttpApiEndpoint.get("get", "/").addSuccess(Schema.String),
+    ),
+);
 
 const groupLive = HttpApiBuilder.group(api, "group", (handlers) =>
-  handlers.handle("get", () => Effect.succeed("Hello, world!"))
-)
+    handlers.handle("get", () => Effect.succeed("Hello, world!")),
+);
 
-const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(groupLive))
+const MyApiLive = HttpApiBuilder.api(api).pipe(Layer.provide(groupLive));
 
-const SwaggerLayer = HttpApiSwagger.layer().pipe(Layer.provide(MyApiLive))
+const SwaggerLayer = HttpApiSwagger.layer().pipe(Layer.provide(MyApiLive));
 
 // Convert the API to a web handler
 const { dispose, handler } = HttpApiBuilder.toWebHandler(
-  Layer.mergeAll(MyApiLive, SwaggerLayer, HttpServer.layerContext)
-)
+    Layer.mergeAll(MyApiLive, SwaggerLayer, HttpServer.layerContext),
+);
 
 // Serving the handler using a custom HTTP server
-http
-  .createServer(async (req, res) => {
-    const url = `http://${req.headers.host}${req.url}`
+http.createServer(async (req, res) => {
+    const url = `http://${req.headers.host}${req.url}`;
     const init: RequestInit = {
-      method: req.method!
-    }
+        method: req.method!,
+    };
 
-    const response = await handler(new Request(url, init))
+    const response = await handler(new Request(url, init));
 
     res.writeHead(
-      response.status,
-      response.statusText,
-      Object.fromEntries(response.headers.entries())
-    )
-    const responseBody = await response.arrayBuffer()
-    res.end(Buffer.from(responseBody))
-  })
-  .listen(3000, () => {
-    console.log("Server running at http://localhost:3000/")
-  })
-  .on("close", () => {
-    dispose()
-  })
+        response.status,
+        response.statusText,
+        Object.fromEntries(response.headers.entries()),
+    );
+    const responseBody = await response.arrayBuffer();
+    res.end(Buffer.from(responseBody));
+})
+    .listen(3000, () => {
+        console.log("Server running at http://localhost:3000/");
+    })
+    .on("close", () => {
+        dispose();
+    });
 ```
 
 # HTTP Client
@@ -2329,27 +2328,27 @@ This will give you access to a `HttpClient` instance.
 **Example: Retrieving JSON Data (GET)**
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { Effect } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { Effect } from "effect";
 
 const program = Effect.gen(function* () {
-  // Access HttpClient
-  const client = yield* HttpClient.HttpClient
+    // Access HttpClient
+    const client = yield* HttpClient.HttpClient;
 
-  // Create and execute a GET request
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
+    // Create and execute a GET request
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
 
-  const json = yield* response.json
+    const json = yield* response.json;
 
-  console.log(json)
+    console.log(json);
 }).pipe(
-  // Provide the HttpClient
-  Effect.provide(FetchHttpClient.layer)
-)
+    // Provide the HttpClient
+    Effect.provide(FetchHttpClient.layer),
+);
 
-Effect.runPromise(program)
+Effect.runPromise(program);
 /*
 Output:
 {
@@ -2374,17 +2373,17 @@ Below is an example of using the `get` accessor api to send a GET request:
 (The following examples will continue to use the `HttpClient` service approach).
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { Effect } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { Effect } from "effect";
 
 const program = HttpClient.get(
-  "https://jsonplaceholder.typicode.com/posts/1"
+    "https://jsonplaceholder.typicode.com/posts/1",
 ).pipe(
-  Effect.andThen((response) => response.json),
-  Effect.provide(FetchHttpClient.layer)
-)
+    Effect.andThen((response) => response.json),
+    Effect.provide(FetchHttpClient.layer),
+);
 
-Effect.runPromise(program)
+Effect.runPromise(program);
 /*
 Output:
 {
@@ -2405,35 +2404,35 @@ Using [HttpClientRequest](#httpclientrequest), you can create and then execute a
 
 ```ts
 import {
-  FetchHttpClient,
-  HttpClient,
-  HttpClientRequest
-} from "@effect/platform"
-import { Effect } from "effect"
+    FetchHttpClient,
+    HttpClient,
+    HttpClientRequest,
+} from "@effect/platform";
+import { Effect } from "effect";
 
 const program = Effect.gen(function* () {
-  // Access HttpClient
-  const client = yield* HttpClient.HttpClient
+    // Access HttpClient
+    const client = yield* HttpClient.HttpClient;
 
-  // Create a GET request
-  const req = HttpClientRequest.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
+    // Create a GET request
+    const req = HttpClientRequest.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
 
-  // Optionally customize the request
+    // Optionally customize the request
 
-  // Execute the request and get the response
-  const response = yield* client.execute(req)
+    // Execute the request and get the response
+    const response = yield* client.execute(req);
 
-  const json = yield* response.json
+    const json = yield* response.json;
 
-  console.log(json)
+    console.log(json);
 }).pipe(
-  // Provide the HttpClient
-  Effect.provide(FetchHttpClient.layer)
-)
+    // Provide the HttpClient
+    Effect.provide(FetchHttpClient.layer),
+);
 
-Effect.runPromise(program)
+Effect.runPromise(program);
 /*
 Output:
 {
@@ -2455,25 +2454,25 @@ The `HttpClient` module allows you to customize the client in various ways. For 
 **Example: Tapping**
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { Console, Effect } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { Console, Effect } from "effect";
 
 const program = Effect.gen(function* () {
-  const client = (yield* HttpClient.HttpClient).pipe(
-    // Log the request before fetching
-    HttpClient.tapRequest(Console.log)
-  )
+    const client = (yield* HttpClient.HttpClient).pipe(
+        // Log the request before fetching
+        HttpClient.tapRequest(Console.log),
+    );
 
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
 
-  const json = yield* response.json
+    const json = yield* response.json;
 
-  console.log(json)
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    console.log(json);
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-Effect.runPromise(program)
+Effect.runPromise(program);
 /*
 Output:
 {
@@ -2523,38 +2522,38 @@ Output:
 Note that `mapRequest` and `mapRequestEffect` add transformations at the end of the request chain, while `mapRequestInput` and `mapRequestInputEffect` apply transformations at the start:
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { Effect } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { Effect } from "effect";
 
 const program = Effect.gen(function* () {
-  const client = (yield* HttpClient.HttpClient).pipe(
-    // Append transformation
-    HttpClient.mapRequest((req) => {
-      console.log(1)
-      return req
-    }),
-    // Another append transformation
-    HttpClient.mapRequest((req) => {
-      console.log(2)
-      return req
-    }),
-    // Prepend transformation, this executes first
-    HttpClient.mapRequestInput((req) => {
-      console.log(3)
-      return req
-    })
-  )
+    const client = (yield* HttpClient.HttpClient).pipe(
+        // Append transformation
+        HttpClient.mapRequest((req) => {
+            console.log(1);
+            return req;
+        }),
+        // Another append transformation
+        HttpClient.mapRequest((req) => {
+            console.log(2);
+            return req;
+        }),
+        // Prepend transformation, this executes first
+        HttpClient.mapRequestInput((req) => {
+            console.log(3);
+            return req;
+        }),
+    );
 
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
 
-  const json = yield* response.json
+    const json = yield* response.json;
 
-  console.log(json)
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    console.log(json);
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-Effect.runPromise(program)
+Effect.runPromise(program);
 /*
 Output:
 3
@@ -2577,26 +2576,26 @@ Output:
 You can manage cookies across requests using the `HttpClient.withCookiesRef` function, which associates a reference to a `Cookies` object with the client.
 
 ```ts
-import { Cookies, FetchHttpClient, HttpClient } from "@effect/platform"
-import { Effect, Ref } from "effect"
+import { Cookies, FetchHttpClient, HttpClient } from "@effect/platform";
+import { Effect, Ref } from "effect";
 
 const program = Effect.gen(function* () {
-  // Create a reference to store cookies
-  const ref = yield* Ref.make(Cookies.empty)
+    // Create a reference to store cookies
+    const ref = yield* Ref.make(Cookies.empty);
 
-  // Access the HttpClient and associate the cookies reference with it
-  const client = (yield* HttpClient.HttpClient).pipe(
-    HttpClient.withCookiesRef(ref)
-  )
+    // Access the HttpClient and associate the cookies reference with it
+    const client = (yield* HttpClient.HttpClient).pipe(
+        HttpClient.withCookiesRef(ref),
+    );
 
-  // Make a GET request to the specified URL
-  yield* client.get("https://www.google.com/")
+    // Make a GET request to the specified URL
+    yield* client.get("https://www.google.com/");
 
-  // Log the keys of the cookies stored in the reference
-  console.log(Object.keys((yield* ref).cookies))
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    // Log the keys of the cookies stored in the reference
+    console.log(Object.keys((yield* ref).cookies));
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-Effect.runPromise(program)
+Effect.runPromise(program);
 // Output: [ 'SOCS', 'AEC', '__Secure-ENID' ]
 ```
 
@@ -2607,25 +2606,25 @@ You can customize the `FetchHttpClient` by passing `RequestInit` options to conf
 In this example, we customize the `FetchHttpClient` to include credentials with every request:
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { Effect, Layer } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { Effect, Layer } from "effect";
 
 const CustomFetchLive = FetchHttpClient.layer.pipe(
-  Layer.provide(
-    Layer.succeed(FetchHttpClient.RequestInit, {
-      credentials: "include"
-    })
-  )
-)
+    Layer.provide(
+        Layer.succeed(FetchHttpClient.RequestInit, {
+            credentials: "include",
+        }),
+    ),
+);
 
 const program = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
-  const json = yield* response.json
-  console.log(json)
-}).pipe(Effect.provide(CustomFetchLive))
+    const client = yield* HttpClient.HttpClient;
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
+    const json = yield* response.json;
+    console.log(json);
+}).pipe(Effect.provide(CustomFetchLive));
 ```
 
 ## Create a Custom HttpClient
@@ -2633,39 +2632,39 @@ const program = Effect.gen(function* () {
 You can create a custom `HttpClient` using the `HttpClient.make` function. This allows you to simulate or mock server responses within your application.
 
 ```ts
-import { HttpClient, HttpClientResponse } from "@effect/platform"
-import { Effect, Layer } from "effect"
+import { HttpClient, HttpClientResponse } from "@effect/platform";
+import { Effect, Layer } from "effect";
 
 const myClient = HttpClient.make((req) =>
-  Effect.succeed(
-    HttpClientResponse.fromWeb(
-      req,
-      // Simulate a response from a server
-      new Response(
-        JSON.stringify({
-          userId: 1,
-          id: 1,
-          title: "title...",
-          body: "body..."
-        })
-      )
-    )
-  )
-)
+    Effect.succeed(
+        HttpClientResponse.fromWeb(
+            req,
+            // Simulate a response from a server
+            new Response(
+                JSON.stringify({
+                    userId: 1,
+                    id: 1,
+                    title: "title...",
+                    body: "body...",
+                }),
+            ),
+        ),
+    ),
+);
 
 const program = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
-  const json = yield* response.json
-  console.log(json)
+    const client = yield* HttpClient.HttpClient;
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
+    const json = yield* response.json;
+    console.log(json);
 }).pipe(
-  // Provide the HttpClient
-  Effect.provide(Layer.succeed(HttpClient.HttpClient, myClient))
-)
+    // Provide the HttpClient
+    Effect.provide(Layer.succeed(HttpClient.HttpClient, myClient)),
+);
 
-Effect.runPromise(program)
+Effect.runPromise(program);
 /*
 Output:
 { userId: 1, id: 1, title: 'title...', body: 'body...' }
@@ -2693,19 +2692,19 @@ You can create a `HttpClientRequest` using the following provided constructors:
 When making HTTP requests, sometimes you need to include additional information in the request headers. You can set headers using the `setHeader` function for a single header or `setHeaders` for multiple headers simultaneously.
 
 ```ts
-import { HttpClientRequest } from "@effect/platform"
+import { HttpClientRequest } from "@effect/platform";
 
 const req = HttpClientRequest.get("https://api.example.com/data").pipe(
-  // Setting a single header
-  HttpClientRequest.setHeader("Authorization", "Bearer your_token_here"),
-  // Setting multiple headers
-  HttpClientRequest.setHeaders({
-    "Content-Type": "application/json; charset=UTF-8",
-    "Custom-Header": "CustomValue"
-  })
-)
+    // Setting a single header
+    HttpClientRequest.setHeader("Authorization", "Bearer your_token_here"),
+    // Setting multiple headers
+    HttpClientRequest.setHeaders({
+        "Content-Type": "application/json; charset=UTF-8",
+        "Custom-Header": "CustomValue",
+    }),
+);
 
-console.log(JSON.stringify(req.headers, null, 2))
+console.log(JSON.stringify(req.headers, null, 2));
 /*
 Output:
 {
@@ -2721,13 +2720,13 @@ Output:
 To include basic authentication in your HTTP request, you can use the `basicAuth` method provided by `HttpClientRequest`.
 
 ```ts
-import { HttpClientRequest } from "@effect/platform"
+import { HttpClientRequest } from "@effect/platform";
 
 const req = HttpClientRequest.get("https://api.example.com/data").pipe(
-  HttpClientRequest.basicAuth("your_username", "your_password")
-)
+    HttpClientRequest.basicAuth("your_username", "your_password"),
+);
 
-console.log(JSON.stringify(req.headers, null, 2))
+console.log(JSON.stringify(req.headers, null, 2));
 /*
 Output:
 {
@@ -2741,13 +2740,13 @@ Output:
 To include a Bearer token in your HTTP request, use the `bearerToken` method provided by `HttpClientRequest`.
 
 ```ts
-import { HttpClientRequest } from "@effect/platform"
+import { HttpClientRequest } from "@effect/platform";
 
 const req = HttpClientRequest.get("https://api.example.com/data").pipe(
-  HttpClientRequest.bearerToken("your_token")
-)
+    HttpClientRequest.bearerToken("your_token"),
+);
 
-console.log(JSON.stringify(req.headers, null, 2))
+console.log(JSON.stringify(req.headers, null, 2));
 /*
 Output:
 {
@@ -2761,13 +2760,13 @@ Output:
 To specify the media types that are acceptable for the response, use the `accept` method provided by `HttpClientRequest`.
 
 ```ts
-import { HttpClientRequest } from "@effect/platform"
+import { HttpClientRequest } from "@effect/platform";
 
 const req = HttpClientRequest.get("https://api.example.com/data").pipe(
-  HttpClientRequest.accept("application/xml")
-)
+    HttpClientRequest.accept("application/xml"),
+);
 
-console.log(JSON.stringify(req.headers, null, 2))
+console.log(JSON.stringify(req.headers, null, 2));
 /*
 Output:
 {
@@ -2781,13 +2780,13 @@ Output:
 To indicate that the client accepts JSON responses, use the `acceptJson` method provided by `HttpClientRequest`.
 
 ```ts
-import { HttpClientRequest } from "@effect/platform"
+import { HttpClientRequest } from "@effect/platform";
 
 const req = HttpClientRequest.get("https://api.example.com/data").pipe(
-  HttpClientRequest.acceptJson
-)
+    HttpClientRequest.acceptJson,
+);
 
-console.log(JSON.stringify(req.headers, null, 2))
+console.log(JSON.stringify(req.headers, null, 2));
 /*
 Output:
 {
@@ -2805,22 +2804,22 @@ The `HttpClientResponse` provides several methods to convert a response into dif
 **Example: Converting to JSON**
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
 const getPostAsJson = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
-  return yield* response.json
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    const client = yield* HttpClient.HttpClient;
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
+    return yield* response.json;
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
 getPostAsJson.pipe(
-  Effect.andThen((post) => Console.log(typeof post, post)),
-  NodeRuntime.runMain
-)
+    Effect.andThen((post) => Console.log(typeof post, post)),
+    NodeRuntime.runMain,
+);
 /*
 Output:
 object {
@@ -2838,22 +2837,22 @@ object {
 **Example: Converting to Text**
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
 const getPostAsText = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
-  return yield* response.text
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    const client = yield* HttpClient.HttpClient;
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
+    return yield* response.text;
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
 getPostAsText.pipe(
-  Effect.andThen((post) => Console.log(typeof post, post)),
-  NodeRuntime.runMain
-)
+    Effect.andThen((post) => Console.log(typeof post, post)),
+    NodeRuntime.runMain,
+);
 /*
 Output:
 string {
@@ -2885,27 +2884,27 @@ A common use case when fetching data is to validate the received format. For thi
 
 ```ts
 import {
-  FetchHttpClient,
-  HttpClient,
-  HttpClientResponse
-} from "@effect/platform"
-import { NodeRuntime } from "@effect/platform-node"
-import { Console, Effect, Schema } from "effect"
+    FetchHttpClient,
+    HttpClient,
+    HttpClientResponse,
+} from "@effect/platform";
+import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect, Schema } from "effect";
 
 const Post = Schema.Struct({
-  id: Schema.Number,
-  title: Schema.String
-})
+    id: Schema.Number,
+    title: Schema.String,
+});
 
 const getPostAndValidate = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/posts/1"
-  )
-  return yield* HttpClientResponse.schemaBodyJson(Post)(response)
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    const client = yield* HttpClient.HttpClient;
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/posts/1",
+    );
+    return yield* HttpClientResponse.schemaBodyJson(Post)(response);
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-getPostAndValidate.pipe(Effect.andThen(Console.log), NodeRuntime.runMain)
+getPostAndValidate.pipe(Effect.andThen(Console.log), NodeRuntime.runMain);
 /*
 Output:
 {
@@ -2926,19 +2925,19 @@ You can use `HttpClient.filterStatusOk` to ensure only `2xx` responses are treat
 In this example, we attempt to fetch a non-existent page and don't receive any error:
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
 const getText = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/non-existing-page"
-  )
-  return yield* response.text
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    const client = yield* HttpClient.HttpClient;
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/non-existing-page",
+    );
+    return yield* response.text;
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-getText.pipe(Effect.andThen(Console.log), NodeRuntime.runMain)
+getText.pipe(Effect.andThen(Console.log), NodeRuntime.runMain);
 /*
 Output:
 {}
@@ -2948,19 +2947,21 @@ Output:
 However, if we use `HttpClient.filterStatusOk`, an error is logged:
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
 const getText = Effect.gen(function* () {
-  const client = (yield* HttpClient.HttpClient).pipe(HttpClient.filterStatusOk)
-  const response = yield* client.get(
-    "https://jsonplaceholder.typicode.com/non-existing-page"
-  )
-  return yield* response.text
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    const client = (yield* HttpClient.HttpClient).pipe(
+        HttpClient.filterStatusOk,
+    );
+    const response = yield* client.get(
+        "https://jsonplaceholder.typicode.com/non-existing-page",
+    );
+    return yield* response.text;
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-getText.pipe(Effect.andThen(Console.log), NodeRuntime.runMain)
+getText.pipe(Effect.andThen(Console.log), NodeRuntime.runMain);
 /*
 Output:
 [17:37:59.923] ERROR (#0):
@@ -2975,29 +2976,29 @@ To make a POST request, you can use the `HttpClientRequest.post` function provid
 
 ```ts
 import {
-  FetchHttpClient,
-  HttpClient,
-  HttpClientRequest
-} from "@effect/platform"
-import { NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+    FetchHttpClient,
+    HttpClient,
+    HttpClientRequest,
+} from "@effect/platform";
+import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
 const addPost = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  return yield* HttpClientRequest.post(
-    "https://jsonplaceholder.typicode.com/posts"
-  ).pipe(
-    HttpClientRequest.bodyJson({
-      title: "foo",
-      body: "bar",
-      userId: 1
-    }),
-    Effect.flatMap(client.execute),
-    Effect.flatMap((res) => res.json)
-  )
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    const client = yield* HttpClient.HttpClient;
+    return yield* HttpClientRequest.post(
+        "https://jsonplaceholder.typicode.com/posts",
+    ).pipe(
+        HttpClientRequest.bodyJson({
+            title: "foo",
+            body: "bar",
+            userId: 1,
+        }),
+        Effect.flatMap(client.execute),
+        Effect.flatMap((res) => res.json),
+    );
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-addPost.pipe(Effect.andThen(Console.log), NodeRuntime.runMain)
+addPost.pipe(Effect.andThen(Console.log), NodeRuntime.runMain);
 /*
 Output:
 { title: 'foo', body: 'bar', userId: 1, id: 101 }
@@ -3010,32 +3011,32 @@ In the following example, we send the data as text:
 
 ```ts
 import {
-  FetchHttpClient,
-  HttpClient,
-  HttpClientRequest
-} from "@effect/platform"
-import { NodeRuntime } from "@effect/platform-node"
-import { Console, Effect } from "effect"
+    FetchHttpClient,
+    HttpClient,
+    HttpClientRequest,
+} from "@effect/platform";
+import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect } from "effect";
 
 const addPost = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  return yield* HttpClientRequest.post(
-    "https://jsonplaceholder.typicode.com/posts"
-  ).pipe(
-    HttpClientRequest.bodyText(
-      JSON.stringify({
-        title: "foo",
-        body: "bar",
-        userId: 1
-      }),
-      "application/json; charset=UTF-8"
-    ),
-    client.execute,
-    Effect.flatMap((res) => res.json)
-  )
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    const client = yield* HttpClient.HttpClient;
+    return yield* HttpClientRequest.post(
+        "https://jsonplaceholder.typicode.com/posts",
+    ).pipe(
+        HttpClientRequest.bodyText(
+            JSON.stringify({
+                title: "foo",
+                body: "bar",
+                userId: 1,
+            }),
+            "application/json; charset=UTF-8",
+        ),
+        client.execute,
+        Effect.flatMap((res) => res.json),
+    );
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-addPost.pipe(Effect.andThen(Console.log), NodeRuntime.runMain)
+addPost.pipe(Effect.andThen(Console.log), NodeRuntime.runMain);
 /*
 Output:
 { title: 'foo', body: 'bar', userId: 1, id: 101 }
@@ -3048,38 +3049,38 @@ A common use case when fetching data is to validate the received format. For thi
 
 ```ts
 import {
-  FetchHttpClient,
-  HttpClient,
-  HttpClientRequest,
-  HttpClientResponse
-} from "@effect/platform"
-import { NodeRuntime } from "@effect/platform-node"
-import { Console, Effect, Schema } from "effect"
+    FetchHttpClient,
+    HttpClient,
+    HttpClientRequest,
+    HttpClientResponse,
+} from "@effect/platform";
+import { NodeRuntime } from "@effect/platform-node";
+import { Console, Effect, Schema } from "effect";
 
 const Post = Schema.Struct({
-  id: Schema.Number,
-  title: Schema.String
-})
+    id: Schema.Number,
+    title: Schema.String,
+});
 
 const addPost = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
-  return yield* HttpClientRequest.post(
-    "https://jsonplaceholder.typicode.com/posts"
-  ).pipe(
-    HttpClientRequest.bodyText(
-      JSON.stringify({
-        title: "foo",
-        body: "bar",
-        userId: 1
-      }),
-      "application/json; charset=UTF-8"
-    ),
-    client.execute,
-    Effect.flatMap(HttpClientResponse.schemaBodyJson(Post))
-  )
-}).pipe(Effect.provide(FetchHttpClient.layer))
+    const client = yield* HttpClient.HttpClient;
+    return yield* HttpClientRequest.post(
+        "https://jsonplaceholder.typicode.com/posts",
+    ).pipe(
+        HttpClientRequest.bodyText(
+            JSON.stringify({
+                title: "foo",
+                body: "bar",
+                userId: 1,
+            }),
+            "application/json; charset=UTF-8",
+        ),
+        client.execute,
+        Effect.flatMap(HttpClientResponse.schemaBodyJson(Post)),
+    );
+}).pipe(Effect.provide(FetchHttpClient.layer));
 
-addPost.pipe(Effect.andThen(Console.log), NodeRuntime.runMain)
+addPost.pipe(Effect.andThen(Console.log), NodeRuntime.runMain);
 /*
 Output:
 { id: 101, title: 'foo' }
@@ -3093,30 +3094,30 @@ Output:
 To test HTTP requests, you can inject a mock fetch implementation.
 
 ```ts
-import { FetchHttpClient, HttpClient } from "@effect/platform"
-import { Effect, Layer } from "effect"
-import * as assert from "node:assert"
+import { FetchHttpClient, HttpClient } from "@effect/platform";
+import { Effect, Layer } from "effect";
+import * as assert from "node:assert";
 
 // Mock fetch implementation
 const FetchTest = Layer.succeed(FetchHttpClient.Fetch, () =>
-  Promise.resolve(new Response("not found", { status: 404 }))
-)
+    Promise.resolve(new Response("not found", { status: 404 })),
+);
 
-const TestLayer = FetchHttpClient.layer.pipe(Layer.provide(FetchTest))
+const TestLayer = FetchHttpClient.layer.pipe(Layer.provide(FetchTest));
 
 const program = Effect.gen(function* () {
-  const client = yield* HttpClient.HttpClient
+    const client = yield* HttpClient.HttpClient;
 
-  return yield* client
-    .get("https://www.google.com/")
-    .pipe(Effect.flatMap((res) => res.text))
-})
+    return yield* client
+        .get("https://www.google.com/")
+        .pipe(Effect.flatMap((res) => res.text));
+});
 
 // Test
 Effect.gen(function* () {
-  const response = yield* program
-  assert.equal(response, "not found")
-}).pipe(Effect.provide(TestLayer), Effect.runPromise)
+    const response = yield* program;
+    assert.equal(response, "not found");
+}).pipe(Effect.provide(TestLayer), Effect.runPromise);
 ```
 
 # HTTP Server
@@ -3138,8 +3139,8 @@ This section provides a simplified explanation of key concepts within the `@effe
 - **Handler**: Another form of `Default` app, which has access to both `RouteContext` and `ServerRequest.ParsedSearchParams`. Handlers are specific functions designed to process requests and generate responses.
 
 - **Middleware**: Functions that transform a `Default` app into another `Default` app. Middleware can be used to modify requests, responses, or handle tasks like logging, authentication, and more. Middleware can be applied in two ways:
-  - On a `Router` using `router.use: Handler -> Default` which applies the middleware to specific routes.
-  - On a `Server` using `server.serve: () -> Layer | Middleware -> Layer` which applies the middleware globally to all routes handled by the server.
+    - On a `Router` using `router.use: Handler -> Default` which applies the middleware to specific routes.
+    - On a `Server` using `server.serve: () -> Layer | Middleware -> Layer` which applies the middleware globally to all routes handled by the server.
 
 ### Applying Concepts
 
@@ -3162,27 +3163,27 @@ In this example, we will create a simple HTTP server that listens on port `3000`
 Node.js Example
 
 ```ts
-import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Layer } from "effect"
-import { createServer } from "node:http"
+import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Layer } from "effect";
+import { createServer } from "node:http";
 
 // Define the router with a single route for the root URL
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.text("Hello World"))
-)
+    HttpRouter.get("/", HttpServerResponse.text("Hello World")),
+);
 
 // Set up the application server with logging
-const app = router.pipe(HttpServer.serve(), HttpServer.withLogAddress)
+const app = router.pipe(HttpServer.serve(), HttpServer.withLogAddress);
 
 // Specify the port
-const port = 3000
+const port = 3000;
 
 // Create a server layer with the specified port
-const ServerLive = NodeHttpServer.layer(() => createServer(), { port })
+const ServerLive = NodeHttpServer.layer(() => createServer(), { port });
 
 // Run the application
-NodeRuntime.runMain(Layer.launch(Layer.provide(app, ServerLive)))
+NodeRuntime.runMain(Layer.launch(Layer.provide(app, ServerLive)));
 
 /*
 Output:
@@ -3196,26 +3197,26 @@ timestamp=... level=INFO fiber=#0 message="Listening on http://localhost:3000"
 Bun Example
 
 ```ts
-import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform"
-import { BunHttpServer, BunRuntime } from "@effect/platform-bun"
-import { Layer } from "effect"
+import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform";
+import { BunHttpServer, BunRuntime } from "@effect/platform-bun";
+import { Layer } from "effect";
 
 // Define the router with a single route for the root URL
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.text("Hello World"))
-)
+    HttpRouter.get("/", HttpServerResponse.text("Hello World")),
+);
 
 // Set up the application server with logging
-const app = router.pipe(HttpServer.serve(), HttpServer.withLogAddress)
+const app = router.pipe(HttpServer.serve(), HttpServer.withLogAddress);
 
 // Specify the port
-const port = 3000
+const port = 3000;
 
 // Create a server layer with the specified port
-const ServerLive = BunHttpServer.layer({ port })
+const ServerLive = BunHttpServer.layer({ port });
 
 // Run the application
-BunRuntime.runMain(Layer.launch(Layer.provide(app, ServerLive)))
+BunRuntime.runMain(Layer.launch(Layer.provide(app, ServerLive)));
 
 /*
 Output:
@@ -3228,47 +3229,47 @@ To avoid boilerplate code for the final server setup, we'll use a helper functio
 Node.js Example
 
 ```ts
-import type { HttpPlatform, HttpServer } from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Layer } from "effect"
-import { createServer } from "node:http"
+import type { HttpPlatform, HttpServer } from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Layer } from "effect";
+import { createServer } from "node:http";
 
 export const listen = (
-  app: Layer.Layer<
-    never,
-    never,
-    HttpPlatform.HttpPlatform | HttpServer.HttpServer
-  >,
-  port: number
+    app: Layer.Layer<
+        never,
+        never,
+        HttpPlatform.HttpPlatform | HttpServer.HttpServer
+    >,
+    port: number,
 ) =>
-  NodeRuntime.runMain(
-    Layer.launch(
-      Layer.provide(
-        app,
-        NodeHttpServer.layer(() => createServer(), { port })
-      )
-    )
-  )
+    NodeRuntime.runMain(
+        Layer.launch(
+            Layer.provide(
+                app,
+                NodeHttpServer.layer(() => createServer(), { port }),
+            ),
+        ),
+    );
 ```
 
 Bun Example
 
 ```ts
-import type { HttpPlatform, HttpServer } from "@effect/platform"
-import { BunHttpServer, BunRuntime } from "@effect/platform-bun"
-import { Layer } from "effect"
+import type { HttpPlatform, HttpServer } from "@effect/platform";
+import { BunHttpServer, BunRuntime } from "@effect/platform-bun";
+import { Layer } from "effect";
 
 export const listen = (
-  app: Layer.Layer<
-    never,
-    never,
-    HttpPlatform.HttpPlatform | HttpServer.HttpServer
-  >,
-  port: number
+    app: Layer.Layer<
+        never,
+        never,
+        HttpPlatform.HttpPlatform | HttpServer.HttpServer
+    >,
+    port: number,
 ) =>
-  BunRuntime.runMain(
-    Layer.launch(Layer.provide(app, BunHttpServer.layer({ port })))
-  )
+    BunRuntime.runMain(
+        Layer.launch(Layer.provide(app, BunHttpServer.layer({ port }))),
+    );
 ```
 
 ### Basic routing
@@ -3293,32 +3294,37 @@ The following examples illustrate defining simple routes.
 Respond with `"Hello World!"` on the homepage:
 
 ```ts
-router.pipe(HttpRouter.get("/", HttpServerResponse.text("Hello World")))
+router.pipe(HttpRouter.get("/", HttpServerResponse.text("Hello World")));
 ```
 
 Respond to POST request on the root route (/), the application's home page:
 
 ```ts
-router.pipe(HttpRouter.post("/", HttpServerResponse.text("Got a POST request")))
+router.pipe(
+    HttpRouter.post("/", HttpServerResponse.text("Got a POST request")),
+);
 ```
 
 Respond to a PUT request to the `/user` route:
 
 ```ts
 router.pipe(
-  HttpRouter.put("/user", HttpServerResponse.text("Got a PUT request at /user"))
-)
+    HttpRouter.put(
+        "/user",
+        HttpServerResponse.text("Got a PUT request at /user"),
+    ),
+);
 ```
 
 Respond to a DELETE request to the `/user` route:
 
 ```ts
 router.pipe(
-  HttpRouter.del(
-    "/user",
-    HttpServerResponse.text("Got a DELETE request at /user")
-  )
-)
+    HttpRouter.del(
+        "/user",
+        HttpServerResponse.text("Got a DELETE request at /user"),
+    ),
+);
 ```
 
 ### Serving static files
@@ -3326,16 +3332,16 @@ router.pipe(
 To serve static files such as images, CSS files, and JavaScript files, use the `HttpServerResponse.file` built-in action.
 
 ```ts
-import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform"
-import { listen } from "./listen.js"
+import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform";
+import { listen } from "./listen.js";
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.file("index.html"))
-)
+    HttpRouter.get("/", HttpServerResponse.file("index.html")),
+);
 
-const app = router.pipe(HttpServer.serve())
+const app = router.pipe(HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 Create an `index.html` file in your project directory:
@@ -3343,15 +3349,15 @@ Create an `index.html` file in your project directory:
 ```html filename="index.html"
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>index.html</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  </head>
-  <body>
-    index.html
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>index.html</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </head>
+    <body>
+        index.html
+    </body>
 </html>
 ```
 
@@ -3367,7 +3373,7 @@ The following code is an example of a very basic route.
 
 ```ts
 // respond with "hello world" when a GET request is made to the homepage
-HttpRouter.get("/", HttpServerResponse.text("Hello World"))
+HttpRouter.get("/", HttpServerResponse.text("Hello World"));
 ```
 
 ### Route methods
@@ -3378,10 +3384,10 @@ The following code is an example of routes that are defined for the GET and the 
 
 ```ts
 // GET method route
-HttpRouter.get("/", HttpServerResponse.text("GET request to the homepage"))
+HttpRouter.get("/", HttpServerResponse.text("GET request to the homepage"));
 
 // POST method route
-HttpRouter.post("/", HttpServerResponse.text("POST request to the homepage"))
+HttpRouter.post("/", HttpServerResponse.text("POST request to the homepage"));
 ```
 
 `HttpRouter` supports methods that correspond to all HTTP request methods: `get`, `post`, and so on.
@@ -3390,11 +3396,11 @@ There is a special routing method, `HttpRouter.all()`, used to load middleware f
 
 ```ts
 HttpRouter.all(
-  "/secret",
-  HttpServerResponse.empty().pipe(
-    Effect.tap(Console.log("Accessing the secret section ..."))
-  )
-)
+    "/secret",
+    HttpServerResponse.empty().pipe(
+        Effect.tap(Console.log("Accessing the secret section ...")),
+    ),
+);
 ```
 
 ### Route paths
@@ -3402,7 +3408,7 @@ HttpRouter.all(
 Route paths, when combined with a request method, define the endpoints where requests can be made. Route paths can be specified as strings according to the following type:
 
 ```ts
-type PathInput = `/${string}` | "*"
+type PathInput = `/${string}` | "*";
 ```
 
 > [!NOTE]
@@ -3413,24 +3419,24 @@ Here are some examples of route paths based on strings.
 This route path will match requests to the root route, /.
 
 ```ts
-HttpRouter.get("/", HttpServerResponse.text("root"))
+HttpRouter.get("/", HttpServerResponse.text("root"));
 ```
 
 This route path will match requests to `/user`.
 
 ```ts
-HttpRouter.get("/user", HttpServerResponse.text("user"))
+HttpRouter.get("/user", HttpServerResponse.text("user"));
 ```
 
 This route path matches requests to any path starting with `/user` (e.g., `/user`, `/users`, etc.)
 
 ```ts
 HttpRouter.get(
-  "/user*",
-  Effect.map(HttpServerRequest.HttpServerRequest, (req) =>
-    HttpServerResponse.text(req.url)
-  )
-)
+    "/user*",
+    Effect.map(HttpServerRequest.HttpServerRequest, (req) =>
+        HttpServerResponse.text(req.url),
+    ),
+);
 ```
 
 ### Route parameters
@@ -3450,29 +3456,29 @@ params: { "userId": "34", "bookId": "8989" }
 To define routes with parameters, include the parameter names in the path and use a schema to validate and parse these parameters, as shown below.
 
 ```ts
-import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform"
-import { Effect, Schema } from "effect"
-import { listen } from "./listen.js"
+import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform";
+import { Effect, Schema } from "effect";
+import { listen } from "./listen.js";
 
 // Define the schema for route parameters
 const Params = Schema.Struct({
-  userId: Schema.String,
-  bookId: Schema.String
-})
+    userId: Schema.String,
+    bookId: Schema.String,
+});
 
 // Create a router with a route that captures parameters
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get(
-    "/users/:userId/books/:bookId",
-    HttpRouter.schemaPathParams(Params).pipe(
-      Effect.flatMap((params) => HttpServerResponse.json(params))
-    )
-  )
-)
+    HttpRouter.get(
+        "/users/:userId/books/:bookId",
+        HttpRouter.schemaPathParams(Params).pipe(
+            Effect.flatMap((params) => HttpServerResponse.json(params)),
+        ),
+    ),
+);
 
-const app = router.pipe(HttpServer.serve())
+const app = router.pipe(HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 ### Response methods
@@ -3498,27 +3504,27 @@ The following example shows how to create a router as a module, define some rout
 Create a file named `birds.ts` in your app directory with the following content:
 
 ```ts
-import { HttpRouter, HttpServerResponse } from "@effect/platform"
+import { HttpRouter, HttpServerResponse } from "@effect/platform";
 
 export const birds = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.text("Birds home page")),
-  HttpRouter.get("/about", HttpServerResponse.text("About birds"))
-)
+    HttpRouter.get("/", HttpServerResponse.text("Birds home page")),
+    HttpRouter.get("/about", HttpServerResponse.text("About birds")),
+);
 ```
 
 In your main application file, load the router module and mount it.
 
 ```ts
-import { HttpRouter, HttpServer } from "@effect/platform"
-import { birds } from "./birds.js"
-import { listen } from "./listen.js"
+import { HttpRouter, HttpServer } from "@effect/platform";
+import { birds } from "./birds.js";
+import { listen } from "./listen.js";
 
 // Create the main router and mount the birds router
-const router = HttpRouter.empty.pipe(HttpRouter.mount("/birds", birds))
+const router = HttpRouter.empty.pipe(HttpRouter.mount("/birds", birds));
 
-const app = router.pipe(HttpServer.serve())
+const app = router.pipe(HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 When you run this code, your application will be able to handle requests to `/birds` and `/birds/about`, serving the respective responses defined in the `birds` router module.
@@ -3537,39 +3543,39 @@ This middleware logs "LOGGED" whenever a request passes through it.
 
 ```ts
 const myLogger = HttpMiddleware.make((app) =>
-  Effect.gen(function* () {
-    console.log("LOGGED")
-    return yield* app
-  })
-)
+    Effect.gen(function* () {
+        console.log("LOGGED");
+        return yield* app;
+    }),
+);
 ```
 
 To use the middleware, add it to the router using `HttpRouter.use()`:
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect } from "effect"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect } from "effect";
+import { listen } from "./listen.js";
 
 const myLogger = HttpMiddleware.make((app) =>
-  Effect.gen(function* () {
-    console.log("LOGGED")
-    return yield* app
-  })
-)
+    Effect.gen(function* () {
+        console.log("LOGGED");
+        return yield* app;
+    }),
+);
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.text("Hello World"))
-)
+    HttpRouter.get("/", HttpServerResponse.text("Hello World")),
+);
 
-const app = router.pipe(HttpRouter.use(myLogger), HttpServer.serve())
+const app = router.pipe(HttpRouter.use(myLogger), HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 With this setup, every request to the app will log "LOGGED" to the terminal. Middleware execute in the order they are loaded.
@@ -3582,46 +3588,46 @@ Next, we'll create a middleware that records the timestamp of each HTTP request 
 class RequestTime extends Context.Tag("RequestTime")<RequestTime, number>() {}
 
 const requestTime = HttpMiddleware.make((app) =>
-  Effect.gen(function* () {
-    return yield* app.pipe(Effect.provideService(RequestTime, Date.now()))
-  })
-)
+    Effect.gen(function* () {
+        return yield* app.pipe(Effect.provideService(RequestTime, Date.now()));
+    }),
+);
 ```
 
 Update the app to use this middleware and display the timestamp in the response:
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { Context, Effect } from "effect"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Context, Effect } from "effect";
+import { listen } from "./listen.js";
 
 class RequestTime extends Context.Tag("RequestTime")<RequestTime, number>() {}
 
 const requestTime = HttpMiddleware.make((app) =>
-  Effect.gen(function* () {
-    return yield* app.pipe(Effect.provideService(RequestTime, Date.now()))
-  })
-)
+    Effect.gen(function* () {
+        return yield* app.pipe(Effect.provideService(RequestTime, Date.now()));
+    }),
+);
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get(
-    "/",
-    Effect.gen(function* () {
-      const requestTime = yield* RequestTime
-      const responseText = `Hello World<br/><small>Requested at: ${requestTime}</small>`
-      return yield* HttpServerResponse.html(responseText)
-    })
-  )
-)
+    HttpRouter.get(
+        "/",
+        Effect.gen(function* () {
+            const requestTime = yield* RequestTime;
+            const responseText = `Hello World<br/><small>Requested at: ${requestTime}</small>`;
+            return yield* HttpServerResponse.html(responseText);
+        }),
+    ),
+);
 
-const app = router.pipe(HttpRouter.use(requestTime), HttpServer.serve())
+const app = router.pipe(HttpRouter.use(requestTime), HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 Now, when you make a request to the root path, the response will include the timestamp of the request.
@@ -3634,68 +3640,68 @@ Here's an example that validates cookies using an external service:
 
 ```ts
 class CookieError {
-  readonly _tag = "CookieError"
+    readonly _tag = "CookieError";
 }
 
 const externallyValidateCookie = (testCookie: string | undefined) =>
-  testCookie && testCookie.length > 0
-    ? Effect.succeed(testCookie)
-    : Effect.fail(new CookieError())
+    testCookie && testCookie.length > 0
+        ? Effect.succeed(testCookie)
+        : Effect.fail(new CookieError());
 
 const cookieValidator = HttpMiddleware.make((app) =>
-  Effect.gen(function* () {
-    const req = yield* HttpServerRequest.HttpServerRequest
-    yield* externallyValidateCookie(req.cookies.testCookie)
-    return yield* app
-  }).pipe(
-    Effect.catchTag("CookieError", () =>
-      HttpServerResponse.text("Invalid cookie")
-    )
-  )
-)
+    Effect.gen(function* () {
+        const req = yield* HttpServerRequest.HttpServerRequest;
+        yield* externallyValidateCookie(req.cookies.testCookie);
+        return yield* app;
+    }).pipe(
+        Effect.catchTag("CookieError", () =>
+            HttpServerResponse.text("Invalid cookie"),
+        ),
+    ),
+);
 ```
 
 Update the app to use the `cookieValidator` middleware:
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerRequest,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect } from "effect"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerRequest,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect } from "effect";
+import { listen } from "./listen.js";
 
 class CookieError {
-  readonly _tag = "CookieError"
+    readonly _tag = "CookieError";
 }
 
 const externallyValidateCookie = (testCookie: string | undefined) =>
-  testCookie && testCookie.length > 0
-    ? Effect.succeed(testCookie)
-    : Effect.fail(new CookieError())
+    testCookie && testCookie.length > 0
+        ? Effect.succeed(testCookie)
+        : Effect.fail(new CookieError());
 
 const cookieValidator = HttpMiddleware.make((app) =>
-  Effect.gen(function* () {
-    const req = yield* HttpServerRequest.HttpServerRequest
-    yield* externallyValidateCookie(req.cookies.testCookie)
-    return yield* app
-  }).pipe(
-    Effect.catchTag("CookieError", () =>
-      HttpServerResponse.text("Invalid cookie")
-    )
-  )
-)
+    Effect.gen(function* () {
+        const req = yield* HttpServerRequest.HttpServerRequest;
+        yield* externallyValidateCookie(req.cookies.testCookie);
+        return yield* app;
+    }).pipe(
+        Effect.catchTag("CookieError", () =>
+            HttpServerResponse.text("Invalid cookie"),
+        ),
+    ),
+);
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.text("Hello World"))
-)
+    HttpRouter.get("/", HttpServerResponse.text("Hello World")),
+);
 
-const app = router.pipe(HttpRouter.use(cookieValidator), HttpServer.serve())
+const app = router.pipe(HttpRouter.use(cookieValidator), HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 Test the middleware with the following commands:
@@ -3726,33 +3732,39 @@ Here's a practical example showing how to apply middleware at the route level:
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect } from "effect"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect } from "effect";
+import { listen } from "./listen.js";
 
 // Middleware constructor that logs the name of the middleware
 const withMiddleware = (name: string) =>
-  HttpMiddleware.make((app) =>
-    Effect.gen(function* () {
-      console.log(name) // Log the middleware name when the route is accessed
-      return yield* app // Continue with the original application flow
-    })
-  )
+    HttpMiddleware.make((app) =>
+        Effect.gen(function* () {
+            console.log(name); // Log the middleware name when the route is accessed
+            return yield* app; // Continue with the original application flow
+        }),
+    );
 
 const router = HttpRouter.empty.pipe(
-  // Applying middleware to route "/a"
-  HttpRouter.get("/a", HttpServerResponse.text("a").pipe(withMiddleware("M1"))),
-  // Applying middleware to route "/b"
-  HttpRouter.get("/b", HttpServerResponse.text("b").pipe(withMiddleware("M2")))
-)
+    // Applying middleware to route "/a"
+    HttpRouter.get(
+        "/a",
+        HttpServerResponse.text("a").pipe(withMiddleware("M1")),
+    ),
+    // Applying middleware to route "/b"
+    HttpRouter.get(
+        "/b",
+        HttpServerResponse.text("b").pipe(withMiddleware("M2")),
+    ),
+);
 
-const app = router.pipe(HttpServer.serve())
+const app = router.pipe(HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 **Testing the Middleware**
@@ -3779,56 +3791,56 @@ Here's how you can structure and apply middleware across different routers using
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect } from "effect"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect } from "effect";
+import { listen } from "./listen.js";
 
 // Middleware constructor that logs the name of the middleware
 const withMiddleware = (name: string) =>
-  HttpMiddleware.make((app) =>
-    Effect.gen(function* () {
-      console.log(name) // Log the middleware name when a route is accessed
-      return yield* app // Continue with the original application flow
-    })
-  )
+    HttpMiddleware.make((app) =>
+        Effect.gen(function* () {
+            console.log(name); // Log the middleware name when a route is accessed
+            return yield* app; // Continue with the original application flow
+        }),
+    );
 
 // Define Router1 with specific routes
 const router1 = HttpRouter.empty.pipe(
-  HttpRouter.get("/a", HttpServerResponse.text("a")), // Middleware M4, M3, M1 will apply
-  HttpRouter.get("/b", HttpServerResponse.text("b")), // Middleware M4, M3, M1 will apply
-  // Apply Middleware at the router level
-  HttpRouter.use(withMiddleware("M1")),
-  HttpRouter.get("/c", HttpServerResponse.text("c")) // Middleware M4, M3 will apply
-)
+    HttpRouter.get("/a", HttpServerResponse.text("a")), // Middleware M4, M3, M1 will apply
+    HttpRouter.get("/b", HttpServerResponse.text("b")), // Middleware M4, M3, M1 will apply
+    // Apply Middleware at the router level
+    HttpRouter.use(withMiddleware("M1")),
+    HttpRouter.get("/c", HttpServerResponse.text("c")), // Middleware M4, M3 will apply
+);
 
 // Define Router2 with specific routes
 const router2 = HttpRouter.empty.pipe(
-  HttpRouter.get("/d", HttpServerResponse.text("d")), // Middleware M4, M2 will apply
-  HttpRouter.get("/e", HttpServerResponse.text("e")), // Middleware M4, M2 will apply
-  HttpRouter.get("/f", HttpServerResponse.text("f")), // Middleware M4, M2 will apply
-  // Apply Middleware at the router level
-  HttpRouter.use(withMiddleware("M2"))
-)
+    HttpRouter.get("/d", HttpServerResponse.text("d")), // Middleware M4, M2 will apply
+    HttpRouter.get("/e", HttpServerResponse.text("e")), // Middleware M4, M2 will apply
+    HttpRouter.get("/f", HttpServerResponse.text("f")), // Middleware M4, M2 will apply
+    // Apply Middleware at the router level
+    HttpRouter.use(withMiddleware("M2")),
+);
 
 // Main router combining Router1 and Router2
 const router = HttpRouter.empty.pipe(
-  HttpRouter.mount("/r1", router1),
-  // Apply Middleware affecting all routes under /r1
-  HttpRouter.use(withMiddleware("M3")),
-  HttpRouter.get("/g", HttpServerResponse.text("g")), // Only Middleware M4 will apply
-  HttpRouter.mount("/r2", router2),
-  // Apply Middleware affecting all routes
-  HttpRouter.use(withMiddleware("M4"))
-)
+    HttpRouter.mount("/r1", router1),
+    // Apply Middleware affecting all routes under /r1
+    HttpRouter.use(withMiddleware("M3")),
+    HttpRouter.get("/g", HttpServerResponse.text("g")), // Only Middleware M4 will apply
+    HttpRouter.mount("/r2", router2),
+    // Apply Middleware affecting all routes
+    HttpRouter.use(withMiddleware("M4")),
+);
 
 // Configure the application with the server middleware
-const app = router.pipe(HttpServer.serve())
+const app = router.pipe(HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 **Testing the Middleware**
@@ -3861,33 +3873,36 @@ Applying middleware at the server level allows you to introduce certain function
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect } from "effect"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect } from "effect";
+import { listen } from "./listen.js";
 
 // Middleware constructor that logs the name of the middleware
 const withMiddleware = (name: string) =>
-  HttpMiddleware.make((app) =>
-    Effect.gen(function* () {
-      console.log(name) // Log the middleware name when the route is accessed
-      return yield* app // Continue with the original application flow
-    })
-  )
+    HttpMiddleware.make((app) =>
+        Effect.gen(function* () {
+            console.log(name); // Log the middleware name when the route is accessed
+            return yield* app; // Continue with the original application flow
+        }),
+    );
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/a", HttpServerResponse.text("a").pipe(withMiddleware("M1"))),
-  HttpRouter.get("/b", HttpServerResponse.text("b")),
-  HttpRouter.use(withMiddleware("M2")),
-  HttpRouter.get("/", HttpServerResponse.text("root"))
-)
+    HttpRouter.get(
+        "/a",
+        HttpServerResponse.text("a").pipe(withMiddleware("M1")),
+    ),
+    HttpRouter.get("/b", HttpServerResponse.text("b")),
+    HttpRouter.use(withMiddleware("M2")),
+    HttpRouter.get("/", HttpServerResponse.text("root")),
+);
 
-const app = router.pipe(HttpServer.serve(withMiddleware("M3")))
+const app = router.pipe(HttpServer.serve(withMiddleware("M3")));
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 **Testing the Middleware**
@@ -3916,43 +3931,43 @@ Middleware functions are simply functions that transform a `Default` app into an
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect, flow } from "effect"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect, flow } from "effect";
+import { listen } from "./listen.js";
 
 // Middleware constructor that logs the middleware's name when a route is accessed
 const withMiddleware = (name: string) =>
-  HttpMiddleware.make((app) =>
-    Effect.gen(function* () {
-      console.log(name) // Log the middleware name
-      return yield* app // Continue with the original application flow
-    })
-  )
+    HttpMiddleware.make((app) =>
+        Effect.gen(function* () {
+            console.log(name); // Log the middleware name
+            return yield* app; // Continue with the original application flow
+        }),
+    );
 
 // Setup routes and apply multiple middlewares using flow for function composition
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get(
-    "/a",
-    HttpServerResponse.text("a").pipe(
-      flow(withMiddleware("M1"), withMiddleware("M2"))
-    )
-  ),
-  HttpRouter.get("/b", HttpServerResponse.text("b")),
-  // Apply combined middlewares to the entire router
-  HttpRouter.use(flow(withMiddleware("M3"), withMiddleware("M4"))),
-  HttpRouter.get("/", HttpServerResponse.text("root"))
-)
+    HttpRouter.get(
+        "/a",
+        HttpServerResponse.text("a").pipe(
+            flow(withMiddleware("M1"), withMiddleware("M2")),
+        ),
+    ),
+    HttpRouter.get("/b", HttpServerResponse.text("b")),
+    // Apply combined middlewares to the entire router
+    HttpRouter.use(flow(withMiddleware("M3"), withMiddleware("M4"))),
+    HttpRouter.get("/", HttpServerResponse.text("root")),
+);
 
 // Apply combined middlewares at the server level
 const app = router.pipe(
-  HttpServer.serve(flow(withMiddleware("M5"), withMiddleware("M6")))
-)
+    HttpServer.serve(flow(withMiddleware("M5"), withMiddleware("M6"))),
+);
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 **Testing the Middleware Composition**
@@ -3988,21 +4003,21 @@ The `HttpMiddleware.logger` middleware enables logging for your entire applicati
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { listen } from "./listen.js";
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.text("Hello World"))
-)
+    HttpRouter.get("/", HttpServerResponse.text("Hello World")),
+);
 
 // Apply the logger middleware globally
-const app = router.pipe(HttpServer.serve(HttpMiddleware.logger))
+const app = router.pipe(HttpServer.serve(HttpMiddleware.logger));
 
-listen(app, 3000)
+listen(app, 3000);
 /*
 curl -i http://localhost:3000
 timestamp=... level=INFO fiber=#0 message="Listening on http://0.0.0.0:3000"
@@ -4017,26 +4032,28 @@ To disable the logger for specific routes, you can use `HttpMiddleware.withLogge
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerResponse
-} from "@effect/platform"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerResponse,
+} from "@effect/platform";
+import { listen } from "./listen.js";
 
 // Create the router with routes that will and will not have logging
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.text("Hello World")),
-  HttpRouter.get(
-    "/no-logger",
-    HttpServerResponse.text("no-logger").pipe(HttpMiddleware.withLoggerDisabled)
-  )
-)
+    HttpRouter.get("/", HttpServerResponse.text("Hello World")),
+    HttpRouter.get(
+        "/no-logger",
+        HttpServerResponse.text("no-logger").pipe(
+            HttpMiddleware.withLoggerDisabled,
+        ),
+    ),
+);
 
 // Apply the logger middleware globally
-const app = router.pipe(HttpServer.serve(HttpMiddleware.logger))
+const app = router.pipe(HttpServer.serve(HttpMiddleware.logger));
 
-listen(app, 3000)
+listen(app, 3000);
 /*
 curl -i http://localhost:3000/no-logger
 timestamp=2024-05-19T09:53:29.877Z level=INFO fiber=#0 message="Listening on http://0.0.0.0:3000"
@@ -4050,32 +4067,32 @@ This middleware handles `X-Forwarded-*` headers, useful when your app is behind 
 
 ```ts
 import {
-  HttpMiddleware,
-  HttpRouter,
-  HttpServer,
-  HttpServerRequest,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect } from "effect"
-import { listen } from "./listen.js"
+    HttpMiddleware,
+    HttpRouter,
+    HttpServer,
+    HttpServerRequest,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect } from "effect";
+import { listen } from "./listen.js";
 
 // Create a router and a route that logs request headers and remote address
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get(
-    "/",
-    Effect.gen(function* () {
-      const req = yield* HttpServerRequest.HttpServerRequest
-      console.log(req.headers)
-      console.log(req.remoteAddress)
-      return yield* HttpServerResponse.text("Hello World")
-    })
-  )
-)
+    HttpRouter.get(
+        "/",
+        Effect.gen(function* () {
+            const req = yield* HttpServerRequest.HttpServerRequest;
+            console.log(req.headers);
+            console.log(req.remoteAddress);
+            return yield* HttpServerResponse.text("Hello World");
+        }),
+    ),
+);
 
 // Set up the server with xForwardedHeaders middleware
-const app = router.pipe(HttpServer.serve(HttpMiddleware.xForwardedHeaders))
+const app = router.pipe(HttpServer.serve(HttpMiddleware.xForwardedHeaders));
 
-listen(app, 3000)
+listen(app, 3000);
 /*
 curl -H "X-Forwarded-Host: 192.168.1.1" -H "X-Forwarded-For: 192.168.1.1" http://localhost:3000
 timestamp=... level=INFO fiber=#0 message="Listening on http://0.0.0.0:3000"
@@ -4097,34 +4114,34 @@ timestamp=... level=INFO fiber=#0 message="Listening on http://0.0.0.0:3000"
 Below is an example illustrating how to catch and manage errors that occur during the execution of route handlers:
 
 ```ts
-import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform"
-import { Effect } from "effect"
-import { listen } from "./listen.js"
+import { HttpRouter, HttpServer, HttpServerResponse } from "@effect/platform";
+import { Effect } from "effect";
+import { listen } from "./listen.js";
 
 // Define routes that might throw errors or fail
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get(
-    "/throw",
-    Effect.sync(() => {
-      throw new Error("BROKEN") // This will intentionally throw an error
-    })
-  ),
-  HttpRouter.get("/fail", Effect.fail("Uh oh!")) // This will intentionally fail
-)
+    HttpRouter.get(
+        "/throw",
+        Effect.sync(() => {
+            throw new Error("BROKEN"); // This will intentionally throw an error
+        }),
+    ),
+    HttpRouter.get("/fail", Effect.fail("Uh oh!")), // This will intentionally fail
+);
 
 // Configure the application to handle different types of errors
 const app = router.pipe(
-  Effect.catchTags({
-    RouteNotFound: () =>
-      HttpServerResponse.text("Route Not Found", { status: 404 })
-  }),
-  Effect.catchAllCause((cause) =>
-    HttpServerResponse.text(cause.toString(), { status: 500 })
-  ),
-  HttpServer.serve()
-)
+    Effect.catchTags({
+        RouteNotFound: () =>
+            HttpServerResponse.text("Route Not Found", { status: 404 }),
+    }),
+    Effect.catchAllCause((cause) =>
+        HttpServerResponse.text(cause.toString(), { status: 500 }),
+    ),
+    HttpServer.serve(),
+);
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 You can test the error handling setup with `curl` commands by trying to access routes that trigger errors:
@@ -4150,35 +4167,35 @@ Headers often contain important information needed by your application, such as 
 
 ```ts
 import {
-  HttpRouter,
-  HttpServer,
-  HttpServerRequest,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect, Schema } from "effect"
-import { listen } from "./listen.js"
+    HttpRouter,
+    HttpServer,
+    HttpServerRequest,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect, Schema } from "effect";
+import { listen } from "./listen.js";
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get(
-    "/",
-    Effect.gen(function* () {
-      // Define the schema for expected headers and validate them
-      const headers = yield* HttpServerRequest.schemaHeaders(
-        Schema.Struct({ test: Schema.String })
-      )
-      return yield* HttpServerResponse.text("header: " + headers.test)
-    }).pipe(
-      // Handle parsing errors
-      Effect.catchTag("ParseError", (e) =>
-        HttpServerResponse.text(`Invalid header: ${e.message}`)
-      )
-    )
-  )
-)
+    HttpRouter.get(
+        "/",
+        Effect.gen(function* () {
+            // Define the schema for expected headers and validate them
+            const headers = yield* HttpServerRequest.schemaHeaders(
+                Schema.Struct({ test: Schema.String }),
+            );
+            return yield* HttpServerResponse.text("header: " + headers.test);
+        }).pipe(
+            // Handle parsing errors
+            Effect.catchTag("ParseError", (e) =>
+                HttpServerResponse.text(`Invalid header: ${e.message}`),
+            ),
+        ),
+    ),
+);
 
-const app = router.pipe(HttpServer.serve())
+const app = router.pipe(HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 You can test header validation using the following `curl` commands:
@@ -4199,34 +4216,34 @@ Here's how you can validate cookies received in HTTP requests:
 
 ```ts
 import {
-  Cookies,
-  HttpRouter,
-  HttpServer,
-  HttpServerRequest,
-  HttpServerResponse
-} from "@effect/platform"
-import { Effect, Schema } from "effect"
-import { listen } from "./listen.js"
+    Cookies,
+    HttpRouter,
+    HttpServer,
+    HttpServerRequest,
+    HttpServerResponse,
+} from "@effect/platform";
+import { Effect, Schema } from "effect";
+import { listen } from "./listen.js";
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get(
-    "/",
-    Effect.gen(function* () {
-      const cookies = yield* HttpServerRequest.schemaCookies(
-        Schema.Struct({ test: Schema.String })
-      )
-      return yield* HttpServerResponse.text("cookie: " + cookies.test)
-    }).pipe(
-      Effect.catchTag("ParseError", (e) =>
-        HttpServerResponse.text(`Invalid cookie: ${e.message}`)
-      )
-    )
-  )
-)
+    HttpRouter.get(
+        "/",
+        Effect.gen(function* () {
+            const cookies = yield* HttpServerRequest.schemaCookies(
+                Schema.Struct({ test: Schema.String }),
+            );
+            return yield* HttpServerResponse.text("cookie: " + cookies.test);
+        }).pipe(
+            Effect.catchTag("ParseError", (e) =>
+                HttpServerResponse.text(`Invalid cookie: ${e.message}`),
+            ),
+        ),
+    ),
+);
 
-const app = router.pipe(HttpServer.serve())
+const app = router.pipe(HttpServer.serve());
 
-listen(app, 3000)
+listen(app, 3000);
 ```
 
 Validate the cookie handling with the following `curl` commands:
@@ -4249,28 +4266,28 @@ Here is an example using Node.js:
 
 ```ts
 import {
-  HttpRouter,
-  HttpServer,
-  HttpServerRequest,
-  HttpServerResponse
-} from "@effect/platform"
-import { NodeHttpServer, NodeHttpServerRequest } from "@effect/platform-node"
-import { Effect } from "effect"
-import { listen } from "./listen.js"
+    HttpRouter,
+    HttpServer,
+    HttpServerRequest,
+    HttpServerResponse,
+} from "@effect/platform";
+import { NodeHttpServer, NodeHttpServerRequest } from "@effect/platform-node";
+import { Effect } from "effect";
+import { listen } from "./listen.js";
 
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get(
-    "/",
-    Effect.gen(function* () {
-      const req = yield* HttpServerRequest.HttpServerRequest
-      const raw = NodeHttpServerRequest.toIncomingMessage(req)
-      console.log(raw)
-      return HttpServerResponse.empty()
-    })
-  )
-)
+    HttpRouter.get(
+        "/",
+        Effect.gen(function* () {
+            const req = yield* HttpServerRequest.HttpServerRequest;
+            const raw = NodeHttpServerRequest.toIncomingMessage(req);
+            console.log(raw);
+            return HttpServerResponse.empty();
+        }),
+    ),
+);
 
-listen(HttpServer.serve(router), 3000)
+listen(HttpServer.serve(router), 3000);
 ```
 
 ## Conversions
@@ -4280,21 +4297,21 @@ listen(HttpServer.serve(router), 3000)
 The `toWebHandler` function converts a `Default` (i.e. a type of `HttpApp` that specifically produces a `ServerResponse` as its output) into a web handler that can process `Request` objects and return `Response` objects.
 
 ```ts
-import { HttpApp, HttpRouter, HttpServerResponse } from "@effect/platform"
+import { HttpApp, HttpRouter, HttpServerResponse } from "@effect/platform";
 
 // Define the router with some routes
 const router = HttpRouter.empty.pipe(
-  HttpRouter.get("/", HttpServerResponse.text("content 1")),
-  HttpRouter.get("/foo", HttpServerResponse.text("content 2"))
-)
+    HttpRouter.get("/", HttpServerResponse.text("content 1")),
+    HttpRouter.get("/foo", HttpServerResponse.text("content 2")),
+);
 
 // Convert the router to a web handler
 // const handler: (request: Request) => Promise<Response>
-const handler = HttpApp.toWebHandler(router)
+const handler = HttpApp.toWebHandler(router);
 
 // Test the handler with a request
-const response = await handler(new Request("http://localhost:3000/foo"))
-console.log(await response.text()) // Output: content 2
+const response = await handler(new Request("http://localhost:3000/foo"));
+console.log(await response.text()); // Output: content 2
 ```
 
 # Url
@@ -4317,29 +4334,29 @@ You can optionally provide a `base` parameter to resolve relative URLs. When sup
 **Example** (Parsing a URL with Optional Base)
 
 ```ts
-import { Url } from "@effect/platform"
-import { Either } from "effect"
+import { Url } from "@effect/platform";
+import { Either } from "effect";
 
 // Parse an absolute URL
 //
 //      ┌─── Either<URL, IllegalArgumentException>
 //      ▼
-const parsed = Url.fromString("https://example.com/path")
+const parsed = Url.fromString("https://example.com/path");
 
 if (Either.isRight(parsed)) {
-  console.log("Parsed URL:", parsed.right.toString())
+    console.log("Parsed URL:", parsed.right.toString());
 } else {
-  console.log("Error:", parsed.left.message)
+    console.log("Error:", parsed.left.message);
 }
 // Output: Parsed URL: https://example.com/path
 
 // Parse a relative URL with a base
-const relativeParsed = Url.fromString("/relative-path", "https://example.com")
+const relativeParsed = Url.fromString("/relative-path", "https://example.com");
 
 if (Either.isRight(relativeParsed)) {
-  console.log("Parsed relative URL:", relativeParsed.right.toString())
+    console.log("Parsed relative URL:", relativeParsed.right.toString());
 } else {
-  console.log("Error:", relativeParsed.left.message)
+    console.log("Error:", relativeParsed.left.message);
 }
 // Output: Parsed relative URL: https://example.com/relative-path
 ```
@@ -4366,23 +4383,23 @@ The `Url` module offers a set of functions for updating properties of a `URL` ob
 **Example** (Using Setters to Modify URL Properties)
 
 ```ts
-import { Url } from "@effect/platform"
-import { pipe } from "effect"
+import { Url } from "@effect/platform";
+import { pipe } from "effect";
 
-const myUrl = new URL("https://example.com")
+const myUrl = new URL("https://example.com");
 
 // Changing protocol, host, and port
 const newUrl = pipe(
-  myUrl,
-  Url.setProtocol("http:"),
-  Url.setHost("google.com"),
-  Url.setPort("8080")
-)
+    myUrl,
+    Url.setProtocol("http:"),
+    Url.setHost("google.com"),
+    Url.setPort("8080"),
+);
 
-console.log("Original:", myUrl.toString())
+console.log("Original:", myUrl.toString());
 // Output: Original: https://example.com/
 
-console.log("New:", newUrl.toString())
+console.log("New:", newUrl.toString());
 // Output: New: http://google.com:8080/
 ```
 
@@ -4393,16 +4410,16 @@ For more advanced modifications, use the `mutate` function. It clones the origin
 **Example** (Applying Multiple Changes with `mutate`)
 
 ```ts
-import { Url } from "@effect/platform"
+import { Url } from "@effect/platform";
 
-const myUrl = new URL("https://example.com")
+const myUrl = new URL("https://example.com");
 
 const mutatedUrl = Url.mutate(myUrl, (url) => {
-  url.username = "user"
-  url.password = "pass"
-})
+    url.username = "user";
+    url.password = "pass";
+});
 
-console.log("Mutated:", mutatedUrl.toString())
+console.log("Mutated:", mutatedUrl.toString());
 // Output: Mutated: https://user:pass@example.com/
 ```
 
@@ -4417,23 +4434,23 @@ To modify or add query parameters, use the `setUrlParams` function. This functio
 **Example** (Reading and Writing Parameters)
 
 ```ts
-import { Url, UrlParams } from "@effect/platform"
+import { Url, UrlParams } from "@effect/platform";
 
-const myUrl = new URL("https://example.com?foo=bar")
+const myUrl = new URL("https://example.com?foo=bar");
 
 // Read parameters
-const params = Url.urlParams(myUrl)
+const params = Url.urlParams(myUrl);
 
-console.log(params)
+console.log(params);
 // Output: [ [ 'foo', 'bar' ] ]
 
 // Write parameters
 const updatedUrl = Url.setUrlParams(
-  myUrl,
-  UrlParams.fromInput([["key", "value"]])
-)
+    myUrl,
+    UrlParams.fromInput([["key", "value"]]),
+);
 
-console.log(updatedUrl.toString())
+console.log(updatedUrl.toString());
 // Output: https://example.com/?key=value
 ```
 
@@ -4444,13 +4461,13 @@ The `modifyUrlParams` function allows you to read, modify, and overwrite URL par
 **Example** (Appending a Parameter to a URL)
 
 ```ts
-import { Url, UrlParams } from "@effect/platform"
+import { Url, UrlParams } from "@effect/platform";
 
-const myUrl = new URL("https://example.com?foo=bar")
+const myUrl = new URL("https://example.com?foo=bar");
 
-const changedUrl = Url.modifyUrlParams(myUrl, UrlParams.append("key", "value"))
+const changedUrl = Url.modifyUrlParams(myUrl, UrlParams.append("key", "value"));
 
-console.log(changedUrl.toString())
+console.log(changedUrl.toString());
 // Output: https://example.com/?foo=bar&key=value
 ```
 
@@ -4465,15 +4482,15 @@ This module enables you to convert `Schema` objects into OpenAPI-compatible JSON
 **Example** (Generating a JSON Schema from a String Schema)
 
 ```ts
-import { OpenApiJsonSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { OpenApiJsonSchema } from "@effect/platform";
+import { Schema } from "effect";
 
-const schema = Schema.String
+const schema = Schema.String;
 
 // Convert the schema to OpenAPI JSON Schema
-const openApiSchema = OpenApiJsonSchema.make(schema)
+const openApiSchema = OpenApiJsonSchema.make(schema);
 
-console.log(JSON.stringify(openApiSchema, null, 2))
+console.log(JSON.stringify(openApiSchema, null, 2));
 /*
 Output:
 {
@@ -4493,15 +4510,15 @@ OpenAPI schemas do not include the `$schema` property, while JSON schemas do.
 **Example** (Comparison of `$schema` Property)
 
 ```ts
-import { OpenApiJsonSchema } from "@effect/platform"
-import { JSONSchema, Schema } from "effect"
+import { OpenApiJsonSchema } from "@effect/platform";
+import { JSONSchema, Schema } from "effect";
 
-const schema = Schema.String
+const schema = Schema.String;
 
-const openApiSchema = OpenApiJsonSchema.make(schema)
-const jsonSchema = JSONSchema.make(schema)
+const openApiSchema = OpenApiJsonSchema.make(schema);
+const jsonSchema = JSONSchema.make(schema);
 
-console.log(JSON.stringify(openApiSchema, null, 2))
+console.log(JSON.stringify(openApiSchema, null, 2));
 /*
 Output:
 {
@@ -4509,7 +4526,7 @@ Output:
 }
 */
 
-console.log(JSON.stringify(jsonSchema, null, 2))
+console.log(JSON.stringify(jsonSchema, null, 2));
 /*
 Output:
 {
@@ -4526,15 +4543,15 @@ OpenAPI does not support `{ "type": "null" }`. Instead, it uses an `enum` contai
 **Example** (Representation of `null` Values)
 
 ```ts
-import { OpenApiJsonSchema } from "@effect/platform"
-import { JSONSchema, Schema } from "effect"
+import { OpenApiJsonSchema } from "@effect/platform";
+import { JSONSchema, Schema } from "effect";
 
-const schema = Schema.Null
+const schema = Schema.Null;
 
-const openApiSchema = OpenApiJsonSchema.make(schema)
-const jsonSchema = JSONSchema.make(schema)
+const openApiSchema = OpenApiJsonSchema.make(schema);
+const jsonSchema = JSONSchema.make(schema);
 
-console.log(JSON.stringify(openApiSchema, null, 2))
+console.log(JSON.stringify(openApiSchema, null, 2));
 /*
 Output:
 {
@@ -4544,7 +4561,7 @@ Output:
 }
 */
 
-console.log(JSON.stringify(jsonSchema, null, 2))
+console.log(JSON.stringify(jsonSchema, null, 2));
 /*
 Output:
 {
@@ -4561,15 +4578,15 @@ OpenAPI uses the `nullable` property to indicate that a value can be `null`, whe
 **Example** (Nullable Property Representation)
 
 ```ts
-import { OpenApiJsonSchema } from "@effect/platform"
-import { JSONSchema, Schema } from "effect"
+import { OpenApiJsonSchema } from "@effect/platform";
+import { JSONSchema, Schema } from "effect";
 
-const schema = Schema.NullOr(Schema.String)
+const schema = Schema.NullOr(Schema.String);
 
-const openApiSchema = OpenApiJsonSchema.make(schema)
-const jsonSchema = JSONSchema.make(schema)
+const openApiSchema = OpenApiJsonSchema.make(schema);
+const jsonSchema = JSONSchema.make(schema);
 
-console.log(JSON.stringify(openApiSchema, null, 2))
+console.log(JSON.stringify(openApiSchema, null, 2));
 /*
 Output:
 {
@@ -4578,7 +4595,7 @@ Output:
 }
 */
 
-console.log(JSON.stringify(jsonSchema, null, 2))
+console.log(JSON.stringify(jsonSchema, null, 2));
 /*
 Output:
 {
@@ -4604,16 +4621,16 @@ OpenAPI schemas include a `contentSchema` property, which allows you to describe
 **Example** (Defining a Schema with `contentSchema` for JSON Content)
 
 ```ts
-import { OpenApiJsonSchema } from "@effect/platform"
-import { JSONSchema, Schema } from "effect"
+import { OpenApiJsonSchema } from "@effect/platform";
+import { JSONSchema, Schema } from "effect";
 
 // Define a schema for parsing JSON content
-const schema = Schema.parseJson(Schema.Struct({ a: Schema.String }))
+const schema = Schema.parseJson(Schema.Struct({ a: Schema.String }));
 
-const openApiSchema = OpenApiJsonSchema.make(schema)
-const jsonSchema = JSONSchema.make(schema)
+const openApiSchema = OpenApiJsonSchema.make(schema);
+const jsonSchema = JSONSchema.make(schema);
 
-console.log(JSON.stringify(openApiSchema, null, 2))
+console.log(JSON.stringify(openApiSchema, null, 2));
 /*
 Output:
 {
@@ -4634,7 +4651,7 @@ Output:
 }
 */
 
-console.log(JSON.stringify(jsonSchema, null, 2))
+console.log(JSON.stringify(jsonSchema, null, 2));
 /*
 Output:
 {
@@ -4660,21 +4677,21 @@ The `makeWithDefs` function generates OpenAPI-compatible JSON schemas and collec
 **Example** (Generating OpenAPI Schema with Definitions)
 
 ```ts
-import { OpenApiJsonSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { OpenApiJsonSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 // Define a schema with an identifier annotation
 const schema = Schema.Struct({ a: Schema.String }).annotations({
-  identifier: "MyStruct"
-})
+    identifier: "MyStruct",
+});
 
 // Create a definitions object
-const defs = {}
+const defs = {};
 
 // Generate the OpenAPI schema while collecting definitions
-const openApiSchema = OpenApiJsonSchema.makeWithDefs(schema, { defs })
+const openApiSchema = OpenApiJsonSchema.makeWithDefs(schema, { defs });
 
-console.log(JSON.stringify(openApiSchema, null, 2))
+console.log(JSON.stringify(openApiSchema, null, 2));
 /*
 Output:
 {
@@ -4682,7 +4699,7 @@ Output:
 }
 */
 
-console.log(JSON.stringify(defs, null, 2))
+console.log(JSON.stringify(defs, null, 2));
 /*
 Output:
 {
@@ -4705,61 +4722,67 @@ Output:
 **Example** (Combining Multiple Schemas into One OpenAPI Specification)
 
 ```ts
-import { OpenApiJsonSchema } from "@effect/platform"
-import { Schema } from "effect"
+import { OpenApiJsonSchema } from "@effect/platform";
+import { Schema } from "effect";
 
 // Define multiple schemas with unique identifiers
 const schema1 = Schema.Struct({ a: Schema.String }).annotations({
-  identifier: "MyStruct1"
-})
+    identifier: "MyStruct1",
+});
 const schema2 = Schema.Struct({ b: Schema.Number }).annotations({
-  identifier: "MyStruct2"
-})
+    identifier: "MyStruct2",
+});
 
 // Create a shared definitions object
-const defs = {}
+const defs = {};
 
 // Use `makeWithDefs` to generate schemas for API paths
 const paths = {
-  paths: {
-    "/path1": {
-      get: {
-        responses: {
-          "200": {
-            content: {
-              "application/json": {
-                schema: OpenApiJsonSchema.makeWithDefs(schema1, { defs })
-              }
-            }
-          }
-        }
-      }
+    paths: {
+        "/path1": {
+            get: {
+                responses: {
+                    "200": {
+                        content: {
+                            "application/json": {
+                                schema: OpenApiJsonSchema.makeWithDefs(
+                                    schema1,
+                                    { defs },
+                                ),
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        "/path2": {
+            get: {
+                responses: {
+                    "200": {
+                        content: {
+                            "application/json": {
+                                schema: OpenApiJsonSchema.makeWithDefs(
+                                    schema2,
+                                    { defs },
+                                ),
+                            },
+                        },
+                    },
+                },
+            },
+        },
     },
-    "/path2": {
-      get: {
-        responses: {
-          "200": {
-            content: {
-              "application/json": {
-                schema: OpenApiJsonSchema.makeWithDefs(schema2, { defs })
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
+};
 
 // Combine paths and definitions into a single OpenAPI schema
 const openApiSchema = {
-  components: {
-    schemas: defs
-  },
-  paths
-}
+    components: {
+        schemas: defs,
+    },
+    paths,
+};
 
-console.log(JSON.stringify(openApiSchema, null, 2))
+console.log(JSON.stringify(openApiSchema, null, 2));
 /*
 Output:
 {
@@ -4838,109 +4861,113 @@ services like `HttpApi` or `RpcServer`'s.
 ## Registering routes
 
 ```ts
-import * as NodeHttpServer from "@effect/platform-node/NodeHttpServer"
-import * as NodeRuntime from "@effect/platform-node/NodeRuntime"
-import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter"
-import * as HttpServerResponse from "@effect/platform/HttpServerResponse"
-import * as Effect from "effect/Effect"
-import * as Layer from "effect/Layer"
-import { createServer } from "http"
+import * as NodeHttpServer from "@effect/platform-node/NodeHttpServer";
+import * as NodeRuntime from "@effect/platform-node/NodeRuntime";
+import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
+import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import { createServer } from "http";
 
 // Here is how you can register a simple GET route
 const HelloRoute = Layer.effectDiscard(
-  Effect.gen(function* () {
-    // First, we need to access the `HttpRouter` service
-    const router = yield* HttpLayerRouter.HttpRouter
+    Effect.gen(function* () {
+        // First, we need to access the `HttpRouter` service
+        const router = yield* HttpLayerRouter.HttpRouter;
 
-    // Then, we can add a new route to the router
-    yield* router.add("GET", "/hello", HttpServerResponse.text("Hello, World!"))
-  })
-)
+        // Then, we can add a new route to the router
+        yield* router.add(
+            "GET",
+            "/hello",
+            HttpServerResponse.text("Hello, World!"),
+        );
+    }),
+);
 
 // You can also use the `HttpLayerRouter.use` function to register a route
 const GoodbyeRoute = HttpLayerRouter.use(
-  Effect.fn(function* (router) {
-    // The `router` parameter is the `HttpRouter` service
-    yield* router.add(
-      "GET",
-      "/goodbye",
-      HttpServerResponse.text("Goodbye, World!")
-    )
-  })
-)
+    Effect.fn(function* (router) {
+        // The `router` parameter is the `HttpRouter` service
+        yield* router.add(
+            "GET",
+            "/goodbye",
+            HttpServerResponse.text("Goodbye, World!"),
+        );
+    }),
+);
 // Or use `HttpLayerRouter.add/addAll` for simple routes
 const SimpleRoute = HttpLayerRouter.add(
-  "GET",
-  "/simple",
-  HttpServerResponse.text("Simply fantastic!")
-)
+    "GET",
+    "/simple",
+    HttpServerResponse.text("Simply fantastic!"),
+);
 
-const AllRoutes = Layer.mergeAll(HelloRoute, GoodbyeRoute, SimpleRoute)
+const AllRoutes = Layer.mergeAll(HelloRoute, GoodbyeRoute, SimpleRoute);
 
 // To start the server, we use `HttpLayerRouter.serve` with the routes layer
 HttpLayerRouter.serve(AllRoutes).pipe(
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
-  Layer.launch,
-  NodeRuntime.runMain
-)
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+    Layer.launch,
+    NodeRuntime.runMain,
+);
 ```
 
 ## Applying middleware
 
 ```ts
-import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter"
-import * as HttpMiddleware from "@effect/platform/HttpMiddleware"
-import * as HttpServerResponse from "@effect/platform/HttpServerResponse"
-import * as Context from "effect/Context"
-import * as Effect from "effect/Effect"
-import * as Layer from "effect/Layer"
+import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
+import * as HttpMiddleware from "@effect/platform/HttpMiddleware";
+import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
 
 // Here is a service that we want to provide to every HTTP request
 class CurrentSession extends Context.Tag("CurrentSession")<
-  CurrentSession,
-  {
-    readonly token: string
-  }
+    CurrentSession,
+    {
+        readonly token: string;
+    }
 >() {}
 
 // Using the `HttpLayerRouter.middleware` function, we can create a middleware
 // that provides the `CurrentSession` service to every HTTP request.
 const SessionMiddleware = HttpLayerRouter.middleware<{
-  provides: CurrentSession
+    provides: CurrentSession;
 }>()(
-  Effect.gen(function* () {
-    yield* Effect.log("SessionMiddleware initialized")
+    Effect.gen(function* () {
+        yield* Effect.log("SessionMiddleware initialized");
 
-    return (httpEffect) =>
-      Effect.provideService(httpEffect, CurrentSession, {
-        token: "dummy-token"
-      })
-  })
-)
+        return (httpEffect) =>
+            Effect.provideService(httpEffect, CurrentSession, {
+                token: "dummy-token",
+            });
+    }),
+);
 
 // And here is an example of global middleware, that modifies the HTTP response.
 // Global middleware directly returns a `Layer`.
 const CorsMiddleware = HttpLayerRouter.middleware(HttpMiddleware.cors(), {
-  global: true
-})
+    global: true,
+});
 // You can also use `HttpLayerRouter.cors()` to create a CORS middleware
 
 const HelloRoute = HttpLayerRouter.add(
-  "GET",
-  "/hello",
-  Effect.gen(function* () {
-    // We can now access the `CurrentSession` service in our route handler
-    const session = yield* CurrentSession
-    return HttpServerResponse.text(
-      `Hello, World! Your session token is: ${session.token}`
-    )
-  })
+    "GET",
+    "/hello",
+    Effect.gen(function* () {
+        // We can now access the `CurrentSession` service in our route handler
+        const session = yield* CurrentSession;
+        return HttpServerResponse.text(
+            `Hello, World! Your session token is: ${session.token}`,
+        );
+    }),
 ).pipe(
-  // We can provide the `SessionMiddleware.layer` to the `HelloRoute` layer
-  Layer.provide(SessionMiddleware.layer),
-  // And we can also provide the `CorsMiddleware` layer to handle CORS
-  Layer.provide(CorsMiddleware)
-)
+    // We can provide the `SessionMiddleware.layer` to the `HelloRoute` layer
+    Layer.provide(SessionMiddleware.layer),
+    // And we can also provide the `CorsMiddleware` layer to handle CORS
+    Layer.provide(CorsMiddleware),
+);
 ```
 
 ## Interdependent middleware
@@ -4949,185 +4976,187 @@ If middleware depends on another middleware, you can use the `.combine` api to
 combine them.
 
 ```ts
-import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter"
-import * as HttpServerResponse from "@effect/platform/HttpServerResponse"
-import * as Context from "effect/Context"
-import * as Effect from "effect/Effect"
-import * as Layer from "effect/Layer"
+import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
+import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
 
 class CurrentSession extends Context.Tag("CurrentSession")<
-  CurrentSession,
-  {
-    readonly token: string
-  }
+    CurrentSession,
+    {
+        readonly token: string;
+    }
 >() {}
 
 const SessionMiddleware = HttpLayerRouter.middleware<{
-  provides: CurrentSession
+    provides: CurrentSession;
 }>()(
-  Effect.gen(function* () {
-    yield* Effect.log("SessionMiddleware initialized")
+    Effect.gen(function* () {
+        yield* Effect.log("SessionMiddleware initialized");
 
-    return (httpEffect) =>
-      Effect.provideService(httpEffect, CurrentSession, {
-        token: "dummy-token"
-      })
-  })
-)
+        return (httpEffect) =>
+            Effect.provideService(httpEffect, CurrentSession, {
+                token: "dummy-token",
+            });
+    }),
+);
 
 // Here is a middleware that uses the `CurrentSession` service
 const LogMiddleware = HttpLayerRouter.middleware(
-  Effect.gen(function* () {
-    yield* Effect.log("LogMiddleware initialized")
+    Effect.gen(function* () {
+        yield* Effect.log("LogMiddleware initialized");
 
-    return Effect.fn(function* (httpEffect) {
-      const session = yield* CurrentSession
-      yield* Effect.log(`Current session token: ${session.token}`)
-      return yield* httpEffect
-    })
-  })
-)
+        return Effect.fn(function* (httpEffect) {
+            const session = yield* CurrentSession;
+            yield* Effect.log(`Current session token: ${session.token}`);
+            return yield* httpEffect;
+        });
+    }),
+);
 
 // We can then use the .combine method to combine the middlewares
-const LogAndSessionMiddleware = LogMiddleware.combine(SessionMiddleware)
+const LogAndSessionMiddleware = LogMiddleware.combine(SessionMiddleware);
 
 const HelloRoute = HttpLayerRouter.add(
-  "GET",
-  "/hello",
-  Effect.gen(function* () {
-    const session = yield* CurrentSession
-    return HttpServerResponse.text(
-      `Hello, World! Your session token is: ${session.token}`
-    )
-  })
-).pipe(Layer.provide(LogAndSessionMiddleware.layer))
+    "GET",
+    "/hello",
+    Effect.gen(function* () {
+        const session = yield* CurrentSession;
+        return HttpServerResponse.text(
+            `Hello, World! Your session token is: ${session.token}`,
+        );
+    }),
+).pipe(Layer.provide(LogAndSessionMiddleware.layer));
 ```
 
 ## Registering a HttpApi
 
 ```ts
 import {
-  HttpApi,
-  HttpApiBuilder,
-  HttpApiEndpoint,
-  HttpApiGroup,
-  HttpApiScalar,
-  HttpLayerRouter
-} from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Effect, Layer } from "effect"
-import { createServer } from "http"
+    HttpApi,
+    HttpApiBuilder,
+    HttpApiEndpoint,
+    HttpApiGroup,
+    HttpApiScalar,
+    HttpLayerRouter,
+} from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Effect, Layer } from "effect";
+import { createServer } from "http";
 
 // First, we define our HttpApi
 class MyApi extends HttpApi.make("api").add(
-  HttpApiGroup.make("users")
-    .add(HttpApiEndpoint.get("me", "/me"))
-    .prefix("/users")
+    HttpApiGroup.make("users")
+        .add(HttpApiEndpoint.get("me", "/me"))
+        .prefix("/users"),
 ) {}
 
 // Implement the handlers for the API
 const UsersApiLayer = HttpApiBuilder.group(MyApi, "users", (handers) =>
-  handers.handle("me", () => Effect.void)
-)
+    handers.handle("me", () => Effect.void),
+);
 
 // Use `HttpLayerRouter.addHttpApi` to register the API with the router
 const HttpApiRoutes = HttpLayerRouter.addHttpApi(MyApi, {
-  openapiPath: "/docs/openapi.json"
+    openapiPath: "/docs/openapi.json",
 }).pipe(
-  // Provide the api handlers layer
-  Layer.provide(UsersApiLayer)
-)
+    // Provide the api handlers layer
+    Layer.provide(UsersApiLayer),
+);
 
 // Create a /docs route for the API documentation
 const DocsRoute = HttpApiScalar.layerHttpLayerRouter({
-  api: MyApi,
-  path: "/docs"
-})
+    api: MyApi,
+    path: "/docs",
+});
 
 // Finally, we merge all routes and serve them using the Node HTTP server
 const AllRoutes = Layer.mergeAll(HttpApiRoutes, DocsRoute).pipe(
-  Layer.provide(HttpLayerRouter.cors())
-)
+    Layer.provide(HttpLayerRouter.cors()),
+);
 
 HttpLayerRouter.serve(AllRoutes).pipe(
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
-  Layer.launch,
-  NodeRuntime.runMain
-)
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+    Layer.launch,
+    NodeRuntime.runMain,
+);
 ```
 
 ## Registering a RpcServer
 
 ```ts
-import { HttpLayerRouter } from "@effect/platform"
-import { NodeHttpServer, NodeRuntime } from "@effect/platform-node"
-import { Rpc, RpcGroup, RpcSerialization, RpcServer } from "@effect/rpc"
-import { Effect, Layer, Schema } from "effect"
-import { createServer } from "http"
+import { HttpLayerRouter } from "@effect/platform";
+import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
+import { Rpc, RpcGroup, RpcSerialization, RpcServer } from "@effect/rpc";
+import { Effect, Layer, Schema } from "effect";
+import { createServer } from "http";
 
 export class User extends Schema.Class<User>("User")({
-  id: Schema.String,
-  name: Schema.String
+    id: Schema.String,
+    name: Schema.String,
 }) {}
 
 // Define a group of RPCs
 export class UserRpcs extends RpcGroup.make(
-  Rpc.make("UserById", {
-    success: User,
-    error: Schema.String, // Indicates that errors, if any, will be returned as strings
-    payload: {
-      id: Schema.String
-    }
-  })
+    Rpc.make("UserById", {
+        success: User,
+        error: Schema.String, // Indicates that errors, if any, will be returned as strings
+        payload: {
+            id: Schema.String,
+        },
+    }),
 ) {}
 
 const UserHandlers = UserRpcs.toLayer({
-  UserById: ({ id }) => Effect.succeed(new User({ id, name: "John Doe" }))
-})
+    UserById: ({ id }) => Effect.succeed(new User({ id, name: "John Doe" })),
+});
 
 // Use `HttpLayerRouter` to register the rpc server
 const RpcRoute = RpcServer.layerHttpRouter({
-  group: UserRpcs,
-  path: "/rpc"
-}).pipe(Layer.provide(UserHandlers), Layer.provide(RpcSerialization.layerJson))
+    group: UserRpcs,
+    path: "/rpc",
+}).pipe(Layer.provide(UserHandlers), Layer.provide(RpcSerialization.layerJson));
 
 // Start the HTTP server with the RPC route
 HttpLayerRouter.serve(RpcRoute).pipe(
-  Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
-  Layer.launch,
-  NodeRuntime.runMain
-)
+    Layer.provide(NodeHttpServer.layer(createServer, { port: 3000 })),
+    Layer.launch,
+    NodeRuntime.runMain,
+);
 ```
 
 ## Create a web handler
 
 ```ts
-import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter"
-import * as HttpServerResponse from "@effect/platform/HttpServerResponse"
-import * as Effect from "effect/Effect"
+import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter";
+import * as HttpServerResponse from "@effect/platform/HttpServerResponse";
+import * as Effect from "effect/Effect";
 
 const HelloRoute = HttpLayerRouter.use(
-  Effect.fn(function*(router) {
-    yield* router.add(
-      "GET",
-      "/hello",
-      HttpServerResponse.text("Hellow, World!")
-    )
-  })
-)
+    Effect.fn(function* (router) {
+        yield* router.add(
+            "GET",
+            "/hello",
+            HttpServerResponse.text("Hellow, World!"),
+        );
+    }),
+);
 
-const { dispose, handler } = HttpLayerRouter.toWebHandler(HelloRoute)
+const { dispose, handler } = HttpLayerRouter.toWebHandler(HelloRoute);
 
 // When the process is interrupted, we want to clean up resources
 process.on("SIGINT", () => {
-  dispose()
-    .then(() => {
-      process.exit(0)
-    }, () => {
-      process.exit(1)
-    })
-})
+    dispose().then(
+        () => {
+            process.exit(0);
+        },
+        () => {
+            process.exit(1);
+        },
+    );
+});
 
 // Use the handler in your server setup
-export { handler }
+export { handler };
 ```

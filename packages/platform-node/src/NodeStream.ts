@@ -5,4 +5,4 @@
 /**
  * @category models
  */
-export * from "@effect/platform-node-shared/NodeStream"
+export * from "@effect/platform-node-shared/NodeStream";

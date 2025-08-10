@@ -13,8 +13,8 @@
  * exhaustive but instead are meant to provide the most common and
  * well-supported SGR display attributes (with a few exceptions).
  */
-import type * as Color from "../Color.js"
-import * as color from "./color.js"
+import type * as Color from "../Color.js";
+import * as color from "./color.js";
 
 // -----------------------------------------------------------------------------
 // Models
@@ -27,12 +27,12 @@ import * as color from "./color.js"
  * @internal
  */
 export type SGR =
-  | Reset
-  | SetBold
-  | SetColor
-  | SetItalicized
-  | SetStrikethrough
-  | SetUnderlined
+    | Reset
+    | SetBold
+    | SetColor
+    | SetItalicized
+    | SetStrikethrough
+    | SetUnderlined;
 
 /**
  * Resets all SGR attributes to their default values.
@@ -40,7 +40,7 @@ export type SGR =
  * @internal
  */
 export interface Reset {
-  readonly _tag: "Reset"
+    readonly _tag: "Reset";
 }
 
 /**
@@ -49,8 +49,8 @@ export interface Reset {
  * @internal
  */
 export interface SetBold {
-  readonly _tag: "SetBold"
-  readonly bold: boolean
+    readonly _tag: "SetBold";
+    readonly bold: boolean;
 }
 
 /**
@@ -59,10 +59,10 @@ export interface SetBold {
  * @internal
  */
 export interface SetColor {
-  readonly _tag: "SetColor"
-  readonly color: Color.Color
-  readonly vivid: boolean
-  readonly layer: SGR.Layer
+    readonly _tag: "SetColor";
+    readonly color: Color.Color;
+    readonly vivid: boolean;
+    readonly layer: SGR.Layer;
 }
 
 /**
@@ -73,8 +73,8 @@ export interface SetColor {
  * @internal
  */
 export interface SetItalicized {
-  readonly _tag: "SetItalicized"
-  readonly italicized: boolean
+    readonly _tag: "SetItalicized";
+    readonly italicized: boolean;
 }
 
 /**
@@ -83,8 +83,8 @@ export interface SetItalicized {
  * @internal
  */
 export interface SetStrikethrough {
-  readonly _tag: "SetStrikethrough"
-  readonly strikethrough: boolean
+    readonly _tag: "SetStrikethrough";
+    readonly strikethrough: boolean;
 }
 
 /**
@@ -93,14 +93,14 @@ export interface SetStrikethrough {
  * @internal
  */
 export interface SetUnderlined {
-  readonly _tag: "SetUnderlined"
-  readonly underlined: boolean
+    readonly _tag: "SetUnderlined";
+    readonly underlined: boolean;
 }
 
 /** @internal */
 export declare namespace SGR {
-  /** @internal */
-  export type Layer = "foreground" | "background"
+    /** @internal */
+    export type Layer = "foreground" | "background";
 }
 
 // -----------------------------------------------------------------------------
@@ -108,39 +108,43 @@ export declare namespace SGR {
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const reset: SGR = { _tag: "Reset" }
+export const reset: SGR = { _tag: "Reset" };
 
 /** @internal */
 export const setBold = (bold: boolean): SGR => ({
-  _tag: "SetBold",
-  bold
-})
+    _tag: "SetBold",
+    bold,
+});
 
 /** @internal */
-export const setColor = (color: Color.Color, vivid: boolean, layer: SGR.Layer): SGR => ({
-  _tag: "SetColor",
-  color,
-  vivid,
-  layer
-})
+export const setColor = (
+    color: Color.Color,
+    vivid: boolean,
+    layer: SGR.Layer,
+): SGR => ({
+    _tag: "SetColor",
+    color,
+    vivid,
+    layer,
+});
 
 /** @internal */
 export const setItalicized = (italicized: boolean): SGR => ({
-  _tag: "SetItalicized",
-  italicized
-})
+    _tag: "SetItalicized",
+    italicized,
+});
 
 /** @internal */
 export const setStrikethrough = (strikethrough: boolean): SGR => ({
-  _tag: "SetStrikethrough",
-  strikethrough
-})
+    _tag: "SetStrikethrough",
+    strikethrough,
+});
 
 /** @internal */
 export const setUnderlined = (underlined: boolean): SGR => ({
-  _tag: "SetUnderlined",
-  underlined
-})
+    _tag: "SetUnderlined",
+    underlined,
+});
 
 // -----------------------------------------------------------------------------
 // Destructors
@@ -148,39 +152,45 @@ export const setUnderlined = (underlined: boolean): SGR => ({
 
 /** @internal */
 export const toCode = (self: SGR): number => {
-  switch (self._tag) {
-    case "Reset": {
-      return 0
-    }
-    case "SetBold": {
-      return self.bold ? 1 : 22
-    }
-    case "SetColor": {
-      switch (self.layer) {
-        case "foreground": {
-          return self.vivid ? 90 + color.toCode(self.color) : 30 + color.toCode(self.color)
+    switch (self._tag) {
+        case "Reset": {
+            return 0;
         }
-        case "background": {
-          return self.vivid ? 100 + color.toCode(self.color) : 40 + color.toCode(self.color)
+        case "SetBold": {
+            return self.bold ? 1 : 22;
         }
-      }
+        case "SetColor": {
+            switch (self.layer) {
+                case "foreground": {
+                    return self.vivid
+                        ? 90 + color.toCode(self.color)
+                        : 30 + color.toCode(self.color);
+                }
+                case "background": {
+                    return self.vivid
+                        ? 100 + color.toCode(self.color)
+                        : 40 + color.toCode(self.color);
+                }
+            }
+        }
+        case "SetItalicized": {
+            return self.italicized ? 3 : 23;
+        }
+        case "SetStrikethrough": {
+            return self.strikethrough ? 9 : 29;
+        }
+        case "SetUnderlined": {
+            return self.underlined ? 4 : 24;
+        }
     }
-    case "SetItalicized": {
-      return self.italicized ? 3 : 23
-    }
-    case "SetStrikethrough": {
-      return self.strikethrough ? 9 : 29
-    }
-    case "SetUnderlined": {
-      return self.underlined ? 4 : 24
-    }
-  }
-}
+};
 
 /** @internal */
-export const toEscapeSequence = (sgrs: Iterable<SGR>): string => csi("m", sgrs)
+export const toEscapeSequence = (sgrs: Iterable<SGR>): string => csi("m", sgrs);
 
 const csi = (controlFunction: string, sgrs: Iterable<SGR>): string => {
-  const params = Array.from(sgrs).map((sgr) => `${toCode(sgr)}`).join(";")
-  return `\u001b[${params}${controlFunction}`
-}
+    const params = Array.from(sgrs)
+        .map((sgr) => `${toCode(sgr)}`)
+        .join(";");
+    return `\u001b[${params}${controlFunction}`;
+};

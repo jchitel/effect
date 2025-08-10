@@ -10,14 +10,14 @@ The `effect` package is the heart of the Effect framework, providing robust prim
 - **Strict Type-Checking:**
   The `strict` flag must be enabled in your `tsconfig.json`. For example:
 
-  ```json
-  {
-    "compilerOptions": {
-      "strict": true
-      // ...other options
+    ```json
+    {
+        "compilerOptions": {
+            "strict": true
+            // ...other options
+        }
     }
-  }
-  ```
+    ```
 
 ## Installation
 

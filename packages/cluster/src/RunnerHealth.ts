@@ -1,13 +1,13 @@
 /**
  * @since 1.0.0
  */
-import * as Context from "effect/Context"
-import * as Effect from "effect/Effect"
-import * as Layer from "effect/Layer"
-import * as MessageStorage from "./MessageStorage.js"
-import type { RunnerAddress } from "./RunnerAddress.js"
-import * as Runners from "./Runners.js"
-import type { ShardingConfig } from "./ShardingConfig.js"
+import * as Context from "effect/Context";
+import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
+import * as MessageStorage from "./MessageStorage.js";
+import type { RunnerAddress } from "./RunnerAddress.js";
+import * as Runners from "./Runners.js";
+import type { ShardingConfig } from "./ShardingConfig.js";
 
 /**
  * Represents the service used to check if a Runner is healthy.
@@ -20,10 +20,10 @@ import type { ShardingConfig } from "./ShardingConfig.js"
  * @category models
  */
 export class RunnerHealth extends Context.Tag("@effect/cluster/RunnerHealth")<
-  RunnerHealth,
-  {
-    readonly isAlive: (address: RunnerAddress) => Effect.Effect<boolean>
-  }
+    RunnerHealth,
+    {
+        readonly isAlive: (address: RunnerAddress) => Effect.Effect<boolean>;
+    }
 >() {}
 
 /**
@@ -35,33 +35,32 @@ export class RunnerHealth extends Context.Tag("@effect/cluster/RunnerHealth")<
  * @category layers
  */
 export const layerNoop = Layer.succeed(
-  RunnerHealth,
-  RunnerHealth.of({
-    isAlive: () => Effect.succeed(true)
-  })
-)
+    RunnerHealth,
+    RunnerHealth.of({
+        isAlive: () => Effect.succeed(true),
+    }),
+);
 
 /**
  * @since 1.0.0
  * @category Constructors
  */
-export const make: Effect.Effect<
-  RunnerHealth["Type"],
-  never,
-  Runners.Runners
-> = Effect.gen(function*() {
-  const runners = yield* Runners.Runners
+export const make: Effect.Effect<RunnerHealth["Type"], never, Runners.Runners> =
+    Effect.gen(function* () {
+        const runners = yield* Runners.Runners;
 
-  function isAlive(address: RunnerAddress): Effect.Effect<boolean> {
-    return runners.ping(address).pipe(
-      Effect.timeout(3000),
-      Effect.retry({ times: 3 }),
-      Effect.isSuccess
-    )
-  }
+        function isAlive(address: RunnerAddress): Effect.Effect<boolean> {
+            return runners
+                .ping(address)
+                .pipe(
+                    Effect.timeout(3000),
+                    Effect.retry({ times: 3 }),
+                    Effect.isSuccess,
+                );
+        }
 
-  return RunnerHealth.of({ isAlive })
-})
+        return RunnerHealth.of({ isAlive });
+    });
 
 /**
  * A layer which will ping a Runner directly to check if it is healthy.
@@ -69,11 +68,8 @@ export const make: Effect.Effect<
  * @since 1.0.0
  * @category layers
  */
-export const layer: Layer.Layer<
-  RunnerHealth,
-  never,
-  Runners.Runners
-> = Layer.effect(RunnerHealth, make)
+export const layer: Layer.Layer<RunnerHealth, never, Runners.Runners> =
+    Layer.effect(RunnerHealth, make);
 
 /**
  * A layer which will ping a Runner directly to check if it is healthy.
@@ -82,10 +78,10 @@ export const layer: Layer.Layer<
  * @category layers
  */
 export const layerRpc: Layer.Layer<
-  RunnerHealth,
-  never,
-  Runners.RpcClientProtocol | ShardingConfig
+    RunnerHealth,
+    never,
+    Runners.RpcClientProtocol | ShardingConfig
 > = layer.pipe(
-  Layer.provide(Runners.layerRpc),
-  Layer.provide(MessageStorage.layerNoop)
-)
+    Layer.provide(Runners.layerRpc),
+    Layer.provide(MessageStorage.layerNoop),
+);

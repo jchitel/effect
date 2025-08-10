@@ -92,61 +92,70 @@
  * @module MutableHashSet
  * @since 2.0.0
  */
-import * as Dual from "./Function.js"
-import { format, type Inspectable, NodeInspectSymbol, toJSON } from "./Inspectable.js"
-import * as MutableHashMap from "./MutableHashMap.js"
-import type { Pipeable } from "./Pipeable.js"
-import { pipeArguments } from "./Pipeable.js"
+import * as Dual from "./Function.js";
+import {
+    format,
+    type Inspectable,
+    NodeInspectSymbol,
+    toJSON,
+} from "./Inspectable.js";
+import * as MutableHashMap from "./MutableHashMap.js";
+import type { Pipeable } from "./Pipeable.js";
+import { pipeArguments } from "./Pipeable.js";
 
-const TypeId: unique symbol = Symbol.for("effect/MutableHashSet") as TypeId
+const TypeId: unique symbol = Symbol.for("effect/MutableHashSet") as TypeId;
 
 /**
  * @since 2.0.0
  * @category symbol
  */
-export type TypeId = typeof TypeId
+export type TypeId = typeof TypeId;
 
 /**
  * @since 2.0.0
  * @category models
  */
-export interface MutableHashSet<out V> extends Iterable<V>, Pipeable, Inspectable {
-  readonly [TypeId]: TypeId
+export interface MutableHashSet<out V>
+    extends Iterable<V>,
+        Pipeable,
+        Inspectable {
+    readonly [TypeId]: TypeId;
 
-  /** @internal */
-  readonly keyMap: MutableHashMap.MutableHashMap<V, boolean>
+    /** @internal */
+    readonly keyMap: MutableHashMap.MutableHashMap<V, boolean>;
 }
 
 const MutableHashSetProto: Omit<MutableHashSet<unknown>, "keyMap"> = {
-  [TypeId]: TypeId,
-  [Symbol.iterator](this: MutableHashSet<unknown>): Iterator<unknown> {
-    return Array.from(this.keyMap)
-      .map(([_]) => _)[Symbol.iterator]()
-  },
-  toString() {
-    return format(this.toJSON())
-  },
-  toJSON() {
-    return {
-      _id: "MutableHashSet",
-      values: Array.from(this).map(toJSON)
-    }
-  },
-  [NodeInspectSymbol]() {
-    return this.toJSON()
-  },
-  pipe() {
-    return pipeArguments(this, arguments)
-  }
-}
+    [TypeId]: TypeId,
+    [Symbol.iterator](this: MutableHashSet<unknown>): Iterator<unknown> {
+        return Array.from(this.keyMap)
+            .map(([_]) => _)
+            [Symbol.iterator]();
+    },
+    toString() {
+        return format(this.toJSON());
+    },
+    toJSON() {
+        return {
+            _id: "MutableHashSet",
+            values: Array.from(this).map(toJSON),
+        };
+    },
+    [NodeInspectSymbol]() {
+        return this.toJSON();
+    },
+    pipe() {
+        return pipeArguments(this, arguments);
+    },
+};
 
 const fromHashMap = <V>(
-  keyMap: MutableHashMap.MutableHashMap<V, boolean>
+    keyMap: MutableHashMap.MutableHashMap<V, boolean>,
 ): MutableHashSet<V> => {
-  const set = Object.create(MutableHashSetProto)
-  set.keyMap = keyMap
-  return set
-}
+    const set = Object.create(MutableHashSetProto);
+    set.keyMap = keyMap;
+    return set;
+};
 
 /**
  * Creates an empty mutable hash set.
@@ -176,7 +185,8 @@ const fromHashMap = <V>(
  *   for the specified type `K`.
  * @see Other `MutableHashSet` constructors are {@link module:MutableHashSet.make} {@link module:MutableHashSet.fromIterable}
  */
-export const empty = <K = never>(): MutableHashSet<K> => fromHashMap(MutableHashMap.empty())
+export const empty = <K = never>(): MutableHashSet<K> =>
+    fromHashMap(MutableHashMap.empty());
 
 /**
  * Creates a new `MutableHashSet` from an iterable collection of values.
@@ -292,9 +302,9 @@ export const empty = <K = never>(): MutableHashSet<K> => fromHashMap(MutableHash
  * @see Other `MutableHashSet` constructors are {@link module:MutableHashSet.empty} {@link module:MutableHashSet.make}
  */
 export const fromIterable = <K = never>(keys: Iterable<K>): MutableHashSet<K> =>
-  fromHashMap(
-    MutableHashMap.fromIterable(Array.from(keys).map((k) => [k, true]))
-  )
+    fromHashMap(
+        MutableHashMap.fromIterable(Array.from(keys).map((k) => [k, true])),
+    );
 
 /**
  * Construct a new `MutableHashSet` from a variable number of values.
@@ -366,8 +376,8 @@ export const fromIterable = <K = never>(keys: Iterable<K>): MutableHashSet<K> =>
  * @see Other `MutableHashSet` constructors are {@link module:MutableHashSet.fromIterable} {@link module:MutableHashSet.empty}
  */
 export const make = <Keys extends ReadonlyArray<unknown>>(
-  ...keys: Keys
-): MutableHashSet<Keys[number]> => fromIterable(keys)
+    ...keys: Keys
+): MutableHashSet<Keys[number]> => fromIterable(keys);
 
 /**
  * **Checks** whether the `MutableHashSet` contains the given element, and
@@ -400,68 +410,68 @@ export const make = <Keys extends ReadonlyArray<unknown>>(
  * @see Other `MutableHashSet` elements are {@link module:MutableHashSet.remove} {@link module:MutableHashSet.size} {@link module:MutableHashSet.clear} {@link module:MutableHashSet.has}
  */
 export const add: {
-  /**
-   * `data-last` a.k.a. `pipeable` API
-   *
-   * ```ts
-   * import { MutableHashSet, pipe } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * const mutableHashSet = pipe(
-   *   MutableHashSet.empty<number>(), // MutableHashSet.MutableHashSet<number>
-   *   MutableHashSet.add(0),
-   *   MutableHashSet.add(1),
-   *   MutableHashSet.add(1),
-   *   MutableHashSet.add(2)
-   * )
-   *
-   * assert.deepStrictEqual(
-   *   Array.from(mutableHashSet), // remember that MutableHashSet is also an Iterable
-   *   Array.of(0, 1, 2)
-   * )
-   * ```
-   *
-   * @template V - The type of elements stored in the `MutableHashSet`.
-   * @param key - The key to be added to the `MutableHashSet` if not already
-   *   present.
-   * @returns A function that accepts a `MutableHashSet` and returns the
-   *   reference of the updated `MutableHashSet` including the key.
-   */
-  <V>(key: V): (self: MutableHashSet<V>) => MutableHashSet<V>
+    /**
+     * `data-last` a.k.a. `pipeable` API
+     *
+     * ```ts
+     * import { MutableHashSet, pipe } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * const mutableHashSet = pipe(
+     *   MutableHashSet.empty<number>(), // MutableHashSet.MutableHashSet<number>
+     *   MutableHashSet.add(0),
+     *   MutableHashSet.add(1),
+     *   MutableHashSet.add(1),
+     *   MutableHashSet.add(2)
+     * )
+     *
+     * assert.deepStrictEqual(
+     *   Array.from(mutableHashSet), // remember that MutableHashSet is also an Iterable
+     *   Array.of(0, 1, 2)
+     * )
+     * ```
+     *
+     * @template V - The type of elements stored in the `MutableHashSet`.
+     * @param key - The key to be added to the `MutableHashSet` if not already
+     *   present.
+     * @returns A function that accepts a `MutableHashSet` and returns the
+     *   reference of the updated `MutableHashSet` including the key.
+     */
+    <V>(key: V): (self: MutableHashSet<V>) => MutableHashSet<V>;
 
-  /**
-   * `data-first` API
-   *
-   * ```ts
-   * import { MutableHashSet } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * const empty = MutableHashSet.empty<number>()
-   * const withZero = MutableHashSet.add(empty, 0)
-   * const withOne = MutableHashSet.add(withZero, 1)
-   * const withTwo = MutableHashSet.add(withOne, 2)
-   * const withTwoTwo = MutableHashSet.add(withTwo, 2)
-   *
-   * assert(Object.is(withTwoTwo, empty)) // proof that it does mutate the original set
-   *
-   * assert.deepStrictEqual(
-   *   Array.from(withTwoTwo), // remember that MutableHashSet is also an Iterable
-   *   Array.of(0, 1, 2)
-   * )
-   * ```
-   *
-   * @template V - The type of elements stored in the `MutableHashSet`.
-   * @param self - The `MutableHashSet` instance from which the key should be
-   *   added to.
-   * @param key - The key to be added to the `MutableHashSet` if not already
-   *   present.
-   * @returns The reference of the updated `MutableHashSet` including the key.
-   */
-  <V>(self: MutableHashSet<V>, key: V): MutableHashSet<V>
+    /**
+     * `data-first` API
+     *
+     * ```ts
+     * import { MutableHashSet } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * const empty = MutableHashSet.empty<number>()
+     * const withZero = MutableHashSet.add(empty, 0)
+     * const withOne = MutableHashSet.add(withZero, 1)
+     * const withTwo = MutableHashSet.add(withOne, 2)
+     * const withTwoTwo = MutableHashSet.add(withTwo, 2)
+     *
+     * assert(Object.is(withTwoTwo, empty)) // proof that it does mutate the original set
+     *
+     * assert.deepStrictEqual(
+     *   Array.from(withTwoTwo), // remember that MutableHashSet is also an Iterable
+     *   Array.of(0, 1, 2)
+     * )
+     * ```
+     *
+     * @template V - The type of elements stored in the `MutableHashSet`.
+     * @param self - The `MutableHashSet` instance from which the key should be
+     *   added to.
+     * @param key - The key to be added to the `MutableHashSet` if not already
+     *   present.
+     * @returns The reference of the updated `MutableHashSet` including the key.
+     */
+    <V>(self: MutableHashSet<V>, key: V): MutableHashSet<V>;
 } = Dual.dual<
-  <V>(key: V) => (self: MutableHashSet<V>) => MutableHashSet<V>,
-  <V>(self: MutableHashSet<V>, key: V) => MutableHashSet<V>
->(2, (self, key) => (MutableHashMap.set(self.keyMap, key, true), self))
+    <V>(key: V) => (self: MutableHashSet<V>) => MutableHashSet<V>,
+    <V>(self: MutableHashSet<V>, key: V) => MutableHashSet<V>
+>(2, (self, key) => (MutableHashMap.set(self.keyMap, key, true), self));
 
 /**
  * Checks if the specified value exists in the `MutableHashSet`.
@@ -499,43 +509,43 @@ export const add: {
  * @see Other `MutableHashSet` elements are {@link module:MutableHashSet.add} {@link module:MutableHashSet.remove} {@link module:MutableHashSet.size} {@link module:MutableHashSet.clear}
  */
 export const has: {
-  /**
-   * `data-last` a.k.a. `pipeable` API
-   *
-   * ```ts
-   * import * as assert from "node:assert/strict"
-   * import { MutableHashSet, pipe } from "effect"
-   *
-   * const set = MutableHashSet.make(0, 1, 2)
-   *
-   * assert.equal(pipe(set, MutableHashSet.has(0)), true)
-   * assert.equal(pipe(set, MutableHashSet.has(1)), true)
-   * assert.equal(pipe(set, MutableHashSet.has(2)), true)
-   * assert.equal(pipe(set, MutableHashSet.has(3)), false)
-   * ```
-   */
-  <V>(key: V): (self: MutableHashSet<V>) => boolean
+    /**
+     * `data-last` a.k.a. `pipeable` API
+     *
+     * ```ts
+     * import * as assert from "node:assert/strict"
+     * import { MutableHashSet, pipe } from "effect"
+     *
+     * const set = MutableHashSet.make(0, 1, 2)
+     *
+     * assert.equal(pipe(set, MutableHashSet.has(0)), true)
+     * assert.equal(pipe(set, MutableHashSet.has(1)), true)
+     * assert.equal(pipe(set, MutableHashSet.has(2)), true)
+     * assert.equal(pipe(set, MutableHashSet.has(3)), false)
+     * ```
+     */
+    <V>(key: V): (self: MutableHashSet<V>) => boolean;
 
-  /**
-   * `data-first` API
-   *
-   * ```ts
-   * import * as assert from "node:assert/strict"
-   * import { MutableHashSet, pipe } from "effect"
-   *
-   * const set = MutableHashSet.make(0, 1, 2)
-   *
-   * assert.equal(MutableHashSet.has(set, 0), true)
-   * assert.equal(MutableHashSet.has(set, 1), true)
-   * assert.equal(MutableHashSet.has(set, 2), true)
-   * assert.equal(MutableHashSet.has(set, 3), false)
-   * ```
-   */
-  <V>(self: MutableHashSet<V>, key: V): boolean
+    /**
+     * `data-first` API
+     *
+     * ```ts
+     * import * as assert from "node:assert/strict"
+     * import { MutableHashSet, pipe } from "effect"
+     *
+     * const set = MutableHashSet.make(0, 1, 2)
+     *
+     * assert.equal(MutableHashSet.has(set, 0), true)
+     * assert.equal(MutableHashSet.has(set, 1), true)
+     * assert.equal(MutableHashSet.has(set, 2), true)
+     * assert.equal(MutableHashSet.has(set, 3), false)
+     * ```
+     */
+    <V>(self: MutableHashSet<V>, key: V): boolean;
 } = Dual.dual<
-  <V>(key: V) => (self: MutableHashSet<V>) => boolean,
-  <V>(self: MutableHashSet<V>, key: V) => boolean
->(2, (self, key) => MutableHashMap.has(self.keyMap, key))
+    <V>(key: V) => (self: MutableHashSet<V>) => boolean,
+    <V>(self: MutableHashSet<V>, key: V) => boolean
+>(2, (self, key) => MutableHashMap.has(self.keyMap, key));
 
 /**
  * Removes a value from the `MutableHashSet`.
@@ -582,64 +592,64 @@ export const has: {
  * @see Other `MutableHashSet` elements are {@link module:MutableHashSet.add} {@link module:MutableHashSet.has} {@link module:MutableHashSet.size} {@link module:MutableHashSet.clear}
  */
 export const remove: {
-  /**
-   * `data-last` a.k.a. `pipeable` API
-   *
-   * ```ts
-   * import { MutableHashSet, pipe } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * const set: MutableHashSet.MutableHashSet<number> = MutableHashSet.make(
-   *   0,
-   *   1,
-   *   2
-   * )
-   * const result: MutableHashSet.MutableHashSet<number> = pipe(
-   *   set,
-   *   MutableHashSet.remove(0)
-   * )
-   *
-   * assert(Object.is(set, result)) // set and result have the same identity
-   * assert.equal(pipe(result, MutableHashSet.has(0)), false) // it has correctly removed 0
-   * assert.equal(pipe(set, MutableHashSet.has(0)), false) // another proof that we are mutating the original MutableHashSet
-   * assert.equal(pipe(result, MutableHashSet.has(1)), true)
-   * assert.equal(pipe(result, MutableHashSet.has(2)), true)
-   * ```
-   *
-   * @template V - The type of the elements in the `MutableHashSet`.
-   * @param key - The key to be removed from the `MutableHashSet`.
-   * @returns A function that takes a `MutableHashSet` as input and returns the
-   *   reference to the same `MutableHashSet` with the specified key removed.
-   */
-  <V>(key: V): (self: MutableHashSet<V>) => MutableHashSet<V>
+    /**
+     * `data-last` a.k.a. `pipeable` API
+     *
+     * ```ts
+     * import { MutableHashSet, pipe } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * const set: MutableHashSet.MutableHashSet<number> = MutableHashSet.make(
+     *   0,
+     *   1,
+     *   2
+     * )
+     * const result: MutableHashSet.MutableHashSet<number> = pipe(
+     *   set,
+     *   MutableHashSet.remove(0)
+     * )
+     *
+     * assert(Object.is(set, result)) // set and result have the same identity
+     * assert.equal(pipe(result, MutableHashSet.has(0)), false) // it has correctly removed 0
+     * assert.equal(pipe(set, MutableHashSet.has(0)), false) // another proof that we are mutating the original MutableHashSet
+     * assert.equal(pipe(result, MutableHashSet.has(1)), true)
+     * assert.equal(pipe(result, MutableHashSet.has(2)), true)
+     * ```
+     *
+     * @template V - The type of the elements in the `MutableHashSet`.
+     * @param key - The key to be removed from the `MutableHashSet`.
+     * @returns A function that takes a `MutableHashSet` as input and returns the
+     *   reference to the same `MutableHashSet` with the specified key removed.
+     */
+    <V>(key: V): (self: MutableHashSet<V>) => MutableHashSet<V>;
 
-  /**
-   * `data-first` API
-   *
-   * ```ts
-   * import { MutableHashSet, pipe } from "effect"
-   * import assert from "node:assert/strict"
-   *
-   * const set = MutableHashSet.make(0, 1, 2)
-   * const result = MutableHashSet.remove(set, 0)
-   *
-   * assert(Object.is(set, result)) // set and result have the same identity
-   * assert.equal(MutableHashSet.has(result, 0), false) // it has correctly removed 0
-   * assert.equal(MutableHashSet.has(set, 0), false) // it mutates the original MutableHashSet
-   * assert.equal(MutableHashSet.has(result, 1), true)
-   * assert.equal(MutableHashSet.has(result, 2), true)
-   * ```
-   *
-   * @template V - The type of the elements in the `MutableHashSet`.
-   * @param self - The `MutableHashSet` to which the key will be removed from.
-   * @param key - The value to be removed from the `MutableHashSet` if present.
-   * @returns The reference to the updated `MutableHashSet`.
-   */
-  <V>(self: MutableHashSet<V>, key: V): MutableHashSet<V>
+    /**
+     * `data-first` API
+     *
+     * ```ts
+     * import { MutableHashSet, pipe } from "effect"
+     * import assert from "node:assert/strict"
+     *
+     * const set = MutableHashSet.make(0, 1, 2)
+     * const result = MutableHashSet.remove(set, 0)
+     *
+     * assert(Object.is(set, result)) // set and result have the same identity
+     * assert.equal(MutableHashSet.has(result, 0), false) // it has correctly removed 0
+     * assert.equal(MutableHashSet.has(set, 0), false) // it mutates the original MutableHashSet
+     * assert.equal(MutableHashSet.has(result, 1), true)
+     * assert.equal(MutableHashSet.has(result, 2), true)
+     * ```
+     *
+     * @template V - The type of the elements in the `MutableHashSet`.
+     * @param self - The `MutableHashSet` to which the key will be removed from.
+     * @param key - The value to be removed from the `MutableHashSet` if present.
+     * @returns The reference to the updated `MutableHashSet`.
+     */
+    <V>(self: MutableHashSet<V>, key: V): MutableHashSet<V>;
 } = Dual.dual<
-  <V>(key: V) => (self: MutableHashSet<V>) => MutableHashSet<V>,
-  <V>(self: MutableHashSet<V>, key: V) => MutableHashSet<V>
->(2, (self, key) => (MutableHashMap.remove(self.keyMap, key), self))
+    <V>(key: V) => (self: MutableHashSet<V>) => MutableHashSet<V>,
+    <V>(self: MutableHashSet<V>, key: V) => MutableHashSet<V>
+>(2, (self, key) => (MutableHashMap.remove(self.keyMap, key), self));
 
 /**
  * Calculates the number of values in the `HashSet`.
@@ -669,7 +679,8 @@ export const remove: {
  * @returns The total number of elements within the `MutableHashSet`.
  * @see Other `MutableHashSet` elements are {@link module:MutableHashSet.add} {@link module:MutableHashSet.has} {@link module:MutableHashSet.remove} {@link module:MutableHashSet.clear}
  */
-export const size = <V>(self: MutableHashSet<V>): number => MutableHashMap.size(self.keyMap)
+export const size = <V>(self: MutableHashSet<V>): number =>
+    MutableHashMap.size(self.keyMap);
 
 /**
  * Removes all values from the `MutableHashSet`.
@@ -702,5 +713,6 @@ export const size = <V>(self: MutableHashSet<V>): number => MutableHashMap.size(
  * @see Other `MutableHashSet` elements are {@link module:MutableHashSet.add} {@link module:MutableHashSet.has} {@link module:MutableHashSet.remove} {@link module:MutableHashSet.size}
  */
 export const clear = <V>(self: MutableHashSet<V>): MutableHashSet<V> => (
-  MutableHashMap.clear(self.keyMap), self
-)
+    MutableHashMap.clear(self.keyMap),
+    self
+);

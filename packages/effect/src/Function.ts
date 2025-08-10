@@ -1,14 +1,14 @@
 /**
  * @since 2.0.0
  */
-import type { TypeLambda } from "./HKT.js"
+import type { TypeLambda } from "./HKT.js";
 
 /**
  * @category type lambdas
  * @since 2.0.0
  */
 export interface FunctionTypeLambda extends TypeLambda {
-  readonly type: (a: this["In"]) => this["Target"]
+    readonly type: (a: this["In"]) => this["Target"];
 }
 
 /**
@@ -26,7 +26,8 @@ export interface FunctionTypeLambda extends TypeLambda {
  * @category guards
  * @since 2.0.0
  */
-export const isFunction = (input: unknown): input is Function => typeof input === "function"
+export const isFunction = (input: unknown): input is Function =>
+    typeof input === "function";
 
 /**
  * Creates a function that can be used in a data-last (aka `pipe`able) or
@@ -93,83 +94,89 @@ export const isFunction = (input: unknown): input is Function => typeof input ==
  * @since 2.0.0
  */
 export const dual: {
-  <DataLast extends (...args: Array<any>) => any, DataFirst extends (...args: Array<any>) => any>(
-    arity: Parameters<DataFirst>["length"],
-    body: DataFirst
-  ): DataLast & DataFirst
-  <DataLast extends (...args: Array<any>) => any, DataFirst extends (...args: Array<any>) => any>(
-    isDataFirst: (args: IArguments) => boolean,
-    body: DataFirst
-  ): DataLast & DataFirst
-} = function(arity, body) {
-  if (typeof arity === "function") {
-    return function() {
-      if (arity(arguments)) {
-        // @ts-expect-error
-        return body.apply(this, arguments)
-      }
-      return ((self: any) => body(self, ...arguments)) as any
+    <
+        DataLast extends (...args: Array<any>) => any,
+        DataFirst extends (...args: Array<any>) => any,
+    >(
+        arity: Parameters<DataFirst>["length"],
+        body: DataFirst,
+    ): DataLast & DataFirst;
+    <
+        DataLast extends (...args: Array<any>) => any,
+        DataFirst extends (...args: Array<any>) => any,
+    >(
+        isDataFirst: (args: IArguments) => boolean,
+        body: DataFirst,
+    ): DataLast & DataFirst;
+} = function (arity, body) {
+    if (typeof arity === "function") {
+        return function () {
+            if (arity(arguments)) {
+                // @ts-expect-error
+                return body.apply(this, arguments);
+            }
+            return ((self: any) => body(self, ...arguments)) as any;
+        };
     }
-  }
 
-  switch (arity) {
-    case 0:
-    case 1:
-      throw new RangeError(`Invalid arity ${arity}`)
+    switch (arity) {
+        case 0:
+        case 1:
+            throw new RangeError(`Invalid arity ${arity}`);
 
-    case 2:
-      return function(a, b) {
-        if (arguments.length >= 2) {
-          return body(a, b)
-        }
-        return function(self: any) {
-          return body(self, a)
-        }
-      }
+        case 2:
+            return function (a, b) {
+                if (arguments.length >= 2) {
+                    return body(a, b);
+                }
+                return function (self: any) {
+                    return body(self, a);
+                };
+            };
 
-    case 3:
-      return function(a, b, c) {
-        if (arguments.length >= 3) {
-          return body(a, b, c)
-        }
-        return function(self: any) {
-          return body(self, a, b)
-        }
-      }
+        case 3:
+            return function (a, b, c) {
+                if (arguments.length >= 3) {
+                    return body(a, b, c);
+                }
+                return function (self: any) {
+                    return body(self, a, b);
+                };
+            };
 
-    case 4:
-      return function(a, b, c, d) {
-        if (arguments.length >= 4) {
-          return body(a, b, c, d)
-        }
-        return function(self: any) {
-          return body(self, a, b, c)
-        }
-      }
+        case 4:
+            return function (a, b, c, d) {
+                if (arguments.length >= 4) {
+                    return body(a, b, c, d);
+                }
+                return function (self: any) {
+                    return body(self, a, b, c);
+                };
+            };
 
-    case 5:
-      return function(a, b, c, d, e) {
-        if (arguments.length >= 5) {
-          return body(a, b, c, d, e)
-        }
-        return function(self: any) {
-          return body(self, a, b, c, d)
-        }
-      }
+        case 5:
+            return function (a, b, c, d, e) {
+                if (arguments.length >= 5) {
+                    return body(a, b, c, d, e);
+                }
+                return function (self: any) {
+                    return body(self, a, b, c, d);
+                };
+            };
 
-    default:
-      return function() {
-        if (arguments.length >= arity) {
-          // @ts-expect-error
-          return body.apply(this, arguments)
-        }
-        const args = arguments
-        return function(self: any) {
-          return body(self, ...args)
-        }
-      }
-  }
-}
+        default:
+            return function () {
+                if (arguments.length >= arity) {
+                    // @ts-expect-error
+                    return body.apply(this, arguments);
+                }
+                const args = arguments;
+                return function (self: any) {
+                    return body(self, ...args);
+                };
+            };
+    }
+};
 /**
  * Apply a function to given values.
  *
@@ -184,7 +191,10 @@ export const dual: {
  *
  * @since 2.0.0
  */
-export const apply = <A extends ReadonlyArray<unknown>>(...a: A) => <B>(self: (...a: A) => B): B => self(...a)
+export const apply =
+    <A extends ReadonlyArray<unknown>>(...a: A) =>
+    <B>(self: (...a: A) => B): B =>
+        self(...a);
 
 /**
  * A lazy argument.
@@ -200,7 +210,7 @@ export const apply = <A extends ReadonlyArray<unknown>>(...a: A) => <B>(self: (.
  * @since 2.0.0
  */
 export interface LazyArg<A> {
-  (): A
+    (): A;
 }
 
 /**
@@ -215,7 +225,7 @@ export interface LazyArg<A> {
  * @since 2.0.0
  */
 export interface FunctionN<A extends ReadonlyArray<unknown>, B> {
-  (...args: A): B
+    (...args: A): B;
 }
 
 /**
@@ -231,7 +241,7 @@ export interface FunctionN<A extends ReadonlyArray<unknown>, B> {
  *
  * @since 2.0.0
  */
-export const identity = <A>(a: A): A => a
+export const identity = <A>(a: A): A => a;
 
 /**
  * A function that ensures that the type of an expression matches some type,
@@ -253,7 +263,10 @@ export const identity = <A>(a: A): A => a
  *
  * @since 2.0.0
  */
-export const satisfies = <A>() => <B extends A>(b: B) => b
+export const satisfies =
+    <A>() =>
+    <B extends A>(b: B) =>
+        b;
 
 /**
  * Casts the result to the specified type.
@@ -268,7 +281,7 @@ export const satisfies = <A>() => <B extends A>(b: B) => b
  *
  * @since 2.0.0
  */
-export const unsafeCoerce: <A, B>(a: A) => B = identity as any
+export const unsafeCoerce: <A, B>(a: A) => B = identity as any;
 
 /**
  * Creates a constant value that never changes.
@@ -289,7 +302,10 @@ export const unsafeCoerce: <A, B>(a: A) => B = identity as any
  *
  * @since 2.0.0
  */
-export const constant = <A>(value: A): LazyArg<A> => () => value
+export const constant =
+    <A>(value: A): LazyArg<A> =>
+    () =>
+        value;
 
 /**
  * A thunk that returns always `true`.
@@ -304,7 +320,7 @@ export const constant = <A>(value: A): LazyArg<A> => () => value
  *
  * @since 2.0.0
  */
-export const constTrue: LazyArg<boolean> = constant(true)
+export const constTrue: LazyArg<boolean> = constant(true);
 
 /**
  * A thunk that returns always `false`.
@@ -319,7 +335,7 @@ export const constTrue: LazyArg<boolean> = constant(true)
  *
  * @since 2.0.0
  */
-export const constFalse: LazyArg<boolean> = constant(false)
+export const constFalse: LazyArg<boolean> = constant(false);
 
 /**
  * A thunk that returns always `null`.
@@ -334,7 +350,7 @@ export const constFalse: LazyArg<boolean> = constant(false)
  *
  * @since 2.0.0
  */
-export const constNull: LazyArg<null> = constant(null)
+export const constNull: LazyArg<null> = constant(null);
 
 /**
  * A thunk that returns always `undefined`.
@@ -349,7 +365,7 @@ export const constNull: LazyArg<null> = constant(null)
  *
  * @since 2.0.0
  */
-export const constUndefined: LazyArg<undefined> = constant(undefined)
+export const constUndefined: LazyArg<undefined> = constant(undefined);
 
 /**
  * A thunk that returns always `void`.
@@ -364,7 +380,7 @@ export const constUndefined: LazyArg<undefined> = constant(undefined)
  *
  * @since 2.0.0
  */
-export const constVoid: LazyArg<void> = constUndefined
+export const constVoid: LazyArg<void> = constUndefined;
 
 /**
  * Reverses the order of arguments for a curried function.
@@ -381,11 +397,13 @@ export const constVoid: LazyArg<void> = constUndefined
  *
  * @since 2.0.0
  */
-export const flip = <A extends Array<unknown>, B extends Array<unknown>, C>(
-  f: (...a: A) => (...b: B) => C
-): (...b: B) => (...a: A) => C =>
-(...b) =>
-(...a) => f(...a)(...b)
+export const flip =
+    <A extends Array<unknown>, B extends Array<unknown>, C>(
+        f: (...a: A) => (...b: B) => C,
+    ): ((...b: B) => (...a: A) => C) =>
+    (...b) =>
+    (...a) =>
+        f(...a)(...b);
 
 /**
  * Composes two functions, `ab` and `bc` into a single function that takes in an argument `a` of type `A` and returns a result of type `C`.
@@ -405,9 +423,14 @@ export const flip = <A extends Array<unknown>, B extends Array<unknown>, C>(
  * @since 2.0.0
  */
 export const compose: {
-  <B, C>(bc: (b: B) => C): <A>(self: (a: A) => B) => (a: A) => C
-  <A, B, C>(self: (a: A) => B, bc: (b: B) => C): (a: A) => C
-} = dual(2, <A, B, C>(ab: (a: A) => B, bc: (b: B) => C): (a: A) => C => (a) => bc(ab(a)))
+    <B, C>(bc: (b: B) => C): <A>(self: (a: A) => B) => (a: A) => C;
+    <A, B, C>(self: (a: A) => B, bc: (b: B) => C): (a: A) => C;
+} = dual(
+    2,
+    <A, B, C>(ab: (a: A) => B, bc: (b: B) => C): ((a: A) => C) =>
+        (a) =>
+            bc(ab(a)),
+);
 
 /**
  * The `absurd` function is a stub for cases where a value of type `never` is encountered in your code,
@@ -418,8 +441,8 @@ export const compose: {
  * @since 2.0.0
  */
 export const absurd = <A>(_: never): A => {
-  throw new Error("Called `absurd` function which should be uncallable")
-}
+    throw new Error("Called `absurd` function which should be uncallable");
+};
 
 /**
  * Creates a   version of this function: instead of `n` arguments, it accepts a single tuple argument.
@@ -436,7 +459,10 @@ export const absurd = <A>(_: never): A => {
  *
  * @since 2.0.0
  */
-export const tupled = <A extends ReadonlyArray<unknown>, B>(f: (...a: A) => B): (a: A) => B => (a) => f(...a)
+export const tupled =
+    <A extends ReadonlyArray<unknown>, B>(f: (...a: A) => B): ((a: A) => B) =>
+    (a) =>
+        f(...a);
 
 /**
  * Inverse function of `tupled`
@@ -453,7 +479,10 @@ export const tupled = <A extends ReadonlyArray<unknown>, B>(f: (...a: A) => B): 
  *
  * @since 2.0.0
  */
-export const untupled = <A extends ReadonlyArray<unknown>, B>(f: (a: A) => B): (...a: A) => B => (...a) => f(a)
+export const untupled =
+    <A extends ReadonlyArray<unknown>, B>(f: (a: A) => B): ((...a: A) => B) =>
+    (...a) =>
+        f(a);
 
 /**
  * Pipes the value of an expression into a pipeline of functions.
@@ -523,492 +552,492 @@ export const untupled = <A extends ReadonlyArray<unknown>, B>(f: (a: A) => B): (
  *
  * @since 2.0.0
  */
-export function pipe<A>(a: A): A
-export function pipe<A, B = never>(a: A, ab: (a: A) => B): B
+export function pipe<A>(a: A): A;
+export function pipe<A, B = never>(a: A, ab: (a: A) => B): B;
 export function pipe<A, B = never, C = never>(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C
-): C
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+): C;
 export function pipe<A, B = never, C = never, D = never>(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D
-): D
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+): D;
 export function pipe<A, B = never, C = never, D = never, E = never>(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E
-): E
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+): E;
 export function pipe<A, B = never, C = never, D = never, E = never, F = never>(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F
-): F
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+): F;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G
-): G
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+): G;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H
-): H
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+): H;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I
-): I
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+): I;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J
-): J
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+): J;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K
-): K
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+): K;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L
-): L
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+): L;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never,
-  M = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
+    M = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L,
-  lm: (l: L) => M
-): M
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+    lm: (l: L) => M,
+): M;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never,
-  M = never,
-  N = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
+    M = never,
+    N = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L,
-  lm: (l: L) => M,
-  mn: (m: M) => N
-): N
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+    lm: (l: L) => M,
+    mn: (m: M) => N,
+): N;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never,
-  M = never,
-  N = never,
-  O = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
+    M = never,
+    N = never,
+    O = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L,
-  lm: (l: L) => M,
-  mn: (m: M) => N,
-  no: (n: N) => O
-): O
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+    lm: (l: L) => M,
+    mn: (m: M) => N,
+    no: (n: N) => O,
+): O;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never,
-  M = never,
-  N = never,
-  O = never,
-  P = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
+    M = never,
+    N = never,
+    O = never,
+    P = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L,
-  lm: (l: L) => M,
-  mn: (m: M) => N,
-  no: (n: N) => O,
-  op: (o: O) => P
-): P
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+    lm: (l: L) => M,
+    mn: (m: M) => N,
+    no: (n: N) => O,
+    op: (o: O) => P,
+): P;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never,
-  M = never,
-  N = never,
-  O = never,
-  P = never,
-  Q = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
+    M = never,
+    N = never,
+    O = never,
+    P = never,
+    Q = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L,
-  lm: (l: L) => M,
-  mn: (m: M) => N,
-  no: (n: N) => O,
-  op: (o: O) => P,
-  pq: (p: P) => Q
-): Q
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+    lm: (l: L) => M,
+    mn: (m: M) => N,
+    no: (n: N) => O,
+    op: (o: O) => P,
+    pq: (p: P) => Q,
+): Q;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never,
-  M = never,
-  N = never,
-  O = never,
-  P = never,
-  Q = never,
-  R = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
+    M = never,
+    N = never,
+    O = never,
+    P = never,
+    Q = never,
+    R = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L,
-  lm: (l: L) => M,
-  mn: (m: M) => N,
-  no: (n: N) => O,
-  op: (o: O) => P,
-  pq: (p: P) => Q,
-  qr: (q: Q) => R
-): R
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+    lm: (l: L) => M,
+    mn: (m: M) => N,
+    no: (n: N) => O,
+    op: (o: O) => P,
+    pq: (p: P) => Q,
+    qr: (q: Q) => R,
+): R;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never,
-  M = never,
-  N = never,
-  O = never,
-  P = never,
-  Q = never,
-  R = never,
-  S = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
+    M = never,
+    N = never,
+    O = never,
+    P = never,
+    Q = never,
+    R = never,
+    S = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L,
-  lm: (l: L) => M,
-  mn: (m: M) => N,
-  no: (n: N) => O,
-  op: (o: O) => P,
-  pq: (p: P) => Q,
-  qr: (q: Q) => R,
-  rs: (r: R) => S
-): S
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+    lm: (l: L) => M,
+    mn: (m: M) => N,
+    no: (n: N) => O,
+    op: (o: O) => P,
+    pq: (p: P) => Q,
+    qr: (q: Q) => R,
+    rs: (r: R) => S,
+): S;
 export function pipe<
-  A,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never,
-  K = never,
-  L = never,
-  M = never,
-  N = never,
-  O = never,
-  P = never,
-  Q = never,
-  R = never,
-  S = never,
-  T = never
+    A,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
+    K = never,
+    L = never,
+    M = never,
+    N = never,
+    O = never,
+    P = never,
+    Q = never,
+    R = never,
+    S = never,
+    T = never,
 >(
-  a: A,
-  ab: (a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J,
-  jk: (j: J) => K,
-  kl: (k: K) => L,
-  lm: (l: L) => M,
-  mn: (m: M) => N,
-  no: (n: N) => O,
-  op: (o: O) => P,
-  pq: (p: P) => Q,
-  qr: (q: Q) => R,
-  rs: (r: R) => S,
-  st: (s: S) => T
-): T
+    a: A,
+    ab: (a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+    jk: (j: J) => K,
+    kl: (k: K) => L,
+    lm: (l: L) => M,
+    mn: (m: M) => N,
+    no: (n: N) => O,
+    op: (o: O) => P,
+    pq: (p: P) => Q,
+    qr: (q: Q) => R,
+    rs: (r: R) => S,
+    st: (s: S) => T,
+): T;
 export function pipe(
-  a: unknown,
-  ab?: Function,
-  bc?: Function,
-  cd?: Function,
-  de?: Function,
-  ef?: Function,
-  fg?: Function,
-  gh?: Function,
-  hi?: Function
+    a: unknown,
+    ab?: Function,
+    bc?: Function,
+    cd?: Function,
+    de?: Function,
+    ef?: Function,
+    fg?: Function,
+    gh?: Function,
+    hi?: Function,
 ): unknown {
-  switch (arguments.length) {
-    case 1:
-      return a
-    case 2:
-      return ab!(a)
-    case 3:
-      return bc!(ab!(a))
-    case 4:
-      return cd!(bc!(ab!(a)))
-    case 5:
-      return de!(cd!(bc!(ab!(a))))
-    case 6:
-      return ef!(de!(cd!(bc!(ab!(a)))))
-    case 7:
-      return fg!(ef!(de!(cd!(bc!(ab!(a))))))
-    case 8:
-      return gh!(fg!(ef!(de!(cd!(bc!(ab!(a)))))))
-    case 9:
-      return hi!(gh!(fg!(ef!(de!(cd!(bc!(ab!(a))))))))
-    default: {
-      let ret = arguments[0]
-      for (let i = 1; i < arguments.length; i++) {
-        ret = arguments[i](ret)
-      }
-      return ret
+    switch (arguments.length) {
+        case 1:
+            return a;
+        case 2:
+            return ab!(a);
+        case 3:
+            return bc!(ab!(a));
+        case 4:
+            return cd!(bc!(ab!(a)));
+        case 5:
+            return de!(cd!(bc!(ab!(a))));
+        case 6:
+            return ef!(de!(cd!(bc!(ab!(a)))));
+        case 7:
+            return fg!(ef!(de!(cd!(bc!(ab!(a))))));
+        case 8:
+            return gh!(fg!(ef!(de!(cd!(bc!(ab!(a)))))));
+        case 9:
+            return hi!(gh!(fg!(ef!(de!(cd!(bc!(ab!(a))))))));
+        default: {
+            let ret = arguments[0];
+            for (let i = 1; i < arguments.length; i++) {
+                ret = arguments[i](ret);
+            }
+            return ret;
+        }
     }
-  }
 }
 
 /**
@@ -1032,168 +1061,174 @@ export function pipe(
  * @since 2.0.0
  */
 export function flow<A extends ReadonlyArray<unknown>, B = never>(
-  ab: (...a: A) => B
-): (...a: A) => B
+    ab: (...a: A) => B,
+): (...a: A) => B;
 export function flow<A extends ReadonlyArray<unknown>, B = never, C = never>(
-  ab: (...a: A) => B,
-  bc: (b: B) => C
-): (...a: A) => C
+    ab: (...a: A) => B,
+    bc: (b: B) => C,
+): (...a: A) => C;
 export function flow<
-  A extends ReadonlyArray<unknown>,
-  B = never,
-  C = never,
-  D = never
->(ab: (...a: A) => B, bc: (b: B) => C, cd: (c: C) => D): (...a: A) => D
+    A extends ReadonlyArray<unknown>,
+    B = never,
+    C = never,
+    D = never,
+>(ab: (...a: A) => B, bc: (b: B) => C, cd: (c: C) => D): (...a: A) => D;
 export function flow<
-  A extends ReadonlyArray<unknown>,
-  B = never,
-  C = never,
-  D = never,
-  E = never
+    A extends ReadonlyArray<unknown>,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
 >(
-  ab: (...a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E
-): (...a: A) => E
+    ab: (...a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+): (...a: A) => E;
 export function flow<
-  A extends ReadonlyArray<unknown>,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never
+    A extends ReadonlyArray<unknown>,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
 >(
-  ab: (...a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F
-): (...a: A) => F
+    ab: (...a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+): (...a: A) => F;
 export function flow<
-  A extends ReadonlyArray<unknown>,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never
+    A extends ReadonlyArray<unknown>,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
 >(
-  ab: (...a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G
-): (...a: A) => G
+    ab: (...a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+): (...a: A) => G;
 export function flow<
-  A extends ReadonlyArray<unknown>,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never
+    A extends ReadonlyArray<unknown>,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
 >(
-  ab: (...a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H
-): (...a: A) => H
+    ab: (...a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+): (...a: A) => H;
 export function flow<
-  A extends ReadonlyArray<unknown>,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never
+    A extends ReadonlyArray<unknown>,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
 >(
-  ab: (...a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I
-): (...a: A) => I
+    ab: (...a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+): (...a: A) => I;
 export function flow<
-  A extends ReadonlyArray<unknown>,
-  B = never,
-  C = never,
-  D = never,
-  E = never,
-  F = never,
-  G = never,
-  H = never,
-  I = never,
-  J = never
+    A extends ReadonlyArray<unknown>,
+    B = never,
+    C = never,
+    D = never,
+    E = never,
+    F = never,
+    G = never,
+    H = never,
+    I = never,
+    J = never,
 >(
-  ab: (...a: A) => B,
-  bc: (b: B) => C,
-  cd: (c: C) => D,
-  de: (d: D) => E,
-  ef: (e: E) => F,
-  fg: (f: F) => G,
-  gh: (g: G) => H,
-  hi: (h: H) => I,
-  ij: (i: I) => J
-): (...a: A) => J
+    ab: (...a: A) => B,
+    bc: (b: B) => C,
+    cd: (c: C) => D,
+    de: (d: D) => E,
+    ef: (e: E) => F,
+    fg: (f: F) => G,
+    gh: (g: G) => H,
+    hi: (h: H) => I,
+    ij: (i: I) => J,
+): (...a: A) => J;
 export function flow(
-  ab: Function,
-  bc?: Function,
-  cd?: Function,
-  de?: Function,
-  ef?: Function,
-  fg?: Function,
-  gh?: Function,
-  hi?: Function,
-  ij?: Function
+    ab: Function,
+    bc?: Function,
+    cd?: Function,
+    de?: Function,
+    ef?: Function,
+    fg?: Function,
+    gh?: Function,
+    hi?: Function,
+    ij?: Function,
 ): unknown {
-  switch (arguments.length) {
-    case 1:
-      return ab
-    case 2:
-      return function(this: unknown) {
-        return bc!(ab.apply(this, arguments))
-      }
-    case 3:
-      return function(this: unknown) {
-        return cd!(bc!(ab.apply(this, arguments)))
-      }
-    case 4:
-      return function(this: unknown) {
-        return de!(cd!(bc!(ab.apply(this, arguments))))
-      }
-    case 5:
-      return function(this: unknown) {
-        return ef!(de!(cd!(bc!(ab.apply(this, arguments)))))
-      }
-    case 6:
-      return function(this: unknown) {
-        return fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))))
-      }
-    case 7:
-      return function(this: unknown) {
-        return gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments)))))))
-      }
-    case 8:
-      return function(this: unknown) {
-        return hi!(gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))))))
-      }
-    case 9:
-      return function(this: unknown) {
-        return ij!(hi!(gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments)))))))))
-      }
-  }
-  return
+    switch (arguments.length) {
+        case 1:
+            return ab;
+        case 2:
+            return function (this: unknown) {
+                return bc!(ab.apply(this, arguments));
+            };
+        case 3:
+            return function (this: unknown) {
+                return cd!(bc!(ab.apply(this, arguments)));
+            };
+        case 4:
+            return function (this: unknown) {
+                return de!(cd!(bc!(ab.apply(this, arguments))));
+            };
+        case 5:
+            return function (this: unknown) {
+                return ef!(de!(cd!(bc!(ab.apply(this, arguments)))));
+            };
+        case 6:
+            return function (this: unknown) {
+                return fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))));
+            };
+        case 7:
+            return function (this: unknown) {
+                return gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments)))))));
+            };
+        case 8:
+            return function (this: unknown) {
+                return hi!(
+                    gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))))),
+                );
+            };
+        case 9:
+            return function (this: unknown) {
+                return ij!(
+                    hi!(
+                        gh!(fg!(ef!(de!(cd!(bc!(ab.apply(this, arguments))))))),
+                    ),
+                );
+            };
+    }
+    return;
 }
 
 /**
@@ -1201,7 +1236,7 @@ export function flow(
  *
  * @since 2.0.0
  */
-export const hole: <T>() => T = unsafeCoerce(absurd)
+export const hole: <T>() => T = unsafeCoerce(absurd);
 
 /**
  * The SK combinator, also known as the "S-K combinator" or "S-combinator", is a fundamental combinator in the
@@ -1219,4 +1254,4 @@ export const hole: <T>() => T = unsafeCoerce(absurd)
  *
  * @since 2.0.0
  */
-export const SK = <A, B>(_: A, b: B): B => b
+export const SK = <A, B>(_: A, b: B): B => b;

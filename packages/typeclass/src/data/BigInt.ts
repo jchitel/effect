@@ -2,9 +2,9 @@
  * @since 0.24.0
  */
 
-import { Order } from "effect/BigInt"
-import * as monoid from "../Monoid.js"
-import * as semigroup from "../Semigroup.js"
+import { Order } from "effect/BigInt";
+import * as monoid from "../Monoid.js";
+import * as semigroup from "../Semigroup.js";
 
 /**
  * `bigint` semigroup under addition.
@@ -22,8 +22,8 @@ import * as semigroup from "../Semigroup.js"
  * @since 0.24.0
  */
 export const SemigroupSum: semigroup.Semigroup<bigint> = semigroup.make(
-  (self, that) => self + that
-)
+    (self, that) => self + that,
+);
 
 /**
  * `bigint` semigroup under multiplication.
@@ -32,21 +32,21 @@ export const SemigroupSum: semigroup.Semigroup<bigint> = semigroup.make(
  * @since 0.24.0
  */
 export const SemigroupMultiply: semigroup.Semigroup<bigint> = semigroup.make(
-  (self, that) => self * that,
-  (self, collection) => {
-    if (self === 0n) {
-      return 0n
-    }
-    let out = self
-    for (const n of collection) {
-      if (n === 0n) {
-        return 0n
-      }
-      out = out * n
-    }
-    return out
-  }
-)
+    (self, that) => self * that,
+    (self, collection) => {
+        if (self === 0n) {
+            return 0n;
+        }
+        let out = self;
+        for (const n of collection) {
+            if (n === 0n) {
+                return 0n;
+            }
+            out = out * n;
+        }
+        return out;
+    },
+);
 
 /**
  * A `Semigroup` that uses the minimum between two values.
@@ -63,7 +63,7 @@ export const SemigroupMultiply: semigroup.Semigroup<bigint> = semigroup.make(
  * @category instances
  * @since 0.24.0
  */
-export const SemigroupMin: semigroup.Semigroup<bigint> = semigroup.min(Order)
+export const SemigroupMin: semigroup.Semigroup<bigint> = semigroup.min(Order);
 
 /**
  * A `Semigroup` that uses the maximum between two values.
@@ -80,7 +80,7 @@ export const SemigroupMin: semigroup.Semigroup<bigint> = semigroup.min(Order)
  * @category instances
  * @since 0.24.0
  */
-export const SemigroupMax: semigroup.Semigroup<bigint> = semigroup.max(Order)
+export const SemigroupMax: semigroup.Semigroup<bigint> = semigroup.max(Order);
 
 /**
  * `bigint` monoid under addition.
@@ -102,9 +102,9 @@ export const SemigroupMax: semigroup.Semigroup<bigint> = semigroup.max(Order)
  * @since 0.24.0
  */
 export const MonoidSum: monoid.Monoid<bigint> = monoid.fromSemigroup(
-  SemigroupSum,
-  0n
-)
+    SemigroupSum,
+    0n,
+);
 
 /**
  * `bigint` monoid under multiplication.
@@ -126,6 +126,6 @@ export const MonoidSum: monoid.Monoid<bigint> = monoid.fromSemigroup(
  * @since 0.24.0
  */
 export const MonoidMultiply: monoid.Monoid<bigint> = monoid.fromSemigroup(
-  SemigroupMultiply,
-  1n
-)
+    SemigroupMultiply,
+    1n,
+);

@@ -6,4 +6,4 @@
  * @since 1.0.0
  * @category Re-exports
  */
-export * from "@effect/platform-node-shared/NodeClusterShardManagerSocket"
+export * from "@effect/platform-node-shared/NodeClusterShardManagerSocket";

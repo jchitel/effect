@@ -1,32 +1,32 @@
 /**
  * @since 3.5.0
  */
-import type * as Cause from "./Cause.js"
-import type * as Duration from "./Duration.js"
-import type * as Effect from "./Effect.js"
-import * as internal from "./internal/rcMap.js"
-import { type Pipeable } from "./Pipeable.js"
-import type * as Scope from "./Scope.js"
-import type * as Types from "./Types.js"
+import type * as Cause from "./Cause.js";
+import type * as Duration from "./Duration.js";
+import type * as Effect from "./Effect.js";
+import * as internal from "./internal/rcMap.js";
+import { type Pipeable } from "./Pipeable.js";
+import type * as Scope from "./Scope.js";
+import type * as Types from "./Types.js";
 
 /**
  * @since 3.5.0
  * @category type ids
  */
-export const TypeId: unique symbol = internal.TypeId
+export const TypeId: unique symbol = internal.TypeId;
 
 /**
  * @since 3.5.0
  * @category type ids
  */
-export type TypeId = typeof TypeId
+export type TypeId = typeof TypeId;
 
 /**
  * @since 3.5.0
  * @category models
  */
 export interface RcMap<in K, out A, out E = never> extends Pipeable {
-  readonly [TypeId]: RcMap.Variance<K, A, E>
+    readonly [TypeId]: RcMap.Variance<K, A, E>;
 }
 
 /**
@@ -34,15 +34,15 @@ export interface RcMap<in K, out A, out E = never> extends Pipeable {
  * @category models
  */
 export declare namespace RcMap {
-  /**
-   * @since 3.5.0
-   * @category models
-   */
-  export interface Variance<K, A, E> {
-    readonly _K: Types.Contravariant<K>
-    readonly _A: Types.Covariant<A>
-    readonly _E: Types.Covariant<E>
-  }
+    /**
+     * @since 3.5.0
+     * @category models
+     */
+    export interface Variance<K, A, E> {
+        readonly _K: Types.Contravariant<K>;
+        readonly _A: Types.Covariant<A>;
+        readonly _E: Types.Covariant<E>;
+    }
 }
 
 /**
@@ -82,51 +82,55 @@ export declare namespace RcMap {
  * ```
  */
 export const make: {
-  <K, A, E, R>(
-    options: {
-      readonly lookup: (key: K) => Effect.Effect<A, E, R>
-      readonly idleTimeToLive?: Duration.DurationInput | undefined
-      readonly capacity?: undefined
-    }
-  ): Effect.Effect<RcMap<K, A, E>, never, Scope.Scope | R>
-  <K, A, E, R>(
-    options: {
-      readonly lookup: (key: K) => Effect.Effect<A, E, R>
-      readonly idleTimeToLive?: Duration.DurationInput | undefined
-      readonly capacity: number
-    }
-  ): Effect.Effect<RcMap<K, A, E | Cause.ExceededCapacityException>, never, Scope.Scope | R>
-} = internal.make
+    <K, A, E, R>(options: {
+        readonly lookup: (key: K) => Effect.Effect<A, E, R>;
+        readonly idleTimeToLive?: Duration.DurationInput | undefined;
+        readonly capacity?: undefined;
+    }): Effect.Effect<RcMap<K, A, E>, never, Scope.Scope | R>;
+    <K, A, E, R>(options: {
+        readonly lookup: (key: K) => Effect.Effect<A, E, R>;
+        readonly idleTimeToLive?: Duration.DurationInput | undefined;
+        readonly capacity: number;
+    }): Effect.Effect<
+        RcMap<K, A, E | Cause.ExceededCapacityException>,
+        never,
+        Scope.Scope | R
+    >;
+} = internal.make;
 
 /**
  * @since 3.5.0
  * @category combinators
  */
 export const get: {
-  <K>(key: K): <A, E>(self: RcMap<K, A, E>) => Effect.Effect<A, E, Scope.Scope>
-  <K, A, E>(self: RcMap<K, A, E>, key: K): Effect.Effect<A, E, Scope.Scope>
-} = internal.get
+    <K>(
+        key: K,
+    ): <A, E>(self: RcMap<K, A, E>) => Effect.Effect<A, E, Scope.Scope>;
+    <K, A, E>(self: RcMap<K, A, E>, key: K): Effect.Effect<A, E, Scope.Scope>;
+} = internal.get;
 
 /**
  * @since 3.8.0
  * @category combinators
  */
-export const keys: <K, A, E>(self: RcMap<K, A, E>) => Effect.Effect<Array<K>, E> = internal.keys
+export const keys: <K, A, E>(
+    self: RcMap<K, A, E>,
+) => Effect.Effect<Array<K>, E> = internal.keys;
 
 /**
  * @since 3.13.0
  * @category combinators
  */
 export const invalidate: {
-  <K>(key: K): <A, E>(self: RcMap<K, A, E>) => Effect.Effect<void>
-  <K, A, E>(self: RcMap<K, A, E>, key: K): Effect.Effect<void>
-} = internal.invalidate
+    <K>(key: K): <A, E>(self: RcMap<K, A, E>) => Effect.Effect<void>;
+    <K, A, E>(self: RcMap<K, A, E>, key: K): Effect.Effect<void>;
+} = internal.invalidate;
 
 /**
  * @since 3.13.0
  * @category combinators
  */
 export const touch: {
-  <K>(key: K): <A, E>(self: RcMap<K, A, E>) => Effect.Effect<void>
-  <K, A, E>(self: RcMap<K, A, E>, key: K): Effect.Effect<void>
-} = internal.touch
+    <K>(key: K): <A, E>(self: RcMap<K, A, E>) => Effect.Effect<void>;
+    <K, A, E>(self: RcMap<K, A, E>, key: K): Effect.Effect<void>;
+} = internal.touch;

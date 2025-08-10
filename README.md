@@ -107,7 +107,7 @@ Run the following commands to ensure your changes do not introduce any issues:
 - `pnpm test`: Execute all unit tests to ensure your changes haven't broken existing functionality.
 - `pnpm circular`: Check for any circular dependencies in imports.
 - `pnpm lint`: Ensure the code adheres to our coding standards.
-  - If you encounter style issues, use `pnpm lint-fix` to automatically correct some of these.
+    - If you encounter style issues, use `pnpm lint-fix` to automatically correct some of these.
 - `pnpm test-types`: Run type-level tests. Tests are written using [tstyche](https://tstyche.org/).
 - `pnpm docgen`: Ensure the documentation generates correctly and reflects any changes made.
 
@@ -132,9 +132,9 @@ This utility helps ensure consistent formatting and streamlines the process of d
 Example Input:
 
 ```ts
-import { Effect } from "effect"
+import { Effect } from "effect";
 
-console.log(Effect.runSyncExit(Effect.succeed(1)))
+console.log(Effect.runSyncExit(Effect.succeed(1)));
 /*
 Output:
 {

@@ -1,9 +1,9 @@
-import * as RA from "effect/Array"
-import * as ParseResult from "effect/ParseResult"
-import * as S from "effect/Schema"
-import type { ParseOptions } from "effect/SchemaAST"
-import { Bench } from "tinybench"
-import { z } from "zod"
+import * as RA from "effect/Array";
+import * as ParseResult from "effect/ParseResult";
+import * as S from "effect/Schema";
+import type { ParseOptions } from "effect/SchemaAST";
+import { Bench } from "tinybench";
+import { z } from "zod";
 
 /*
 ┌─────────┬──────────────────────────────────────────┬─────────────┬────────────────────┬──────────┬─────────┐
@@ -18,66 +18,68 @@ import { z } from "zod"
 └─────────┴──────────────────────────────────────────┴─────────────┴────────────────────┴──────────┴─────────┘
 */
 
-const bench = new Bench({ time: 1000 })
+const bench = new Bench({ time: 1000 });
 
-const n = 100
+const n = 100;
 const members = RA.makeBy(n, (i) =>
-  S.Struct({
-    kind: S.Literal(i),
-    a: S.String,
-    b: S.Number,
-    c: S.Boolean
-  }))
-const schema = S.Union(...members)
+    S.Struct({
+        kind: S.Literal(i),
+        a: S.String,
+        b: S.Number,
+        c: S.Boolean,
+    }),
+);
+const schema = S.Union(...members);
 
 const x = RA.makeBy(n, (i) =>
-  z.object({
-    kind: z.literal(i),
-    a: z.string(),
-    b: z.number(),
-    c: z.boolean()
-  }))
+    z.object({
+        kind: z.literal(i),
+        a: z.string(),
+        b: z.number(),
+        c: z.boolean(),
+    }),
+);
 
-const schemaZod = z.discriminatedUnion("kind", x)
+const schemaZod = z.discriminatedUnion("kind", x);
 
 const good = {
-  kind: n - 1,
-  a: "a",
-  b: 1,
-  c: true
-}
+    kind: n - 1,
+    a: "a",
+    b: 1,
+    c: true,
+};
 
 const bad = {
-  kind: n - 1,
-  a: "a",
-  b: 1,
-  c: "c"
-}
+    kind: n - 1,
+    a: "a",
+    b: 1,
+    c: "c",
+};
 
-const schemaDecodeUnknownEither = S.decodeUnknownEither(schema)
-const parseResultDecodeUnknownEither = ParseResult.decodeUnknownEither(schema)
-const options: ParseOptions = { errors: "all" }
+const schemaDecodeUnknownEither = S.decodeUnknownEither(schema);
+const parseResultDecodeUnknownEither = ParseResult.decodeUnknownEither(schema);
+const options: ParseOptions = { errors: "all" };
 
 bench
-  .add("Schema.decodeUnknownEither (good)", function() {
-    schemaDecodeUnknownEither(good, options)
-  })
-  .add("ParseResult.decodeUnknownEither (good)", function() {
-    parseResultDecodeUnknownEither(good, options)
-  })
-  .add("zod (good)", function() {
-    schemaZod.safeParse(good)
-  })
-  .add("Schema.decodeUnknownEither (bad)", function() {
-    schemaDecodeUnknownEither(bad, options)
-  })
-  .add("ParseResult.decodeUnknownEither (bad)", function() {
-    parseResultDecodeUnknownEither(bad, options)
-  })
-  .add("zod (bad)", function() {
-    schemaZod.safeParse(good)
-  })
+    .add("Schema.decodeUnknownEither (good)", function () {
+        schemaDecodeUnknownEither(good, options);
+    })
+    .add("ParseResult.decodeUnknownEither (good)", function () {
+        parseResultDecodeUnknownEither(good, options);
+    })
+    .add("zod (good)", function () {
+        schemaZod.safeParse(good);
+    })
+    .add("Schema.decodeUnknownEither (bad)", function () {
+        schemaDecodeUnknownEither(bad, options);
+    })
+    .add("ParseResult.decodeUnknownEither (bad)", function () {
+        parseResultDecodeUnknownEither(bad, options);
+    })
+    .add("zod (bad)", function () {
+        schemaZod.safeParse(good);
+    });
 
-await bench.run()
+await bench.run();
 
-console.table(bench.table())
+console.table(bench.table());

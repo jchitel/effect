@@ -1,94 +1,101 @@
 /**
  * @since 2.0.0
  */
-import type { NoSuchElementException } from "./Cause.js"
-import * as Cause from "./Cause.js"
-import * as Deferred from "./Deferred.js"
-import * as Effect from "./Effect.js"
-import * as Exit from "./Exit.js"
-import * as Fiber from "./Fiber.js"
-import * as FiberId from "./FiberId.js"
-import { constFalse, constVoid, dual } from "./Function.js"
-import * as HashSet from "./HashSet.js"
-import * as Inspectable from "./Inspectable.js"
-import * as Iterable from "./Iterable.js"
-import * as MutableHashMap from "./MutableHashMap.js"
-import * as Option from "./Option.js"
-import { type Pipeable, pipeArguments } from "./Pipeable.js"
-import * as Predicate from "./Predicate.js"
-import * as Runtime from "./Runtime.js"
-import type * as Scope from "./Scope.js"
+import type { NoSuchElementException } from "./Cause.js";
+import * as Cause from "./Cause.js";
+import * as Deferred from "./Deferred.js";
+import * as Effect from "./Effect.js";
+import * as Exit from "./Exit.js";
+import * as Fiber from "./Fiber.js";
+import * as FiberId from "./FiberId.js";
+import { constFalse, constVoid, dual } from "./Function.js";
+import * as HashSet from "./HashSet.js";
+import * as Inspectable from "./Inspectable.js";
+import * as Iterable from "./Iterable.js";
+import * as MutableHashMap from "./MutableHashMap.js";
+import * as Option from "./Option.js";
+import { type Pipeable, pipeArguments } from "./Pipeable.js";
+import * as Predicate from "./Predicate.js";
+import * as Runtime from "./Runtime.js";
+import type * as Scope from "./Scope.js";
 
 /**
  * @since 2.0.0
  * @categories type ids
  */
-export const TypeId: unique symbol = Symbol.for("effect/FiberMap")
+export const TypeId: unique symbol = Symbol.for("effect/FiberMap");
 
 /**
  * @since 2.0.0
  * @categories type ids
  */
-export type TypeId = typeof TypeId
+export type TypeId = typeof TypeId;
 
 /**
  * @since 2.0.0
  * @categories models
  */
 export interface FiberMap<in out K, out A = unknown, out E = unknown>
-  extends Pipeable, Inspectable.Inspectable, Iterable<[K, Fiber.RuntimeFiber<A, E>]>
-{
-  readonly [TypeId]: TypeId
-  readonly deferred: Deferred.Deferred<void, unknown>
-  /** @internal */
-  state: {
-    readonly _tag: "Open"
-    readonly backing: MutableHashMap.MutableHashMap<K, Fiber.RuntimeFiber<A, E>>
-  } | {
-    readonly _tag: "Closed"
-  }
+    extends Pipeable,
+        Inspectable.Inspectable,
+        Iterable<[K, Fiber.RuntimeFiber<A, E>]> {
+    readonly [TypeId]: TypeId;
+    readonly deferred: Deferred.Deferred<void, unknown>;
+    /** @internal */
+    state:
+        | {
+              readonly _tag: "Open";
+              readonly backing: MutableHashMap.MutableHashMap<
+                  K,
+                  Fiber.RuntimeFiber<A, E>
+              >;
+          }
+        | {
+              readonly _tag: "Closed";
+          };
 }
 
 /**
  * @since 2.0.0
  * @categories refinements
  */
-export const isFiberMap = (u: unknown): u is FiberMap<unknown> => Predicate.hasProperty(u, TypeId)
+export const isFiberMap = (u: unknown): u is FiberMap<unknown> =>
+    Predicate.hasProperty(u, TypeId);
 
 const Proto = {
-  [TypeId]: TypeId,
-  [Symbol.iterator](this: FiberMap<unknown>) {
-    if (this.state._tag === "Closed") {
-      return Iterable.empty()
-    }
-    return this.state.backing[Symbol.iterator]()
-  },
-  toString(this: FiberMap<unknown>) {
-    return Inspectable.format(this.toJSON())
-  },
-  toJSON(this: FiberMap<unknown>) {
-    return {
-      _id: "FiberMap",
-      state: this.state
-    }
-  },
-  [Inspectable.NodeInspectSymbol](this: FiberMap<unknown>) {
-    return this.toJSON()
-  },
-  pipe() {
-    return pipeArguments(this, arguments)
-  }
-}
+    [TypeId]: TypeId,
+    [Symbol.iterator](this: FiberMap<unknown>) {
+        if (this.state._tag === "Closed") {
+            return Iterable.empty();
+        }
+        return this.state.backing[Symbol.iterator]();
+    },
+    toString(this: FiberMap<unknown>) {
+        return Inspectable.format(this.toJSON());
+    },
+    toJSON(this: FiberMap<unknown>) {
+        return {
+            _id: "FiberMap",
+            state: this.state,
+        };
+    },
+    [Inspectable.NodeInspectSymbol](this: FiberMap<unknown>) {
+        return this.toJSON();
+    },
+    pipe() {
+        return pipeArguments(this, arguments);
+    },
+};
 
 const unsafeMake = <K, A = unknown, E = unknown>(
-  backing: MutableHashMap.MutableHashMap<K, Fiber.RuntimeFiber<A, E>>,
-  deferred: Deferred.Deferred<void, E>
+    backing: MutableHashMap.MutableHashMap<K, Fiber.RuntimeFiber<A, E>>,
+    deferred: Deferred.Deferred<void, E>,
 ): FiberMap<K, A, E> => {
-  const self = Object.create(Proto)
-  self.state = { _tag: "Open", backing }
-  self.deferred = deferred
-  return self
-}
+    const self = Object.create(Proto);
+    self.state = { _tag: "Open", backing };
+    self.deferred = deferred;
+    return self;
+};
 
 /**
  * A FiberMap can be used to store a collection of fibers, indexed by some key.
@@ -117,26 +124,26 @@ const unsafeMake = <K, A = unknown, E = unknown>(
  * @since 2.0.0
  * @categories constructors
  */
-export const make = <K, A = unknown, E = unknown>(): Effect.Effect<FiberMap<K, A, E>, never, Scope.Scope> =>
-  Effect.acquireRelease(
-    Effect.map(Deferred.make<void, E>(), (deferred) =>
-      unsafeMake<K, A, E>(
-        MutableHashMap.empty(),
-        deferred
-      )),
-    (map) =>
-      Effect.withFiberRuntime((parent) => {
-        const state = map.state
-        if (state._tag === "Closed") return Effect.void
-        map.state = { _tag: "Closed" }
-        return Fiber.interruptAllAs(
-          Iterable.map(state.backing, ([, fiber]) => fiber),
-          FiberId.combine(parent.id(), internalFiberId)
-        ).pipe(
-          Effect.intoDeferred(map.deferred)
-        )
-      })
-  )
+export const make = <K, A = unknown, E = unknown>(): Effect.Effect<
+    FiberMap<K, A, E>,
+    never,
+    Scope.Scope
+> =>
+    Effect.acquireRelease(
+        Effect.map(Deferred.make<void, E>(), (deferred) =>
+            unsafeMake<K, A, E>(MutableHashMap.empty(), deferred),
+        ),
+        (map) =>
+            Effect.withFiberRuntime((parent) => {
+                const state = map.state;
+                if (state._tag === "Closed") return Effect.void;
+                map.state = { _tag: "Closed" };
+                return Fiber.interruptAllAs(
+                    Iterable.map(state.backing, ([, fiber]) => fiber),
+                    FiberId.combine(parent.id(), internalFiberId),
+                ).pipe(Effect.intoDeferred(map.deferred));
+            }),
+    );
 
 /**
  * Create an Effect run function that is backed by a FiberMap.
@@ -145,22 +152,18 @@ export const make = <K, A = unknown, E = unknown>(): Effect.Effect<FiberMap<K, A
  * @categories constructors
  */
 export const makeRuntime = <R, K, E = unknown, A = unknown>(): Effect.Effect<
-  <XE extends E, XA extends A>(
-    key: K,
-    effect: Effect.Effect<XA, XE, R>,
-    options?:
-      | Runtime.RunForkOptions & {
-        readonly onlyIfMissing?: boolean | undefined
-      }
-      | undefined
-  ) => Fiber.RuntimeFiber<XA, XE>,
-  never,
-  Scope.Scope | R
-> =>
-  Effect.flatMap(
-    make<K, A, E>(),
-    (self) => runtime(self)<R>()
-  )
+    <XE extends E, XA extends A>(
+        key: K,
+        effect: Effect.Effect<XA, XE, R>,
+        options?:
+            | (Runtime.RunForkOptions & {
+                  readonly onlyIfMissing?: boolean | undefined;
+              })
+            | undefined,
+    ) => Fiber.RuntimeFiber<XA, XE>,
+    never,
+    Scope.Scope | R
+> => Effect.flatMap(make<K, A, E>(), (self) => runtime(self)<R>());
 
 /**
  * Create an Effect run function that is backed by a FiberMap.
@@ -168,34 +171,36 @@ export const makeRuntime = <R, K, E = unknown, A = unknown>(): Effect.Effect<
  * @since 3.13.0
  * @categories constructors
  */
-export const makeRuntimePromise = <R, K, A = unknown, E = unknown>(): Effect.Effect<
-  <XE extends E, XA extends A>(
-    key: K,
-    effect: Effect.Effect<XA, XE, R>,
-    options?:
-      | Runtime.RunForkOptions & {
-        readonly onlyIfMissing?: boolean | undefined
-      }
-      | undefined
-  ) => Promise<XA>,
-  never,
-  Scope.Scope | R
-> =>
-  Effect.flatMap(
-    make<K, A, E>(),
-    (self) => runtimePromise(self)<R>()
-  )
+export const makeRuntimePromise = <
+    R,
+    K,
+    A = unknown,
+    E = unknown,
+>(): Effect.Effect<
+    <XE extends E, XA extends A>(
+        key: K,
+        effect: Effect.Effect<XA, XE, R>,
+        options?:
+            | (Runtime.RunForkOptions & {
+                  readonly onlyIfMissing?: boolean | undefined;
+              })
+            | undefined,
+    ) => Promise<XA>,
+    never,
+    Scope.Scope | R
+> => Effect.flatMap(make<K, A, E>(), (self) => runtimePromise(self)<R>());
 
-const internalFiberIdId = -1
-const internalFiberId = FiberId.make(internalFiberIdId, 0)
+const internalFiberIdId = -1;
+const internalFiberId = FiberId.make(internalFiberIdId, 0);
 const isInternalInterruption = Cause.reduceWithContext(undefined, {
-  emptyCase: constFalse,
-  failCase: constFalse,
-  dieCase: constFalse,
-  interruptCase: (_, fiberId) => HashSet.has(FiberId.ids(fiberId), internalFiberIdId),
-  sequentialCase: (_, left, right) => left || right,
-  parallelCase: (_, left, right) => left || right
-})
+    emptyCase: constFalse,
+    failCase: constFalse,
+    dieCase: constFalse,
+    interruptCase: (_, fiberId) =>
+        HashSet.has(FiberId.ids(fiberId), internalFiberIdId),
+    sequentialCase: (_, left, right) => left || right,
+    parallelCase: (_, left, right) => left || right,
+});
 
 /**
  * Add a fiber to the FiberMap. When the fiber completes, it will be removed from the FiberMap.
@@ -205,72 +210,94 @@ const isInternalInterruption = Cause.reduceWithContext(undefined, {
  * @categories combinators
  */
 export const unsafeSet: {
-  <K, A, E, XE extends E, XA extends A>(
-    key: K,
-    fiber: Fiber.RuntimeFiber<XA, XE>,
-    options?: {
-      readonly interruptAs?: FiberId.FiberId | undefined
-      readonly onlyIfMissing?: boolean | undefined
-      readonly propagateInterruption?: boolean | undefined
-    } | undefined
-  ): (self: FiberMap<K, A, E>) => void
-  <K, A, E, XE extends E, XA extends A>(
-    self: FiberMap<K, A, E>,
-    key: K,
-    fiber: Fiber.RuntimeFiber<XA, XE>,
-    options?: {
-      readonly interruptAs?: FiberId.FiberId | undefined
-      readonly onlyIfMissing?: boolean | undefined
-      readonly propagateInterruption?: boolean | undefined
-    } | undefined
-  ): void
-} = dual((args) => isFiberMap(args[0]), <K, A, E, XE extends E, XA extends A>(
-  self: FiberMap<K, A, E>,
-  key: K,
-  fiber: Fiber.RuntimeFiber<XA, XE>,
-  options?: {
-    readonly interruptAs?: FiberId.FiberId | undefined
-    readonly onlyIfMissing?: boolean | undefined
-    readonly propagateInterruption?: boolean | undefined
-  } | undefined
-): void => {
-  if (self.state._tag === "Closed") {
-    fiber.unsafeInterruptAsFork(FiberId.combine(options?.interruptAs ?? FiberId.none, internalFiberId))
-    return
-  }
+    <K, A, E, XE extends E, XA extends A>(
+        key: K,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?:
+            | {
+                  readonly interruptAs?: FiberId.FiberId | undefined;
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              }
+            | undefined,
+    ): (self: FiberMap<K, A, E>) => void;
+    <K, A, E, XE extends E, XA extends A>(
+        self: FiberMap<K, A, E>,
+        key: K,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?:
+            | {
+                  readonly interruptAs?: FiberId.FiberId | undefined;
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              }
+            | undefined,
+    ): void;
+} = dual(
+    (args) => isFiberMap(args[0]),
+    <K, A, E, XE extends E, XA extends A>(
+        self: FiberMap<K, A, E>,
+        key: K,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?:
+            | {
+                  readonly interruptAs?: FiberId.FiberId | undefined;
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              }
+            | undefined,
+    ): void => {
+        if (self.state._tag === "Closed") {
+            fiber.unsafeInterruptAsFork(
+                FiberId.combine(
+                    options?.interruptAs ?? FiberId.none,
+                    internalFiberId,
+                ),
+            );
+            return;
+        }
 
-  const previous = MutableHashMap.get(self.state.backing, key)
-  if (previous._tag === "Some") {
-    if (options?.onlyIfMissing === true) {
-      fiber.unsafeInterruptAsFork(FiberId.combine(options?.interruptAs ?? FiberId.none, internalFiberId))
-      return
-    } else if (previous.value === fiber) {
-      return
-    }
-    previous.value.unsafeInterruptAsFork(FiberId.combine(options?.interruptAs ?? FiberId.none, internalFiberId))
-  }
+        const previous = MutableHashMap.get(self.state.backing, key);
+        if (previous._tag === "Some") {
+            if (options?.onlyIfMissing === true) {
+                fiber.unsafeInterruptAsFork(
+                    FiberId.combine(
+                        options?.interruptAs ?? FiberId.none,
+                        internalFiberId,
+                    ),
+                );
+                return;
+            } else if (previous.value === fiber) {
+                return;
+            }
+            previous.value.unsafeInterruptAsFork(
+                FiberId.combine(
+                    options?.interruptAs ?? FiberId.none,
+                    internalFiberId,
+                ),
+            );
+        }
 
-  MutableHashMap.set(self.state.backing, key, fiber)
-  fiber.addObserver((exit) => {
-    if (self.state._tag === "Closed") {
-      return
-    }
-    const current = MutableHashMap.get(self.state.backing, key)
-    if (Option.isSome(current) && fiber === current.value) {
-      MutableHashMap.remove(self.state.backing, key)
-    }
-    if (
-      Exit.isFailure(exit) &&
-      (
-        options?.propagateInterruption === true ?
-          !isInternalInterruption(exit.cause) :
-          !Cause.isInterruptedOnly(exit.cause)
-      )
-    ) {
-      Deferred.unsafeDone(self.deferred, exit as any)
-    }
-  })
-})
+        MutableHashMap.set(self.state.backing, key, fiber);
+        fiber.addObserver((exit) => {
+            if (self.state._tag === "Closed") {
+                return;
+            }
+            const current = MutableHashMap.get(self.state.backing, key);
+            if (Option.isSome(current) && fiber === current.value) {
+                MutableHashMap.remove(self.state.backing, key);
+            }
+            if (
+                Exit.isFailure(exit) &&
+                (options?.propagateInterruption === true
+                    ? !isInternalInterruption(exit.cause)
+                    : !Cause.isInterruptedOnly(exit.cause))
+            ) {
+                Deferred.unsafeDone(self.deferred, exit as any);
+            }
+        });
+    },
+);
 
 /**
  * Add a fiber to the FiberMap. When the fiber completes, it will be removed from the FiberMap.
@@ -280,41 +307,49 @@ export const unsafeSet: {
  * @categories combinators
  */
 export const set: {
-  <K, A, E, XE extends E, XA extends A>(
-    key: K,
-    fiber: Fiber.RuntimeFiber<XA, XE>,
-    options?: {
-      readonly onlyIfMissing?: boolean | undefined
-      readonly propagateInterruption?: boolean | undefined
-    } | undefined
-  ): (self: FiberMap<K, A, E>) => Effect.Effect<void>
-  <K, A, E, XE extends E, XA extends A>(
-    self: FiberMap<K, A, E>,
-    key: K,
-    fiber: Fiber.RuntimeFiber<XA, XE>,
-    options?: {
-      readonly onlyIfMissing?: boolean | undefined
-      readonly propagateInterruption?: boolean | undefined
-    } | undefined
-  ): Effect.Effect<void>
-} = dual((args) => isFiberMap(args[0]), <K, A, E, XE extends E, XA extends A>(
-  self: FiberMap<K, A, E>,
-  key: K,
-  fiber: Fiber.RuntimeFiber<XA, XE>,
-  options?: {
-    readonly onlyIfMissing?: boolean | undefined
-    readonly propagateInterruption?: boolean | undefined
-  } | undefined
-): Effect.Effect<void> =>
-  Effect.fiberIdWith(
-    (fiberId) =>
-      Effect.sync(() =>
-        unsafeSet(self, key, fiber, {
-          ...options,
-          interruptAs: fiberId
-        })
-      )
-  ))
+    <K, A, E, XE extends E, XA extends A>(
+        key: K,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?:
+            | {
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              }
+            | undefined,
+    ): (self: FiberMap<K, A, E>) => Effect.Effect<void>;
+    <K, A, E, XE extends E, XA extends A>(
+        self: FiberMap<K, A, E>,
+        key: K,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?:
+            | {
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              }
+            | undefined,
+    ): Effect.Effect<void>;
+} = dual(
+    (args) => isFiberMap(args[0]),
+    <K, A, E, XE extends E, XA extends A>(
+        self: FiberMap<K, A, E>,
+        key: K,
+        fiber: Fiber.RuntimeFiber<XA, XE>,
+        options?:
+            | {
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              }
+            | undefined,
+    ): Effect.Effect<void> =>
+        Effect.fiberIdWith((fiberId) =>
+            Effect.sync(() =>
+                unsafeSet(self, key, fiber, {
+                    ...options,
+                    interruptAs: fiberId,
+                }),
+            ),
+        ),
+);
 
 /**
  * Retrieve a fiber from the FiberMap.
@@ -323,17 +358,30 @@ export const set: {
  * @categories combinators
  */
 export const unsafeGet: {
-  <K>(key: K): <A, E>(self: FiberMap<K, A, E>) => Option.Option<Fiber.RuntimeFiber<A, E>>
-  <K, A, E>(self: FiberMap<K, A, E>, key: K): Option.Option<Fiber.RuntimeFiber<A, E>>
+    <K>(
+        key: K,
+    ): <A, E>(
+        self: FiberMap<K, A, E>,
+    ) => Option.Option<Fiber.RuntimeFiber<A, E>>;
+    <K, A, E>(
+        self: FiberMap<K, A, E>,
+        key: K,
+    ): Option.Option<Fiber.RuntimeFiber<A, E>>;
 } = dual<
-  <K>(
-    key: K
-  ) => <A, E>(self: FiberMap<K, A, E>) => Option.Option<Fiber.RuntimeFiber<A, E>>,
-  <K, A, E>(
-    self: FiberMap<K, A, E>,
-    key: K
-  ) => Option.Option<Fiber.RuntimeFiber<A, E>>
->(2, (self, key) => self.state._tag === "Closed" ? Option.none() : MutableHashMap.get(self.state.backing, key))
+    <K>(
+        key: K,
+    ) => <A, E>(
+        self: FiberMap<K, A, E>,
+    ) => Option.Option<Fiber.RuntimeFiber<A, E>>,
+    <K, A, E>(
+        self: FiberMap<K, A, E>,
+        key: K,
+    ) => Option.Option<Fiber.RuntimeFiber<A, E>>
+>(2, (self, key) =>
+    self.state._tag === "Closed"
+        ? Option.none()
+        : MutableHashMap.get(self.state.backing, key),
+);
 
 /**
  * Retrieve a fiber from the FiberMap.
@@ -342,17 +390,26 @@ export const unsafeGet: {
  * @categories combinators
  */
 export const get: {
-  <K>(key: K): <A, E>(self: FiberMap<K, A, E>) => Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException>
-  <K, A, E>(self: FiberMap<K, A, E>, key: K): Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException>
+    <K>(
+        key: K,
+    ): <A, E>(
+        self: FiberMap<K, A, E>,
+    ) => Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException>;
+    <K, A, E>(
+        self: FiberMap<K, A, E>,
+        key: K,
+    ): Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException>;
 } = dual<
-  <K>(
-    key: K
-  ) => <A, E>(self: FiberMap<K, A, E>) => Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException>,
-  <K, A, E>(
-    self: FiberMap<K, A, E>,
-    key: K
-  ) => Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException>
->(2, (self, key) => Effect.suspend(() => unsafeGet(self, key)))
+    <K>(
+        key: K,
+    ) => <A, E>(
+        self: FiberMap<K, A, E>,
+    ) => Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException>,
+    <K, A, E>(
+        self: FiberMap<K, A, E>,
+        key: K,
+    ) => Effect.Effect<Fiber.RuntimeFiber<A, E>, NoSuchElementException>
+>(2, (self, key) => Effect.suspend(() => unsafeGet(self, key)));
 
 /**
  * Check if a key exists in the FiberMap.
@@ -361,13 +418,13 @@ export const get: {
  * @categories combinators
  */
 export const unsafeHas: {
-  <K>(key: K): <A, E>(self: FiberMap<K, A, E>) => boolean
-  <K, A, E>(self: FiberMap<K, A, E>, key: K): boolean
-} = dual(
-  2,
-  <K, A, E>(self: FiberMap<K, A, E>, key: K): boolean =>
-    self.state._tag === "Closed" ? false : MutableHashMap.has(self.state.backing, key)
-)
+    <K>(key: K): <A, E>(self: FiberMap<K, A, E>) => boolean;
+    <K, A, E>(self: FiberMap<K, A, E>, key: K): boolean;
+} = dual(2, <K, A, E>(self: FiberMap<K, A, E>, key: K): boolean =>
+    self.state._tag === "Closed"
+        ? false
+        : MutableHashMap.has(self.state.backing, key),
+);
 
 /**
  * Check if a key exists in the FiberMap.
@@ -376,12 +433,13 @@ export const unsafeHas: {
  * @categories combinators
  */
 export const has: {
-  <K>(key: K): <A, E>(self: FiberMap<K, A, E>) => Effect.Effect<boolean>
-  <K, A, E>(self: FiberMap<K, A, E>, key: K): Effect.Effect<boolean>
+    <K>(key: K): <A, E>(self: FiberMap<K, A, E>) => Effect.Effect<boolean>;
+    <K, A, E>(self: FiberMap<K, A, E>, key: K): Effect.Effect<boolean>;
 } = dual(
-  2,
-  <K, A, E>(self: FiberMap<K, A, E>, key: K): Effect.Effect<boolean> => Effect.sync(() => unsafeHas(self, key))
-)
+    2,
+    <K, A, E>(self: FiberMap<K, A, E>, key: K): Effect.Effect<boolean> =>
+        Effect.sync(() => unsafeHas(self, key)),
+);
 
 /**
  * Remove a fiber from the FiberMap, interrupting it if it exists.
@@ -390,53 +448,56 @@ export const has: {
  * @categories combinators
  */
 export const remove: {
-  <K>(key: K): <A, E>(self: FiberMap<K, A, E>) => Effect.Effect<void>
-  <K, A, E>(self: FiberMap<K, A, E>, key: K): Effect.Effect<void>
+    <K>(key: K): <A, E>(self: FiberMap<K, A, E>) => Effect.Effect<void>;
+    <K, A, E>(self: FiberMap<K, A, E>, key: K): Effect.Effect<void>;
 } = dual<
-  <K>(
-    key: K
-  ) => <A, E>(self: FiberMap<K, A, E>) => Effect.Effect<void>,
-  <K, A, E>(
-    self: FiberMap<K, A, E>,
-    key: K
-  ) => Effect.Effect<void>
+    <K>(key: K) => <A, E>(self: FiberMap<K, A, E>) => Effect.Effect<void>,
+    <K, A, E>(self: FiberMap<K, A, E>, key: K) => Effect.Effect<void>
 >(2, (self, key) =>
-  Effect.withFiberRuntime((removeFiber) => {
-    if (self.state._tag === "Closed") {
-      return Effect.void
-    }
-    const fiber = MutableHashMap.get(self.state.backing, key)
-    if (fiber._tag === "None") {
-      return Effect.void
-    }
-    // will be removed by the observer
-    return Fiber.interruptAs(fiber.value, FiberId.combine(removeFiber.id(), internalFiberId))
-  }))
+    Effect.withFiberRuntime((removeFiber) => {
+        if (self.state._tag === "Closed") {
+            return Effect.void;
+        }
+        const fiber = MutableHashMap.get(self.state.backing, key);
+        if (fiber._tag === "None") {
+            return Effect.void;
+        }
+        // will be removed by the observer
+        return Fiber.interruptAs(
+            fiber.value,
+            FiberId.combine(removeFiber.id(), internalFiberId),
+        );
+    }),
+);
 
 /**
  * @since 2.0.0
  * @categories combinators
  */
 export const clear = <K, A, E>(self: FiberMap<K, A, E>): Effect.Effect<void> =>
-  Effect.withFiberRuntime((clearFiber) => {
-    if (self.state._tag === "Closed") {
-      return Effect.void
-    }
+    Effect.withFiberRuntime((clearFiber) => {
+        if (self.state._tag === "Closed") {
+            return Effect.void;
+        }
 
-    return Effect.forEach(self.state.backing, ([, fiber]) =>
-      // will be removed by the observer
-      Fiber.interruptAs(fiber, FiberId.combine(clearFiber.id(), internalFiberId)))
-  })
+        return Effect.forEach(self.state.backing, ([, fiber]) =>
+            // will be removed by the observer
+            Fiber.interruptAs(
+                fiber,
+                FiberId.combine(clearFiber.id(), internalFiberId),
+            ),
+        );
+    });
 
-const constInterruptedFiber = (function() {
-  let fiber: Fiber.RuntimeFiber<never, never> | undefined = undefined
-  return () => {
-    if (fiber === undefined) {
-      fiber = Effect.runFork(Effect.interrupt)
-    }
-    return fiber
-  }
-})()
+const constInterruptedFiber = (function () {
+    let fiber: Fiber.RuntimeFiber<never, never> | undefined = undefined;
+    return () => {
+        if (fiber === undefined) {
+            fiber = Effect.runFork(Effect.interrupt);
+        }
+        return fiber;
+    };
+})();
 
 /**
  * Run an Effect and add the forked fiber to the FiberMap.
@@ -446,55 +507,59 @@ const constInterruptedFiber = (function() {
  * @categories combinators
  */
 export const run: {
-  <K, A, E>(
-    self: FiberMap<K, A, E>,
-    key: K,
-    options?: {
-      readonly onlyIfMissing?: boolean | undefined
-      readonly propagateInterruption?: boolean | undefined
-    } | undefined
-  ): <R, XE extends E, XA extends A>(
-    effect: Effect.Effect<XA, XE, R>
-  ) => Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R>
-  <K, A, E, R, XE extends E, XA extends A>(
+    <K, A, E>(
+        self: FiberMap<K, A, E>,
+        key: K,
+        options?:
+            | {
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              }
+            | undefined,
+    ): <R, XE extends E, XA extends A>(
+        effect: Effect.Effect<XA, XE, R>,
+    ) => Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R>;
+    <K, A, E, R, XE extends E, XA extends A>(
+        self: FiberMap<K, A, E>,
+        key: K,
+        effect: Effect.Effect<XA, XE, R>,
+        options?:
+            | {
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              }
+            | undefined,
+    ): Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R>;
+} = function () {
+    const self = arguments[0];
+    if (Effect.isEffect(arguments[2])) {
+        return runImpl(self, arguments[1], arguments[2], arguments[3]) as any;
+    }
+    const key = arguments[1];
+    const options = arguments[2];
+    return (effect: Effect.Effect<any, any, any>) =>
+        runImpl(self, key, effect, options);
+};
+
+const runImpl = <K, A, E, R, XE extends E, XA extends A>(
     self: FiberMap<K, A, E>,
     key: K,
     effect: Effect.Effect<XA, XE, R>,
     options?: {
-      readonly onlyIfMissing?: boolean | undefined
-      readonly propagateInterruption?: boolean | undefined
-    } | undefined
-  ): Effect.Effect<Fiber.RuntimeFiber<XA, XE>, never, R>
-} = function() {
-  const self = arguments[0]
-  if (Effect.isEffect(arguments[2])) {
-    return runImpl(self, arguments[1], arguments[2], arguments[3]) as any
-  }
-  const key = arguments[1]
-  const options = arguments[2]
-  return (effect: Effect.Effect<any, any, any>) => runImpl(self, key, effect, options)
-}
-
-const runImpl = <K, A, E, R, XE extends E, XA extends A>(
-  self: FiberMap<K, A, E>,
-  key: K,
-  effect: Effect.Effect<XA, XE, R>,
-  options?: {
-    readonly onlyIfMissing?: boolean
-    readonly propagateInterruption?: boolean | undefined
-  }
+        readonly onlyIfMissing?: boolean;
+        readonly propagateInterruption?: boolean | undefined;
+    },
 ) =>
-  Effect.fiberIdWith((fiberId) => {
-    if (self.state._tag === "Closed") {
-      return Effect.interrupt
-    } else if (options?.onlyIfMissing === true && unsafeHas(self, key)) {
-      return Effect.sync(constInterruptedFiber)
-    }
-    return Effect.tap(
-      Effect.forkDaemon(effect),
-      (fiber) => unsafeSet(self, key, fiber, { ...options, interruptAs: fiberId })
-    )
-  })
+    Effect.fiberIdWith((fiberId) => {
+        if (self.state._tag === "Closed") {
+            return Effect.interrupt;
+        } else if (options?.onlyIfMissing === true && unsafeHas(self, key)) {
+            return Effect.sync(constInterruptedFiber);
+        }
+        return Effect.tap(Effect.forkDaemon(effect), (fiber) =>
+            unsafeSet(self, key, fiber, { ...options, interruptAs: fiberId }),
+        );
+    });
 
 /**
  * Capture a Runtime and use it to fork Effect's, adding the forked fibers to the FiberMap.
@@ -526,46 +591,48 @@ const runImpl = <K, A, E, R, XE extends E, XA extends A>(
  * @categories combinators
  */
 export const runtime: <K, A, E>(
-  self: FiberMap<K, A, E>
+    self: FiberMap<K, A, E>,
 ) => <R = never>() => Effect.Effect<
-  <XE extends E, XA extends A>(
-    key: K,
-    effect: Effect.Effect<XA, XE, R>,
-    options?:
-      | Runtime.RunForkOptions & {
-        readonly onlyIfMissing?: boolean | undefined
-        readonly propagateInterruption?: boolean | undefined
-      }
-      | undefined
-  ) => Fiber.RuntimeFiber<XA, XE>,
-  never,
-  R
-> = <K, A, E>(self: FiberMap<K, A, E>) => <R>() =>
-  Effect.map(
-    Effect.runtime<R>(),
-    (runtime) => {
-      const runFork = Runtime.runFork(runtime)
-      return <XE extends E, XA extends A>(
+    <XE extends E, XA extends A>(
         key: K,
         effect: Effect.Effect<XA, XE, R>,
         options?:
-          | Runtime.RunForkOptions & {
-            readonly onlyIfMissing?: boolean | undefined
-            readonly propagateInterruption?: boolean | undefined
-          }
-          | undefined
-      ) => {
-        if (self.state._tag === "Closed") {
-          return constInterruptedFiber()
-        } else if (options?.onlyIfMissing === true && unsafeHas(self, key)) {
-          return constInterruptedFiber()
-        }
-        const fiber = runFork(effect, options)
-        unsafeSet(self, key, fiber, options)
-        return fiber
-      }
-    }
-  )
+            | (Runtime.RunForkOptions & {
+                  readonly onlyIfMissing?: boolean | undefined;
+                  readonly propagateInterruption?: boolean | undefined;
+              })
+            | undefined,
+    ) => Fiber.RuntimeFiber<XA, XE>,
+    never,
+    R
+> =
+    <K, A, E>(self: FiberMap<K, A, E>) =>
+    <R>() =>
+        Effect.map(Effect.runtime<R>(), (runtime) => {
+            const runFork = Runtime.runFork(runtime);
+            return <XE extends E, XA extends A>(
+                key: K,
+                effect: Effect.Effect<XA, XE, R>,
+                options?:
+                    | (Runtime.RunForkOptions & {
+                          readonly onlyIfMissing?: boolean | undefined;
+                          readonly propagateInterruption?: boolean | undefined;
+                      })
+                    | undefined,
+            ) => {
+                if (self.state._tag === "Closed") {
+                    return constInterruptedFiber();
+                } else if (
+                    options?.onlyIfMissing === true &&
+                    unsafeHas(self, key)
+                ) {
+                    return constInterruptedFiber();
+                }
+                const fiber = runFork(effect, options);
+                unsafeSet(self, key, fiber, options);
+                return fiber;
+            };
+        });
 
 /**
  * Capture a Runtime and use it to fork Effect's, adding the forked fibers to the FiberMap.
@@ -573,48 +640,59 @@ export const runtime: <K, A, E>(
  * @since 3.13.0
  * @categories combinators
  */
-export const runtimePromise = <K, A, E>(self: FiberMap<K, A, E>): <R = never>() => Effect.Effect<
-  <XE extends E, XA extends A>(
-    key: K,
-    effect: Effect.Effect<XA, XE, R>,
-    options?:
-      | Runtime.RunForkOptions & {
-        readonly onlyIfMissing?: boolean | undefined
-        readonly propagateInterruption?: boolean | undefined
-      }
-      | undefined
-  ) => Promise<XA>,
-  never,
-  R
-> =>
-<R>() =>
-  Effect.map(
-    runtime(self)<R>(),
-    (runFork) =>
-    <XE extends E, XA extends A>(
-      key: K,
-      effect: Effect.Effect<XA, XE, R>,
-      options?:
-        | Runtime.RunForkOptions & { readonly propagateInterruption?: boolean | undefined }
-        | undefined
-    ): Promise<XA> =>
-      new Promise((resolve, reject) =>
-        runFork(key, effect, options).addObserver((exit) => {
-          if (Exit.isSuccess(exit)) {
-            resolve(exit.value)
-          } else {
-            reject(Cause.squash(exit.cause))
-          }
-        })
-      )
-  )
+export const runtimePromise =
+    <K, A, E>(
+        self: FiberMap<K, A, E>,
+    ): (<R = never>() => Effect.Effect<
+        <XE extends E, XA extends A>(
+            key: K,
+            effect: Effect.Effect<XA, XE, R>,
+            options?:
+                | (Runtime.RunForkOptions & {
+                      readonly onlyIfMissing?: boolean | undefined;
+                      readonly propagateInterruption?: boolean | undefined;
+                  })
+                | undefined,
+        ) => Promise<XA>,
+        never,
+        R
+    >) =>
+    <R>() =>
+        Effect.map(
+            runtime(self)<R>(),
+            (runFork) =>
+                <XE extends E, XA extends A>(
+                    key: K,
+                    effect: Effect.Effect<XA, XE, R>,
+                    options?:
+                        | (Runtime.RunForkOptions & {
+                              readonly propagateInterruption?:
+                                  | boolean
+                                  | undefined;
+                          })
+                        | undefined,
+                ): Promise<XA> =>
+                    new Promise((resolve, reject) =>
+                        runFork(key, effect, options).addObserver((exit) => {
+                            if (Exit.isSuccess(exit)) {
+                                resolve(exit.value);
+                            } else {
+                                reject(Cause.squash(exit.cause));
+                            }
+                        }),
+                    ),
+        );
 
 /**
  * @since 2.0.0
  * @categories combinators
  */
 export const size = <K, A, E>(self: FiberMap<K, A, E>): Effect.Effect<number> =>
-  Effect.sync(() => self.state._tag === "Closed" ? 0 : MutableHashMap.size(self.state.backing))
+    Effect.sync(() =>
+        self.state._tag === "Closed"
+            ? 0
+            : MutableHashMap.size(self.state.backing),
+    );
 
 /**
  * Join all fibers in the FiberMap. If any of the Fiber's in the map terminate with a failure,
@@ -635,8 +713,10 @@ export const size = <K, A, E>(self: FiberMap<K, A, E>): Effect.Effect<number> =>
  * });
  * ```
  */
-export const join = <K, A, E>(self: FiberMap<K, A, E>): Effect.Effect<void, E> =>
-  Deferred.await(self.deferred as Deferred.Deferred<void, E>)
+export const join = <K, A, E>(
+    self: FiberMap<K, A, E>,
+): Effect.Effect<void, E> =>
+    Deferred.await(self.deferred as Deferred.Deferred<void, E>);
 
 /**
  * Wait for the FiberMap to be empty.
@@ -644,9 +724,13 @@ export const join = <K, A, E>(self: FiberMap<K, A, E>): Effect.Effect<void, E> =
  * @since 3.13.0
  * @categories combinators
  */
-export const awaitEmpty = <K, A, E>(self: FiberMap<K, A, E>): Effect.Effect<void, E> =>
-  Effect.whileLoop({
-    while: () => self.state._tag === "Open" && MutableHashMap.size(self.state.backing) > 0,
-    body: () => Fiber.await(Iterable.unsafeHead(self)[1]),
-    step: constVoid
-  })
+export const awaitEmpty = <K, A, E>(
+    self: FiberMap<K, A, E>,
+): Effect.Effect<void, E> =>
+    Effect.whileLoop({
+        while: () =>
+            self.state._tag === "Open" &&
+            MutableHashMap.size(self.state.backing) > 0,
+        body: () => Fiber.await(Iterable.unsafeHead(self)[1]),
+        step: constVoid,
+    });

@@ -1,10 +1,10 @@
 # ANSI Terminal Pretty Printer for Effect-TS
 
 - [ANSI Terminal Pretty Printer for Effect-TS](#ansi-terminal-pretty-printer-for-effect-ts)
-  - [Installation](#installation)
-    - [`@effect/printer-ansi`](#effectprinter-ansi)
-  - [Overview](#overview)
-  - [Acknowledgements](#acknowledgements)
+    - [Installation](#installation)
+        - [`@effect/printer-ansi`](#effectprinter-ansi)
+    - [Overview](#overview)
+    - [Acknowledgements](#acknowledgements)
 
 ## Installation
 

@@ -1,32 +1,32 @@
 /**
  * @since 2.0.0
  */
-import type * as Duration from "./Duration.js"
-import type * as Effect from "./Effect.js"
-import type { LazyArg } from "./Function.js"
-import * as fiberRuntime from "./internal/fiberRuntime.js"
-import * as internal from "./internal/metric.js"
-import type * as MetricBoundaries from "./MetricBoundaries.js"
-import type * as MetricKey from "./MetricKey.js"
-import type * as MetricKeyType from "./MetricKeyType.js"
-import type * as MetricLabel from "./MetricLabel.js"
-import type * as MetricPair from "./MetricPair.js"
-import type * as MetricRegistry from "./MetricRegistry.js"
-import type * as MetricState from "./MetricState.js"
-import type { Pipeable } from "./Pipeable.js"
-import type * as Types from "./Types.js"
+import type * as Duration from "./Duration.js";
+import type * as Effect from "./Effect.js";
+import type { LazyArg } from "./Function.js";
+import * as fiberRuntime from "./internal/fiberRuntime.js";
+import * as internal from "./internal/metric.js";
+import type * as MetricBoundaries from "./MetricBoundaries.js";
+import type * as MetricKey from "./MetricKey.js";
+import type * as MetricKeyType from "./MetricKeyType.js";
+import type * as MetricLabel from "./MetricLabel.js";
+import type * as MetricPair from "./MetricPair.js";
+import type * as MetricRegistry from "./MetricRegistry.js";
+import type * as MetricState from "./MetricState.js";
+import type { Pipeable } from "./Pipeable.js";
+import type * as Types from "./Types.js";
 
 /**
  * @since 2.0.0
  * @category symbols
  */
-export const MetricTypeId: unique symbol = internal.MetricTypeId
+export const MetricTypeId: unique symbol = internal.MetricTypeId;
 
 /**
  * @since 2.0.0
  * @category symbols
  */
-export type MetricTypeId = typeof MetricTypeId
+export type MetricTypeId = typeof MetricTypeId;
 
 /**
  * A `Metric<Type, In, Out>` represents a concurrent metric which accepts
@@ -48,17 +48,27 @@ export type MetricTypeId = typeof MetricTypeId
  * @since 2.0.0
  * @category models
  */
-export interface Metric<in out Type, in In, out Out> extends Metric.Variance<Type, In, Out>, Pipeable {
-  /**
-   * The type of the underlying primitive metric. For example, this could be
-   * `MetricKeyType.Counter` or `MetricKeyType.Gauge`.
-   */
-  readonly keyType: Type
-  unsafeUpdate(input: In, extraTags: ReadonlyArray<MetricLabel.MetricLabel>): void
-  unsafeValue(extraTags: ReadonlyArray<MetricLabel.MetricLabel>): Out
-  unsafeModify(input: In, extraTags: ReadonlyArray<MetricLabel.MetricLabel>): void
-  register(): this
-  <A extends In, E, R>(effect: Effect.Effect<A, E, R>): Effect.Effect<A, E, R>
+export interface Metric<in out Type, in In, out Out>
+    extends Metric.Variance<Type, In, Out>,
+        Pipeable {
+    /**
+     * The type of the underlying primitive metric. For example, this could be
+     * `MetricKeyType.Counter` or `MetricKeyType.Gauge`.
+     */
+    readonly keyType: Type;
+    unsafeUpdate(
+        input: In,
+        extraTags: ReadonlyArray<MetricLabel.MetricLabel>,
+    ): void;
+    unsafeValue(extraTags: ReadonlyArray<MetricLabel.MetricLabel>): Out;
+    unsafeModify(
+        input: In,
+        extraTags: ReadonlyArray<MetricLabel.MetricLabel>,
+    ): void;
+    register(): this;
+    <A extends In, E, R>(
+        effect: Effect.Effect<A, E, R>,
+    ): Effect.Effect<A, E, R>;
 }
 
 /**
@@ -66,82 +76,104 @@ export interface Metric<in out Type, in In, out Out> extends Metric.Variance<Typ
  * @category models
  */
 export interface MetricApply {
-  <Type, In, Out>(
-    keyType: Type,
-    unsafeUpdate: (input: In, extraTags: ReadonlyArray<MetricLabel.MetricLabel>) => void,
-    unsafeValue: (extraTags: ReadonlyArray<MetricLabel.MetricLabel>) => Out,
-    unsafeModify: (input: In, extraTags: ReadonlyArray<MetricLabel.MetricLabel>) => void
-  ): Metric<Type, In, Out>
+    <Type, In, Out>(
+        keyType: Type,
+        unsafeUpdate: (
+            input: In,
+            extraTags: ReadonlyArray<MetricLabel.MetricLabel>,
+        ) => void,
+        unsafeValue: (extraTags: ReadonlyArray<MetricLabel.MetricLabel>) => Out,
+        unsafeModify: (
+            input: In,
+            extraTags: ReadonlyArray<MetricLabel.MetricLabel>,
+        ) => void,
+    ): Metric<Type, In, Out>;
 }
 
 /**
  * @since 2.0.0
  */
 export declare namespace Metric {
-  /**
-   * @since 2.0.0
-   * @category models
-   */
-  export interface Counter<In extends number | bigint>
-    extends Metric<MetricKeyType.MetricKeyType.Counter<In>, In, MetricState.MetricState.Counter<In>>
-  {}
+    /**
+     * @since 2.0.0
+     * @category models
+     */
+    export interface Counter<In extends number | bigint>
+        extends Metric<
+            MetricKeyType.MetricKeyType.Counter<In>,
+            In,
+            MetricState.MetricState.Counter<In>
+        > {}
 
-  /**
-   * @since 2.0.0
-   * @category models
-   */
-  export interface Gauge<In extends number | bigint>
-    extends Metric<MetricKeyType.MetricKeyType.Gauge<In>, In, MetricState.MetricState.Gauge<In>>
-  {}
+    /**
+     * @since 2.0.0
+     * @category models
+     */
+    export interface Gauge<In extends number | bigint>
+        extends Metric<
+            MetricKeyType.MetricKeyType.Gauge<In>,
+            In,
+            MetricState.MetricState.Gauge<In>
+        > {}
 
-  /**
-   * @since 2.0.0
-   * @category models
-   */
-  export interface Frequency<In>
-    extends Metric<MetricKeyType.MetricKeyType.Frequency, In, MetricState.MetricState.Frequency>
-  {}
+    /**
+     * @since 2.0.0
+     * @category models
+     */
+    export interface Frequency<In>
+        extends Metric<
+            MetricKeyType.MetricKeyType.Frequency,
+            In,
+            MetricState.MetricState.Frequency
+        > {}
 
-  /**
-   * @since 2.0.0
-   * @category models
-   */
-  export interface Histogram<In>
-    extends Metric<MetricKeyType.MetricKeyType.Histogram, In, MetricState.MetricState.Histogram>
-  {}
+    /**
+     * @since 2.0.0
+     * @category models
+     */
+    export interface Histogram<In>
+        extends Metric<
+            MetricKeyType.MetricKeyType.Histogram,
+            In,
+            MetricState.MetricState.Histogram
+        > {}
 
-  /**
-   * @since 2.0.0
-   * @category models
-   */
-  export interface Summary<In>
-    extends Metric<MetricKeyType.MetricKeyType.Summary, In, MetricState.MetricState.Summary>
-  {}
+    /**
+     * @since 2.0.0
+     * @category models
+     */
+    export interface Summary<In>
+        extends Metric<
+            MetricKeyType.MetricKeyType.Summary,
+            In,
+            MetricState.MetricState.Summary
+        > {}
 
-  /**
-   * @since 2.0.0
-   * @category models
-   */
-  export interface Variance<in out Type, in In, out Out> {
-    readonly [MetricTypeId]: {
-      readonly _Type: Types.Invariant<Type>
-      readonly _In: Types.Contravariant<In>
-      readonly _Out: Types.Covariant<Out>
+    /**
+     * @since 2.0.0
+     * @category models
+     */
+    export interface Variance<in out Type, in In, out Out> {
+        readonly [MetricTypeId]: {
+            readonly _Type: Types.Invariant<Type>;
+            readonly _In: Types.Contravariant<In>;
+            readonly _Out: Types.Covariant<Out>;
+        };
     }
-  }
 }
 
 /**
  * @since 2.0.0
  * @category globals
  */
-export const globalMetricRegistry: MetricRegistry.MetricRegistry = internal.globalMetricRegistry
+export const globalMetricRegistry: MetricRegistry.MetricRegistry =
+    internal.globalMetricRegistry;
 
 /**
  * @since 2.0.0
  * @category constructors
  */
-export const make: MetricApply = internal.make
+export const make: MetricApply = internal.make;
 
 /**
  * Returns a new metric that is powered by this one, but which accepts updates
@@ -152,9 +184,14 @@ export const make: MetricApply = internal.make
  * @category mapping
  */
 export const mapInput: {
-  <In, In2>(f: (input: In2) => In): <Type, Out>(self: Metric<Type, In, Out>) => Metric<Type, In2, Out>
-  <Type, In, Out, In2>(self: Metric<Type, In, Out>, f: (input: In2) => In): Metric<Type, In2, Out>
-} = internal.mapInput
+    <In, In2>(
+        f: (input: In2) => In,
+    ): <Type, Out>(self: Metric<Type, In, Out>) => Metric<Type, In2, Out>;
+    <Type, In, Out, In2>(
+        self: Metric<Type, In, Out>,
+        f: (input: In2) => In,
+    ): Metric<Type, In2, Out>;
+} = internal.mapInput;
 
 /**
  * Represents a Counter metric that tracks cumulative numerical values over time.
@@ -184,23 +221,23 @@ export const mapInput: {
  * @category constructors
  */
 export const counter: {
-  (
-    name: string,
-    options?: {
-      readonly description?: string | undefined
-      readonly bigint?: false | undefined
-      readonly incremental?: boolean | undefined
-    }
-  ): Metric.Counter<number>
-  (
-    name: string,
-    options: {
-      readonly description?: string | undefined
-      readonly bigint: true
-      readonly incremental?: boolean | undefined
-    }
-  ): Metric.Counter<bigint>
-} = internal.counter
+    (
+        name: string,
+        options?: {
+            readonly description?: string | undefined;
+            readonly bigint?: false | undefined;
+            readonly incremental?: boolean | undefined;
+        },
+    ): Metric.Counter<number>;
+    (
+        name: string,
+        options: {
+            readonly description?: string | undefined;
+            readonly bigint: true;
+            readonly incremental?: boolean | undefined;
+        },
+    ): Metric.Counter<bigint>;
+} = internal.counter;
 
 /**
  * Creates a Frequency metric to count occurrences of events.
@@ -219,11 +256,14 @@ export const counter: {
  * @category constructors
  */
 export const frequency: (
-  name: string,
-  options?:
-    | { readonly description?: string | undefined; readonly preregisteredWords?: ReadonlyArray<string> | undefined }
-    | undefined
-) => Metric.Frequency<string> = internal.frequency
+    name: string,
+    options?:
+        | {
+              readonly description?: string | undefined;
+              readonly preregisteredWords?: ReadonlyArray<string> | undefined;
+          }
+        | undefined,
+) => Metric.Frequency<string> = internal.frequency;
 
 /**
  * Returns a new metric that is powered by this one, but which accepts updates
@@ -234,18 +274,28 @@ export const frequency: (
  * @category constructors
  */
 export const withConstantInput: {
-  <In>(input: In): <Type, Out>(self: Metric<Type, In, Out>) => Metric<Type, unknown, Out>
-  <Type, In, Out>(self: Metric<Type, In, Out>, input: In): Metric<Type, unknown, Out>
-} = internal.withConstantInput
+    <In>(
+        input: In,
+    ): <Type, Out>(self: Metric<Type, In, Out>) => Metric<Type, unknown, Out>;
+    <Type, In, Out>(
+        self: Metric<Type, In, Out>,
+        input: In,
+    ): Metric<Type, unknown, Out>;
+} = internal.withConstantInput;
 
 /**
  * @since 2.0.0
  * @category constructors
  */
-export const fromMetricKey: <Type extends MetricKeyType.MetricKeyType<any, any>>(
-  key: MetricKey.MetricKey<Type>
-) => Metric<Type, MetricKeyType.MetricKeyType.InType<Type>, MetricKeyType.MetricKeyType.OutType<Type>> =
-  internal.fromMetricKey
+export const fromMetricKey: <
+    Type extends MetricKeyType.MetricKeyType<any, any>,
+>(
+    key: MetricKey.MetricKey<Type>,
+) => Metric<
+    Type,
+    MetricKeyType.MetricKeyType.InType<Type>,
+    MetricKeyType.MetricKeyType.OutType<Type>
+> = internal.fromMetricKey;
 
 /**
  * Represents a Gauge metric that tracks and reports a single numerical value at a specific moment.
@@ -274,15 +324,21 @@ export const fromMetricKey: <Type extends MetricKeyType.MetricKeyType<any, any>>
  * @category constructors
  */
 export const gauge: {
-  (name: string, options?: {
-    readonly description?: string | undefined
-    readonly bigint?: false | undefined
-  }): Metric.Gauge<number>
-  (name: string, options: {
-    readonly description?: string | undefined
-    readonly bigint: true
-  }): Metric.Gauge<bigint>
-} = internal.gauge
+    (
+        name: string,
+        options?: {
+            readonly description?: string | undefined;
+            readonly bigint?: false | undefined;
+        },
+    ): Metric.Gauge<number>;
+    (
+        name: string,
+        options: {
+            readonly description?: string | undefined;
+            readonly bigint: true;
+        },
+    ): Metric.Gauge<bigint>;
+} = internal.gauge;
 
 /**
  * Represents a Histogram metric that records observations in specified value boundaries.
@@ -302,29 +358,51 @@ export const gauge: {
  * @category constructors
  */
 export const histogram: (
-  name: string,
-  boundaries: MetricBoundaries.MetricBoundaries,
-  description?: string
-) => Metric<MetricKeyType.MetricKeyType.Histogram, number, MetricState.MetricState.Histogram> = internal.histogram
+    name: string,
+    boundaries: MetricBoundaries.MetricBoundaries,
+    description?: string,
+) => Metric<
+    MetricKeyType.MetricKeyType.Histogram,
+    number,
+    MetricState.MetricState.Histogram
+> = internal.histogram;
 
 /**
  * @since 2.0.0
  * @category combinators
  */
 export const increment: (
-  self: Metric.Counter<number> | Metric.Counter<bigint> | Metric.Gauge<number> | Metric.Gauge<bigint>
-) => Effect.Effect<void> = internal.increment
+    self:
+        | Metric.Counter<number>
+        | Metric.Counter<bigint>
+        | Metric.Gauge<number>
+        | Metric.Gauge<bigint>,
+) => Effect.Effect<void> = internal.increment;
 
 /**
  * @since 2.0.0
  * @category combinators
  */
 export const incrementBy: {
-  (amount: number): (self: Metric.Counter<number> | Metric.Counter<number>) => Effect.Effect<void>
-  (amount: bigint): (self: Metric.Counter<bigint> | Metric.Gauge<bigint>) => Effect.Effect<void>
-  (self: Metric.Counter<number> | Metric.Gauge<number>, amount: number): Effect.Effect<void>
-  (self: Metric.Counter<bigint> | Metric.Gauge<bigint>, amount: bigint): Effect.Effect<void>
-} = internal.incrementBy
+    (
+        amount: number,
+    ): (
+        self: Metric.Counter<number> | Metric.Counter<number>,
+    ) => Effect.Effect<void>;
+    (
+        amount: bigint,
+    ): (
+        self: Metric.Counter<bigint> | Metric.Gauge<bigint>,
+    ) => Effect.Effect<void>;
+    (
+        self: Metric.Counter<number> | Metric.Gauge<number>,
+        amount: number,
+    ): Effect.Effect<void>;
+    (
+        self: Metric.Counter<bigint> | Metric.Gauge<bigint>,
+        amount: bigint,
+    ): Effect.Effect<void>;
+} = internal.incrementBy;
 
 /**
  * Returns a new metric that is powered by this one, but which outputs a new
@@ -335,18 +413,28 @@ export const incrementBy: {
  * @category mapping
  */
 export const map: {
-  <Out, Out2>(f: (out: Out) => Out2): <Type, In>(self: Metric<Type, In, Out>) => Metric<Type, In, Out2>
-  <Type, In, Out, Out2>(self: Metric<Type, In, Out>, f: (out: Out) => Out2): Metric<Type, In, Out2>
-} = internal.map
+    <Out, Out2>(
+        f: (out: Out) => Out2,
+    ): <Type, In>(self: Metric<Type, In, Out>) => Metric<Type, In, Out2>;
+    <Type, In, Out, Out2>(
+        self: Metric<Type, In, Out>,
+        f: (out: Out) => Out2,
+    ): Metric<Type, In, Out2>;
+} = internal.map;
 
 /**
  * @since 2.0.0
  * @category mapping
  */
 export const mapType: {
-  <Type, Type2>(f: (type: Type) => Type2): <In, Out>(self: Metric<Type, In, Out>) => Metric<Type2, In, Out>
-  <Type, In, Out, Type2>(self: Metric<Type, In, Out>, f: (type: Type) => Type2): Metric<Type2, In, Out>
-} = internal.mapType
+    <Type, Type2>(
+        f: (type: Type) => Type2,
+    ): <In, Out>(self: Metric<Type, In, Out>) => Metric<Type2, In, Out>;
+    <Type, In, Out, Type2>(
+        self: Metric<Type, In, Out>,
+        f: (type: Type) => Type2,
+    ): Metric<Type2, In, Out>;
+} = internal.mapType;
 
 /**
  * Modifies the metric with the specified update message. For example, if the
@@ -357,20 +445,25 @@ export const mapType: {
  * @category utils
  */
 export const modify: {
-  <In>(input: In): <Type, Out>(self: Metric<Type, In, Out>) => Effect.Effect<void>
-  <Type, In, Out>(self: Metric<Type, In, Out>, input: In): Effect.Effect<void>
-} = internal.modify
+    <In>(
+        input: In,
+    ): <Type, Out>(self: Metric<Type, In, Out>) => Effect.Effect<void>;
+    <Type, In, Out>(
+        self: Metric<Type, In, Out>,
+        input: In,
+    ): Effect.Effect<void>;
+} = internal.modify;
 
 /**
  * @since 2.0.0
  * @category aspects
  */
 export const set: {
-  (value: number): (self: Metric.Gauge<number>) => Effect.Effect<void>
-  (value: bigint): (self: Metric.Gauge<bigint>) => Effect.Effect<void>
-  (self: Metric.Gauge<number>, value: number): Effect.Effect<void>
-  (self: Metric.Gauge<bigint>, value: bigint): Effect.Effect<void>
-} = internal.set
+    (value: number): (self: Metric.Gauge<number>) => Effect.Effect<void>;
+    (value: bigint): (self: Metric.Gauge<bigint>) => Effect.Effect<void>;
+    (self: Metric.Gauge<number>, value: number): Effect.Effect<void>;
+    (self: Metric.Gauge<bigint>, value: bigint): Effect.Effect<void>;
+} = internal.set;
 
 /**
  * Captures a snapshot of all metrics recorded by the application.
@@ -378,7 +471,8 @@ export const set: {
  * @since 2.0.0
  * @category getters
  */
-export const snapshot: Effect.Effect<Array<MetricPair.MetricPair.Untyped>> = internal.snapshot
+export const snapshot: Effect.Effect<Array<MetricPair.MetricPair.Untyped>> =
+    internal.snapshot;
 
 /**
  * Creates a metric that ignores input and produces constant output.
@@ -386,7 +480,8 @@ export const snapshot: Effect.Effect<Array<MetricPair.MetricPair.Untyped>> = int
  * @since 2.0.0
  * @category constructors
  */
-export const succeed: <Out>(out: Out) => Metric<void, unknown, Out> = internal.succeed
+export const succeed: <Out>(out: Out) => Metric<void, unknown, Out> =
+    internal.succeed;
 
 /**
  * Creates a metric that ignores input and produces constant output.
@@ -394,7 +489,8 @@ export const succeed: <Out>(out: Out) => Metric<void, unknown, Out> = internal.s
  * @since 2.0.0
  * @category constructors
  */
-export const sync: <Out>(evaluate: LazyArg<Out>) => Metric<void, unknown, Out> = internal.sync
+export const sync: <Out>(evaluate: LazyArg<Out>) => Metric<void, unknown, Out> =
+    internal.sync;
 
 /**
  * Creates a Summary metric that records observations and calculates quantiles.
@@ -426,32 +522,28 @@ export const sync: <Out>(evaluate: LazyArg<Out>) => Metric<void, unknown, Out> =
  * @since 2.0.0
  * @category constructors
  */
-export const summary: (
-  options: {
-    readonly name: string
-    readonly maxAge: Duration.DurationInput
-    readonly maxSize: number
-    readonly error: number
-    readonly quantiles: ReadonlyArray<number>
-    readonly description?: string | undefined
-  }
-) => Metric.Summary<number> = internal.summary
+export const summary: (options: {
+    readonly name: string;
+    readonly maxAge: Duration.DurationInput;
+    readonly maxSize: number;
+    readonly error: number;
+    readonly quantiles: ReadonlyArray<number>;
+    readonly description?: string | undefined;
+}) => Metric.Summary<number> = internal.summary;
 
 /**
  * @since 2.0.0
  * @category constructors
  */
-export const summaryTimestamp: (
-  options: {
-    readonly name: string
-    readonly maxAge: Duration.DurationInput
-    readonly maxSize: number
-    readonly error: number
-    readonly quantiles: ReadonlyArray<number>
-    readonly description?: string | undefined
-  }
-) => Metric.Summary<readonly [value: number, timestamp: number]> // readonly because contravariant
- = internal.summaryTimestamp
+export const summaryTimestamp: (options: {
+    readonly name: string;
+    readonly maxAge: Duration.DurationInput;
+    readonly maxSize: number;
+    readonly error: number;
+    readonly quantiles: ReadonlyArray<number>;
+    readonly description?: string | undefined;
+}) => Metric.Summary<readonly [value: number, timestamp: number]> = // readonly because contravariant
+    internal.summaryTimestamp;
 
 /**
  * Returns a new metric, which is identical in every way to this one, except
@@ -461,9 +553,16 @@ export const summaryTimestamp: (
  * @category utils
  */
 export const tagged: {
-  <Type, In, Out>(key: string, value: string): (self: Metric<Type, In, Out>) => Metric<Type, In, Out>
-  <Type, In, Out>(self: Metric<Type, In, Out>, key: string, value: string): Metric<Type, In, Out>
-} = internal.tagged
+    <Type, In, Out>(
+        key: string,
+        value: string,
+    ): (self: Metric<Type, In, Out>) => Metric<Type, In, Out>;
+    <Type, In, Out>(
+        self: Metric<Type, In, Out>,
+        key: string,
+        value: string,
+    ): Metric<Type, In, Out>;
+} = internal.tagged;
 
 /**
  * Returns a new metric, which is identical in every way to this one, except
@@ -475,14 +574,14 @@ export const tagged: {
  * @category utils
  */
 export const taggedWithLabelsInput: {
-  <In>(
-    f: (input: In) => Iterable<MetricLabel.MetricLabel>
-  ): <Type, Out>(self: Metric<Type, In, Out>) => Metric<Type, In, void>
-  <Type, In, Out>(
-    self: Metric<Type, In, Out>,
-    f: (input: In) => Iterable<MetricLabel.MetricLabel>
-  ): Metric<Type, In, void>
-} = internal.taggedWithLabelsInput
+    <In>(
+        f: (input: In) => Iterable<MetricLabel.MetricLabel>,
+    ): <Type, Out>(self: Metric<Type, In, Out>) => Metric<Type, In, void>;
+    <Type, In, Out>(
+        self: Metric<Type, In, Out>,
+        f: (input: In) => Iterable<MetricLabel.MetricLabel>,
+    ): Metric<Type, In, void>;
+} = internal.taggedWithLabelsInput;
 
 /**
  * Returns a new metric, which is identical in every way to this one, except
@@ -492,9 +591,14 @@ export const taggedWithLabelsInput: {
  * @category utils
  */
 export const taggedWithLabels: {
-  <Type, In, Out>(extraTags: Iterable<MetricLabel.MetricLabel>): (self: Metric<Type, In, Out>) => Metric<Type, In, Out>
-  <Type, In, Out>(self: Metric<Type, In, Out>, extraTags: Iterable<MetricLabel.MetricLabel>): Metric<Type, In, Out>
-} = internal.taggedWithLabels
+    <Type, In, Out>(
+        extraTags: Iterable<MetricLabel.MetricLabel>,
+    ): (self: Metric<Type, In, Out>) => Metric<Type, In, Out>;
+    <Type, In, Out>(
+        self: Metric<Type, In, Out>,
+        extraTags: Iterable<MetricLabel.MetricLabel>,
+    ): Metric<Type, In, Out>;
+} = internal.taggedWithLabels;
 
 /**
  * Creates a timer metric, based on a histogram, which keeps track of
@@ -505,10 +609,13 @@ export const taggedWithLabels: {
  * @category constructors
  */
 export const timer: (
-  name: string,
-  description?: string
-) => Metric<MetricKeyType.MetricKeyType.Histogram, Duration.Duration, MetricState.MetricState.Histogram> =
-  internal.timer
+    name: string,
+    description?: string,
+) => Metric<
+    MetricKeyType.MetricKeyType.Histogram,
+    Duration.Duration,
+    MetricState.MetricState.Histogram
+> = internal.timer;
 
 /**
  * Creates a timer metric, based on a histogram created from the provided
@@ -520,11 +627,14 @@ export const timer: (
  * @category constructors
  */
 export const timerWithBoundaries: (
-  name: string,
-  boundaries: ReadonlyArray<number>,
-  description?: string
-) => Metric<MetricKeyType.MetricKeyType.Histogram, Duration.Duration, MetricState.MetricState.Histogram> =
-  internal.timerWithBoundaries
+    name: string,
+    boundaries: ReadonlyArray<number>,
+    description?: string,
+) => Metric<
+    MetricKeyType.MetricKeyType.Histogram,
+    Duration.Duration,
+    MetricState.MetricState.Histogram
+> = internal.timerWithBoundaries;
 
 /**
  * Returns an aspect that will update this metric with the specified constant
@@ -535,14 +645,16 @@ export const timerWithBoundaries: (
  * @category aspects
  */
 export const trackAll: {
-  <In>(
-    input: In
-  ): <Type, Out>(self: Metric<Type, In, Out>) => <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <Type, In, Out>(
-    self: Metric<Type, In, Out>,
-    input: In
-  ): <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-} = internal.trackAll
+    <In>(
+        input: In,
+    ): <Type, Out>(
+        self: Metric<Type, In, Out>,
+    ) => <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>;
+    <Type, In, Out>(
+        self: Metric<Type, In, Out>,
+        input: In,
+    ): <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>;
+} = internal.trackAll;
 
 /**
  * Returns an aspect that will update this metric with the defects of the
@@ -552,9 +664,14 @@ export const trackAll: {
  * @category aspects
  */
 export const trackDefect: {
-  <Type, Out>(metric: Metric<Type, unknown, Out>): <A, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <A, E, R, Type, Out>(self: Effect.Effect<A, E, R>, metric: Metric<Type, unknown, Out>): Effect.Effect<A, E, R>
-} = internal.trackDefect
+    <Type, Out>(
+        metric: Metric<Type, unknown, Out>,
+    ): <A, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>;
+    <A, E, R, Type, Out>(
+        self: Effect.Effect<A, E, R>,
+        metric: Metric<Type, unknown, Out>,
+    ): Effect.Effect<A, E, R>;
+} = internal.trackDefect;
 
 /**
  * Returns an aspect that will update this metric with the result of applying
@@ -565,16 +682,16 @@ export const trackDefect: {
  * @category aspects
  */
 export const trackDefectWith: {
-  <Type, In, Out>(
-    metric: Metric<Type, In, Out>,
-    f: (defect: unknown) => In
-  ): <A, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <A, E, R, Type, In, Out>(
-    self: Effect.Effect<A, E, R>,
-    metric: Metric<Type, In, Out>,
-    f: (defect: unknown) => In
-  ): Effect.Effect<A, E, R>
-} = internal.trackDefectWith
+    <Type, In, Out>(
+        metric: Metric<Type, In, Out>,
+        f: (defect: unknown) => In,
+    ): <A, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>;
+    <A, E, R, Type, In, Out>(
+        self: Effect.Effect<A, E, R>,
+        metric: Metric<Type, In, Out>,
+        f: (defect: unknown) => In,
+    ): Effect.Effect<A, E, R>;
+} = internal.trackDefectWith;
 
 /**
  * Returns an aspect that will update this metric with the duration that the
@@ -585,14 +702,14 @@ export const trackDefectWith: {
  * @category aspects
  */
 export const trackDuration: {
-  <Type, Out>(
-    metric: Metric<Type, Duration.Duration, Out>
-  ): <A, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <A, E, R, Type, Out>(
-    self: Effect.Effect<A, E, R>,
-    metric: Metric<Type, Duration.Duration, Out>
-  ): Effect.Effect<A, E, R>
-} = internal.trackDuration
+    <Type, Out>(
+        metric: Metric<Type, Duration.Duration, Out>,
+    ): <A, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>;
+    <A, E, R, Type, Out>(
+        self: Effect.Effect<A, E, R>,
+        metric: Metric<Type, Duration.Duration, Out>,
+    ): Effect.Effect<A, E, R>;
+} = internal.trackDuration;
 
 /**
  * Returns an aspect that will update this metric with the duration that the
@@ -603,16 +720,16 @@ export const trackDuration: {
  * @category aspects
  */
 export const trackDurationWith: {
-  <Type, In, Out>(
-    metric: Metric<Type, In, Out>,
-    f: (duration: Duration.Duration) => In
-  ): <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <A, E, R, Type, In, Out>(
-    self: Effect.Effect<A, E, R>,
-    metric: Metric<Type, In, Out>,
-    f: (duration: Duration.Duration) => In
-  ): Effect.Effect<A, E, R>
-} = internal.trackDurationWith
+    <Type, In, Out>(
+        metric: Metric<Type, In, Out>,
+        f: (duration: Duration.Duration) => In,
+    ): <A, E, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>;
+    <A, E, R, Type, In, Out>(
+        self: Effect.Effect<A, E, R>,
+        metric: Metric<Type, In, Out>,
+        f: (duration: Duration.Duration) => In,
+    ): Effect.Effect<A, E, R>;
+} = internal.trackDurationWith;
 
 /**
  * Returns an aspect that will update this metric with the failure value of
@@ -622,14 +739,16 @@ export const trackDurationWith: {
  * @category aspects
  */
 export const trackError: {
-  <Type, In, Out>(
-    metric: Metric<Type, In, Out>
-  ): <A, E extends In, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <A, E extends In, R, Type, In, Out>(
-    self: Effect.Effect<A, E, R>,
-    metric: Metric<Type, In, Out>
-  ): Effect.Effect<A, E, R>
-} = internal.trackError
+    <Type, In, Out>(
+        metric: Metric<Type, In, Out>,
+    ): <A, E extends In, R>(
+        self: Effect.Effect<A, E, R>,
+    ) => Effect.Effect<A, E, R>;
+    <A, E extends In, R, Type, In, Out>(
+        self: Effect.Effect<A, E, R>,
+        metric: Metric<Type, In, Out>,
+    ): Effect.Effect<A, E, R>;
+} = internal.trackError;
 
 /**
  * Returns an aspect that will update this metric with the result of applying
@@ -640,16 +759,18 @@ export const trackError: {
  * @category aspects
  */
 export const trackErrorWith: {
-  <Type, In, Out, In2>(
-    metric: Metric<Type, In, Out>,
-    f: (error: In2) => In
-  ): <A, E extends In2, R>(effect: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <A, E extends In2, R, Type, In, Out, In2>(
-    self: Effect.Effect<A, E, R>,
-    metric: Metric<Type, In, Out>,
-    f: (error: In2) => In
-  ): Effect.Effect<A, E, R>
-} = internal.trackErrorWith
+    <Type, In, Out, In2>(
+        metric: Metric<Type, In, Out>,
+        f: (error: In2) => In,
+    ): <A, E extends In2, R>(
+        effect: Effect.Effect<A, E, R>,
+    ) => Effect.Effect<A, E, R>;
+    <A, E extends In2, R, Type, In, Out, In2>(
+        self: Effect.Effect<A, E, R>,
+        metric: Metric<Type, In, Out>,
+        f: (error: In2) => In,
+    ): Effect.Effect<A, E, R>;
+} = internal.trackErrorWith;
 
 /**
  * Returns an aspect that will update this metric with the success value of
@@ -659,14 +780,16 @@ export const trackErrorWith: {
  * @category aspects
  */
 export const trackSuccess: {
-  <Type, In, Out>(
-    metric: Metric<Type, In, Out>
-  ): <A extends In, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <A extends In, E, R, Type, In, Out>(
-    self: Effect.Effect<A, E, R>,
-    metric: Metric<Type, In, Out>
-  ): Effect.Effect<A, E, R>
-} = internal.trackSuccess
+    <Type, In, Out>(
+        metric: Metric<Type, In, Out>,
+    ): <A extends In, E, R>(
+        self: Effect.Effect<A, E, R>,
+    ) => Effect.Effect<A, E, R>;
+    <A extends In, E, R, Type, In, Out>(
+        self: Effect.Effect<A, E, R>,
+        metric: Metric<Type, In, Out>,
+    ): Effect.Effect<A, E, R>;
+} = internal.trackSuccess;
 
 /**
  * Returns an aspect that will update this metric with the result of applying
@@ -677,16 +800,18 @@ export const trackSuccess: {
  * @category aspects
  */
 export const trackSuccessWith: {
-  <Type, In, Out, In2>(
-    metric: Metric<Type, In, Out>,
-    f: (value: In2) => In
-  ): <A extends In2, E, R>(self: Effect.Effect<A, E, R>) => Effect.Effect<A, E, R>
-  <A extends In2, E, R, Type, In, Out, In2>(
-    self: Effect.Effect<A, E, R>,
-    metric: Metric<Type, In, Out>,
-    f: (value: In2) => In
-  ): Effect.Effect<A, E, R>
-} = internal.trackSuccessWith
+    <Type, In, Out, In2>(
+        metric: Metric<Type, In, Out>,
+        f: (value: In2) => In,
+    ): <A extends In2, E, R>(
+        self: Effect.Effect<A, E, R>,
+    ) => Effect.Effect<A, E, R>;
+    <A extends In2, E, R, Type, In, Out, In2>(
+        self: Effect.Effect<A, E, R>,
+        metric: Metric<Type, In, Out>,
+        f: (value: In2) => In,
+    ): Effect.Effect<A, E, R>;
+} = internal.trackSuccessWith;
 
 /**
  * Updates the metric with the specified update message. For example, if the
@@ -697,9 +822,14 @@ export const trackSuccessWith: {
  * @category utils
  */
 export const update: {
-  <In>(input: In): <Type, Out>(self: Metric<Type, In, Out>) => Effect.Effect<void>
-  <Type, In, Out>(self: Metric<Type, In, Out>, input: In): Effect.Effect<void>
-} = internal.update
+    <In>(
+        input: In,
+    ): <Type, Out>(self: Metric<Type, In, Out>) => Effect.Effect<void>;
+    <Type, In, Out>(
+        self: Metric<Type, In, Out>,
+        input: In,
+    ): Effect.Effect<void>;
+} = internal.update;
 
 /**
  * Retrieves a snapshot of the value of the metric at this moment in time.
@@ -707,38 +837,41 @@ export const update: {
  * @since 2.0.0
  * @category getters
  */
-export const value: <Type, In, Out>(self: Metric<Type, In, Out>) => Effect.Effect<Out> = internal.value
+export const value: <Type, In, Out>(
+    self: Metric<Type, In, Out>,
+) => Effect.Effect<Out> = internal.value;
 
 /**
  * @since 2.0.0
  * @category utils
  */
-export const withNow: <Type, In, Out>(self: Metric<Type, readonly [In, number], Out>) => Metric<Type, In, Out> =
-  internal.withNow
+export const withNow: <Type, In, Out>(
+    self: Metric<Type, readonly [In, number], Out>,
+) => Metric<Type, In, Out> = internal.withNow;
 
 /**
  * @since 2.0.0
  * @category zipping
  */
 export const zip: {
-  <Type2, In2, Out2>(
-    that: Metric<Type2, In2, Out2>
-  ): <Type, In, Out>(
-    self: Metric<Type, In, Out>
-  ) => Metric<
-    readonly [Type, Type2], // readonly because invariant
-    readonly [In, In2], // readonly because contravariant
-    [Out, Out2]
-  >
-  <Type, In, Out, Type2, In2, Out2>(
-    self: Metric<Type, In, Out>,
-    that: Metric<Type2, In2, Out2>
-  ): Metric<
-    readonly [Type, Type2], // readonly because invariant
-    readonly [In, In2], // readonly because contravariant
-    [Out, Out2]
-  >
-} = internal.zip
+    <Type2, In2, Out2>(
+        that: Metric<Type2, In2, Out2>,
+    ): <Type, In, Out>(
+        self: Metric<Type, In, Out>,
+    ) => Metric<
+        readonly [Type, Type2], // readonly because invariant
+        readonly [In, In2], // readonly because contravariant
+        [Out, Out2]
+    >;
+    <Type, In, Out, Type2, In2, Out2>(
+        self: Metric<Type, In, Out>,
+        that: Metric<Type2, In2, Out2>,
+    ): Metric<
+        readonly [Type, Type2], // readonly because invariant
+        readonly [In, In2], // readonly because contravariant
+        [Out, Out2]
+    >;
+} = internal.zip;
 
 /**
  * Unsafely captures a snapshot of all metrics recorded by the application.
@@ -746,35 +879,41 @@ export const zip: {
  * @since 2.0.0
  * @category unsafe
  */
-export const unsafeSnapshot: (_: void) => ReadonlyArray<MetricPair.MetricPair.Untyped> = internal.unsafeSnapshot
+export const unsafeSnapshot: (
+    _: void,
+) => ReadonlyArray<MetricPair.MetricPair.Untyped> = internal.unsafeSnapshot;
 
 /**
  * @since 2.0.0
  * @category metrics
  */
-export const fiberStarted: Metric.Counter<number> = fiberRuntime.fiberStarted
+export const fiberStarted: Metric.Counter<number> = fiberRuntime.fiberStarted;
 
 /**
  * @since 2.0.0
  * @category metrics
  */
-export const fiberSuccesses: Metric.Counter<number> = fiberRuntime.fiberSuccesses
+export const fiberSuccesses: Metric.Counter<number> =
+    fiberRuntime.fiberSuccesses;
 
 /**
  * @since 2.0.0
  * @category metrics
  */
-export const fiberFailures: Metric.Counter<number> = fiberRuntime.fiberFailures
+export const fiberFailures: Metric.Counter<number> = fiberRuntime.fiberFailures;
 
 /**
  * @since 2.0.0
  * @category metrics
  */
-export const fiberLifetimes: Metric<MetricKeyType.MetricKeyType.Histogram, number, MetricState.MetricState.Histogram> =
-  fiberRuntime.fiberLifetimes
+export const fiberLifetimes: Metric<
+    MetricKeyType.MetricKeyType.Histogram,
+    number,
+    MetricState.MetricState.Histogram
+> = fiberRuntime.fiberLifetimes;
 
 /**
  * @since 2.0.0
  * @category metrics
  */
-export const fiberActive: Metric.Counter<number> = fiberRuntime.fiberActive
+export const fiberActive: Metric.Counter<number> = fiberRuntime.fiberActive;

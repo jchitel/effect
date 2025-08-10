@@ -1,26 +1,26 @@
 /**
  * @since 1.0.0
  */
-import * as Equal from "effect/Equal"
-import * as Hash from "effect/Hash"
-import { NodeInspectSymbol } from "effect/Inspectable"
-import * as Pretty from "effect/Pretty"
-import * as Schema from "effect/Schema"
-import { RunnerAddress } from "./RunnerAddress.js"
+import * as Equal from "effect/Equal";
+import * as Hash from "effect/Hash";
+import { NodeInspectSymbol } from "effect/Inspectable";
+import * as Pretty from "effect/Pretty";
+import * as Schema from "effect/Schema";
+import { RunnerAddress } from "./RunnerAddress.js";
 
-const SymbolKey = "@effect/cluster/Runner"
-
-/**
- * @since 1.0.0
- * @category type ids
- */
-export const TypeId: unique symbol = Symbol.for(SymbolKey)
+const SymbolKey = "@effect/cluster/Runner";
 
 /**
  * @since 1.0.0
  * @category type ids
  */
-export type TypeId = typeof TypeId
+export const TypeId: unique symbol = Symbol.for(SymbolKey);
+
+/**
+ * @since 1.0.0
+ * @category type ids
+ */
+export type TypeId = typeof TypeId;
 
 /**
  * A `Runner` represents a physical application server that is capable of running
@@ -36,50 +36,56 @@ export type TypeId = typeof TypeId
  * @category models
  */
 export class Runner extends Schema.Class<Runner>(SymbolKey)({
-  address: RunnerAddress,
-  groups: Schema.Array(Schema.String),
-  version: Schema.Int
+    address: RunnerAddress,
+    groups: Schema.Array(Schema.String),
+    version: Schema.Int,
 }) {
-  /**
-   * @since 1.0.0
-   */
-  static pretty = Pretty.make(this)
+    /**
+     * @since 1.0.0
+     */
+    static pretty = Pretty.make(this);
 
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId] = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId] = TypeId;
 
-  /**
-   * @since 1.0.0
-   */
-  static readonly decodeSync = Schema.decodeSync(Schema.parseJson(Runner))
+    /**
+     * @since 1.0.0
+     */
+    static readonly decodeSync = Schema.decodeSync(Schema.parseJson(Runner));
 
-  /**
-   * @since 1.0.0
-   */
-  static readonly encodeSync = Schema.encodeSync(Schema.parseJson(Runner));
+    /**
+     * @since 1.0.0
+     */
+    static readonly encodeSync = Schema.encodeSync(Schema.parseJson(Runner));
 
-  /**
-   * @since 1.0.0
-   */
-  [NodeInspectSymbol](): string {
-    return this.toString()
-  }
+    /**
+     * @since 1.0.0
+     */
+    [NodeInspectSymbol](): string {
+        return this.toString();
+    }
 
-  /**
-   * @since 1.0.0
-   */
-  [Equal.symbol](that: Runner): boolean {
-    return this.address[Equal.symbol](that.address) && this.version === that.version
-  }
+    /**
+     * @since 1.0.0
+     */
+    [Equal.symbol](that: Runner): boolean {
+        return (
+            this.address[Equal.symbol](that.address) &&
+            this.version === that.version
+        );
+    }
 
-  /**
-   * @since 1.0.0
-   */
-  [Hash.symbol](): number {
-    return Hash.cached(this, Hash.string(`${this.address.toString()}:${this.version}`))
-  }
+    /**
+     * @since 1.0.0
+     */
+    [Hash.symbol](): number {
+        return Hash.cached(
+            this,
+            Hash.string(`${this.address.toString()}:${this.version}`),
+        );
+    }
 }
 
 /**
@@ -96,7 +102,7 @@ export class Runner extends Schema.Class<Runner>(SymbolKey)({
  * @category Constructors
  */
 export const make = (props: {
-  readonly address: RunnerAddress
-  readonly groups: ReadonlyArray<string>
-  readonly version: number
-}): Runner => new Runner(props)
+    readonly address: RunnerAddress;
+    readonly groups: ReadonlyArray<string>;
+    readonly version: number;
+}): Runner => new Runner(props);

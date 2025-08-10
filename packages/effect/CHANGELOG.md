@@ -23,25 +23,25 @@
 
 - [#4949](https://github.com/Effect-TS/effect/pull/4949) [`073a1b8`](https://github.com/Effect-TS/effect/commit/073a1b8be5dbfa87454393ee7346f5bc36a4fd63) Thanks @f15u! - Add `Layer.mock`
 
-  Creates a mock layer for testing purposes. You can provide a partial
-  implementation of the service, and any methods not provided will
-  throw an `UnimplementedError` defect when called.
+    Creates a mock layer for testing purposes. You can provide a partial
+    implementation of the service, and any methods not provided will
+    throw an `UnimplementedError` defect when called.
 
-  ```ts
-  import { Context, Effect, Layer } from "effect"
+    ```ts
+    import { Context, Effect, Layer } from "effect";
 
-  class MyService extends Context.Tag("MyService")<
-    MyService,
-    {
-      one: Effect.Effect<number>
-      two(): Effect.Effect<number>
-    }
-  >() {}
+    class MyService extends Context.Tag("MyService")<
+        MyService,
+        {
+            one: Effect.Effect<number>;
+            two(): Effect.Effect<number>;
+        }
+    >() {}
 
-  const MyServiceTest = Layer.mock(MyService, {
-    two: () => Effect.succeed(2)
-  })
-  ```
+    const MyServiceTest = Layer.mock(MyService, {
+        two: () => Effect.succeed(2),
+    });
+    ```
 
 - [#4949](https://github.com/Effect-TS/effect/pull/4949) [`f382e99`](https://github.com/Effect-TS/effect/commit/f382e99e409838a879246250fc3994b9bf5b3c2c) Thanks @KhraksMamtsov! - Schedule output has been added into `CurrentIterationMetadata`
 
@@ -51,13 +51,13 @@
 
 - [#4949](https://github.com/Effect-TS/effect/pull/4949) [`e9bdece`](https://github.com/Effect-TS/effect/commit/e9bdececdc24f60a246be5055eca71a0d49ea7f2) Thanks @vinassefranche! - Add HashMap.countBy
 
-  ```ts
-  import { HashMap } from "effect"
+    ```ts
+    import { HashMap } from "effect";
 
-  const map = HashMap.make([1, "a"], [2, "b"], [3, "c"])
-  const result = HashMap.countBy(map, (_v, key) => key % 2 === 1)
-  console.log(result) // 2
-  ```
+    const map = HashMap.make([1, "a"], [2, "b"], [3, "c"]);
+    const result = HashMap.countBy(map, (_v, key) => key % 2 === 1);
+    console.log(result); // 2
+    ```
 
 - [#4949](https://github.com/Effect-TS/effect/pull/4949) [`8d95eb0`](https://github.com/Effect-TS/effect/commit/8d95eb0356b1d1736204836c275d201a547d208d) Thanks @tim-smart! - add Effect.ensure{Success,Error,Requirements}Type, for constraining Effect types
 
@@ -89,29 +89,29 @@
 
 - [#5192](https://github.com/Effect-TS/effect/pull/5192) [`17a5ea8`](https://github.com/Effect-TS/effect/commit/17a5ea8fa29785fe6e4c9480f2a2e9c8c59f3f38) Thanks @nikelborm! - Updated deprecated OTel Resource attributes names and values.
 
-  Many of the attributes have undergone the process of deprecation not once, but twice. Most of the constants holding attribute names have been renamed. These are minor changes.
+    Many of the attributes have undergone the process of deprecation not once, but twice. Most of the constants holding attribute names have been renamed. These are minor changes.
 
-  Additionally, there were numerous changes to the attribute keys themselves. These changes can be considered major.
+    Additionally, there were numerous changes to the attribute keys themselves. These changes can be considered major.
 
-  In the `@opentelemetry/semantic-conventions` package, new attributes having ongoing discussion about them are going through a process called incubation, until a consensus about their necessity and form is reached. Otel team [recommends](https://github.com/open-telemetry/opentelemetry-js/blob/main/semantic-conventions/README.md#unstable-semconv) devs to copy them directly into their code. Luckily, it's not necessary because all of the new attribute names and values came out of this process (some of them were changed again) and are now considered stable.
+    In the `@opentelemetry/semantic-conventions` package, new attributes having ongoing discussion about them are going through a process called incubation, until a consensus about their necessity and form is reached. Otel team [recommends](https://github.com/open-telemetry/opentelemetry-js/blob/main/semantic-conventions/README.md#unstable-semconv) devs to copy them directly into their code. Luckily, it's not necessary because all of the new attribute names and values came out of this process (some of them were changed again) and are now considered stable.
 
-  ## Reasoning for minor version bump
+    ## Reasoning for minor version bump
 
-  | Package                    | Major attribute changes                                                       | Major value changes               |
-  | -------------------------- | ----------------------------------------------------------------------------- | --------------------------------- |
-  | Clickhouse client          | `db.system` -> `db.system.name` <br/> `db.name` -> `db.namespace`             |                                   |
-  | MsSQL client               | `db.system` -> `db.system.name` <br/> `db.name` -> `db.namespace`             | `mssql` -> `microsoft.sql_server` |
-  | MySQL client               | `db.system` -> `db.system.name` <br/> `db.name` -> `db.namespace`             |                                   |
-  | Pg client                  | `db.system` -> `db.system.name` <br/> `db.name` -> `db.namespace`             |                                   |
-  | Bun SQLite client          | `db.system` -> `db.system.name`                                               |                                   |
-  | Node SQLite client         | `db.system` -> `db.system.name`                                               |                                   |
-  | React.Native SQLite client | `db.system` -> `db.system.name`                                               |                                   |
-  | Wasm SQLite client         | `db.system` -> `db.system.name`                                               |                                   |
-  | SQLite Do client           | `db.system` -> `db.system.name`                                               |                                   |
-  | LibSQL client              | `db.system` -> `db.system.name`                                               |                                   |
-  | D1 client                  | `db.system` -> `db.system.name`                                               |                                   |
-  | Kysely client              | `db.statement` -> `db.query.text`                                             |                                   |
-  | @effect/sql                | `db.statement` -> `db.query.text` <br/> `db.operation` -> `db.operation.name` |                                   |
+    | Package                    | Major attribute changes                                                       | Major value changes               |
+    | -------------------------- | ----------------------------------------------------------------------------- | --------------------------------- |
+    | Clickhouse client          | `db.system` -> `db.system.name` <br/> `db.name` -> `db.namespace`             |                                   |
+    | MsSQL client               | `db.system` -> `db.system.name` <br/> `db.name` -> `db.namespace`             | `mssql` -> `microsoft.sql_server` |
+    | MySQL client               | `db.system` -> `db.system.name` <br/> `db.name` -> `db.namespace`             |                                   |
+    | Pg client                  | `db.system` -> `db.system.name` <br/> `db.name` -> `db.namespace`             |                                   |
+    | Bun SQLite client          | `db.system` -> `db.system.name`                                               |                                   |
+    | Node SQLite client         | `db.system` -> `db.system.name`                                               |                                   |
+    | React.Native SQLite client | `db.system` -> `db.system.name`                                               |                                   |
+    | Wasm SQLite client         | `db.system` -> `db.system.name`                                               |                                   |
+    | SQLite Do client           | `db.system` -> `db.system.name`                                               |                                   |
+    | LibSQL client              | `db.system` -> `db.system.name`                                               |                                   |
+    | D1 client                  | `db.system` -> `db.system.name`                                               |                                   |
+    | Kysely client              | `db.statement` -> `db.query.text`                                             |                                   |
+    | @effect/sql                | `db.statement` -> `db.query.text` <br/> `db.operation` -> `db.operation.name` |                                   |
 
 - [#5211](https://github.com/Effect-TS/effect/pull/5211) [`d25f22b`](https://github.com/Effect-TS/effect/commit/d25f22be7598abe977caf6cdac3b0dd78b438c48) Thanks @mattiamanzati! - Removed some unnecessary single-arg pipe calls
 
@@ -217,248 +217,259 @@
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`ee0bd5d`](https://github.com/Effect-TS/effect/commit/ee0bd5d24864752c54cb359f67a67dd903971ec4) Thanks @KhraksMamtsov! - `Schedule.CurrentIterationMetadata` has been added
 
-  ```ts
-  import { Effect, Schedule } from "effect"
+    ```ts
+    import { Effect, Schedule } from "effect";
 
-  Effect.gen(function* () {
-    const currentIterationMetadata = yield* Schedule.CurrentIterationMetadata
-    //     ^? Schedule.IterationMetadata
+    Effect.gen(function* () {
+        const currentIterationMetadata =
+            yield* Schedule.CurrentIterationMetadata;
+        //     ^? Schedule.IterationMetadata
 
-    console.log(currentIterationMetadata)
-  }).pipe(Effect.repeat(Schedule.recurs(2)))
-  // {
-  //   elapsed: Duration.zero,
-  //   elapsedSincePrevious: Duration.zero,
-  //   input: undefined,
-  //   now: 0,
-  //   recurrence: 0,
-  //   start: 0
-  // }
-  // {
-  //   elapsed: Duration.zero,
-  //   elapsedSincePrevious: Duration.zero,
-  //   input: undefined,
-  //   now: 0,
-  //   recurrence: 1,
-  //   start: 0
-  // }
-  // {
-  //   elapsed: Duration.zero,
-  //   elapsedSincePrevious: Duration.zero,
-  //   input: undefined,
-  //   now: 0,
-  //   recurrence: 2,
-  //   start: 0
-  // }
+        console.log(currentIterationMetadata);
+    }).pipe(Effect.repeat(Schedule.recurs(2)));
+    // {
+    //   elapsed: Duration.zero,
+    //   elapsedSincePrevious: Duration.zero,
+    //   input: undefined,
+    //   now: 0,
+    //   recurrence: 0,
+    //   start: 0
+    // }
+    // {
+    //   elapsed: Duration.zero,
+    //   elapsedSincePrevious: Duration.zero,
+    //   input: undefined,
+    //   now: 0,
+    //   recurrence: 1,
+    //   start: 0
+    // }
+    // {
+    //   elapsed: Duration.zero,
+    //   elapsedSincePrevious: Duration.zero,
+    //   input: undefined,
+    //   now: 0,
+    //   recurrence: 2,
+    //   start: 0
+    // }
 
-  Effect.gen(function* () {
-    const currentIterationMetadata = yield* Schedule.CurrentIterationMetadata
+    Effect.gen(function* () {
+        const currentIterationMetadata =
+            yield* Schedule.CurrentIterationMetadata;
 
-    console.log(currentIterationMetadata)
-  }).pipe(
-    Effect.schedule(
-      Schedule.intersect(Schedule.fibonacci("1 second"), Schedule.recurs(3))
-    )
-  )
-  // {
-  //   elapsed: Duration.zero,
-  //   elapsedSincePrevious: Duration.zero,
-  //   recurrence: 1,
-  //   input: undefined,
-  //   now: 0,
-  //   start: 0
-  // },
-  // {
-  //   elapsed: Duration.seconds(1),
-  //   elapsedSincePrevious: Duration.seconds(1),
-  //   recurrence: 2,
-  //   input: undefined,
-  //   now: 1000,
-  //   start: 0
-  // },
-  // {
-  //   elapsed: Duration.seconds(2),
-  //   elapsedSincePrevious: Duration.seconds(1),
-  //   recurrence: 3,
-  //   input: undefined,
-  //   now: 2000,
-  //   start: 0
-  // }
-  ```
+        console.log(currentIterationMetadata);
+    }).pipe(
+        Effect.schedule(
+            Schedule.intersect(
+                Schedule.fibonacci("1 second"),
+                Schedule.recurs(3),
+            ),
+        ),
+    );
+    // {
+    //   elapsed: Duration.zero,
+    //   elapsedSincePrevious: Duration.zero,
+    //   recurrence: 1,
+    //   input: undefined,
+    //   now: 0,
+    //   start: 0
+    // },
+    // {
+    //   elapsed: Duration.seconds(1),
+    //   elapsedSincePrevious: Duration.seconds(1),
+    //   recurrence: 2,
+    //   input: undefined,
+    //   now: 1000,
+    //   start: 0
+    // },
+    // {
+    //   elapsed: Duration.seconds(2),
+    //   elapsedSincePrevious: Duration.seconds(1),
+    //   recurrence: 3,
+    //   input: undefined,
+    //   now: 2000,
+    //   start: 0
+    // }
+    ```
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`5189800`](https://github.com/Effect-TS/effect/commit/51898004e11766b8cf6d95e960b636f6d5db79ec) Thanks @vinassefranche! - Add HashMap.hasBy helper
 
-  ```ts
-  import { HashMap } from "effect"
+    ```ts
+    import { HashMap } from "effect";
 
-  const hm = HashMap.make([1, "a"])
-  HashMap.hasBy(hm, (value, key) => value === "a" && key === 1) // -> true
-  HashMap.hasBy(hm, (value) => value === "b") // -> false
-  ```
+    const hm = HashMap.make([1, "a"]);
+    HashMap.hasBy(hm, (value, key) => value === "a" && key === 1); // -> true
+    HashMap.hasBy(hm, (value) => value === "b"); // -> false
+    ```
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`58bfeaa`](https://github.com/Effect-TS/effect/commit/58bfeaa64ded8c88f772b184311c0c0dbac10960) Thanks @jrudder! - Add round and sumAll to BigDecimal
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`194d748`](https://github.com/Effect-TS/effect/commit/194d7486943f56f3267ef415395ac220a4b3e634) Thanks @tim-smart! - add ExecutionPlan module
 
-  A `ExecutionPlan` can be used with `Effect.withExecutionPlan` or `Stream.withExecutionPlan`, allowing you to provide different resources for each step of execution until the effect succeeds or the plan is exhausted.
+    A `ExecutionPlan` can be used with `Effect.withExecutionPlan` or `Stream.withExecutionPlan`, allowing you to provide different resources for each step of execution until the effect succeeds or the plan is exhausted.
 
-  ```ts
-  import { type AiLanguageModel } from "@effect/ai"
-  import type { Layer } from "effect"
-  import { Effect, ExecutionPlan, Schedule } from "effect"
+    ```ts
+    import { type AiLanguageModel } from "@effect/ai";
+    import type { Layer } from "effect";
+    import { Effect, ExecutionPlan, Schedule } from "effect";
 
-  declare const layerBad: Layer.Layer<AiLanguageModel.AiLanguageModel>
-  declare const layerGood: Layer.Layer<AiLanguageModel.AiLanguageModel>
+    declare const layerBad: Layer.Layer<AiLanguageModel.AiLanguageModel>;
+    declare const layerGood: Layer.Layer<AiLanguageModel.AiLanguageModel>;
 
-  const ThePlan = ExecutionPlan.make(
-    {
-      // First try with the bad layer 2 times with a 3 second delay between attempts
-      provide: layerBad,
-      attempts: 2,
-      schedule: Schedule.spaced(3000)
-    },
-    // Then try with the bad layer 3 times with a 1 second delay between attempts
-    {
-      provide: layerBad,
-      attempts: 3,
-      schedule: Schedule.spaced(1000)
-    },
-    // Finally try with the good layer.
-    //
-    // If `attempts` is omitted, the plan will only attempt once, unless a schedule is provided.
-    {
-      provide: layerGood
-    }
-  )
+    const ThePlan = ExecutionPlan.make(
+        {
+            // First try with the bad layer 2 times with a 3 second delay between attempts
+            provide: layerBad,
+            attempts: 2,
+            schedule: Schedule.spaced(3000),
+        },
+        // Then try with the bad layer 3 times with a 1 second delay between attempts
+        {
+            provide: layerBad,
+            attempts: 3,
+            schedule: Schedule.spaced(1000),
+        },
+        // Finally try with the good layer.
+        //
+        // If `attempts` is omitted, the plan will only attempt once, unless a schedule is provided.
+        {
+            provide: layerGood,
+        },
+    );
 
-  declare const effect: Effect.Effect<
-    void,
-    never,
-    AiLanguageModel.AiLanguageModel
-  >
-  const withPlan: Effect.Effect<void> = Effect.withExecutionPlan(
-    effect,
-    ThePlan
-  )
-  ```
+    declare const effect: Effect.Effect<
+        void,
+        never,
+        AiLanguageModel.AiLanguageModel
+    >;
+    const withPlan: Effect.Effect<void> = Effect.withExecutionPlan(
+        effect,
+        ThePlan,
+    );
+    ```
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`918c9ea`](https://github.com/Effect-TS/effect/commit/918c9ea1a57facb154f0fb26792021f337054dee) Thanks @thewilkybarkid! - Add Array.removeOption and Chunk.removeOption
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`9198e6f`](https://github.com/Effect-TS/effect/commit/9198e6fcc1a3ff4fefb3363004de558d8de01f40) Thanks @TylorS! - Add parameter support for Effect.Service
 
-  This allows you to pass parameters to the `effect` & `scoped` Effect.Service
-  constructors, which will also be reflected in the `.Default` layer.
+    This allows you to pass parameters to the `effect` & `scoped` Effect.Service
+    constructors, which will also be reflected in the `.Default` layer.
 
-  ```ts
-  import type { Layer } from "effect"
-  import { Effect } from "effect"
+    ```ts
+    import type { Layer } from "effect";
+    import { Effect } from "effect";
 
-  class NumberService extends Effect.Service<NumberService>()("NumberService", {
-    // You can now pass a function to the `effect` and `scoped` constructors
-    effect: Effect.fn(function* (input: number) {
-      return {
-        get: Effect.succeed(`The number is: ${input}`)
-      } as const
-    })
-  }) {}
+    class NumberService extends Effect.Service<NumberService>()(
+        "NumberService",
+        {
+            // You can now pass a function to the `effect` and `scoped` constructors
+            effect: Effect.fn(function* (input: number) {
+                return {
+                    get: Effect.succeed(`The number is: ${input}`),
+                } as const;
+            }),
+        },
+    ) {}
 
-  // Pass the arguments to the `Default` layer
-  const CoolNumberServiceLayer: Layer.Layer<NumberService> =
-    NumberService.Default(6942)
-  ```
+    // Pass the arguments to the `Default` layer
+    const CoolNumberServiceLayer: Layer.Layer<NumberService> =
+        NumberService.Default(6942);
+    ```
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`2a370bf`](https://github.com/Effect-TS/effect/commit/2a370bf625fdeede5659721468eb0d527e403279) Thanks @vinassefranche! - Add `Iterable.countBy` and `Array.countBy`
 
-  ```ts
-  import { Array, Iterable } from "effect"
+    ```ts
+    import { Array, Iterable } from "effect";
 
-  const resultArray = Array.countBy([1, 2, 3, 4, 5], (n) => n % 2 === 0)
-  console.log(resultArray) // 2
+    const resultArray = Array.countBy([1, 2, 3, 4, 5], (n) => n % 2 === 0);
+    console.log(resultArray); // 2
 
-  const resultIterable = resultIterable.countBy(
-    [1, 2, 3, 4, 5],
-    (n) => n % 2 === 0
-  )
-  console.log(resultIterable) // 2
-  ```
+    const resultIterable = resultIterable.countBy(
+        [1, 2, 3, 4, 5],
+        (n) => n % 2 === 0,
+    );
+    console.log(resultIterable); // 2
+    ```
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`58ccb91`](https://github.com/Effect-TS/effect/commit/58ccb91328c8df5d49808b673738bc09df355201) Thanks @KhraksMamtsov! - The `Config.port` and `Config.branded` functions have been added.
 
-  ```ts
-  import { Brand, Config } from "effect"
+    ```ts
+    import { Brand, Config } from "effect";
 
-  type DbPort = Brand.Branded<number, "DbPort">
-  const DbPort = Brand.nominal<DbPort>()
+    type DbPort = Brand.Branded<number, "DbPort">;
+    const DbPort = Brand.nominal<DbPort>();
 
-  const dbPort: Config.Config<DbPort> = Config.branded(
-    Config.port("DB_PORT"),
-    DbPort
-  )
-  ```
+    const dbPort: Config.Config<DbPort> = Config.branded(
+        Config.port("DB_PORT"),
+        DbPort,
+    );
+    ```
 
-  ```ts
-  import { Brand, Config } from "effect"
+    ```ts
+    import { Brand, Config } from "effect";
 
-  type Port = Brand.Branded<number, "Port">
-  const Port = Brand.refined<Port>(
-    (num) =>
-      !Number.isNaN(num) && Number.isInteger(num) && num >= 1 && num <= 65535,
-    (n) => Brand.error(`Expected ${n} to be an TCP port`)
-  )
+    type Port = Brand.Branded<number, "Port">;
+    const Port = Brand.refined<Port>(
+        (num) =>
+            !Number.isNaN(num) &&
+            Number.isInteger(num) &&
+            num >= 1 &&
+            num <= 65535,
+        (n) => Brand.error(`Expected ${n} to be an TCP port`),
+    );
 
-  const dbPort: Config.Config<Port> = Config.number("DB_PORT").pipe(
-    Config.branded(Port)
-  )
-  ```
+    const dbPort: Config.Config<Port> = Config.number("DB_PORT").pipe(
+        Config.branded(Port),
+    );
+    ```
 
 - [#4891](https://github.com/Effect-TS/effect/pull/4891) [`fd47834`](https://github.com/Effect-TS/effect/commit/fd478348203fa89462b0a1d067ce4de034353df4) Thanks @tim-smart! - return a proxy Layer from LayerMap service
 
-  The new usage is:
+    The new usage is:
 
-  ```ts
-  import { NodeRuntime } from "@effect/platform-node"
-  import { Context, Effect, FiberRef, Layer, LayerMap } from "effect"
+    ```ts
+    import { NodeRuntime } from "@effect/platform-node";
+    import { Context, Effect, FiberRef, Layer, LayerMap } from "effect";
 
-  class Greeter extends Context.Tag("Greeter")<
-    Greeter,
-    {
-      greet: Effect.Effect<string>
-    }
-  >() {}
+    class Greeter extends Context.Tag("Greeter")<
+        Greeter,
+        {
+            greet: Effect.Effect<string>;
+        }
+    >() {}
 
-  // create a service that wraps a LayerMap
-  class GreeterMap extends LayerMap.Service<GreeterMap>()("GreeterMap", {
-    // define the lookup function for the layer map
-    //
-    // The returned Layer will be used to provide the Greeter service for the
-    // given name.
-    lookup: (name: string) =>
-      Layer.succeed(Greeter, {
-        greet: Effect.succeed(`Hello, ${name}!`)
-      }),
+    // create a service that wraps a LayerMap
+    class GreeterMap extends LayerMap.Service<GreeterMap>()("GreeterMap", {
+        // define the lookup function for the layer map
+        //
+        // The returned Layer will be used to provide the Greeter service for the
+        // given name.
+        lookup: (name: string) =>
+            Layer.succeed(Greeter, {
+                greet: Effect.succeed(`Hello, ${name}!`),
+            }),
 
-    // If a layer is not used for a certain amount of time, it can be removed
-    idleTimeToLive: "5 seconds",
+        // If a layer is not used for a certain amount of time, it can be removed
+        idleTimeToLive: "5 seconds",
 
-    // Supply the dependencies for the layers in the LayerMap
-    dependencies: []
-  }) {}
+        // Supply the dependencies for the layers in the LayerMap
+        dependencies: [],
+    }) {}
 
-  // usage
-  const program: Effect.Effect<void, never, GreeterMap> = Effect.gen(
-    function* () {
-      // access and use the Greeter service
-      const greeter = yield* Greeter
-      yield* Effect.log(yield* greeter.greet)
-    }
-  ).pipe(
-    // use the GreeterMap service to provide a variant of the Greeter service
-    Effect.provide(GreeterMap.get("John"))
-  )
+    // usage
+    const program: Effect.Effect<void, never, GreeterMap> = Effect.gen(
+        function* () {
+            // access and use the Greeter service
+            const greeter = yield* Greeter;
+            yield* Effect.log(yield* greeter.greet);
+        },
+    ).pipe(
+        // use the GreeterMap service to provide a variant of the Greeter service
+        Effect.provide(GreeterMap.get("John")),
+    );
 
-  // run the program
-  program.pipe(Effect.provide(GreeterMap.Default), NodeRuntime.runMain)
-  ```
+    // run the program
+    program.pipe(Effect.provide(GreeterMap.Default), NodeRuntime.runMain);
+    ```
 
 ## 3.15.5
 
@@ -485,7 +496,7 @@
 ### Patch Changes
 
 - [#4659](https://github.com/Effect-TS/effect/pull/4659) [`b8722b8`](https://github.com/Effect-TS/effect/commit/b8722b817e2306fe8c8245f3f9e32d85b824b961) Thanks @KhraksMamtsov! - - The `HashMap.has/get` family has become more type-safe.
-  - Fix the related type errors in TestAnnotationsMap.ts.
+    - Fix the related type errors in TestAnnotationsMap.ts.
 
 ## 3.15.1
 
@@ -513,52 +524,52 @@
 
 - [#4641](https://github.com/Effect-TS/effect/pull/4641) [`6f02224`](https://github.com/Effect-TS/effect/commit/6f02224b3fc46a682ad2defb1a260841956c6780) Thanks @tim-smart! - add Stream.toAsyncIterable\* apis
 
-  ```ts
-  import { Stream } from "effect"
+    ```ts
+    import { Stream } from "effect";
 
-  // Will print:
-  // 1
-  // 2
-  // 3
-  const stream = Stream.make(1, 2, 3)
-  for await (const result of Stream.toAsyncIterable(stream)) {
-    console.log(result)
-  }
-  ```
+    // Will print:
+    // 1
+    // 2
+    // 3
+    const stream = Stream.make(1, 2, 3);
+    for await (const result of Stream.toAsyncIterable(stream)) {
+        console.log(result);
+    }
+    ```
 
 - [#4641](https://github.com/Effect-TS/effect/pull/4641) [`1dcfd41`](https://github.com/Effect-TS/effect/commit/1dcfd41ff96abd706901293a00c1893cb29dd8fd) Thanks @tim-smart! - improve Effect.filter\* types to exclude candidates in fallback functions
 
 - [#4641](https://github.com/Effect-TS/effect/pull/4641) [`b21ab16`](https://github.com/Effect-TS/effect/commit/b21ab16b6f773e7ec4369db4e752c35e719f7870) Thanks @KhraksMamtsov! - Simplified the creation of pipeable classes.
 
-  ```ts
-  class MyClass extends Pipeable.Class() {
-    constructor(public a: number) {
-      super()
+    ```ts
+    class MyClass extends Pipeable.Class() {
+        constructor(public a: number) {
+            super();
+        }
+        methodA() {
+            return this.a;
+        }
     }
-    methodA() {
-      return this.a
-    }
-  }
-  console.log(new MyClass(2).pipe((x) => x.methodA())) // 2
-  ```
+    console.log(new MyClass(2).pipe((x) => x.methodA())); // 2
+    ```
 
-  ```ts
-  class A {
-    constructor(public a: number) {}
-    methodA() {
-      return this.a
+    ```ts
+    class A {
+        constructor(public a: number) {}
+        methodA() {
+            return this.a;
+        }
     }
-  }
-  class B extends Pipeable.Class(A) {
-    constructor(private b: string) {
-      super(b.length)
+    class B extends Pipeable.Class(A) {
+        constructor(private b: string) {
+            super(b.length);
+        }
+        methodB() {
+            return [this.b, this.methodA()];
+        }
     }
-    methodB() {
-      return [this.b, this.methodA()]
-    }
-  }
-  console.log(new B("pipe").pipe((x) => x.methodB())) // ['pipe', 4]
-  ```
+    console.log(new B("pipe").pipe((x) => x.methodB())); // ['pipe', 4]
+    ```
 
 - [#4641](https://github.com/Effect-TS/effect/pull/4641) [`fcf1822`](https://github.com/Effect-TS/effect/commit/fcf1822f98fcda60351d64e9d2c2c13563d7e6db) Thanks @KhraksMamtsov! - property `message: string` has been added to `ConfigError.And` & `Or` members
 
@@ -574,27 +585,27 @@
 
 - [#4847](https://github.com/Effect-TS/effect/pull/4847) [`24a9ebb`](https://github.com/Effect-TS/effect/commit/24a9ebbb5af598f0bfd6ecc45307e528043fe011) Thanks @gcanti! - Schema: TaggedError no longer crashes when the `message` field is explicitly defined.
 
-  If you define a `message` field in your schema, `TaggedError` will no longer add its own `message` getter. This avoids a stack overflow caused by infinite recursion.
+    If you define a `message` field in your schema, `TaggedError` will no longer add its own `message` getter. This avoids a stack overflow caused by infinite recursion.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  class Todo extends Schema.TaggedError<Todo>()("Todo", {
-    message: Schema.optional(Schema.String)
-  }) {}
+    class Todo extends Schema.TaggedError<Todo>()("Todo", {
+        message: Schema.optional(Schema.String),
+    }) {}
 
-  // ❌ Throws "Maximum call stack size exceeded"
-  console.log(Todo.make({}))
-  ```
+    // ❌ Throws "Maximum call stack size exceeded"
+    console.log(Todo.make({}));
+    ```
 
-  After
+    After
 
-  ```ts
-  // ✅ Works correctly
-  console.log(Todo.make({}))
-  ```
+    ```ts
+    // ✅ Works correctly
+    console.log(Todo.make({}));
+    ```
 
 ## 3.14.21
 
@@ -608,59 +619,59 @@
 
 - [#4832](https://github.com/Effect-TS/effect/pull/4832) [`17e2f30`](https://github.com/Effect-TS/effect/commit/17e2f3091408cf0fca9414d4af3bdf7b2765b378) Thanks @gcanti! - JSONSchema: respect annotations on declarations.
 
-  Previously, annotations added with `.annotations(...)` on `Schema.declare(...)` were not included in the generated JSON Schema output.
+    Previously, annotations added with `.annotations(...)` on `Schema.declare(...)` were not included in the generated JSON Schema output.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  class MyType {}
+    class MyType {}
 
-  const schema = Schema.declare<MyType>((x) => x instanceof MyType, {
-    jsonSchema: {
-      type: "my-type"
+    const schema = Schema.declare<MyType>((x) => x instanceof MyType, {
+        jsonSchema: {
+            type: "my-type",
+        },
+    }).annotations({
+        title: "My Title",
+        description: "My Description",
+    });
+
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "my-type"
     }
-  }).annotations({
-    title: "My Title",
-    description: "My Description"
-  })
+    */
+    ```
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "my-type"
-  }
-  */
-  ```
+    After
 
-  After
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    class MyType {}
 
-  class MyType {}
+    const schema = Schema.declare<MyType>((x) => x instanceof MyType, {
+        jsonSchema: {
+            type: "my-type",
+        },
+    }).annotations({
+        title: "My Title",
+        description: "My Description",
+    });
 
-  const schema = Schema.declare<MyType>((x) => x instanceof MyType, {
-    jsonSchema: {
-      type: "my-type"
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "My Description",
+      "title": "My Title",
+      "type": "my-type"
     }
-  }).annotations({
-    title: "My Title",
-    description: "My Description"
-  })
-
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "description": "My Description",
-    "title": "My Title",
-    "type": "my-type"
-  }
-  */
-  ```
+    */
+    ```
 
 ## 3.14.19
 
@@ -696,43 +707,43 @@
 
 - [#4798](https://github.com/Effect-TS/effect/pull/4798) [`239cc99`](https://github.com/Effect-TS/effect/commit/239cc995ce645946210a3c3d2cb52bd3547c0687) Thanks @gcanti! - Schema: respect custom constructors in `make` for `Schema.Class`, closes #4797
 
-  Previously, the `make` method did not support custom constructors defined using `Schema.Class` or `Schema.TaggedError`, resulting in type errors when passing custom constructor arguments.
+    Previously, the `make` method did not support custom constructors defined using `Schema.Class` or `Schema.TaggedError`, resulting in type errors when passing custom constructor arguments.
 
-  This update ensures that `make` now correctly uses the class constructor, allowing custom parameters and initialization logic.
+    This update ensures that `make` now correctly uses the class constructor, allowing custom parameters and initialization logic.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  class MyError extends Schema.TaggedError<MyError>()("MyError", {
-    message: Schema.String
-  }) {
-    constructor({ a, b }: { a: string; b: string }) {
-      super({ message: `${a}:${b}` })
+    class MyError extends Schema.TaggedError<MyError>()("MyError", {
+        message: Schema.String,
+    }) {
+        constructor({ a, b }: { a: string; b: string }) {
+            super({ message: `${a}:${b}` });
+        }
     }
-  }
 
-  // @ts-expect-error: Object literal may only specify known properties, and 'a' does not exist in type '{ readonly message: string; }'.ts(2353)
-  MyError.make({ a: "1", b: "2" })
-  ```
+    // @ts-expect-error: Object literal may only specify known properties, and 'a' does not exist in type '{ readonly message: string; }'.ts(2353)
+    MyError.make({ a: "1", b: "2" });
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  class MyError extends Schema.TaggedError<MyError>()("MyError", {
-    message: Schema.String
-  }) {
-    constructor({ a, b }: { a: string; b: string }) {
-      super({ message: `${a}:${b}` })
+    class MyError extends Schema.TaggedError<MyError>()("MyError", {
+        message: Schema.String,
+    }) {
+        constructor({ a, b }: { a: string; b: string }) {
+            super({ message: `${a}:${b}` });
+        }
     }
-  }
 
-  console.log(MyError.make({ a: "1", b: "2" }).message)
-  // Output: "1:2"
-  ```
+    console.log(MyError.make({ a: "1", b: "2" }).message);
+    // Output: "1:2"
+    ```
 
 - [#4687](https://github.com/Effect-TS/effect/pull/4687) [`8b6c947`](https://github.com/Effect-TS/effect/commit/8b6c947eaa8e45a67ecb3c37d45cd27f3e41d165) Thanks @KhraksMamtsov! - Modify the signatures of `Either.liftPredicate` and `Effect.predicate` to make them reusable.
 
@@ -750,396 +761,396 @@
 
 - [#4777](https://github.com/Effect-TS/effect/pull/4777) [`ee77788`](https://github.com/Effect-TS/effect/commit/ee77788747e7ebbde6bfa88256cde49dbbad3608) Thanks @gcanti! - JSONSchema: apply `encodeOption` to each example and retain successful results.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.propertySignature(Schema.BigInt).annotations({
-      examples: [1n, 2n]
-    })
-  })
+    const schema = Schema.Struct({
+        a: Schema.propertySignature(Schema.BigInt).annotations({
+            examples: [1n, 2n],
+        }),
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$defs": {
-      "BigInt": {
-        "type": "string",
-        "description": "a string to be decoded into a bigint"
-      }
-    },
-    "type": "object",
-    "required": [
-      "a"
-    ],
-    "properties": {
-      "a": {
-        "$ref": "#/$defs/BigInt",
-        "examples": [
-          "1",
-          "2"
-        ]
-      }
-    },
-    "additionalProperties": false
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "$defs": {
+        "BigInt": {
+          "type": "string",
+          "description": "a string to be decoded into a bigint"
+        }
+      },
+      "type": "object",
+      "required": [
+        "a"
+      ],
+      "properties": {
+        "a": {
+          "$ref": "#/$defs/BigInt",
+          "examples": [
+            "1",
+            "2"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+    */
+    ```
 
 - [#4701](https://github.com/Effect-TS/effect/pull/4701) [`5fce6ba`](https://github.com/Effect-TS/effect/commit/5fce6ba19c3cc63cc0104e737e581ad989dedbf0) Thanks @gcanti! - Fix `JSONSchema.make` for `Exit` schemas.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Exit({
-    failure: Schema.String,
-    success: Schema.Number,
-    defect: Schema.Defect
-  })
+    const schema = Schema.Exit({
+        failure: Schema.String,
+        success: Schema.Number,
+        defect: Schema.Defect,
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  throws
-  Error: Missing annotation
-  at path: ["cause"]["left"]
-  details: Generating a JSON Schema for this schema requires an "identifier" annotation
-  schema (Suspend): CauseEncoded<string>
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    throws
+    Error: Missing annotation
+    at path: ["cause"]["left"]
+    details: Generating a JSON Schema for this schema requires an "identifier" annotation
+    schema (Suspend): CauseEncoded<string>
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Exit({
-    failure: Schema.String,
-    success: Schema.Number,
-    defect: Schema.Defect
-  })
+    const schema = Schema.Exit({
+        failure: Schema.String,
+        success: Schema.Number,
+        defect: Schema.Defect,
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  Output:
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$defs": {
-      "CauseEncoded0": {
-        "anyOf": [
-          {
-            "type": "object",
-            "required": [
-              "_tag"
-            ],
-            "properties": {
-              "_tag": {
-                "type": "string",
-                "enum": [
-                  "Empty"
-                ]
-              }
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    Output:
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "$defs": {
+        "CauseEncoded0": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "_tag"
+              ],
+              "properties": {
+                "_tag": {
+                  "type": "string",
+                  "enum": [
+                    "Empty"
+                  ]
+                }
+              },
+              "additionalProperties": false
             },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "_tag",
-              "error"
-            ],
-            "properties": {
-              "_tag": {
-                "type": "string",
-                "enum": [
-                  "Fail"
-                ]
+            {
+              "type": "object",
+              "required": [
+                "_tag",
+                "error"
+              ],
+              "properties": {
+                "_tag": {
+                  "type": "string",
+                  "enum": [
+                    "Fail"
+                  ]
+                },
+                "error": {
+                  "type": "string"
+                }
               },
-              "error": {
-                "type": "string"
-              }
+              "additionalProperties": false
             },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "_tag",
-              "defect"
-            ],
-            "properties": {
-              "_tag": {
-                "type": "string",
-                "enum": [
-                  "Die"
-                ]
+            {
+              "type": "object",
+              "required": [
+                "_tag",
+                "defect"
+              ],
+              "properties": {
+                "_tag": {
+                  "type": "string",
+                  "enum": [
+                    "Die"
+                  ]
+                },
+                "defect": {
+                  "$ref": "#/$defs/Defect"
+                }
               },
-              "defect": {
-                "$ref": "#/$defs/Defect"
-              }
+              "additionalProperties": false
             },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "_tag",
-              "fiberId"
-            ],
-            "properties": {
-              "_tag": {
-                "type": "string",
-                "enum": [
-                  "Interrupt"
-                ]
+            {
+              "type": "object",
+              "required": [
+                "_tag",
+                "fiberId"
+              ],
+              "properties": {
+                "_tag": {
+                  "type": "string",
+                  "enum": [
+                    "Interrupt"
+                  ]
+                },
+                "fiberId": {
+                  "$ref": "#/$defs/FiberIdEncoded"
+                }
               },
-              "fiberId": {
-                "$ref": "#/$defs/FiberIdEncoded"
-              }
+              "additionalProperties": false
             },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "_tag",
-              "left",
-              "right"
-            ],
-            "properties": {
-              "_tag": {
-                "type": "string",
-                "enum": [
-                  "Sequential"
-                ]
+            {
+              "type": "object",
+              "required": [
+                "_tag",
+                "left",
+                "right"
+              ],
+              "properties": {
+                "_tag": {
+                  "type": "string",
+                  "enum": [
+                    "Sequential"
+                  ]
+                },
+                "left": {
+                  "$ref": "#/$defs/CauseEncoded0"
+                },
+                "right": {
+                  "$ref": "#/$defs/CauseEncoded0"
+                }
               },
-              "left": {
-                "$ref": "#/$defs/CauseEncoded0"
-              },
-              "right": {
-                "$ref": "#/$defs/CauseEncoded0"
-              }
+              "additionalProperties": false
             },
-            "additionalProperties": false
-          },
-          {
-            "type": "object",
-            "required": [
-              "_tag",
-              "left",
-              "right"
-            ],
-            "properties": {
-              "_tag": {
-                "type": "string",
-                "enum": [
-                  "Parallel"
-                ]
+            {
+              "type": "object",
+              "required": [
+                "_tag",
+                "left",
+                "right"
+              ],
+              "properties": {
+                "_tag": {
+                  "type": "string",
+                  "enum": [
+                    "Parallel"
+                  ]
+                },
+                "left": {
+                  "$ref": "#/$defs/CauseEncoded0"
+                },
+                "right": {
+                  "$ref": "#/$defs/CauseEncoded0"
+                }
               },
-              "left": {
-                "$ref": "#/$defs/CauseEncoded0"
-              },
-              "right": {
-                "$ref": "#/$defs/CauseEncoded0"
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "title": "CauseEncoded<string>"
-      },
-      "Defect": {
-        "$id": "/schemas/unknown",
-        "title": "unknown"
-      },
-      "FiberIdEncoded": {
-        "anyOf": [
-          {
-            "$ref": "#/$defs/FiberIdNoneEncoded"
-          },
-          {
-            "$ref": "#/$defs/FiberIdRuntimeEncoded"
-          },
-          {
-            "$ref": "#/$defs/FiberIdCompositeEncoded"
-          }
-        ]
-      },
-      "FiberIdNoneEncoded": {
-        "type": "object",
-        "required": [
-          "_tag"
-        ],
-        "properties": {
-          "_tag": {
-            "type": "string",
-            "enum": [
-              "None"
-            ]
-          }
+              "additionalProperties": false
+            }
+          ],
+          "title": "CauseEncoded<string>"
         },
-        "additionalProperties": false
-      },
-      "FiberIdRuntimeEncoded": {
-        "type": "object",
-        "required": [
-          "_tag",
-          "id",
-          "startTimeMillis"
-        ],
-        "properties": {
-          "_tag": {
-            "type": "string",
-            "enum": [
-              "Runtime"
-            ]
-          },
-          "id": {
-            "$ref": "#/$defs/Int"
-          },
-          "startTimeMillis": {
-            "$ref": "#/$defs/Int"
-          }
+        "Defect": {
+          "$id": "/schemas/unknown",
+          "title": "unknown"
         },
-        "additionalProperties": false
-      },
-      "Int": {
-        "type": "integer",
-        "description": "an integer",
-        "title": "int"
-      },
-      "FiberIdCompositeEncoded": {
-        "type": "object",
-        "required": [
-          "_tag",
-          "left",
-          "right"
-        ],
-        "properties": {
-          "_tag": {
-            "type": "string",
-            "enum": [
-              "Composite"
-            ]
-          },
-          "left": {
-            "$ref": "#/$defs/FiberIdEncoded"
-          },
-          "right": {
-            "$ref": "#/$defs/FiberIdEncoded"
-          }
+        "FiberIdEncoded": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FiberIdNoneEncoded"
+            },
+            {
+              "$ref": "#/$defs/FiberIdRuntimeEncoded"
+            },
+            {
+              "$ref": "#/$defs/FiberIdCompositeEncoded"
+            }
+          ]
         },
-        "additionalProperties": false
-      }
-    },
-    "anyOf": [
-      {
-        "type": "object",
-        "required": [
-          "_tag",
-          "cause"
-        ],
-        "properties": {
-          "_tag": {
-            "type": "string",
-            "enum": [
-              "Failure"
-            ]
+        "FiberIdNoneEncoded": {
+          "type": "object",
+          "required": [
+            "_tag"
+          ],
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "None"
+              ]
+            }
           },
-          "cause": {
-            "$ref": "#/$defs/CauseEncoded0"
-          }
+          "additionalProperties": false
         },
-        "additionalProperties": false
+        "FiberIdRuntimeEncoded": {
+          "type": "object",
+          "required": [
+            "_tag",
+            "id",
+            "startTimeMillis"
+          ],
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "Runtime"
+              ]
+            },
+            "id": {
+              "$ref": "#/$defs/Int"
+            },
+            "startTimeMillis": {
+              "$ref": "#/$defs/Int"
+            }
+          },
+          "additionalProperties": false
+        },
+        "Int": {
+          "type": "integer",
+          "description": "an integer",
+          "title": "int"
+        },
+        "FiberIdCompositeEncoded": {
+          "type": "object",
+          "required": [
+            "_tag",
+            "left",
+            "right"
+          ],
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "Composite"
+              ]
+            },
+            "left": {
+              "$ref": "#/$defs/FiberIdEncoded"
+            },
+            "right": {
+              "$ref": "#/$defs/FiberIdEncoded"
+            }
+          },
+          "additionalProperties": false
+        }
       },
-      {
-        "type": "object",
-        "required": [
-          "_tag",
-          "value"
-        ],
-        "properties": {
-          "_tag": {
-            "type": "string",
-            "enum": [
-              "Success"
-            ]
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "_tag",
+            "cause"
+          ],
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "Failure"
+              ]
+            },
+            "cause": {
+              "$ref": "#/$defs/CauseEncoded0"
+            }
           },
-          "value": {
-            "type": "number"
-          }
+          "additionalProperties": false
         },
-        "additionalProperties": false
-      }
-    ],
-    "title": "ExitEncoded<number, string, Defect>"
-  }
-  */
-  ```
+        {
+          "type": "object",
+          "required": [
+            "_tag",
+            "value"
+          ],
+          "properties": {
+            "_tag": {
+              "type": "string",
+              "enum": [
+                "Success"
+              ]
+            },
+            "value": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "title": "ExitEncoded<number, string, Defect>"
+    }
+    */
+    ```
 
 - [#4775](https://github.com/Effect-TS/effect/pull/4775) [`570e45f`](https://github.com/Effect-TS/effect/commit/570e45f8cb936e42ec48f67f21bb2b7252f36c0c) Thanks @gcanti! - JSONSchema: preserve original key name when using `fromKey` followed by `annotations`, closes #4774.
 
-  Before:
+    Before:
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.propertySignature(Schema.String)
-      .pipe(Schema.fromKey("b"))
-      .annotations({})
-  })
+    const schema = Schema.Struct({
+        a: Schema.propertySignature(Schema.String)
+            .pipe(Schema.fromKey("b"))
+            .annotations({}),
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-      "a"
-    ],
-    "properties": {
-      "a": {
-        "type": "string"
-      }
-    },
-    "additionalProperties": false
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "a"
+      ],
+      "properties": {
+        "a": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+    */
+    ```
 
-  After:
+    After:
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.propertySignature(Schema.String)
-      .pipe(Schema.fromKey("b"))
-      .annotations({})
-  })
+    const schema = Schema.Struct({
+        a: Schema.propertySignature(Schema.String)
+            .pipe(Schema.fromKey("b"))
+            .annotations({}),
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-      "b"
-    ],
-    "properties": {
-      "b": {
-        "type": "string"
-      }
-    },
-    "additionalProperties": false
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "b"
+      ],
+      "properties": {
+        "b": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+    */
+    ```
 
 ## 3.14.12
 
@@ -1147,21 +1158,21 @@
 
 - [#4770](https://github.com/Effect-TS/effect/pull/4770) [`c2ad9ee`](https://github.com/Effect-TS/effect/commit/c2ad9ee9f3c4c743390edf35ed9e85a20be33811) Thanks @gcanti! - Fixes a bug where non existing properties were allowed in the `make` constructor of a `Schema.Class`, closes #4767.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  class A extends Schema.Class<A>("A")({
-    a: Schema.String
-  }) {}
+    class A extends Schema.Class<A>("A")({
+        a: Schema.String,
+    }) {}
 
-  A.make({
-    a: "a",
-    // @ts-expect-error: Object literal may only specify known properties, and 'b' does not exist in type '{ readonly a: string; }'.ts(2353)
-    b: "b"
-  })
-  ```
+    A.make({
+        a: "a",
+        // @ts-expect-error: Object literal may only specify known properties, and 'b' does not exist in type '{ readonly a: string; }'.ts(2353)
+        b: "b",
+    });
+    ```
 
 - [#4735](https://github.com/Effect-TS/effect/pull/4735) [`9c68654`](https://github.com/Effect-TS/effect/commit/9c686542b6eb3ea188cb70673ef2e41223633e89) Thanks @suddenlyGiovanni! - Improve `Number` module with comprehensive TsDocs and type-level tests
 
@@ -1203,58 +1214,58 @@
 
 - [#4699](https://github.com/Effect-TS/effect/pull/4699) [`6077882`](https://github.com/Effect-TS/effect/commit/60778824a4794336c33807801f813f8751d1c7e4) Thanks @gcanti! - Fix JSONSchema generation for record values that include `undefined`, closes #4697.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.partial(
-    Schema.Struct(
-      { foo: Schema.Number },
-      {
-        key: Schema.String,
-        value: Schema.Number
-      }
-    )
-  )
+    const schema = Schema.partial(
+        Schema.Struct(
+            { foo: Schema.Number },
+            {
+                key: Schema.String,
+                value: Schema.Number,
+            },
+        ),
+    );
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  // throws
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    // throws
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.partial(
-    Schema.Struct(
-      { foo: Schema.Number },
-      {
-        key: Schema.String,
-        value: Schema.Number
-      }
-    )
-  )
+    const schema = Schema.partial(
+        Schema.Struct(
+            { foo: Schema.Number },
+            {
+                key: Schema.String,
+                value: Schema.Number,
+            },
+        ),
+    );
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  Output:
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [],
-    "properties": {
-      "foo": {
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    Output:
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [],
+      "properties": {
+        "foo": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": {
         "type": "number"
       }
-    },
-    "additionalProperties": {
-      "type": "number"
     }
-  }
-  */
-  ```
+    */
+    ```
 
 ## 3.14.5
 
@@ -1286,83 +1297,83 @@
 
 - [#4646](https://github.com/Effect-TS/effect/pull/4646) [`f87991b`](https://github.com/Effect-TS/effect/commit/f87991b6d8a2edfaf90b01cebda4b466992ae865) Thanks @gcanti! - Arbitrary: fix bug where annotations were ignored.
 
-  Before
+    Before
 
-  ```ts
-  import { Arbitrary, Schema } from "effect"
+    ```ts
+    import { Arbitrary, Schema } from "effect";
 
-  const schema = Schema.Int.annotations({
-    arbitrary: (_, ctx) => (fc) => {
-      console.log("context: ", ctx)
-      return fc.integer()
+    const schema = Schema.Int.annotations({
+        arbitrary: (_, ctx) => (fc) => {
+            console.log("context: ", ctx);
+            return fc.integer();
+        },
+    }).pipe(Schema.greaterThan(0), Schema.lessThan(10));
+
+    Arbitrary.make(schema);
+    // No output ❌
+    ```
+
+    After
+
+    ```ts
+    import { Arbitrary, Schema } from "effect";
+
+    const schema = Schema.Int.annotations({
+        arbitrary: (_, ctx) => (fc) => {
+            console.log("context: ", ctx);
+            return fc.integer();
+        },
+    }).pipe(Schema.greaterThan(0), Schema.lessThan(10));
+
+    Arbitrary.make(schema);
+    /*
+    context:  {
+      maxDepth: 2,
+      constraints: {
+        _tag: 'NumberConstraints',
+        constraints: { min: 0, minExcluded: true, max: 10, maxExcluded: true },
+        isInteger: true
+      }
     }
-  }).pipe(Schema.greaterThan(0), Schema.lessThan(10))
-
-  Arbitrary.make(schema)
-  // No output ❌
-  ```
-
-  After
-
-  ```ts
-  import { Arbitrary, Schema } from "effect"
-
-  const schema = Schema.Int.annotations({
-    arbitrary: (_, ctx) => (fc) => {
-      console.log("context: ", ctx)
-      return fc.integer()
-    }
-  }).pipe(Schema.greaterThan(0), Schema.lessThan(10))
-
-  Arbitrary.make(schema)
-  /*
-  context:  {
-    maxDepth: 2,
-    constraints: {
-      _tag: 'NumberConstraints',
-      constraints: { min: 0, minExcluded: true, max: 10, maxExcluded: true },
-      isInteger: true
-    }
-  }
-  */
-  ```
+    */
+    ```
 
 - [#4648](https://github.com/Effect-TS/effect/pull/4648) [`0a3e3e1`](https://github.com/Effect-TS/effect/commit/0a3e3e18eea5e0d1882f1a6c906198e6ef226a41) Thanks @gcanti! - Schema: `standardSchemaV1` now includes the schema, closes #4494.
 
-  This update fixes an issue where passing `Schema.standardSchemaV1(...)` directly to `JSONSchema.make` would throw a `TypeError`. The schema was missing from the returned object, causing the JSON schema generation to fail.
+    This update fixes an issue where passing `Schema.standardSchemaV1(...)` directly to `JSONSchema.make` would throw a `TypeError`. The schema was missing from the returned object, causing the JSON schema generation to fail.
 
-  Now `standardSchemaV1` includes the schema itself, so it can be used with `JSONSchema.make` without issues.
+    Now `standardSchemaV1` includes the schema itself, so it can be used with `JSONSchema.make` without issues.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const Person = Schema.Struct({
-    name: Schema.optionalWith(Schema.NonEmptyString, { exact: true })
-  })
+    const Person = Schema.Struct({
+        name: Schema.optionalWith(Schema.NonEmptyString, { exact: true }),
+    });
 
-  const standardSchema = Schema.standardSchemaV1(Person)
+    const standardSchema = Schema.standardSchemaV1(Person);
 
-  console.log(JSONSchema.make(standardSchema))
-  /*
-  {
-    '$schema': 'http://json-schema.org/draft-07/schema#',
-    '$defs': {
-      NonEmptyString: {
-        type: 'string',
-        description: 'a non empty string',
-        title: 'nonEmptyString',
-        minLength: 1
-      }
-    },
-    type: 'object',
-    required: [],
-    properties: { name: { '$ref': '#/$defs/NonEmptyString' } },
-    additionalProperties: false
-  }
-  */
-  ```
+    console.log(JSONSchema.make(standardSchema));
+    /*
+    {
+      '$schema': 'http://json-schema.org/draft-07/schema#',
+      '$defs': {
+        NonEmptyString: {
+          type: 'string',
+          description: 'a non empty string',
+          title: 'nonEmptyString',
+          minLength: 1
+        }
+      },
+      type: 'object',
+      required: [],
+      properties: { name: { '$ref': '#/$defs/NonEmptyString' } },
+      additionalProperties: false
+    }
+    */
+    ```
 
 ## 3.14.1
 
@@ -1392,57 +1403,57 @@
 
 - [#4469](https://github.com/Effect-TS/effect/pull/4469) [`26dd75f`](https://github.com/Effect-TS/effect/commit/26dd75f276a0d8a63eab313bd5a167d5072c9780) Thanks @tim-smart! - add LayerMap module
 
-  A `LayerMap` allows you to create a map of Layer's that can be used to
-  dynamically access resources based on a key.
+    A `LayerMap` allows you to create a map of Layer's that can be used to
+    dynamically access resources based on a key.
 
-  Here is an example of how you can use a `LayerMap` to create a service that
-  provides access to multiple OpenAI completions services.
+    Here is an example of how you can use a `LayerMap` to create a service that
+    provides access to multiple OpenAI completions services.
 
-  ```ts
-  import { Completions } from "@effect/ai"
-  import { OpenAiClient, OpenAiCompletions } from "@effect/ai-openai"
-  import { FetchHttpClient } from "@effect/platform"
-  import { NodeRuntime } from "@effect/platform-node"
-  import { Config, Effect, Layer, LayerMap } from "effect"
+    ```ts
+    import { Completions } from "@effect/ai";
+    import { OpenAiClient, OpenAiCompletions } from "@effect/ai-openai";
+    import { FetchHttpClient } from "@effect/platform";
+    import { NodeRuntime } from "@effect/platform-node";
+    import { Config, Effect, Layer, LayerMap } from "effect";
 
-  // create the openai client layer
-  const OpenAiLayer = OpenAiClient.layerConfig({
-    apiKey: Config.redacted("OPENAI_API_KEY")
-  }).pipe(Layer.provide(FetchHttpClient.layer))
+    // create the openai client layer
+    const OpenAiLayer = OpenAiClient.layerConfig({
+        apiKey: Config.redacted("OPENAI_API_KEY"),
+    }).pipe(Layer.provide(FetchHttpClient.layer));
 
-  // create a service that wraps a LayerMap
-  class AiClients extends LayerMap.Service<AiClients>()("AiClients", {
-    // this LayerMap will provide the ai Completions service
-    provides: Completions.Completions,
+    // create a service that wraps a LayerMap
+    class AiClients extends LayerMap.Service<AiClients>()("AiClients", {
+        // this LayerMap will provide the ai Completions service
+        provides: Completions.Completions,
 
-    // define the lookup function for the layer map
-    //
-    // The returned Layer will be used to provide the Completions service for the
-    // given model.
-    lookup: (model: OpenAiCompletions.Model) =>
-      OpenAiCompletions.layer({ model }),
+        // define the lookup function for the layer map
+        //
+        // The returned Layer will be used to provide the Completions service for the
+        // given model.
+        lookup: (model: OpenAiCompletions.Model) =>
+            OpenAiCompletions.layer({ model }),
 
-    // If a layer is not used for a certain amount of time, it can be removed
-    idleTimeToLive: "5 seconds",
+        // If a layer is not used for a certain amount of time, it can be removed
+        idleTimeToLive: "5 seconds",
 
-    // Supply the dependencies for the layers in the LayerMap
-    dependencies: [OpenAiLayer]
-  }) {}
+        // Supply the dependencies for the layers in the LayerMap
+        dependencies: [OpenAiLayer],
+    }) {}
 
-  // usage
-  Effect.gen(function* () {
-    // access and use the generic Completions service
-    const ai = yield* Completions.Completions
-    const response = yield* ai.create("Hello, world!")
-    console.log(response.text)
-  }).pipe(
-    // use the AiClients service to provide a variant of the Completions service
-    AiClients.provide("gpt-4o"),
-    // provide the LayerMap service
-    Effect.provide(AiClients.Default),
-    NodeRuntime.runMain
-  )
-  ```
+    // usage
+    Effect.gen(function* () {
+        // access and use the generic Completions service
+        const ai = yield* Completions.Completions;
+        const response = yield* ai.create("Hello, world!");
+        console.log(response.text);
+    }).pipe(
+        // use the AiClients service to provide a variant of the Completions service
+        AiClients.provide("gpt-4o"),
+        // provide the LayerMap service
+        Effect.provide(AiClients.Default),
+        NodeRuntime.runMain,
+    );
+    ```
 
 - [#4469](https://github.com/Effect-TS/effect/pull/4469) [`baaab60`](https://github.com/Effect-TS/effect/commit/baaab60b737f35dfab8e4a21bce28a195d19e899) Thanks @vinassefranche! - Make Runtime.run\* apis dual
 
@@ -1456,105 +1467,109 @@
 
 - [#4610](https://github.com/Effect-TS/effect/pull/4610) [`0c4803f`](https://github.com/Effect-TS/effect/commit/0c4803fcc69262d11a97ce49d0e9b4288df0651f) Thanks @gcanti! - Preserve specific annotations (e.g., `arbitrary`) when using `Schema.typeSchema`, closes #4609.
 
-  Previously, annotations such as `arbitrary` were lost when calling `Schema.typeSchema` on a transformation. This update ensures that certain annotations, which depend only on the "to" side of the transformation, are preserved.
+    Previously, annotations such as `arbitrary` were lost when calling `Schema.typeSchema` on a transformation. This update ensures that certain annotations, which depend only on the "to" side of the transformation, are preserved.
 
-  Annotations that are now retained:
-  - `examples`
-  - `default`
-  - `jsonSchema`
-  - `arbitrary`
-  - `pretty`
-  - `equivalence`
+    Annotations that are now retained:
+    - `examples`
+    - `default`
+    - `jsonSchema`
+    - `arbitrary`
+    - `pretty`
+    - `equivalence`
 
-  **Example**
+    **Example**
 
-  Before
+    Before
 
-  ```ts
-  import { Arbitrary, FastCheck, Schema } from "effect"
+    ```ts
+    import { Arbitrary, FastCheck, Schema } from "effect";
 
-  const schema = Schema.NumberFromString.annotations({
-    arbitrary: () => (fc) => fc.constant(1)
-  })
+    const schema = Schema.NumberFromString.annotations({
+        arbitrary: () => (fc) => fc.constant(1),
+    });
 
-  const to = Schema.typeSchema(schema) // ❌ Annotation is lost
+    const to = Schema.typeSchema(schema); // ❌ Annotation is lost
 
-  console.log(FastCheck.sample(Arbitrary.make(to), 5))
-  /*
-  [
-    2.5223372357846707e-44,
-    -2.145443957806771e+25,
-    -3.4028179901346956e+38,
-    5.278086259208735e+29,
-    1.8216880036222622e-44
-  ]
-  */
-  ```
+    console.log(FastCheck.sample(Arbitrary.make(to), 5));
+    /*
+    [
+      2.5223372357846707e-44,
+      -2.145443957806771e+25,
+      -3.4028179901346956e+38,
+      5.278086259208735e+29,
+      1.8216880036222622e-44
+    ]
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Arbitrary, FastCheck, Schema } from "effect"
+    ```ts
+    import { Arbitrary, FastCheck, Schema } from "effect";
 
-  const schema = Schema.NumberFromString.annotations({
-    arbitrary: () => (fc) => fc.constant(1)
-  })
+    const schema = Schema.NumberFromString.annotations({
+        arbitrary: () => (fc) => fc.constant(1),
+    });
 
-  const to = Schema.typeSchema(schema) // ✅ Annotation is now preserved
+    const to = Schema.typeSchema(schema); // ✅ Annotation is now preserved
 
-  console.log(FastCheck.sample(Arbitrary.make(to), 5))
-  /*
-  [ 1, 1, 1, 1, 1 ]
-  */
-  ```
+    console.log(FastCheck.sample(Arbitrary.make(to), 5));
+    /*
+    [ 1, 1, 1, 1, 1 ]
+    */
+    ```
 
 - [#4607](https://github.com/Effect-TS/effect/pull/4607) [`6f65ac4`](https://github.com/Effect-TS/effect/commit/6f65ac4eac1489cd6ea390e18b0908670722adad) Thanks @gcanti! - Add support for `jsonSchema` annotations on `SymbolFromSelf` index signatures.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Record({
-    key: Schema.SymbolFromSelf.annotations({ jsonSchema: { type: "string" } }),
-    value: Schema.Number
-  })
+    const schema = Schema.Record({
+        key: Schema.SymbolFromSelf.annotations({
+            jsonSchema: { type: "string" },
+        }),
+        value: Schema.Number,
+    });
 
-  JSONSchema.make(schema)
-  /*
-  throws:
-  Error: Unsupported index signature parameter
-  schema (SymbolKeyword): symbol
-  */
-  ```
+    JSONSchema.make(schema);
+    /*
+    throws:
+    Error: Unsupported index signature parameter
+    schema (SymbolKeyword): symbol
+    */
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Record({
-    key: Schema.SymbolFromSelf.annotations({ jsonSchema: { type: "string" } }),
-    value: Schema.Number
-  })
+    const schema = Schema.Record({
+        key: Schema.SymbolFromSelf.annotations({
+            jsonSchema: { type: "string" },
+        }),
+        value: Schema.Number,
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  Output:
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [],
-    "properties": {},
-    "additionalProperties": {
-      "type": "number"
-    },
-    "propertyNames": {
-      "type": "string"
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    Output:
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "additionalProperties": {
+        "type": "number"
+      },
+      "propertyNames": {
+        "type": "string"
+      }
     }
-  }
-  */
-  ```
+    */
+    ```
 
 ## 3.13.11
 
@@ -1562,66 +1577,66 @@
 
 - [#4601](https://github.com/Effect-TS/effect/pull/4601) [`fad8cca`](https://github.com/Effect-TS/effect/commit/fad8cca9bbfcc2eaeb44b97c15dbe0a1eda75315) Thanks @gcanti! - Schema: enhance the internal `formatUnknown` function to handle various types including iterables, classes, and additional edge cases.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Array(Schema.Number)
+    const schema = Schema.Array(Schema.Number);
 
-  Schema.decodeUnknownSync(schema)(new Set([1, 2]))
-  // throws Expected ReadonlyArray<number>, actual {}
+    Schema.decodeUnknownSync(schema)(new Set([1, 2]));
+    // throws Expected ReadonlyArray<number>, actual {}
 
-  class A {
-    constructor(readonly a: number) {}
-  }
+    class A {
+        constructor(readonly a: number) {}
+    }
 
-  Schema.decodeUnknownSync(schema)(new A(1))
-  // throws Expected ReadonlyArray<number>, actual {"a":1}
-  ```
+    Schema.decodeUnknownSync(schema)(new A(1));
+    // throws Expected ReadonlyArray<number>, actual {"a":1}
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Array(Schema.Number)
+    const schema = Schema.Array(Schema.Number);
 
-  Schema.decodeUnknownSync(schema)(new Set([1, 2]))
-  // throws Expected ReadonlyArray<number>, actual Set([1,2])
+    Schema.decodeUnknownSync(schema)(new Set([1, 2]));
+    // throws Expected ReadonlyArray<number>, actual Set([1,2])
 
-  class A {
-    constructor(readonly a: number) {}
-  }
+    class A {
+        constructor(readonly a: number) {}
+    }
 
-  Schema.decodeUnknownSync(schema)(new A(1))
-  // throws Expected ReadonlyArray<number>, actual A({"a":1})
-  ```
+    Schema.decodeUnknownSync(schema)(new A(1));
+    // throws Expected ReadonlyArray<number>, actual A({"a":1})
+    ```
 
 - [#4606](https://github.com/Effect-TS/effect/pull/4606) [`4296293`](https://github.com/Effect-TS/effect/commit/4296293049414d0cf2d915a26c552b09f946b9a0) Thanks @gcanti! - Fix issue with generic filters when generating arbitraries, closes #4605.
 
-  Previously, applying a `filter` to a schema when generating arbitraries could cause a `TypeError` due to missing properties. This fix ensures that arbitraries are generated correctly when filters are used.
+    Previously, applying a `filter` to a schema when generating arbitraries could cause a `TypeError` due to missing properties. This fix ensures that arbitraries are generated correctly when filters are used.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Arbitrary, Schema } from "effect"
+    ```ts
+    import { Arbitrary, Schema } from "effect";
 
-  const schema = Schema.BigIntFromSelf.pipe(Schema.filter(() => true))
+    const schema = Schema.BigIntFromSelf.pipe(Schema.filter(() => true));
 
-  Arbitrary.make(schema)
-  // TypeError: Cannot read properties of undefined (reading 'min')
-  ```
+    Arbitrary.make(schema);
+    // TypeError: Cannot read properties of undefined (reading 'min')
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Arbitrary, Schema } from "effect"
+    ```ts
+    import { Arbitrary, Schema } from "effect";
 
-  const schema = Schema.BigIntFromSelf.pipe(Schema.filter(() => true))
+    const schema = Schema.BigIntFromSelf.pipe(Schema.filter(() => true));
 
-  const result = Arbitrary.make(schema) // Works correctly
-  ```
+    const result = Arbitrary.make(schema); // Works correctly
+    ```
 
 - [#4587](https://github.com/Effect-TS/effect/pull/4587) [`9c241ab`](https://github.com/Effect-TS/effect/commit/9c241abe47ccf7a5257b98a4a64a63054a12741d) Thanks @gcanti! - Schema: simplify `Struct` and `Record` return types.
 
@@ -1629,61 +1644,61 @@
 
 - [#4604](https://github.com/Effect-TS/effect/pull/4604) [`be12983`](https://github.com/Effect-TS/effect/commit/be12983bc7e7537b41cd8910fc4eb7d1da56ab07) Thanks @gcanti! - Add support for refinements to `Schema.omit`, closes #4603.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.String,
-    b: Schema.String
-  })
+    const schema = Schema.Struct({
+        a: Schema.String,
+        b: Schema.String,
+    });
 
-  const omitted = schema.pipe(
-    Schema.filter(() => true),
-    Schema.omit("a")
-  )
+    const omitted = schema.pipe(
+        Schema.filter(() => true),
+        Schema.omit("a"),
+    );
 
-  console.log(String(omitted.ast))
-  // {} ❌
-  ```
+    console.log(String(omitted.ast));
+    // {} ❌
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.String,
-    b: Schema.String
-  })
+    const schema = Schema.Struct({
+        a: Schema.String,
+        b: Schema.String,
+    });
 
-  const omitted = schema.pipe(
-    Schema.filter(() => true),
-    Schema.omit("a")
-  )
+    const omitted = schema.pipe(
+        Schema.filter(() => true),
+        Schema.omit("a"),
+    );
 
-  console.log(String(omitted.ast))
-  // { readonly b: string }
-  ```
+    console.log(String(omitted.ast));
+    // { readonly b: string }
+    ```
 
 - [#4593](https://github.com/Effect-TS/effect/pull/4593) [`de88127`](https://github.com/Effect-TS/effect/commit/de88127a5a5906ccece98af74787b5ae0e65e431) Thanks @gcanti! - Schema: export `Field` type.
 
-  Useful for creating a type that can be used to add custom constraints to the fields of a struct.
+    Useful for creating a type that can be used to add custom constraints to the fields of a struct.
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const f = <Fields extends Record<"a" | "b", Schema.Struct.Field>>(
-    schema: Schema.Struct<Fields>
-  ) => {
-    return schema.omit("a")
-  }
+    const f = <Fields extends Record<"a" | "b", Schema.Struct.Field>>(
+        schema: Schema.Struct<Fields>,
+    ) => {
+        return schema.omit("a");
+    };
 
-  //      ┌─── Schema.Struct<{ b: typeof Schema.Number; }>
-  //      ▼
-  const result = f(Schema.Struct({ a: Schema.String, b: Schema.Number }))
-  ```
+    //      ┌─── Schema.Struct<{ b: typeof Schema.Number; }>
+    //      ▼
+    const result = f(Schema.Struct({ a: Schema.String, b: Schema.Number }));
+    ```
 
 ## 3.13.10
 
@@ -1691,7 +1706,7 @@
 
 - [#4578](https://github.com/Effect-TS/effect/pull/4578) [`527c964`](https://github.com/Effect-TS/effect/commit/527c9645229f5be9714a7e60a38a9e753c4bbfb1) Thanks @gcanti! - Allow `toString` Method to Be Overridden in Schema Classes, closes #4577.
 
-  Previously, attempting to override the `toString` method in schema classes caused a `TypeError` in the browser because the property was set as **read-only** (`writable: false`). This fix makes `toString` **writable**, allowing developers to override it when needed.
+    Previously, attempting to override the `toString` method in schema classes caused a `TypeError` in the browser because the property was set as **read-only** (`writable: false`). This fix makes `toString` **writable**, allowing developers to override it when needed.
 
 ## 3.13.9
 
@@ -1705,93 +1720,93 @@
 
 - [#4567](https://github.com/Effect-TS/effect/pull/4567) [`c65d336`](https://github.com/Effect-TS/effect/commit/c65d3362d07ec815ff3b46278314e8a31706ddc2) Thanks @rehos! - Schema: `standardSchemaV1` now returns all errors by default and supports custom options.
 
-  The `standardSchemaV1` now returns **all validation errors** by default (`ParseOptions = { errors: "all" }`). Additionally, it now accepts an optional `overrideOptions` parameter, allowing you to customize the default parsing behavior as needed.
+    The `standardSchemaV1` now returns **all validation errors** by default (`ParseOptions = { errors: "all" }`). Additionally, it now accepts an optional `overrideOptions` parameter, allowing you to customize the default parsing behavior as needed.
 
 - [#4565](https://github.com/Effect-TS/effect/pull/4565) [`22d2ebb`](https://github.com/Effect-TS/effect/commit/22d2ebb4b11f5a44351a4736e65da391a3b647d0) Thanks @gcanti! - ParseResult.ArrayFormatter: correct `_tag` fields for `Refinement` and `Transformation` issues, closes #4564.
 
-  This update fixes an issue where `ParseResult.ArrayFormatter` incorrectly labeled **Refinement** and **Transformation** errors as `Type` in the output.
+    This update fixes an issue where `ParseResult.ArrayFormatter` incorrectly labeled **Refinement** and **Transformation** errors as `Type` in the output.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Effect, ParseResult, Schema } from "effect"
+    ```ts
+    import { Effect, ParseResult, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.NonEmptyString,
-    b: Schema.NumberFromString
-  })
+    const schema = Schema.Struct({
+        a: Schema.NonEmptyString,
+        b: Schema.NumberFromString,
+    });
 
-  const input = { a: "", b: "" }
+    const input = { a: "", b: "" };
 
-  const program = Schema.decodeUnknown(schema, { errors: "all" })(input).pipe(
-    Effect.catchTag("ParseError", (err) =>
-      ParseResult.ArrayFormatter.formatError(err).pipe(
-        Effect.map((err) => JSON.stringify(err, null, 2))
-      )
-    )
-  )
+    const program = Schema.decodeUnknown(schema, { errors: "all" })(input).pipe(
+        Effect.catchTag("ParseError", (err) =>
+            ParseResult.ArrayFormatter.formatError(err).pipe(
+                Effect.map((err) => JSON.stringify(err, null, 2)),
+            ),
+        ),
+    );
 
-  program.pipe(Effect.runPromise).then(console.log)
-  /*
-  [
-    {
-      "_tag": "Type", ❌
-      "path": [
-        "a"
-      ],
-      "message": "Expected a non empty string, actual \"\""
-    },
-    {
-      "_tag": "Type", ❌
-      "path": [
-        "b"
-      ],
-      "message": "Unable to decode \"\" into a number"
-    }
-  ]
-  */
-  ```
+    program.pipe(Effect.runPromise).then(console.log);
+    /*
+    [
+      {
+        "_tag": "Type", ❌
+        "path": [
+          "a"
+        ],
+        "message": "Expected a non empty string, actual \"\""
+      },
+      {
+        "_tag": "Type", ❌
+        "path": [
+          "b"
+        ],
+        "message": "Unable to decode \"\" into a number"
+      }
+    ]
+    */
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Effect, ParseResult, Schema } from "effect"
+    ```ts
+    import { Effect, ParseResult, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.NonEmptyString,
-    b: Schema.NumberFromString
-  })
+    const schema = Schema.Struct({
+        a: Schema.NonEmptyString,
+        b: Schema.NumberFromString,
+    });
 
-  const input = { a: "", b: "" }
+    const input = { a: "", b: "" };
 
-  const program = Schema.decodeUnknown(schema, { errors: "all" })(input).pipe(
-    Effect.catchTag("ParseError", (err) =>
-      ParseResult.ArrayFormatter.formatError(err).pipe(
-        Effect.map((err) => JSON.stringify(err, null, 2))
-      )
-    )
-  )
+    const program = Schema.decodeUnknown(schema, { errors: "all" })(input).pipe(
+        Effect.catchTag("ParseError", (err) =>
+            ParseResult.ArrayFormatter.formatError(err).pipe(
+                Effect.map((err) => JSON.stringify(err, null, 2)),
+            ),
+        ),
+    );
 
-  program.pipe(Effect.runPromise).then(console.log)
-  /*
-  [
-    {
-      "_tag": "Refinement", ✅
-      "path": [
-        "a"
-      ],
-      "message": "Expected a non empty string, actual \"\""
-    },
-    {
-      "_tag": "Transformation", ✅
-      "path": [
-        "b"
-      ],
-      "message": "Unable to decode \"\" into a number"
-    }
-  ]
-  */
-  ```
+    program.pipe(Effect.runPromise).then(console.log);
+    /*
+    [
+      {
+        "_tag": "Refinement", ✅
+        "path": [
+          "a"
+        ],
+        "message": "Expected a non empty string, actual \"\""
+      },
+      {
+        "_tag": "Transformation", ✅
+        "path": [
+          "b"
+        ],
+        "message": "Unable to decode \"\" into a number"
+      }
+    ]
+    */
+    ```
 
 ## 3.13.7
 
@@ -1799,196 +1814,196 @@
 
 - [#4540](https://github.com/Effect-TS/effect/pull/4540) [`840cc73`](https://github.com/Effect-TS/effect/commit/840cc7329908db7ca693ef47b07d4f845c29cadd) Thanks @gcanti! - Add `additionalPropertiesStrategy` option to `OpenApi.fromApi`, closes #4531.
 
-  This update introduces the `additionalPropertiesStrategy` option in `OpenApi.fromApi`, allowing control over how additional properties are handled in the generated OpenAPI schema.
-  - When `"strict"` (default), additional properties are disallowed (`"additionalProperties": false`).
-  - When `"allow"`, additional properties are allowed (`"additionalProperties": true`), making APIs more flexible.
+    This update introduces the `additionalPropertiesStrategy` option in `OpenApi.fromApi`, allowing control over how additional properties are handled in the generated OpenAPI schema.
+    - When `"strict"` (default), additional properties are disallowed (`"additionalProperties": false`).
+    - When `"allow"`, additional properties are allowed (`"additionalProperties": true`), making APIs more flexible.
 
-  The `additionalPropertiesStrategy` option has also been added to:
-  - `JSONSchema.fromAST`
-  - `OpenApiJsonSchema.makeWithDefs`
+    The `additionalPropertiesStrategy` option has also been added to:
+    - `JSONSchema.fromAST`
+    - `OpenApiJsonSchema.makeWithDefs`
 
-  **Example**
+    **Example**
 
-  ```ts
-  import {
-    HttpApi,
-    HttpApiEndpoint,
-    HttpApiGroup,
-    OpenApi
-  } from "@effect/platform"
-  import { Schema } from "effect"
+    ```ts
+    import {
+        HttpApi,
+        HttpApiEndpoint,
+        HttpApiGroup,
+        OpenApi,
+    } from "@effect/platform";
+    import { Schema } from "effect";
 
-  const api = HttpApi.make("api").add(
-    HttpApiGroup.make("group").add(
-      HttpApiEndpoint.get("get", "/").addSuccess(
-        Schema.Struct({ a: Schema.String })
-      )
-    )
-  )
+    const api = HttpApi.make("api").add(
+        HttpApiGroup.make("group").add(
+            HttpApiEndpoint.get("get", "/").addSuccess(
+                Schema.Struct({ a: Schema.String }),
+            ),
+        ),
+    );
 
-  const schema = OpenApi.fromApi(api, {
-    additionalPropertiesStrategy: "allow"
-  })
+    const schema = OpenApi.fromApi(api, {
+        additionalPropertiesStrategy: "allow",
+    });
 
-  console.log(JSON.stringify(schema, null, 2))
-  /*
-  {
-    "openapi": "3.1.0",
-    "info": {
-      "title": "Api",
-      "version": "0.0.1"
-    },
-    "paths": {
-      "/": {
-        "get": {
-          "tags": [
-            "group"
-          ],
-          "operationId": "group.get",
-          "parameters": [],
-          "security": [],
-          "responses": {
-            "200": {
-              "description": "Success",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "required": [
-                      "a"
-                    ],
-                    "properties": {
-                      "a": {
-                        "type": "string"
-                      }
-                    },
-                    "additionalProperties": true
+    console.log(JSON.stringify(schema, null, 2));
+    /*
+    {
+      "openapi": "3.1.0",
+      "info": {
+        "title": "Api",
+        "version": "0.0.1"
+      },
+      "paths": {
+        "/": {
+          "get": {
+            "tags": [
+              "group"
+            ],
+            "operationId": "group.get",
+            "parameters": [],
+            "security": [],
+            "responses": {
+              "200": {
+                "description": "Success",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "required": [
+                        "a"
+                      ],
+                      "properties": {
+                        "a": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": true
+                    }
                   }
                 }
-              }
-            },
-            "400": {
-              "description": "The request did not match the expected schema",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/HttpApiDecodeError"
+              },
+              "400": {
+                "description": "The request did not match the expected schema",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/HttpApiDecodeError"
+                    }
                   }
                 }
               }
             }
           }
         }
-      }
-    },
-    "components": {
-      "schemas": {
-        "HttpApiDecodeError": {
-          "type": "object",
-          "required": [
-            "issues",
-            "message",
-            "_tag"
-          ],
-          "properties": {
-            "issues": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/Issue"
-              }
-            },
-            "message": {
-              "type": "string"
-            },
-            "_tag": {
-              "type": "string",
-              "enum": [
-                "HttpApiDecodeError"
-              ]
-            }
-          },
-          "additionalProperties": true,
-          "description": "The request did not match the expected schema"
-        },
-        "Issue": {
-          "type": "object",
-          "required": [
-            "_tag",
-            "path",
-            "message"
-          ],
-          "properties": {
-            "_tag": {
-              "type": "string",
-              "enum": [
-                "Pointer",
-                "Unexpected",
-                "Missing",
-                "Composite",
-                "Refinement",
-                "Transformation",
-                "Type",
-                "Forbidden"
-              ],
-              "description": "The tag identifying the type of parse issue"
-            },
-            "path": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/PropertyKey"
-              },
-              "description": "The path to the property where the issue occurred"
-            },
-            "message": {
-              "type": "string",
-              "description": "A descriptive message explaining the issue"
-            }
-          },
-          "additionalProperties": true,
-          "description": "Represents an error encountered while parsing a value to match the schema"
-        },
-        "PropertyKey": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "object",
-              "required": [
-                "_tag",
-                "key"
-              ],
-              "properties": {
-                "_tag": {
-                  "type": "string",
-                  "enum": [
-                    "symbol"
-                  ]
-                },
-                "key": {
-                  "type": "string"
+      },
+      "components": {
+        "schemas": {
+          "HttpApiDecodeError": {
+            "type": "object",
+            "required": [
+              "issues",
+              "message",
+              "_tag"
+            ],
+            "properties": {
+              "issues": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Issue"
                 }
               },
-              "additionalProperties": true,
-              "description": "an object to be decoded into a globally shared symbol"
-            }
-          ]
-        }
+              "message": {
+                "type": "string"
+              },
+              "_tag": {
+                "type": "string",
+                "enum": [
+                  "HttpApiDecodeError"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "description": "The request did not match the expected schema"
+          },
+          "Issue": {
+            "type": "object",
+            "required": [
+              "_tag",
+              "path",
+              "message"
+            ],
+            "properties": {
+              "_tag": {
+                "type": "string",
+                "enum": [
+                  "Pointer",
+                  "Unexpected",
+                  "Missing",
+                  "Composite",
+                  "Refinement",
+                  "Transformation",
+                  "Type",
+                  "Forbidden"
+                ],
+                "description": "The tag identifying the type of parse issue"
+              },
+              "path": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PropertyKey"
+                },
+                "description": "The path to the property where the issue occurred"
+              },
+              "message": {
+                "type": "string",
+                "description": "A descriptive message explaining the issue"
+              }
+            },
+            "additionalProperties": true,
+            "description": "Represents an error encountered while parsing a value to match the schema"
+          },
+          "PropertyKey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "_tag",
+                  "key"
+                ],
+                "properties": {
+                  "_tag": {
+                    "type": "string",
+                    "enum": [
+                      "symbol"
+                    ]
+                  },
+                  "key": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true,
+                "description": "an object to be decoded into a globally shared symbol"
+              }
+            ]
+          }
+        },
+        "securitySchemes": {}
       },
-      "securitySchemes": {}
-    },
-    "security": [],
-    "tags": [
-      {
-        "name": "group"
-      }
-    ]
-  }
-  */
-  ```
+      "security": [],
+      "tags": [
+        {
+          "name": "group"
+        }
+      ]
+    }
+    */
+    ```
 
 - [#4541](https://github.com/Effect-TS/effect/pull/4541) [`9bf8a74`](https://github.com/Effect-TS/effect/commit/9bf8a74b967f18d931743dd5196af326c9118e9c) Thanks @fubhy! - Disallowed excess properties for various function options
 
@@ -2000,58 +2015,58 @@
 
 - [#4551](https://github.com/Effect-TS/effect/pull/4551) [`3154ce4`](https://github.com/Effect-TS/effect/commit/3154ce4692fa18b804982158d3c4c8a8a5fae386) Thanks @gcanti! - Arbitrary: `make` called on `Schema.Class` now respects property annotations, closes #4550.
 
-  Previously, when calling `Arbitrary.make` on a `Schema.Class`, property-specific annotations (such as `arbitrary`) were ignored, leading to unexpected values in generated instances.
+    Previously, when calling `Arbitrary.make` on a `Schema.Class`, property-specific annotations (such as `arbitrary`) were ignored, leading to unexpected values in generated instances.
 
-  Before
+    Before
 
-  Even though `a` had an `arbitrary` annotation, the generated values were random:
+    Even though `a` had an `arbitrary` annotation, the generated values were random:
 
-  ```ts
-  import { Arbitrary, FastCheck, Schema } from "effect"
+    ```ts
+    import { Arbitrary, FastCheck, Schema } from "effect";
 
-  class Class extends Schema.Class<Class>("Class")({
-    a: Schema.NumberFromString.annotations({
-      arbitrary: () => (fc) => fc.constant(1)
-    })
-  }) {}
+    class Class extends Schema.Class<Class>("Class")({
+        a: Schema.NumberFromString.annotations({
+            arbitrary: () => (fc) => fc.constant(1),
+        }),
+    }) {}
 
-  console.log(FastCheck.sample(Arbitrary.make(Class), 5))
-  /*
-  Example Output:
-  [
-    Class { a: 2.6624670822171524e-44 },
-    Class { a: 3.4028177873105996e+38 },
-    Class { a: 3.402820626847944e+38 },
-    Class { a: 3.783505853677006e-44 },
-    Class { a: 3243685 }
-  ]
-  */
-  ```
+    console.log(FastCheck.sample(Arbitrary.make(Class), 5));
+    /*
+    Example Output:
+    [
+      Class { a: 2.6624670822171524e-44 },
+      Class { a: 3.4028177873105996e+38 },
+      Class { a: 3.402820626847944e+38 },
+      Class { a: 3.783505853677006e-44 },
+      Class { a: 3243685 }
+    ]
+    */
+    ```
 
-  After
+    After
 
-  Now, the values respect the `arbitrary` annotation and return the expected constant:
+    Now, the values respect the `arbitrary` annotation and return the expected constant:
 
-  ```ts
-  import { Arbitrary, FastCheck, Schema } from "effect"
+    ```ts
+    import { Arbitrary, FastCheck, Schema } from "effect";
 
-  class Class extends Schema.Class<Class>("Class")({
-    a: Schema.NumberFromString.annotations({
-      arbitrary: () => (fc) => fc.constant(1)
-    })
-  }) {}
+    class Class extends Schema.Class<Class>("Class")({
+        a: Schema.NumberFromString.annotations({
+            arbitrary: () => (fc) => fc.constant(1),
+        }),
+    }) {}
 
-  console.log(FastCheck.sample(Arbitrary.make(Class), 5))
-  /*
-  [
-    Class { a: 1 },
-    Class { a: 1 },
-    Class { a: 1 },
-    Class { a: 1 },
-    Class { a: 1 }
-  ]
-  */
-  ```
+    console.log(FastCheck.sample(Arbitrary.make(Class), 5));
+    /*
+    [
+      Class { a: 1 },
+      Class { a: 1 },
+      Class { a: 1 },
+      Class { a: 1 },
+      Class { a: 1 }
+    ]
+    */
+    ```
 
 ## 3.13.5
 
@@ -2061,115 +2076,115 @@
 
 - [#4543](https://github.com/Effect-TS/effect/pull/4543) [`6cf11c3`](https://github.com/Effect-TS/effect/commit/6cf11c3a75773ceec2877c85ddc760f381f0866d) Thanks @gcanti! - Preserve branded primitive types in `DeepMutable` transformation, closes #4542.
 
-  Previously, applying `DeepMutable` to branded primitive types (e.g., `string & Brand.Brand<"mybrand">`) caused unexpected behavior, where `String` prototype methods were incorrectly inherited.
+    Previously, applying `DeepMutable` to branded primitive types (e.g., `string & Brand.Brand<"mybrand">`) caused unexpected behavior, where `String` prototype methods were incorrectly inherited.
 
-  This fix ensures that branded types remain unchanged during transformation, preventing type inconsistencies.
+    This fix ensures that branded types remain unchanged during transformation, preventing type inconsistencies.
 
-  **Example**
+    **Example**
 
-  Before
+    Before
 
-  ```ts
-  import type { Brand, Types } from "effect"
+    ```ts
+    import type { Brand, Types } from "effect";
 
-  type T = string & Brand.Brand<"mybrand">
+    type T = string & Brand.Brand<"mybrand">;
 
-  /*
-  type Result = {
-      [x: number]: string;
-      toString: () => string;
-      charAt: (pos: number) => string;
-      charCodeAt: (index: number) => number;
-      concat: (...strings: string[]) => string;
-      indexOf: (searchString: string, position?: number) => number;
-      ... 47 more ...;
-      [BrandTypeId]: {
-          ...;
-      };
-  }
-  */
-  type Result = Types.DeepMutable<T>
-  ```
+    /*
+    type Result = {
+        [x: number]: string;
+        toString: () => string;
+        charAt: (pos: number) => string;
+        charCodeAt: (index: number) => number;
+        concat: (...strings: string[]) => string;
+        indexOf: (searchString: string, position?: number) => number;
+        ... 47 more ...;
+        [BrandTypeId]: {
+            ...;
+        };
+    }
+    */
+    type Result = Types.DeepMutable<T>;
+    ```
 
-  After
+    After
 
-  ```ts
-  import type { Brand, Types } from "effect"
+    ```ts
+    import type { Brand, Types } from "effect";
 
-  type T = string & Brand.Brand<"mybrand">
+    type T = string & Brand.Brand<"mybrand">;
 
-  // type Result = string & Brand.Brand<"mybrand">
-  type Result = Types.DeepMutable<T>
-  ```
+    // type Result = string & Brand.Brand<"mybrand">
+    type Result = Types.DeepMutable<T>;
+    ```
 
 - [#4546](https://github.com/Effect-TS/effect/pull/4546) [`a0acec8`](https://github.com/Effect-TS/effect/commit/a0acec851f72e19466363d24b9cc218acd00006a) Thanks @gcanti! - Schema.extend: add support for Transformation + Struct, closes #4536.
 
-  **Example**
+    **Example**
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const A = Schema.Struct({
-    a: Schema.String
-  })
+    const A = Schema.Struct({
+        a: Schema.String,
+    });
 
-  const B = Schema.Struct({
-    b: Schema.String
-  })
+    const B = Schema.Struct({
+        b: Schema.String,
+    });
 
-  const C = Schema.Struct({
-    c: Schema.String
-  })
+    const C = Schema.Struct({
+        c: Schema.String,
+    });
 
-  const AB = Schema.transform(A, B, {
-    strict: true,
-    decode: (a) => ({ b: a.a }),
-    encode: (b) => ({ a: b.b })
-  })
+    const AB = Schema.transform(A, B, {
+        strict: true,
+        decode: (a) => ({ b: a.a }),
+        encode: (b) => ({ a: b.b }),
+    });
 
-  // Transformation + Struct
-  const schema = Schema.extend(AB, C)
-  /*
-  throws:
-  Error: Unsupported schema or overlapping types
-  details: cannot extend ({ readonly a: string } <-> { readonly b: string }) with { readonly c: string }
-  */
-  ```
+    // Transformation + Struct
+    const schema = Schema.extend(AB, C);
+    /*
+    throws:
+    Error: Unsupported schema or overlapping types
+    details: cannot extend ({ readonly a: string } <-> { readonly b: string }) with { readonly c: string }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const A = Schema.Struct({
-    a: Schema.String
-  })
+    const A = Schema.Struct({
+        a: Schema.String,
+    });
 
-  const B = Schema.Struct({
-    b: Schema.String
-  })
+    const B = Schema.Struct({
+        b: Schema.String,
+    });
 
-  const C = Schema.Struct({
-    c: Schema.String
-  })
+    const C = Schema.Struct({
+        c: Schema.String,
+    });
 
-  const AB = Schema.transform(A, B, {
-    strict: true,
-    decode: (a) => ({ b: a.a }),
-    encode: (b) => ({ a: b.b })
-  })
+    const AB = Schema.transform(A, B, {
+        strict: true,
+        decode: (a) => ({ b: a.a }),
+        encode: (b) => ({ a: b.b }),
+    });
 
-  // Transformation + Struct
-  const schema = Schema.extend(AB, C)
+    // Transformation + Struct
+    const schema = Schema.extend(AB, C);
 
-  console.log(Schema.decodeUnknownSync(schema)({ a: "a", c: "c" }))
-  // Output: { b: 'a', c: 'c' }
+    console.log(Schema.decodeUnknownSync(schema)({ a: "a", c: "c" }));
+    // Output: { b: 'a', c: 'c' }
 
-  console.log(Schema.encodeSync(schema)({ b: "b", c: "c" }))
-  // Output: { a: 'b', c: 'c' }
-  ```
+    console.log(Schema.encodeSync(schema)({ b: "b", c: "c" }));
+    // Output: { a: 'b', c: 'c' }
+    ```
 
 ## 3.13.4
 
@@ -2183,286 +2198,286 @@
 
 - [#4502](https://github.com/Effect-TS/effect/pull/4502) [`cc5588d`](https://github.com/Effect-TS/effect/commit/cc5588df07f9103513547cb429ce041b9436a8bd) Thanks @gcanti! - Schema: More Accurate Return Types for `DataFromSelf` and `Data`.
 
-  This update refines the return types of `DataFromSelf` and `Data`, making them clearer and more specific, especially when working with structured schemas.
+    This update refines the return types of `DataFromSelf` and `Data`, making them clearer and more specific, especially when working with structured schemas.
 
-  **Before**
+    **Before**
 
-  The return types were more generic, making it harder to see the underlying structure:
+    The return types were more generic, making it harder to see the underlying structure:
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const struct = Schema.Struct({ a: Schema.NumberFromString })
+    const struct = Schema.Struct({ a: Schema.NumberFromString });
 
-  //       ┌─── Schema.DataFromSelf<Schema<{ readonly a: number; }, { readonly a: string; }>>
-  //       ▼
-  const schema1 = Schema.DataFromSelf(struct)
+    //       ┌─── Schema.DataFromSelf<Schema<{ readonly a: number; }, { readonly a: string; }>>
+    //       ▼
+    const schema1 = Schema.DataFromSelf(struct);
 
-  //       ┌─── Schema.Data<Schema<{ readonly a: number; }, { readonly a: string; }>>
-  //       ▼
-  const schema2 = Schema.Data(struct)
-  ```
+    //       ┌─── Schema.Data<Schema<{ readonly a: number; }, { readonly a: string; }>>
+    //       ▼
+    const schema2 = Schema.Data(struct);
+    ```
 
-  **After**
+    **After**
 
-  Now, the return types clearly reflect the original schema structure:
+    Now, the return types clearly reflect the original schema structure:
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const struct = Schema.Struct({ a: Schema.NumberFromString })
+    const struct = Schema.Struct({ a: Schema.NumberFromString });
 
-  //       ┌─── Schema.DataFromSelf<Schema.Struct<{ a: typeof Schema.NumberFromString; }>>
-  //       ▼
-  const schema1 = Schema.DataFromSelf(struct)
+    //       ┌─── Schema.DataFromSelf<Schema.Struct<{ a: typeof Schema.NumberFromString; }>>
+    //       ▼
+    const schema1 = Schema.DataFromSelf(struct);
 
-  //       ┌─── Schema.Data<Schema.Struct<{ a: typeof Schema.NumberFromString; }>>
-  //       ▼
-  const schema2 = Schema.Data(struct)
-  ```
+    //       ┌─── Schema.Data<Schema.Struct<{ a: typeof Schema.NumberFromString; }>>
+    //       ▼
+    const schema2 = Schema.Data(struct);
+    ```
 
 - [#4510](https://github.com/Effect-TS/effect/pull/4510) [`623c8cd`](https://github.com/Effect-TS/effect/commit/623c8cd053ed6ee3d353aaa8778d484670fca2bb) Thanks @gcanti! - Schema: More Accurate Return Type for `compose`.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  //      ┌─── SchemaClass<number | null, string>
-  //      ▼
-  const schema = Schema.compose(
-    Schema.NumberFromString,
-    Schema.NullOr(Schema.Number)
-  )
+    //      ┌─── SchemaClass<number | null, string>
+    //      ▼
+    const schema = Schema.compose(
+        Schema.NumberFromString,
+        Schema.NullOr(Schema.Number),
+    );
 
-  // @ts-expect-error: Property 'from' does not exist
-  schema.from
+    // @ts-expect-error: Property 'from' does not exist
+    schema.from;
 
-  // @ts-expect-error: Property 'to' does not exist
-  schema.to
-  ```
+    // @ts-expect-error: Property 'to' does not exist
+    schema.to;
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  //      ┌─── transform<typeof Schema.NumberFromString, Schema.NullOr<typeof Schema.Number>>
-  //      ▼
-  const schema = Schema.compose(
-    Schema.NumberFromString,
-    Schema.NullOr(Schema.Number)
-  )
+    //      ┌─── transform<typeof Schema.NumberFromString, Schema.NullOr<typeof Schema.Number>>
+    //      ▼
+    const schema = Schema.compose(
+        Schema.NumberFromString,
+        Schema.NullOr(Schema.Number),
+    );
 
-  //      ┌─── typeof Schema.NumberFromString
-  //      ▼
-  schema.from
+    //      ┌─── typeof Schema.NumberFromString
+    //      ▼
+    schema.from;
 
-  //      ┌─── Schema.NullOr<typeof Schema.Number>
-  //      ▼
-  schema.to
-  ```
+    //      ┌─── Schema.NullOr<typeof Schema.Number>
+    //      ▼
+    schema.to;
+    ```
 
 - [#4488](https://github.com/Effect-TS/effect/pull/4488) [`00b4eb1`](https://github.com/Effect-TS/effect/commit/00b4eb1ece12a16e222e6220965bb4024d6752ac) Thanks @gcanti! - Schema: more precise return types when filters are involved.
 
-  **Example** (with `Schema.maxLength`)
+    **Example** (with `Schema.maxLength`)
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  //      ┌─── Schema.filter<Schema.Schema<string, string, never>>
-  //      ▼
-  const schema = Schema.String.pipe(Schema.maxLength(10))
+    //      ┌─── Schema.filter<Schema.Schema<string, string, never>>
+    //      ▼
+    const schema = Schema.String.pipe(Schema.maxLength(10));
 
-  // Schema<string, string, never>
-  schema.from
-  ```
+    // Schema<string, string, never>
+    schema.from;
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  //      ┌─── Schema.filter<typeof Schema.String>
-  //      ▼
-  const schema = Schema.String.pipe(Schema.maxLength(10))
+    //      ┌─── Schema.filter<typeof Schema.String>
+    //      ▼
+    const schema = Schema.String.pipe(Schema.maxLength(10));
 
-  // typeof Schema.String
-  schema.from
-  ```
+    // typeof Schema.String
+    schema.from;
+    ```
 
-  String filters:
-  - `maxLength`
-  - `minLength`
-  - `length`
-  - `pattern`
-  - `startsWith`
-  - `endsWith`
-  - `includes`
-  - `lowercased`
-  - `capitalized`
-  - `uncapitalized`
-  - `uppercased`
-  - `nonEmptyString`
-  - `trimmed`
+    String filters:
+    - `maxLength`
+    - `minLength`
+    - `length`
+    - `pattern`
+    - `startsWith`
+    - `endsWith`
+    - `includes`
+    - `lowercased`
+    - `capitalized`
+    - `uncapitalized`
+    - `uppercased`
+    - `nonEmptyString`
+    - `trimmed`
 
-  Number filters:
-  - `finite`
-  - `greaterThan`
-  - `greaterThanOrEqualTo`
-  - `lessThan`
-  - `lessThanOrEqualTo`
-  - `int`
-  - `multipleOf`
-  - `between`
-  - `nonNaN`
-  - `positive`
-  - `negative`
-  - `nonPositive`
-  - `nonNegative`
+    Number filters:
+    - `finite`
+    - `greaterThan`
+    - `greaterThanOrEqualTo`
+    - `lessThan`
+    - `lessThanOrEqualTo`
+    - `int`
+    - `multipleOf`
+    - `between`
+    - `nonNaN`
+    - `positive`
+    - `negative`
+    - `nonPositive`
+    - `nonNegative`
 
-  BigInt filters:
-  - `greaterThanBigInt`
-  - `greaterThanOrEqualToBigInt`
-  - `lessThanBigInt`
-  - `lessThanOrEqualToBigInt`
-  - `betweenBigInt`
-  - `positiveBigInt`
-  - `negativeBigInt`
-  - `nonNegativeBigInt`
-  - `nonPositiveBigInt`
+    BigInt filters:
+    - `greaterThanBigInt`
+    - `greaterThanOrEqualToBigInt`
+    - `lessThanBigInt`
+    - `lessThanOrEqualToBigInt`
+    - `betweenBigInt`
+    - `positiveBigInt`
+    - `negativeBigInt`
+    - `nonNegativeBigInt`
+    - `nonPositiveBigInt`
 
-  Duration filters:
-  - `lessThanDuration`
-  - `lessThanOrEqualToDuration`
-  - `greaterThanDuration`
-  - `greaterThanOrEqualToDuration`
-  - `betweenDuration`
+    Duration filters:
+    - `lessThanDuration`
+    - `lessThanOrEqualToDuration`
+    - `greaterThanDuration`
+    - `greaterThanOrEqualToDuration`
+    - `betweenDuration`
 
-  Array filters:
-  - `minItems`
-  - `maxItems`
-  - `itemsCount`
+    Array filters:
+    - `minItems`
+    - `maxItems`
+    - `itemsCount`
 
-  Date filters:
-  - `validDate`
-  - `lessThanDate`
-  - `lessThanOrEqualToDate`
-  - `greaterThanDate`
-  - `greaterThanOrEqualToDate`
-  - `betweenDate`
+    Date filters:
+    - `validDate`
+    - `lessThanDate`
+    - `lessThanOrEqualToDate`
+    - `greaterThanDate`
+    - `greaterThanOrEqualToDate`
+    - `betweenDate`
 
-  BigDecimal filters:
-  - `greaterThanBigDecimal`
-  - `greaterThanOrEqualToBigDecimal`
-  - `lessThanBigDecimal`
-  - `lessThanOrEqualToBigDecimal`
-  - `positiveBigDecimal`
-  - `nonNegativeBigDecimal`
-  - `negativeBigDecimal`
-  - `nonPositiveBigDecimal`
-  - `betweenBigDecimal`
+    BigDecimal filters:
+    - `greaterThanBigDecimal`
+    - `greaterThanOrEqualToBigDecimal`
+    - `lessThanBigDecimal`
+    - `lessThanOrEqualToBigDecimal`
+    - `positiveBigDecimal`
+    - `nonNegativeBigDecimal`
+    - `negativeBigDecimal`
+    - `nonPositiveBigDecimal`
+    - `betweenBigDecimal`
 
 - [#4508](https://github.com/Effect-TS/effect/pull/4508) [`f2aee98`](https://github.com/Effect-TS/effect/commit/f2aee989b0a600900ce83e7f460d02908620c80f) Thanks @gcanti! - Schema: More Accurate Return Types for `ArrayEnsure` and `NonEmptyArrayEnsure`.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema1 = Schema.ArrayEnsure(Schema.String)
+    const schema1 = Schema.ArrayEnsure(Schema.String);
 
-  // @ts-expect-error: Property 'from' does not exist
-  schema1.from
+    // @ts-expect-error: Property 'from' does not exist
+    schema1.from;
 
-  const schema2 = Schema.NonEmptyArrayEnsure(Schema.String)
+    const schema2 = Schema.NonEmptyArrayEnsure(Schema.String);
 
-  // @ts-expect-error: Property 'from' does not exist
-  schema2.from
-  ```
+    // @ts-expect-error: Property 'from' does not exist
+    schema2.from;
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema1 = Schema.ArrayEnsure(Schema.String)
+    const schema1 = Schema.ArrayEnsure(Schema.String);
 
-  //        ┌─── Schema.Union<[typeof Schema.String, Schema.Array$<typeof Schema.String>]>
-  //        ▼
-  schema1.from
+    //        ┌─── Schema.Union<[typeof Schema.String, Schema.Array$<typeof Schema.String>]>
+    //        ▼
+    schema1.from;
 
-  const schema2 = Schema.NonEmptyArrayEnsure(Schema.String)
+    const schema2 = Schema.NonEmptyArrayEnsure(Schema.String);
 
-  //        ┌─── Schema.Union<[typeof Schema.String, Schema.NonEmptyArray<typeof Schema.String>]>
-  //        ▼
-  schema2.from
-  ```
+    //        ┌─── Schema.Union<[typeof Schema.String, Schema.NonEmptyArray<typeof Schema.String>]>
+    //        ▼
+    schema2.from;
+    ```
 
 - [#4509](https://github.com/Effect-TS/effect/pull/4509) [`fb798eb`](https://github.com/Effect-TS/effect/commit/fb798eb9061f1191badc017d1aa649360254da20) Thanks @gcanti! - Schema: More Accurate Return Types for:
-  - `transformLiteral`
-  - `clamp`
-  - `clampBigInt`
-  - `clampDuration`
-  - `clampBigDecimal`
-  - `head`
-  - `headNonEmpty`
-  - `headOrElse`
+    - `transformLiteral`
+    - `clamp`
+    - `clampBigInt`
+    - `clampDuration`
+    - `clampBigDecimal`
+    - `head`
+    - `headNonEmpty`
+    - `headOrElse`
 
 - [#4524](https://github.com/Effect-TS/effect/pull/4524) [`2251b15`](https://github.com/Effect-TS/effect/commit/2251b1528810bb695b37ce388b653cec0c5bf80c) Thanks @gcanti! - Schema: More Accurate Return Type for `parseNumber`.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.parseNumber(Schema.String)
+    const schema = Schema.parseNumber(Schema.String);
 
-  //      ┌─── Schema<string>
-  //      ▼
-  schema.from
-  ```
+    //      ┌─── Schema<string>
+    //      ▼
+    schema.from;
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.parseNumber(Schema.String)
+    const schema = Schema.parseNumber(Schema.String);
 
-  //      ┌─── typeof Schema.String
-  //      ▼
-  schema.from
-  ```
+    //      ┌─── typeof Schema.String
+    //      ▼
+    schema.from;
+    ```
 
 - [#4483](https://github.com/Effect-TS/effect/pull/4483) [`2e15c1e`](https://github.com/Effect-TS/effect/commit/2e15c1e33648add0b29fe274fbcb7294b7515085) Thanks @mikearnaldi! - Fix nested batching
 
 - [#4514](https://github.com/Effect-TS/effect/pull/4514) [`a4979db`](https://github.com/Effect-TS/effect/commit/a4979db021aef16e731be64df196b72088fc4376) Thanks @gcanti! - Schema: add missing `from` property to `brand` interface.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.String.pipe(Schema.brand("my-brand"))
+    const schema = Schema.String.pipe(Schema.brand("my-brand"));
 
-  // @ts-expect-error: Property 'from' does not exist
-  schema.from
-  ```
+    // @ts-expect-error: Property 'from' does not exist
+    schema.from;
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.String.pipe(Schema.brand("my-brand"))
+    const schema = Schema.String.pipe(Schema.brand("my-brand"));
 
-  //      ┌─── typeof Schema.String
-  //      ▼
-  schema.from
-  ```
+    //      ┌─── typeof Schema.String
+    //      ▼
+    schema.from;
+    ```
 
 - [#4496](https://github.com/Effect-TS/effect/pull/4496) [`b74255a`](https://github.com/Effect-TS/effect/commit/b74255a304ad49d60bedb1a260fd697f370af27a) Thanks @tim-smart! - ensure fibers can't be added to Fiber{Handle,Set,Map} during closing
 
@@ -2472,158 +2487,158 @@
 
 - [#4507](https://github.com/Effect-TS/effect/pull/4507) [`477b488`](https://github.com/Effect-TS/effect/commit/477b488284f47c5469d7fba3e4065fb7e3b6556e) Thanks @gcanti! - Schema: More Accurate Return Type for `parseJson(schema)`.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  //      ┌─── Schema.SchemaClass<{ readonly a: number; }, string>
-  //      ▼
-  const schema = Schema.parseJson(
-    Schema.Struct({
-      a: Schema.NumberFromString
-    })
-  )
+    //      ┌─── Schema.SchemaClass<{ readonly a: number; }, string>
+    //      ▼
+    const schema = Schema.parseJson(
+        Schema.Struct({
+            a: Schema.NumberFromString,
+        }),
+    );
 
-  // @ts-expect-error: Property 'to' does not exist
-  schema.to
-  ```
+    // @ts-expect-error: Property 'to' does not exist
+    schema.to;
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  //      ┌─── Schema.transform<Schema.SchemaClass<unknown, string, never>, Schema.Struct<{ a: typeof Schema.NumberFromString; }>>
-  //      ▼
-  const schema = Schema.parseJson(
-    Schema.Struct({
-      a: Schema.NumberFromString
-    })
-  )
+    //      ┌─── Schema.transform<Schema.SchemaClass<unknown, string, never>, Schema.Struct<{ a: typeof Schema.NumberFromString; }>>
+    //      ▼
+    const schema = Schema.parseJson(
+        Schema.Struct({
+            a: Schema.NumberFromString,
+        }),
+    );
 
-  //      ┌─── Schema.Struct<{ a: typeof Schema.NumberFromString; }>
-  //      ▼
-  schema.to
-  ```
+    //      ┌─── Schema.Struct<{ a: typeof Schema.NumberFromString; }>
+    //      ▼
+    schema.to;
+    ```
 
 - [#4519](https://github.com/Effect-TS/effect/pull/4519) [`10932cb`](https://github.com/Effect-TS/effect/commit/10932cbf58fc721ada631cebec42f773ce96d3cc) Thanks @gcanti! - Refactor `JSONSchema` to use `additionalProperties` instead of `patternProperties` for simple records, closes #4518.
 
-  This update improves how records are represented in JSON Schema by replacing `patternProperties` with `additionalProperties`, resolving issues in OpenAPI schema generation.
+    This update improves how records are represented in JSON Schema by replacing `patternProperties` with `additionalProperties`, resolving issues in OpenAPI schema generation.
 
-  **Why the change?**
-  - **Fixes OpenAPI issues** – Previously, records were represented using `patternProperties`, which caused problems with OpenAPI tools.
-  - **Better schema compatibility** – Some tools, like `openapi-ts`, struggled with `patternProperties`, generating `Record<string, never>` instead of the correct type.
-  - **Fixes missing example values** – When using `patternProperties`, OpenAPI failed to generate proper response examples, displaying only `{}`.
-  - **Simplifies schema modification** – Users previously had to manually fix schemas with `OpenApi.Transform`, which was messy and lacked type safety.
+    **Why the change?**
+    - **Fixes OpenAPI issues** – Previously, records were represented using `patternProperties`, which caused problems with OpenAPI tools.
+    - **Better schema compatibility** – Some tools, like `openapi-ts`, struggled with `patternProperties`, generating `Record<string, never>` instead of the correct type.
+    - **Fixes missing example values** – When using `patternProperties`, OpenAPI failed to generate proper response examples, displaying only `{}`.
+    - **Simplifies schema modification** – Users previously had to manually fix schemas with `OpenApi.Transform`, which was messy and lacked type safety.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Record({ key: Schema.String, value: Schema.Number })
+    const schema = Schema.Record({ key: Schema.String, value: Schema.Number });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [],
-    "properties": {},
-    "patternProperties": {
-      "": { // ❌ Empty string pattern
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "patternProperties": {
+        "": { // ❌ Empty string pattern
+          "type": "number"
+        }
+      }
+    }
+    */
+    ```
+
+    **After**
+
+    Now, `additionalProperties` is used instead, which properly represents an open-ended record:
+
+    ```ts
+    import { JSONSchema, Schema } from "effect";
+
+    const schema = Schema.Record({ key: Schema.String, value: Schema.Number });
+
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "additionalProperties": { // ✅ Represents unrestricted record keys
         "type": "number"
       }
     }
-  }
-  */
-  ```
-
-  **After**
-
-  Now, `additionalProperties` is used instead, which properly represents an open-ended record:
-
-  ```ts
-  import { JSONSchema, Schema } from "effect"
-
-  const schema = Schema.Record({ key: Schema.String, value: Schema.Number })
-
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [],
-    "properties": {},
-    "additionalProperties": { // ✅ Represents unrestricted record keys
-      "type": "number"
-    }
-  }
-  */
-  ```
+    */
+    ```
 
 - [#4501](https://github.com/Effect-TS/effect/pull/4501) [`9f6c784`](https://github.com/Effect-TS/effect/commit/9f6c78468b3b5e9ebfc38ffdfb70702901ee977b) Thanks @gcanti! - Schema: Add Missing `declare` API Interface to Expose Type Parameters.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.OptionFromSelf(Schema.String)
+    const schema = Schema.OptionFromSelf(Schema.String);
 
-  //       ┌─── readonly [typeof Schema.String]
-  //       ▼
-  schema.typeParameters
-  ```
+    //       ┌─── readonly [typeof Schema.String]
+    //       ▼
+    schema.typeParameters;
+    ```
 
 - [#4487](https://github.com/Effect-TS/effect/pull/4487) [`2c639ec`](https://github.com/Effect-TS/effect/commit/2c639ecee332de4266e36022c989c35ae4e02105) Thanks @gcanti! - Schema: more precise return types when transformations are involved.
-  - `Chunk`
-  - `NonEmptyChunk`
-  - `Redacted`
-  - `Option`
-  - `OptionFromNullOr`
-  - `OptionFromUndefinedOr`
-  - `OptionFromNullishOr`
-  - `Either`
-  - `EitherFromUnion`
-  - `ReadonlyMap`
-  - `Map`
-  - `HashMap`
-  - `ReadonlySet`
-  - `Set`
-  - `HashSet`
-  - `List`
-  - `Cause`
-  - `Exit`
-  - `SortedSet`
-  - `head`
-  - `headNonEmpty`
-  - `headOrElse`
+    - `Chunk`
+    - `NonEmptyChunk`
+    - `Redacted`
+    - `Option`
+    - `OptionFromNullOr`
+    - `OptionFromUndefinedOr`
+    - `OptionFromNullishOr`
+    - `Either`
+    - `EitherFromUnion`
+    - `ReadonlyMap`
+    - `Map`
+    - `HashMap`
+    - `ReadonlySet`
+    - `Set`
+    - `HashSet`
+    - `List`
+    - `Cause`
+    - `Exit`
+    - `SortedSet`
+    - `head`
+    - `headNonEmpty`
+    - `headOrElse`
 
-  **Example** (with `Schema.Chunk`)
+    **Example** (with `Schema.Chunk`)
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Chunk(Schema.Number)
+    const schema = Schema.Chunk(Schema.Number);
 
-  // Property 'from' does not exist on type 'Chunk<typeof Number$>'
-  schema.from
-  ```
+    // Property 'from' does not exist on type 'Chunk<typeof Number$>'
+    schema.from;
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Chunk(Schema.Number)
+    const schema = Schema.Chunk(Schema.Number);
 
-  // Schema.Array$<typeof Schema.Number>
-  schema.from
-  ```
+    // Schema.Array$<typeof Schema.Number>
+    schema.from;
+    ```
 
 - [#4492](https://github.com/Effect-TS/effect/pull/4492) [`886aaa8`](https://github.com/Effect-TS/effect/commit/886aaa81e06dfd3cd9391e8ea987d8cd5ada1124) Thanks @gcanti! - Schema: Improve `Literal` return type — now returns `SchemaClass` instead of `Schema`
 
@@ -2633,41 +2648,41 @@
 
 - [#4472](https://github.com/Effect-TS/effect/pull/4472) [`31be72a`](https://github.com/Effect-TS/effect/commit/31be72ada118cb84a942e67b1663263f8db74a9f) Thanks @gcanti! - Fix `Schema.Enums` `toString()` method to display correct enum values.
 
-  Now, `toString()` correctly displays the actual enum values instead of internal numeric indices.
+    Now, `toString()` correctly displays the actual enum values instead of internal numeric indices.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  enum Fruits {
-    Apple = "apple",
-    Banana = "banana",
-    Cantaloupe = 0
-  }
+    enum Fruits {
+        Apple = "apple",
+        Banana = "banana",
+        Cantaloupe = 0,
+    }
 
-  const schema = Schema.Enums(Fruits)
+    const schema = Schema.Enums(Fruits);
 
-  console.log(String(schema))
-  // Output: <enum 3 value(s): 0 | 1 | 2> ❌ (incorrect)
-  ```
+    console.log(String(schema));
+    // Output: <enum 3 value(s): 0 | 1 | 2> ❌ (incorrect)
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  enum Fruits {
-    Apple = "apple",
-    Banana = "banana",
-    Cantaloupe = 0
-  }
+    enum Fruits {
+        Apple = "apple",
+        Banana = "banana",
+        Cantaloupe = 0,
+    }
 
-  const schema = Schema.Enums(Fruits)
+    const schema = Schema.Enums(Fruits);
 
-  console.log(String(schema))
-  // Output: <enum 3 value(s): "apple" | "banana" | 0> ✅ (correct)
-  ```
+    console.log(String(schema));
+    // Output: <enum 3 value(s): "apple" | "banana" | 0> ✅ (correct)
+    ```
 
 ## 3.13.1
 
@@ -2683,31 +2698,31 @@
 
 - [#4280](https://github.com/Effect-TS/effect/pull/4280) [`655bfe2`](https://github.com/Effect-TS/effect/commit/655bfe29e44cc3f0fb9b4e53038f50b891c188df) Thanks @gcanti! - Add `Effect.transposeOption`, closes #3142.
 
-  Converts an `Option` of an `Effect` into an `Effect` of an `Option`.
+    Converts an `Option` of an `Effect` into an `Effect` of an `Option`.
 
-  **Details**
+    **Details**
 
-  This function transforms an `Option<Effect<A, E, R>>` into an
-  `Effect<Option<A>, E, R>`. If the `Option` is `None`, the resulting `Effect`
-  will immediately succeed with a `None` value. If the `Option` is `Some`, the
-  inner `Effect` will be executed, and its result wrapped in a `Some`.
+    This function transforms an `Option<Effect<A, E, R>>` into an
+    `Effect<Option<A>, E, R>`. If the `Option` is `None`, the resulting `Effect`
+    will immediately succeed with a `None` value. If the `Option` is `Some`, the
+    inner `Effect` will be executed, and its result wrapped in a `Some`.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Effect, Option } from "effect"
+    ```ts
+    import { Effect, Option } from "effect";
 
-  //      ┌─── Option<Effect<number, never, never>>
-  //      ▼
-  const maybe = Option.some(Effect.succeed(42))
+    //      ┌─── Option<Effect<number, never, never>>
+    //      ▼
+    const maybe = Option.some(Effect.succeed(42));
 
-  //      ┌─── Effect<Option<number>, never, never>
-  //      ▼
-  const result = Effect.transposeOption(maybe)
+    //      ┌─── Effect<Option<number>, never, never>
+    //      ▼
+    const result = Effect.transposeOption(maybe);
 
-  console.log(Effect.runSync(result))
-  // Output: { _id: 'Option', _tag: 'Some', value: 42 }
-  ```
+    console.log(Effect.runSync(result));
+    // Output: { _id: 'Option', _tag: 'Some', value: 42 }
+    ```
 
 - [#4280](https://github.com/Effect-TS/effect/pull/4280) [`d90cbc2`](https://github.com/Effect-TS/effect/commit/d90cbc274e2742d18671fe65aa4764c057eb6cba) Thanks @indietyp! - Add `Effect.whenLogLevel`, which conditionally executes an effect if the specified log level is enabled
 
@@ -2733,74 +2748,76 @@
 
 - [#4280](https://github.com/Effect-TS/effect/pull/4280) [`9760fdc`](https://github.com/Effect-TS/effect/commit/9760fdc37bdaef9da8b150e46b86ddfbe2ad9221) Thanks @gcanti! - Schema: Add `standardSchemaV1` API to Generate a [Standard Schema v1](https://standardschema.dev/).
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Struct({
-    name: Schema.String
-  })
+    const schema = Schema.Struct({
+        name: Schema.String,
+    });
 
-  //      ┌─── StandardSchemaV1<{ readonly name: string; }>
-  //      ▼
-  const standardSchema = Schema.standardSchemaV1(schema)
-  ```
+    //      ┌─── StandardSchemaV1<{ readonly name: string; }>
+    //      ▼
+    const standardSchema = Schema.standardSchemaV1(schema);
+    ```
 
 - [#4280](https://github.com/Effect-TS/effect/pull/4280) [`5b471e7`](https://github.com/Effect-TS/effect/commit/5b471e7d4317e8ee5d72bbbd3e0c9775160949ab) Thanks @fubhy! - Added `Duration.formatIso` and `Duration.fromIso` for formatting and parsing ISO8601 durations.
 
 - [#4280](https://github.com/Effect-TS/effect/pull/4280) [`4f810cc`](https://github.com/Effect-TS/effect/commit/4f810cc2770e9f1f266851d2cb6257112c12af49) Thanks @tim-smart! - add Effect.filterEffect\* apis
 
-  #### Effect.filterEffectOrElse
+    #### Effect.filterEffectOrElse
 
-  Filters an effect with an effectful predicate, falling back to an alternative
-  effect if the predicate fails.
+    Filters an effect with an effectful predicate, falling back to an alternative
+    effect if the predicate fails.
 
-  ```ts
-  import { Effect, pipe } from "effect"
+    ```ts
+    import { Effect, pipe } from "effect";
 
-  // Define a user interface
-  interface User {
-    readonly name: string
-  }
+    // Define a user interface
+    interface User {
+        readonly name: string;
+    }
 
-  // Simulate an asynchronous authentication function
-  declare const auth: () => Promise<User | null>
+    // Simulate an asynchronous authentication function
+    declare const auth: () => Promise<User | null>;
 
-  const program = pipe(
-    Effect.promise(() => auth()),
-    // Use filterEffectOrElse with an effectful predicate
-    Effect.filterEffectOrElse({
-      predicate: (user) => Effect.succeed(user !== null),
-      orElse: (user) => Effect.fail(new Error(`Unauthorized user: ${user}`))
-    })
-  )
-  ```
+    const program = pipe(
+        Effect.promise(() => auth()),
+        // Use filterEffectOrElse with an effectful predicate
+        Effect.filterEffectOrElse({
+            predicate: (user) => Effect.succeed(user !== null),
+            orElse: (user) =>
+                Effect.fail(new Error(`Unauthorized user: ${user}`)),
+        }),
+    );
+    ```
 
-  #### Effect.filterEffectOrFail
+    #### Effect.filterEffectOrFail
 
-  Filters an effect with an effectful predicate, failing with a custom error if the predicate fails.
+    Filters an effect with an effectful predicate, failing with a custom error if the predicate fails.
 
-  ```ts
-  import { Effect, pipe } from "effect"
+    ```ts
+    import { Effect, pipe } from "effect";
 
-  // Define a user interface
-  interface User {
-    readonly name: string
-  }
+    // Define a user interface
+    interface User {
+        readonly name: string;
+    }
 
-  // Simulate an asynchronous authentication function
-  declare const auth: () => Promise<User | null>
+    // Simulate an asynchronous authentication function
+    declare const auth: () => Promise<User | null>;
 
-  const program = pipe(
-    Effect.promise(() => auth()),
-    // Use filterEffectOrFail with an effectful predicate
-    Effect.filterEffectOrFail({
-      predicate: (user) => Effect.succeed(user !== null),
-      orFailWith: (user) => Effect.fail(new Error(`Unauthorized user: ${user}`))
-    })
-  )
-  ```
+    const program = pipe(
+        Effect.promise(() => auth()),
+        // Use filterEffectOrFail with an effectful predicate
+        Effect.filterEffectOrFail({
+            predicate: (user) => Effect.succeed(user !== null),
+            orFailWith: (user) =>
+                Effect.fail(new Error(`Unauthorized user: ${user}`)),
+        }),
+    );
+    ```
 
 ### Patch Changes
 
@@ -2814,77 +2831,77 @@
 
 - [#4439](https://github.com/Effect-TS/effect/pull/4439) [`543d36d`](https://github.com/Effect-TS/effect/commit/543d36d1a11452560b01ab966a82529ad5fee8c9) Thanks @gcanti! - Schedule: fix unsafe `tapOutput` signature.
 
-  Previously, `tapOutput` allowed using an output type that wasn't properly inferred, leading to potential runtime errors. Now, TypeScript correctly detects mismatches at compile time, preventing unexpected crashes.
+    Previously, `tapOutput` allowed using an output type that wasn't properly inferred, leading to potential runtime errors. Now, TypeScript correctly detects mismatches at compile time, preventing unexpected crashes.
 
-  **Before (Unsafe, Causes Runtime Error)**
+    **Before (Unsafe, Causes Runtime Error)**
 
-  ```ts
-  import { Effect, Schedule, Console } from "effect"
+    ```ts
+    import { Effect, Schedule, Console } from "effect";
 
-  const schedule = Schedule.once.pipe(
-    Schedule.as<number | string>(1),
-    Schedule.tapOutput((s: string) => Console.log(s.trim())) // ❌ Runtime error
-  )
+    const schedule = Schedule.once.pipe(
+        Schedule.as<number | string>(1),
+        Schedule.tapOutput((s: string) => Console.log(s.trim())), // ❌ Runtime error
+    );
 
-  Effect.runPromise(Effect.void.pipe(Effect.schedule(schedule)))
-  // throws: TypeError: s.trim is not a function
-  ```
+    Effect.runPromise(Effect.void.pipe(Effect.schedule(schedule)));
+    // throws: TypeError: s.trim is not a function
+    ```
 
-  **After (Safe, Catches Type Error at Compile Time)**
+    **After (Safe, Catches Type Error at Compile Time)**
 
-  ```ts
-  import { Console, Schedule } from "effect"
+    ```ts
+    import { Console, Schedule } from "effect";
 
-  const schedule = Schedule.once.pipe(
-    Schedule.as<number | string>(1),
-    // ✅ Type Error: Type 'number' is not assignable to type 'string'
-    Schedule.tapOutput((s: string) => Console.log(s.trim()))
-  )
-  ```
+    const schedule = Schedule.once.pipe(
+        Schedule.as<number | string>(1),
+        // ✅ Type Error: Type 'number' is not assignable to type 'string'
+        Schedule.tapOutput((s: string) => Console.log(s.trim())),
+    );
+    ```
 
 - [#4447](https://github.com/Effect-TS/effect/pull/4447) [`f70a65a`](https://github.com/Effect-TS/effect/commit/f70a65ac80c6635d80b12beaf4d32a9cc59fa143) Thanks @gcanti! - Preserve function `length` property in `Effect.fn` / `Effect.fnUntraced`, closes #4435
 
-  Previously, functions created with `Effect.fn` and `Effect.fnUntraced` always had a `.length` of `0`, regardless of their actual number of parameters. This has been fixed so that the `length` property correctly reflects the expected number of arguments.
+    Previously, functions created with `Effect.fn` and `Effect.fnUntraced` always had a `.length` of `0`, regardless of their actual number of parameters. This has been fixed so that the `length` property correctly reflects the expected number of arguments.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  const fn1 = Effect.fn("fn1")(function* (n: number) {
-    return n
-  })
+    const fn1 = Effect.fn("fn1")(function* (n: number) {
+        return n;
+    });
 
-  console.log(fn1.length)
-  // Output: 0 ❌ (incorrect)
+    console.log(fn1.length);
+    // Output: 0 ❌ (incorrect)
 
-  const fn2 = Effect.fnUntraced(function* (n: number) {
-    return n
-  })
+    const fn2 = Effect.fnUntraced(function* (n: number) {
+        return n;
+    });
 
-  console.log(fn2.length)
-  // Output: 0 ❌ (incorrect)
-  ```
+    console.log(fn2.length);
+    // Output: 0 ❌ (incorrect)
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  const fn1 = Effect.fn("fn1")(function* (n: number) {
-    return n
-  })
+    const fn1 = Effect.fn("fn1")(function* (n: number) {
+        return n;
+    });
 
-  console.log(fn1.length)
-  // Output: 1 ✅ (correct)
+    console.log(fn1.length);
+    // Output: 1 ✅ (correct)
 
-  const fn2 = Effect.fnUntraced(function* (n: number) {
-    return n
-  })
+    const fn2 = Effect.fnUntraced(function* (n: number) {
+        return n;
+    });
 
-  console.log(fn2.length)
-  // Output: 1 ✅ (correct)
-  ```
+    console.log(fn2.length);
+    // Output: 1 ✅ (correct)
+    ```
 
 - [#4422](https://github.com/Effect-TS/effect/pull/4422) [`ba409f6`](https://github.com/Effect-TS/effect/commit/ba409f69c41aeaa29e475c0630735726eaf4dbac) Thanks @mikearnaldi! - Fix Context.Tag inference using explicit generics
 
@@ -2908,50 +2925,50 @@
 
 - [#4403](https://github.com/Effect-TS/effect/pull/4403) [`33fa667`](https://github.com/Effect-TS/effect/commit/33fa667c2623be1026e1ccee91bd44f73b09020a) Thanks @gcanti! - Duration: fix `format` output when the input is zero.
 
-  Before
+    Before
 
-  ```ts
-  import { Duration } from "effect"
+    ```ts
+    import { Duration } from "effect";
 
-  console.log(Duration.format(Duration.zero))
-  // Output: ""
-  ```
+    console.log(Duration.format(Duration.zero));
+    // Output: ""
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Duration } from "effect"
+    ```ts
+    import { Duration } from "effect";
 
-  console.log(Duration.format(Duration.zero))
-  // Output: "0"
-  ```
+    console.log(Duration.format(Duration.zero));
+    // Output: "0"
+    ```
 
 - [#4411](https://github.com/Effect-TS/effect/pull/4411) [`87f5f28`](https://github.com/Effect-TS/effect/commit/87f5f2842e4196cb88d13f10f443ff0567e82832) Thanks @gcanti! - Enhance `TagClass` and `ReferenceClass` to enforce `key` type narrowing, closes #4409.
 
-  The `key` property in `TagClass` and `ReferenceClass` now correctly retains its specific string value, just like in `Effect.Service`
+    The `key` property in `TagClass` and `ReferenceClass` now correctly retains its specific string value, just like in `Effect.Service`
 
-  ```ts
-  import { Context, Effect } from "effect"
+    ```ts
+    import { Context, Effect } from "effect";
 
-  // -------------------------------------------------------------------------------------
-  // `key` field
-  // -------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------
+    // `key` field
+    // -------------------------------------------------------------------------------------
 
-  class A extends Effect.Service<A>()("A", { succeed: { a: "value" } }) {}
+    class A extends Effect.Service<A>()("A", { succeed: { a: "value" } }) {}
 
-  // $ExpectType "A"
-  A.key
+    // $ExpectType "A"
+    A.key;
 
-  class B extends Context.Tag("B")<B, { a: "value" }>() {}
+    class B extends Context.Tag("B")<B, { a: "value" }>() {}
 
-  // $ExpectType "B"
-  B.key
+    // $ExpectType "B"
+    B.key;
 
-  class C extends Context.Reference<C>()("C", { defaultValue: () => 0 }) {}
+    class C extends Context.Reference<C>()("C", { defaultValue: () => 0 }) {}
 
-  // $ExpectType "C"
-  C.key
-  ```
+    // $ExpectType "C"
+    C.key;
+    ```
 
 - [#4397](https://github.com/Effect-TS/effect/pull/4397) [`4dbd170`](https://github.com/Effect-TS/effect/commit/4dbd170538e8fb7a36aa7c469c6f93b6c7000091) Thanks @thewilkybarkid! - Make Array.makeBy dual
 
@@ -2966,8 +2983,8 @@
 ### Patch Changes
 
 - [#4341](https://github.com/Effect-TS/effect/pull/4341) [`766113c`](https://github.com/Effect-TS/effect/commit/766113c0ea3512cdb887650ead8ba314236e22ee) Thanks @fubhy! - Improve `Duration.decode` Handling of High-Resolution Time
-  - **Ensured Immutability**: Added the `readonly` modifier to `[seconds: number, nanos: number]` in `DurationInput` to prevent accidental modifications.
-  - **Better Edge Case Handling**: Now correctly processes special values like `-Infinity` and `NaN` when they appear in the tuple representation of duration.
+    - **Ensured Immutability**: Added the `readonly` modifier to `[seconds: number, nanos: number]` in `DurationInput` to prevent accidental modifications.
+    - **Better Edge Case Handling**: Now correctly processes special values like `-Infinity` and `NaN` when they appear in the tuple representation of duration.
 
 - [#4333](https://github.com/Effect-TS/effect/pull/4333) [`712277f`](https://github.com/Effect-TS/effect/commit/712277f949052a24b46e4aa234063a6abf395c90) Thanks @gcanti! - Cron: `unsafeParse` now throws a more informative error instead of a generic one
 
@@ -2979,49 +2996,49 @@
 
 - [#4313](https://github.com/Effect-TS/effect/pull/4313) [`a9c94c8`](https://github.com/Effect-TS/effect/commit/a9c94c807755610831211a686d2fad849ab38eb4) Thanks @gcanti! - Schema: Update `Duration` Encoding to a Tagged Union Format.
 
-  This changeset fixes the `Duration` schema to support all possible duration types, including finite, infinite, and nanosecond durations. The encoding format has been updated from a tuple (`readonly [seconds: number, nanos: number]`) to a tagged union.
+    This changeset fixes the `Duration` schema to support all possible duration types, including finite, infinite, and nanosecond durations. The encoding format has been updated from a tuple (`readonly [seconds: number, nanos: number]`) to a tagged union.
 
-  This update introduces a change to the encoding format. The previous tuple representation is replaced with a more expressive tagged union, which accommodates all duration types:
+    This update introduces a change to the encoding format. The previous tuple representation is replaced with a more expressive tagged union, which accommodates all duration types:
 
-  ```ts
-  type DurationEncoded =
-    | {
-        readonly _tag: "Millis"
-        readonly millis: number
-      }
-    | {
-        readonly _tag: "Nanos"
-        readonly nanos: string
-      }
-    | {
-        readonly _tag: "Infinity"
-      }
-  ```
+    ```ts
+    type DurationEncoded =
+        | {
+              readonly _tag: "Millis";
+              readonly millis: number;
+          }
+        | {
+              readonly _tag: "Nanos";
+              readonly nanos: string;
+          }
+        | {
+              readonly _tag: "Infinity";
+          };
+    ```
 
-  **Rationale**
+    **Rationale**
 
-  The `Duration` schema is primarily used to encode durations for transmission. The new tagged union format ensures clear and precise encoding for:
-  - Finite durations, such as milliseconds.
-  - Infinite durations, such as `Duration.infinity`.
-  - Nanosecond durations.
+    The `Duration` schema is primarily used to encode durations for transmission. The new tagged union format ensures clear and precise encoding for:
+    - Finite durations, such as milliseconds.
+    - Infinite durations, such as `Duration.infinity`.
+    - Nanosecond durations.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Duration, Schema } from "effect"
+    ```ts
+    import { Duration, Schema } from "effect";
 
-  // Encoding a finite duration in milliseconds
-  console.log(Schema.encodeSync(Schema.Duration)(Duration.millis(1000)))
-  // Output: { _tag: 'Millis', millis: 1000 }
+    // Encoding a finite duration in milliseconds
+    console.log(Schema.encodeSync(Schema.Duration)(Duration.millis(1000)));
+    // Output: { _tag: 'Millis', millis: 1000 }
 
-  // Encoding an infinite duration
-  console.log(Schema.encodeSync(Schema.Duration)(Duration.infinity))
-  // Output: { _tag: 'Infinity' }
+    // Encoding an infinite duration
+    console.log(Schema.encodeSync(Schema.Duration)(Duration.infinity));
+    // Output: { _tag: 'Infinity' }
 
-  // Encoding a duration in nanoseconds
-  console.log(Schema.encodeSync(Schema.Duration)(Duration.nanos(1000n)))
-  // Output: { _tag: 'Nanos', nanos: '1000' }
-  ```
+    // Encoding a duration in nanoseconds
+    console.log(Schema.encodeSync(Schema.Duration)(Duration.nanos(1000n)));
+    // Output: { _tag: 'Nanos', nanos: '1000' }
+    ```
 
 - [#4331](https://github.com/Effect-TS/effect/pull/4331) [`107e6f0`](https://github.com/Effect-TS/effect/commit/107e6f0557a1e2d3b0dce25d62fa1e2601521752) Thanks @gcanti! - Schema: Improve encoding in `Defect` and add test for array-based defects.
 
@@ -3043,111 +3060,111 @@
 
 - [#4307](https://github.com/Effect-TS/effect/pull/4307) [`289c13b`](https://github.com/Effect-TS/effect/commit/289c13b38e8e35b214d46d385d05dead176c87cd) Thanks @gcanti! - Schema: Enhance error messages for discriminated unions.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Union(
-    Schema.Tuple(Schema.Literal(-1), Schema.Literal(0)).annotations({
-      identifier: "A"
-    }),
-    Schema.Tuple(Schema.NonNegativeInt, Schema.NonNegativeInt).annotations({
-      identifier: "B"
-    })
-  ).annotations({ identifier: "AB" })
+    const schema = Schema.Union(
+        Schema.Tuple(Schema.Literal(-1), Schema.Literal(0)).annotations({
+            identifier: "A",
+        }),
+        Schema.Tuple(Schema.NonNegativeInt, Schema.NonNegativeInt).annotations({
+            identifier: "B",
+        }),
+    ).annotations({ identifier: "AB" });
 
-  Schema.decodeUnknownSync(schema)([-500, 0])
-  /*
-  throws:
-  ParseError: AB
-  ├─ { readonly 0: -1 }
-  │  └─ ["0"]
-  │     └─ Expected -1, actual -500
-  └─ B
-     └─ [0]
-        └─ NonNegativeInt
-           └─ From side refinement failure
-              └─ NonNegative
-                 └─ Predicate refinement failure
-                    └─ Expected a non-negative number, actual -500
-  */
-  ```
+    Schema.decodeUnknownSync(schema)([-500, 0]);
+    /*
+    throws:
+    ParseError: AB
+    ├─ { readonly 0: -1 }
+    │  └─ ["0"]
+    │     └─ Expected -1, actual -500
+    └─ B
+       └─ [0]
+          └─ NonNegativeInt
+             └─ From side refinement failure
+                └─ NonNegative
+                   └─ Predicate refinement failure
+                      └─ Expected a non-negative number, actual -500
+    */
+    ```
 
-  **After**
+    **After**
 
-  ```diff
-  import { Schema } from "effect"
+    ```diff
+    import { Schema } from "effect"
 
-  const schema = Schema.Union(
-    Schema.Tuple(Schema.Literal(-1), Schema.Literal(0)).annotations({
-      identifier: "A"
-    }),
-    Schema.Tuple(Schema.NonNegativeInt, Schema.NonNegativeInt).annotations({
-      identifier: "B"
-    })
-  ).annotations({ identifier: "AB" })
+    const schema = Schema.Union(
+      Schema.Tuple(Schema.Literal(-1), Schema.Literal(0)).annotations({
+        identifier: "A"
+      }),
+      Schema.Tuple(Schema.NonNegativeInt, Schema.NonNegativeInt).annotations({
+        identifier: "B"
+      })
+    ).annotations({ identifier: "AB" })
 
-  Schema.decodeUnknownSync(schema)([-500, 0])
-  /*
-  throws:
-  ParseError: AB
-  -├─ { readonly 0: -1 }
-  +├─ A
-  │  └─ ["0"]
-  │     └─ Expected -1, actual -500
-  └─ B
-     └─ [0]
-        └─ NonNegativeInt
-           └─ From side refinement failure
-              └─ NonNegative
-                 └─ Predicate refinement failure
-                    └─ Expected a non-negative number, actual -500
-  */
-  ```
+    Schema.decodeUnknownSync(schema)([-500, 0])
+    /*
+    throws:
+    ParseError: AB
+    -├─ { readonly 0: -1 }
+    +├─ A
+    │  └─ ["0"]
+    │     └─ Expected -1, actual -500
+    └─ B
+       └─ [0]
+          └─ NonNegativeInt
+             └─ From side refinement failure
+                └─ NonNegative
+                   └─ Predicate refinement failure
+                      └─ Expected a non-negative number, actual -500
+    */
+    ```
 
 - [#4298](https://github.com/Effect-TS/effect/pull/4298) [`8b4e75d`](https://github.com/Effect-TS/effect/commit/8b4e75d35daea807c447ca760948a717aa66bb52) Thanks @KhraksMamtsov! - Added type-level validation for the `Effect.Service` function to ensure the `Self` generic parameter is provided. If the generic is missing, the `MissingSelfGeneric` type will be returned, indicating that the generic parameter must be specified. This improves type safety and prevents misuse of the `Effect.Service` function.
 
-  ```ts
-  type MissingSelfGeneric =
-    `Missing \`Self\` generic - use \`class Self extends Service<Self>()...\``
-  ```
+    ```ts
+    type MissingSelfGeneric =
+        `Missing \`Self\` generic - use \`class Self extends Service<Self>()...\``;
+    ```
 
 - [#4292](https://github.com/Effect-TS/effect/pull/4292) [`fc5e0f0`](https://github.com/Effect-TS/effect/commit/fc5e0f0d357a0051cfa01c1ede83ffdd3cb41ab1) Thanks @gcanti! - Improve `UnknownException` error messages
 
-  `UnknownException` error messages now include the name of the Effect api that
-  created the error.
+    `UnknownException` error messages now include the name of the Effect api that
+    created the error.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  Effect.tryPromise(() =>
-    Promise.reject(new Error("The operation failed"))
-  ).pipe(Effect.catchAllCause(Effect.logError), Effect.runFork)
+    Effect.tryPromise(() =>
+        Promise.reject(new Error("The operation failed")),
+    ).pipe(Effect.catchAllCause(Effect.logError), Effect.runFork);
 
-  // timestamp=2025-01-21T00:41:03.403Z level=ERROR fiber=#0 cause="UnknownException: An unknown error occurred in Effect.tryPromise
-  //     at fail (.../effect/packages/effect/src/internal/core-effect.ts:1654:19)
-  //     at <anonymous> (.../effect/packages/effect/src/internal/core-effect.ts:1674:26) {
-  //   [cause]: Error: The operation failed
-  //       at <anonymous> (.../effect/scratchpad/error.ts:4:24)
-  //       at .../effect/packages/effect/src/internal/core-effect.ts:1671:7
-  // }"
-  ```
+    // timestamp=2025-01-21T00:41:03.403Z level=ERROR fiber=#0 cause="UnknownException: An unknown error occurred in Effect.tryPromise
+    //     at fail (.../effect/packages/effect/src/internal/core-effect.ts:1654:19)
+    //     at <anonymous> (.../effect/packages/effect/src/internal/core-effect.ts:1674:26) {
+    //   [cause]: Error: The operation failed
+    //       at <anonymous> (.../effect/scratchpad/error.ts:4:24)
+    //       at .../effect/packages/effect/src/internal/core-effect.ts:1671:7
+    // }"
+    ```
 
 - [#4309](https://github.com/Effect-TS/effect/pull/4309) [`004fd2b`](https://github.com/Effect-TS/effect/commit/004fd2bbd1459e64fb1b57f02eeb791ca5ea1ea5) Thanks @gcanti! - Schema: Enforce Finite Durations in `DurationFromNanos`.
 
-  This update ensures that `DurationFromNanos` only accepts finite durations. Previously, the schema did not explicitly enforce this constraint.
+    This update ensures that `DurationFromNanos` only accepts finite durations. Previously, the schema did not explicitly enforce this constraint.
 
-  A filter has been added to validate that the duration is finite.
+    A filter has been added to validate that the duration is finite.
 
-  ```diff
-  DurationFromSelf
-  +.pipe(
-  +  filter((duration) => duration_.isFinite(duration), {
-  +    description: "a finite duration"
-  +  })
-  )
-  ```
+    ```diff
+    DurationFromSelf
+    +.pipe(
+    +  filter((duration) => duration_.isFinite(duration), {
+    +    description: "a finite duration"
+    +  })
+    )
+    ```
 
 - [#4314](https://github.com/Effect-TS/effect/pull/4314) [`b2a31be`](https://github.com/Effect-TS/effect/commit/b2a31be85c35d891351ce4f9a2cc93ece0c257f6) Thanks @gcanti! - Duration: make `DurationValue` properties readonly.
 
@@ -3155,17 +3172,17 @@
 
 - [#4301](https://github.com/Effect-TS/effect/pull/4301) [`bf5f0ae`](https://github.com/Effect-TS/effect/commit/bf5f0ae9daa0170471678e22585e8ec14ce667bb) Thanks @gcanti! - Schema: Fix `BigIntFromNumber` to enforce upper and lower bounds.
 
-  This update ensures the `BigIntFromNumber` schema adheres to safe integer limits by applying the following bounds:
+    This update ensures the `BigIntFromNumber` schema adheres to safe integer limits by applying the following bounds:
 
-  ```diff
-  BigIntFromSelf
-  +  .pipe(
-  +    betweenBigInt(
-  +      BigInt(Number.MIN_SAFE_INTEGER),
-  +      BigInt(Number.MAX_SAFE_INTEGER)
-  +    )
-  +  )
-  ```
+    ```diff
+    BigIntFromSelf
+    +  .pipe(
+    +    betweenBigInt(
+    +      BigInt(Number.MIN_SAFE_INTEGER),
+    +      BigInt(Number.MAX_SAFE_INTEGER)
+    +    )
+    +  )
+    ```
 
 - [#4228](https://github.com/Effect-TS/effect/pull/4228) [`3b19bcf`](https://github.com/Effect-TS/effect/commit/3b19bcfd3aaadb6c9253428622df524537c8e626) Thanks @fubhy! - Fixed conflicting `ParseError` tags between `Cron` and `Schema`
 
@@ -3173,70 +3190,70 @@
 
 - [#4307](https://github.com/Effect-TS/effect/pull/4307) [`289c13b`](https://github.com/Effect-TS/effect/commit/289c13b38e8e35b214d46d385d05dead176c87cd) Thanks @gcanti! - Schema: Add Support for Infinity in `Duration`.
 
-  This update adds support for encoding `Duration.infinity` in `Schema.Duration`.
+    This update adds support for encoding `Duration.infinity` in `Schema.Duration`.
 
-  **Before**
+    **Before**
 
-  Attempting to encode `Duration.infinity` resulted in a `ParseError` due to the lack of support for `Infinity` in `Schema.Duration`:
+    Attempting to encode `Duration.infinity` resulted in a `ParseError` due to the lack of support for `Infinity` in `Schema.Duration`:
 
-  ```ts
-  import { Duration, Schema } from "effect"
+    ```ts
+    import { Duration, Schema } from "effect";
 
-  console.log(Schema.encodeUnknownSync(Schema.Duration)(Duration.infinity))
-  /*
-  throws:
-  ParseError: Duration
-  └─ Encoded side transformation failure
-     └─ HRTime
-        └─ [0]
-           └─ NonNegativeInt
-              └─ Predicate refinement failure
-                 └─ Expected an integer, actual Infinity
-  */
-  ```
+    console.log(Schema.encodeUnknownSync(Schema.Duration)(Duration.infinity));
+    /*
+    throws:
+    ParseError: Duration
+    └─ Encoded side transformation failure
+       └─ HRTime
+          └─ [0]
+             └─ NonNegativeInt
+                └─ Predicate refinement failure
+                   └─ Expected an integer, actual Infinity
+    */
+    ```
 
-  **After**
+    **After**
 
-  The updated behavior successfully encodes `Duration.infinity` as `[ -1, 0 ]`:
+    The updated behavior successfully encodes `Duration.infinity` as `[ -1, 0 ]`:
 
-  ```ts
-  import { Duration, Schema } from "effect"
+    ```ts
+    import { Duration, Schema } from "effect";
 
-  console.log(Schema.encodeUnknownSync(Schema.Duration)(Duration.infinity))
-  // Output: [ -1, 0 ]
-  ```
+    console.log(Schema.encodeUnknownSync(Schema.Duration)(Duration.infinity));
+    // Output: [ -1, 0 ]
+    ```
 
 - [#4300](https://github.com/Effect-TS/effect/pull/4300) [`f474678`](https://github.com/Effect-TS/effect/commit/f474678bf10b8f1c80e3dc096ddc7ecf20b2b23e) Thanks @gcanti! - Schema: update `pluck` type signature to respect optional fields.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema1 = Schema.Struct({ a: Schema.optional(Schema.String) })
+    const schema1 = Schema.Struct({ a: Schema.optional(Schema.String) });
 
-  /*
-  const schema2: Schema.Schema<string | undefined, {
-      readonly a: string | undefined;
-  }, never>
-  */
-  const schema2 = Schema.pluck(schema1, "a")
-  ```
+    /*
+    const schema2: Schema.Schema<string | undefined, {
+        readonly a: string | undefined;
+    }, never>
+    */
+    const schema2 = Schema.pluck(schema1, "a");
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema1 = Schema.Struct({ a: Schema.optional(Schema.String) })
+    const schema1 = Schema.Struct({ a: Schema.optional(Schema.String) });
 
-  /*
-  const schema2: Schema.Schema<string | undefined, {
-      readonly a?: string | undefined;
-  }, never>
-  */
-  const schema2 = Schema.pluck(schema1, "a")
-  ```
+    /*
+    const schema2: Schema.Schema<string | undefined, {
+        readonly a?: string | undefined;
+    }, never>
+    */
+    const schema2 = Schema.pluck(schema1, "a");
+    ```
 
 - [#4296](https://github.com/Effect-TS/effect/pull/4296) [`ee187d0`](https://github.com/Effect-TS/effect/commit/ee187d098007a402844c94d04f0cd8f07695377a) Thanks @gcanti! - fix: update `Cause.isCause` type from 'never' to 'unknown'
 
@@ -3246,50 +3263,50 @@
 
 - [#4273](https://github.com/Effect-TS/effect/pull/4273) [`a8b0ddb`](https://github.com/Effect-TS/effect/commit/a8b0ddb84710054799fc8f57485b95d00093ada1) Thanks @gcanti! - Arbitrary: Fix bug adjusting array constraints for schemas with fixed and rest elements
 
-  This fix ensures that when a schema includes both fixed elements and a rest element, the constraints for the array are correctly adjusted. The adjustment now subtracts the number of values generated by the fixed elements from the overall constraints.
+    This fix ensures that when a schema includes both fixed elements and a rest element, the constraints for the array are correctly adjusted. The adjustment now subtracts the number of values generated by the fixed elements from the overall constraints.
 
 - [#4259](https://github.com/Effect-TS/effect/pull/4259) [`507d546`](https://github.com/Effect-TS/effect/commit/507d546bd49db31000425fb5da88c434e4291bea) Thanks @gcanti! - Schema: improve error messages for invalid transformations
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  Schema.decodeUnknownSync(Schema.NumberFromString)("a")
-  /*
-  throws:
-  ParseError: NumberFromString
-  └─ Transformation process failure
-     └─ Expected NumberFromString, actual "a"
-  */
-  ```
+    Schema.decodeUnknownSync(Schema.NumberFromString)("a");
+    /*
+    throws:
+    ParseError: NumberFromString
+    └─ Transformation process failure
+       └─ Expected NumberFromString, actual "a"
+    */
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  Schema.decodeUnknownSync(Schema.NumberFromString)("a")
-  /*
-  throws:
-  ParseError: NumberFromString
-  └─ Transformation process failure
-     └─ Unable to decode "a" into a number
-  */
-  ```
+    Schema.decodeUnknownSync(Schema.NumberFromString)("a");
+    /*
+    throws:
+    ParseError: NumberFromString
+    └─ Transformation process failure
+       └─ Unable to decode "a" into a number
+    */
+    ```
 
 - [#4273](https://github.com/Effect-TS/effect/pull/4273) [`a8b0ddb`](https://github.com/Effect-TS/effect/commit/a8b0ddb84710054799fc8f57485b95d00093ada1) Thanks @gcanti! - Schema: Extend Support for Array filters, closes #4269.
 
-  Added support for `minItems`, `maxItems`, and `itemsCount` to all schemas where `A` extends `ReadonlyArray`, including `NonEmptyArray`.
+    Added support for `minItems`, `maxItems`, and `itemsCount` to all schemas where `A` extends `ReadonlyArray`, including `NonEmptyArray`.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  // Previously, this would have caused an error
-  const schema = Schema.NonEmptyArray(Schema.String).pipe(Schema.maxItems(2))
-  ```
+    // Previously, this would have caused an error
+    const schema = Schema.NonEmptyArray(Schema.String).pipe(Schema.maxItems(2));
+    ```
 
 - [#4257](https://github.com/Effect-TS/effect/pull/4257) [`8db239b`](https://github.com/Effect-TS/effect/commit/8db239b9c869a3707f6566b9d9dbdf53c4df03fc) Thanks @gcanti! - Schema: Correct `BigInt` and `BigIntFromNumber` identifier annotations to follow naming conventions
 
@@ -3321,109 +3338,109 @@
 
 - [#4244](https://github.com/Effect-TS/effect/pull/4244) [`d7dac48`](https://github.com/Effect-TS/effect/commit/d7dac48a477cdfeec509dbe9f33fce6a1b02b63d) Thanks @gcanti! - Improve pattern handling by merging multiple patterns into a union, closes #4243.
 
-  Previously, the algorithm always prioritized the first pattern when multiple patterns were encountered.
+    Previously, the algorithm always prioritized the first pattern when multiple patterns were encountered.
 
-  This fix introduces a merging strategy that combines patterns into a union (e.g., `(?:${pattern1})|(?:${pattern2})`). By doing so, all patterns have an equal chance to generate values when using `FastCheck.stringMatching`.
+    This fix introduces a merging strategy that combines patterns into a union (e.g., `(?:${pattern1})|(?:${pattern2})`). By doing so, all patterns have an equal chance to generate values when using `FastCheck.stringMatching`.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Arbitrary, FastCheck, Schema } from "effect"
+    ```ts
+    import { Arbitrary, FastCheck, Schema } from "effect";
 
-  // /^[^A-Z]*$/ (given by Lowercase) + /^0x[0-9a-f]{40}$/
-  const schema = Schema.Lowercase.pipe(Schema.pattern(/^0x[0-9a-f]{40}$/))
+    // /^[^A-Z]*$/ (given by Lowercase) + /^0x[0-9a-f]{40}$/
+    const schema = Schema.Lowercase.pipe(Schema.pattern(/^0x[0-9a-f]{40}$/));
 
-  const arb = Arbitrary.make(schema)
+    const arb = Arbitrary.make(schema);
 
-  // Before this fix, the first pattern would always dominate,
-  // making it impossible to generate values
-  const sample = FastCheck.sample(arb, { numRuns: 100 })
+    // Before this fix, the first pattern would always dominate,
+    // making it impossible to generate values
+    const sample = FastCheck.sample(arb, { numRuns: 100 });
 
-  console.log(sample)
-  ```
+    console.log(sample);
+    ```
 
 - [#4252](https://github.com/Effect-TS/effect/pull/4252) [`1d7fd2b`](https://github.com/Effect-TS/effect/commit/1d7fd2b7ee8eeecc912d27adf76ed897db236dc5) Thanks @gcanti! - Fix: Correct `Arbitrary.make` to support nested `TemplateLiteral`s.
 
-  Previously, `Arbitrary.make` did not properly handle nested `TemplateLiteral` schemas, resulting in incorrect or empty outputs. This fix ensures that nested template literals are processed correctly, producing valid arbitrary values.
+    Previously, `Arbitrary.make` did not properly handle nested `TemplateLiteral` schemas, resulting in incorrect or empty outputs. This fix ensures that nested template literals are processed correctly, producing valid arbitrary values.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Arbitrary, FastCheck, Schema as S } from "effect"
+    ```ts
+    import { Arbitrary, FastCheck, Schema as S } from "effect";
 
-  const schema = S.TemplateLiteral(
-    "<",
-    S.TemplateLiteral("h", S.Literal(1, 2)),
-    ">"
-  )
+    const schema = S.TemplateLiteral(
+        "<",
+        S.TemplateLiteral("h", S.Literal(1, 2)),
+        ">",
+    );
 
-  const arb = Arbitrary.make(schema)
+    const arb = Arbitrary.make(schema);
 
-  console.log(FastCheck.sample(arb, { numRuns: 10 }))
-  /*
-  Output:
-  [
-    '<>', '<>', '<>',
-    '<>', '<>', '<>',
-    '<>', '<>', '<>',
-    '<>'
-  ]
-  */
-  ```
+    console.log(FastCheck.sample(arb, { numRuns: 10 }));
+    /*
+    Output:
+    [
+      '<>', '<>', '<>',
+      '<>', '<>', '<>',
+      '<>', '<>', '<>',
+      '<>'
+    ]
+    */
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Arbitrary, FastCheck, Schema as S } from "effect"
+    ```ts
+    import { Arbitrary, FastCheck, Schema as S } from "effect";
 
-  const schema = S.TemplateLiteral(
-    "<",
-    S.TemplateLiteral("h", S.Literal(1, 2)),
-    ">"
-  )
+    const schema = S.TemplateLiteral(
+        "<",
+        S.TemplateLiteral("h", S.Literal(1, 2)),
+        ">",
+    );
 
-  const arb = Arbitrary.make(schema)
+    const arb = Arbitrary.make(schema);
 
-  console.log(FastCheck.sample(arb, { numRuns: 10 }))
-  /*
-  Output:
-  [
-    '<h2>', '<h2>',
-    '<h2>', '<h2>',
-    '<h2>', '<h1>',
-    '<h2>', '<h1>',
-    '<h1>', '<h1>'
-  ]
-  */
-  ```
+    console.log(FastCheck.sample(arb, { numRuns: 10 }));
+    /*
+    Output:
+    [
+      '<h2>', '<h2>',
+      '<h2>', '<h2>',
+      '<h2>', '<h1>',
+      '<h2>', '<h1>',
+      '<h1>', '<h1>'
+    ]
+    */
+    ```
 
 - [#4252](https://github.com/Effect-TS/effect/pull/4252) [`1d7fd2b`](https://github.com/Effect-TS/effect/commit/1d7fd2b7ee8eeecc912d27adf76ed897db236dc5) Thanks @gcanti! - Fix: Allow `Schema.TemplateLiteral` to handle strings with linebreaks, closes #4251.
 
-  **Before**
+    **Before**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteral("a: ", Schema.String)
+    const schema = Schema.TemplateLiteral("a: ", Schema.String);
 
-  console.log(Schema.decodeSync(schema)("a: b \n c"))
-  // throws: ParseError: Expected `a: ${string}`, actual "a: b \n c"
-  ```
+    console.log(Schema.decodeSync(schema)("a: b \n c"));
+    // throws: ParseError: Expected `a: ${string}`, actual "a: b \n c"
+    ```
 
-  **After**
+    **After**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteral("a: ", Schema.String)
+    const schema = Schema.TemplateLiteral("a: ", Schema.String);
 
-  console.log(Schema.decodeSync(schema)("a: b \n c"))
-  /*
-  Output:
-  a: b
-   c
-  */
-  ```
+    console.log(Schema.decodeSync(schema)("a: b \n c"));
+    /*
+    Output:
+    a: b
+     c
+    */
+    ```
 
 ## 3.12.2
 
@@ -3433,7 +3450,7 @@
 
 - [#4212](https://github.com/Effect-TS/effect/pull/4212) [`b63c780`](https://github.com/Effect-TS/effect/commit/b63c78010893101520448ddda7019c487cf7eedd) Thanks @KhraksMamtsov! - Refine `Effect.validateAll` return type to use `NonEmptyArray` for errors.
 
-  This refinement is possible because `Effect.validateAll` guarantees that when the input iterable is non-empty, any validation failure will produce at least one error. In such cases, the errors are inherently non-empty, making it safe and accurate to represent them using a `NonEmptyArray` type. This change aligns the return type with the function's actual behavior, improving type safety and making the API more predictable for developers.
+    This refinement is possible because `Effect.validateAll` guarantees that when the input iterable is non-empty, any validation failure will produce at least one error. In such cases, the errors are inherently non-empty, making it safe and accurate to represent them using a `NonEmptyArray` type. This change aligns the return type with the function's actual behavior, improving type safety and making the API more predictable for developers.
 
 - [#4219](https://github.com/Effect-TS/effect/pull/4219) [`c640d77`](https://github.com/Effect-TS/effect/commit/c640d77b33ad417876f4e8ffe8574ee6cbe5607f) Thanks @whoisandy! - fix: ManagedRuntime.Context to work when Context is of type never
 
@@ -3455,7 +3472,7 @@
 
 - [#4196](https://github.com/Effect-TS/effect/pull/4196) [`39db211`](https://github.com/Effect-TS/effect/commit/39db211414e90c8db8fdad7dc8ce5b4661bcfaef) Thanks @mikearnaldi! - Avoid putting symbols in global to fix incompatibility with Temporal Sandbox.
 
-  After speaking with James Watkins-Harvey we realized current Effect escapes the Temporal Worker sandbox that doesn't look for symbols when restoring global context in the isolate they create leading to memory leaks.
+    After speaking with James Watkins-Harvey we realized current Effect escapes the Temporal Worker sandbox that doesn't look for symbols when restoring global context in the isolate they create leading to memory leaks.
 
 ## 3.12.0
 
@@ -3495,76 +3512,76 @@
 
 - [#4181](https://github.com/Effect-TS/effect/pull/4181) [`a475cc2`](https://github.com/Effect-TS/effect/commit/a475cc25fd7c9f26b27a8e98f8fbe43cc9e6ee3e) Thanks @gcanti! - Schema: Fix `withDecodingDefault` implementation to align with its signature (now removes `undefined` from the AST).
 
-  Additionally, a new constraint has been added to the signature to prevent calling `withDecodingDefault` after `withConstructorDefault`, which previously led to the following issue:
+    Additionally, a new constraint has been added to the signature to prevent calling `withDecodingDefault` after `withConstructorDefault`, which previously led to the following issue:
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.optional(Schema.String).pipe(
-      Schema.withConstructorDefault(() => undefined), // this is invalidated by the following call to `withDecodingDefault`
-      Schema.withDecodingDefault(() => "")
-    )
-  })
-  ```
+    const schema = Schema.Struct({
+        a: Schema.optional(Schema.String).pipe(
+            Schema.withConstructorDefault(() => undefined), // this is invalidated by the following call to `withDecodingDefault`
+            Schema.withDecodingDefault(() => ""),
+        ),
+    });
+    ```
 
 - [#4175](https://github.com/Effect-TS/effect/pull/4175) [`199214e`](https://github.com/Effect-TS/effect/commit/199214e21c616d8a0ccd7ed5f92e944e6c580193) Thanks @gcanti! - Schema: refactor annotations:
-  - Export internal `Uint8` schema
-  - Export internal `NonNegativeInt` schema
-  - Remove title annotations that are identical to identifiers
-  - Avoid setting a title annotation when applying branding
-  - Add more title annotations to refinements
-  - Improve `toString` output and provide more precise error messages for refinements:
+    - Export internal `Uint8` schema
+    - Export internal `NonNegativeInt` schema
+    - Remove title annotations that are identical to identifiers
+    - Avoid setting a title annotation when applying branding
+    - Add more title annotations to refinements
+    - Improve `toString` output and provide more precise error messages for refinements:
 
-    Before
+        Before
 
-    ```ts
-    import { Schema } from "effect"
+        ```ts
+        import { Schema } from "effect";
 
-    const schema = Schema.Number.pipe(
-      Schema.int({ identifier: "MyInt" }),
-      Schema.positive()
-    )
+        const schema = Schema.Number.pipe(
+            Schema.int({ identifier: "MyInt" }),
+            Schema.positive(),
+        );
 
-    console.log(String(schema))
-    // Output: a positive number
+        console.log(String(schema));
+        // Output: a positive number
 
-    Schema.decodeUnknownSync(schema)(1.1)
-    /*
-    throws:
-    ParseError: a positive number
-    └─ From side refinement failure
-      └─ MyInt
-          └─ Predicate refinement failure
-            └─ Expected MyInt, actual 1.1
-    */
-    ```
+        Schema.decodeUnknownSync(schema)(1.1);
+        /*
+        throws:
+        ParseError: a positive number
+        └─ From side refinement failure
+          └─ MyInt
+              └─ Predicate refinement failure
+                └─ Expected MyInt, actual 1.1
+        */
+        ```
 
-    After
-    - `toString` now combines all refinements with `" & "` instead of showing only the last one.
-    - The last message (`"Expected ..."`) now uses the extended description to make the error message clearer.
+        After
+        - `toString` now combines all refinements with `" & "` instead of showing only the last one.
+        - The last message (`"Expected ..."`) now uses the extended description to make the error message clearer.
 
-    ```ts
-    import { Schema } from "effect"
+        ```ts
+        import { Schema } from "effect";
 
-    const schema = Schema.Number.pipe(
-      Schema.int({ identifier: "MyInt" }),
-      Schema.positive()
-    )
+        const schema = Schema.Number.pipe(
+            Schema.int({ identifier: "MyInt" }),
+            Schema.positive(),
+        );
 
-    console.log(String(schema))
-    // Output: MyInt & positive // <= all the refinements
+        console.log(String(schema));
+        // Output: MyInt & positive // <= all the refinements
 
-    Schema.decodeUnknownSync(schema)(1.1)
-    /*
-    throws:
-    ParseError: MyInt & positive
-    └─ From side refinement failure
-      └─ MyInt
-          └─ Predicate refinement failure
-            └─ Expected an integer, actual 1.1 // <= extended description
-    */
-    ```
+        Schema.decodeUnknownSync(schema)(1.1);
+        /*
+        throws:
+        ParseError: MyInt & positive
+        └─ From side refinement failure
+          └─ MyInt
+              └─ Predicate refinement failure
+                └─ Expected an integer, actual 1.1 // <= extended description
+        */
+        ```
 
 - [#4182](https://github.com/Effect-TS/effect/pull/4182) [`b3c160d`](https://github.com/Effect-TS/effect/commit/b3c160d7a1fdfc2d3fb2440530f1ab80efc65133) Thanks @mikearnaldi! - Replace absolute imports with relative ones
 
@@ -3574,98 +3591,98 @@
 
 - [#4113](https://github.com/Effect-TS/effect/pull/4113) [`1c08a0b`](https://github.com/Effect-TS/effect/commit/1c08a0b8505badcffb4d9cade5a746ea90c9557e) Thanks @thewilkybarkid! - Schema: Support template literals in `Schema.Config`.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  // const config: Config<`a${string}`>
-  const config = Schema.Config(
-    "A",
-    Schema.TemplateLiteral(Schema.Literal("a"), Schema.String)
-  )
-  ```
+    // const config: Config<`a${string}`>
+    const config = Schema.Config(
+        "A",
+        Schema.TemplateLiteral(Schema.Literal("a"), Schema.String),
+    );
+    ```
 
 - [#4174](https://github.com/Effect-TS/effect/pull/4174) [`1ce703b`](https://github.com/Effect-TS/effect/commit/1ce703b041bbd7560c5c437c9b9be48f027937fd) Thanks @gcanti! - Schema: Add support for `TemplateLiteral` parameters in `TemplateLiteral`, closes #4166.
 
-  This update also adds support for `TemplateLiteral` and `TemplateLiteralParser` parameters in `TemplateLiteralParser`.
+    This update also adds support for `TemplateLiteral` and `TemplateLiteralParser` parameters in `TemplateLiteralParser`.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteralParser(
-    "<",
-    Schema.TemplateLiteralParser("h", Schema.Literal(1, 2)),
-    ">"
-  )
-  /*
-  throws:
-  Error: Unsupported template literal span
-  schema (TemplateLiteral): `h${"1" | "2"}`
-  */
-  ```
+    const schema = Schema.TemplateLiteralParser(
+        "<",
+        Schema.TemplateLiteralParser("h", Schema.Literal(1, 2)),
+        ">",
+    );
+    /*
+    throws:
+    Error: Unsupported template literal span
+    schema (TemplateLiteral): `h${"1" | "2"}`
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  // Schema<readonly ["<", readonly ["h", 2 | 1], ">"], "<h2>" | "<h1>", never>
-  const schema = Schema.TemplateLiteralParser(
-    "<",
-    Schema.TemplateLiteralParser("h", Schema.Literal(1, 2)),
-    ">"
-  )
+    // Schema<readonly ["<", readonly ["h", 2 | 1], ">"], "<h2>" | "<h1>", never>
+    const schema = Schema.TemplateLiteralParser(
+        "<",
+        Schema.TemplateLiteralParser("h", Schema.Literal(1, 2)),
+        ">",
+    );
 
-  console.log(Schema.decodeUnknownSync(schema)("<h1>"))
-  // Output: [ '<', [ 'h', 1 ], '>' ]
-  ```
+    console.log(Schema.decodeUnknownSync(schema)("<h1>"));
+    // Output: [ '<', [ 'h', 1 ], '>' ]
+    ```
 
 - [#4174](https://github.com/Effect-TS/effect/pull/4174) [`1ce703b`](https://github.com/Effect-TS/effect/commit/1ce703b041bbd7560c5c437c9b9be48f027937fd) Thanks @gcanti! - Schema: Fix bug in `TemplateLiteralParser` where unions of numeric literals were not coerced correctly.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteralParser("a", Schema.Literal(1, 2))
+    const schema = Schema.TemplateLiteralParser("a", Schema.Literal(1, 2));
 
-  console.log(Schema.decodeUnknownSync(schema)("a1"))
-  /*
-  throws:
-  ParseError: (`a${"1" | "2"}` <-> readonly ["a", 1 | 2])
-  └─ Type side transformation failure
-     └─ readonly ["a", 1 | 2]
-        └─ [1]
-           └─ 1 | 2
-              ├─ Expected 1, actual "1"
-              └─ Expected 2, actual "1"
-  */
-  ```
+    console.log(Schema.decodeUnknownSync(schema)("a1"));
+    /*
+    throws:
+    ParseError: (`a${"1" | "2"}` <-> readonly ["a", 1 | 2])
+    └─ Type side transformation failure
+       └─ readonly ["a", 1 | 2]
+          └─ [1]
+             └─ 1 | 2
+                ├─ Expected 1, actual "1"
+                └─ Expected 2, actual "1"
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteralParser("a", Schema.Literal(1, 2))
+    const schema = Schema.TemplateLiteralParser("a", Schema.Literal(1, 2));
 
-  console.log(Schema.decodeUnknownSync(schema)("a1"))
-  // Output: [ 'a', 1 ]
+    console.log(Schema.decodeUnknownSync(schema)("a1"));
+    // Output: [ 'a', 1 ]
 
-  console.log(Schema.decodeUnknownSync(schema)("a2"))
-  // Output: [ 'a', 2 ]
+    console.log(Schema.decodeUnknownSync(schema)("a2"));
+    // Output: [ 'a', 2 ]
 
-  console.log(Schema.decodeUnknownSync(schema)("a3"))
-  /*
-  throws:
-  ParseError: (`a${"1" | "2"}` <-> readonly ["a", 1 | 2])
-  └─ Encoded side transformation failure
-     └─ Expected `a${"1" | "2"}`, actual "a3"
-  */
-  ```
+    console.log(Schema.decodeUnknownSync(schema)("a3"));
+    /*
+    throws:
+    ParseError: (`a${"1" | "2"}` <-> readonly ["a", 1 | 2])
+    └─ Encoded side transformation failure
+       └─ Expected `a${"1" | "2"}`, actual "a3"
+    */
+    ```
 
 ## 3.11.8
 
@@ -3681,221 +3698,221 @@
 
 - [#4138](https://github.com/Effect-TS/effect/pull/4138) [`cec0b4d`](https://github.com/Effect-TS/effect/commit/cec0b4d152ef660be2ccdb0927255f2471436e6e) Thanks @gcanti! - JSONSchema: ignore never members in unions.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Union(Schema.String, Schema.Never)
+    const schema = Schema.Union(Schema.String, Schema.Never);
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "anyOf": [
-      {
-        "type": "string"
-      },
-      {
-        "$id": "/schemas/never",
-        "not": {},
-        "title": "never"
-      }
-    ]
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$id": "/schemas/never",
+          "not": {},
+          "title": "never"
+        }
+      ]
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Union(Schema.String, Schema.Never)
+    const schema = Schema.Union(Schema.String, Schema.Never);
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "string"
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "string"
+    }
+    */
+    ```
 
 - [#4138](https://github.com/Effect-TS/effect/pull/4138) [`cec0b4d`](https://github.com/Effect-TS/effect/commit/cec0b4d152ef660be2ccdb0927255f2471436e6e) Thanks @gcanti! - JSONSchema: handle the `nullable` keyword for OpenAPI target, closes #4075.
 
-  Before
+    Before
 
-  ```ts
-  import { OpenApiJsonSchema } from "@effect/platform"
-  import { Schema } from "effect"
+    ```ts
+    import { OpenApiJsonSchema } from "@effect/platform";
+    import { Schema } from "effect";
 
-  const schema = Schema.NullOr(Schema.String)
+    const schema = Schema.NullOr(Schema.String);
 
-  console.log(JSON.stringify(OpenApiJsonSchema.make(schema), null, 2))
-  /*
-  {
-    "anyOf": [
-      {
-        "type": "string"
-      },
-      {
-        "enum": [
-          null
-        ]
-      }
-    ]
-  }
-  */
-  ```
+    console.log(JSON.stringify(OpenApiJsonSchema.make(schema), null, 2));
+    /*
+    {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "enum": [
+            null
+          ]
+        }
+      ]
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { OpenApiJsonSchema } from "@effect/platform"
-  import { Schema } from "effect"
+    ```ts
+    import { OpenApiJsonSchema } from "@effect/platform";
+    import { Schema } from "effect";
 
-  const schema = Schema.NullOr(Schema.String)
+    const schema = Schema.NullOr(Schema.String);
 
-  console.log(JSON.stringify(OpenApiJsonSchema.make(schema), null, 2))
-  /*
-  {
-    "type": "string",
-    "nullable": true
-  }
-  */
-  ```
+    console.log(JSON.stringify(OpenApiJsonSchema.make(schema), null, 2));
+    /*
+    {
+      "type": "string",
+      "nullable": true
+    }
+    */
+    ```
 
 - [#4128](https://github.com/Effect-TS/effect/pull/4128) [`8d978c5`](https://github.com/Effect-TS/effect/commit/8d978c53f6fcc98d9d645ecba3e4b55d4297dd36) Thanks @gcanti! - JSONSchema: add `type` for homogeneous enum schemas, closes #4127
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Literal("a", "b")
+    const schema = Schema.Literal("a", "b");
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "enum": [
-      "a",
-      "b"
-    ]
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "enum": [
+        "a",
+        "b"
+      ]
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Literal("a", "b")
+    const schema = Schema.Literal("a", "b");
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "string",
-    "enum": [
-      "a",
-      "b"
-    ]
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "string",
+      "enum": [
+        "a",
+        "b"
+      ]
+    }
+    */
+    ```
 
 - [#4138](https://github.com/Effect-TS/effect/pull/4138) [`cec0b4d`](https://github.com/Effect-TS/effect/commit/cec0b4d152ef660be2ccdb0927255f2471436e6e) Thanks @gcanti! - JSONSchema: use `{ "type": "null" }` to represent the `null` literal
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.NullOr(Schema.String)
+    const schema = Schema.NullOr(Schema.String);
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "anyOf": [
-      {
-        "type": "string"
-      },
-      {
-        "enum": [
-          null
-        ]
-      }
-    ]
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "enum": [
+            null
+          ]
+        }
+      ]
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.NullOr(Schema.String)
+    const schema = Schema.NullOr(Schema.String);
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "anyOf": [
-      {
-        "type": "string"
-      },
-      {
-        "type": "null"
-      }
-    ]
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+    */
+    ```
 
 - [#4138](https://github.com/Effect-TS/effect/pull/4138) [`cec0b4d`](https://github.com/Effect-TS/effect/commit/cec0b4d152ef660be2ccdb0927255f2471436e6e) Thanks @gcanti! - JSONSchema: handle empty native enums.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  enum Empty {}
+    enum Empty {}
 
-  const schema = Schema.Enums(Empty)
+    const schema = Schema.Enums(Empty);
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$comment": "/schemas/enums",
-    "anyOf": [] // <= invalid schema!
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "$comment": "/schemas/enums",
+      "anyOf": [] // <= invalid schema!
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  enum Empty {}
+    enum Empty {}
 
-  const schema = Schema.Enums(Empty)
+    const schema = Schema.Enums(Empty);
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "/schemas/never",
-    "not": {}
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "$id": "/schemas/never",
+      "not": {}
+    }
+    */
+    ```
 
 ## 3.11.6
 
@@ -3903,46 +3920,46 @@
 
 - [#4118](https://github.com/Effect-TS/effect/pull/4118) [`662d1ce`](https://github.com/Effect-TS/effect/commit/662d1ce6fb7da384a95888d5b2bb5605bdf3208d) Thanks @gcanti! - Allow the transformation created by the Class API to be annotated on all its components: the type side, the transformation itself, and the encoded side.
 
-  **Example**
+    **Example**
 
-  ```ts
-  import { Schema, SchemaAST } from "effect"
+    ```ts
+    import { Schema, SchemaAST } from "effect";
 
-  class A extends Schema.Class<A>("A")(
-    {
-      a: Schema.NonEmptyString
-    },
-    [
-      { identifier: "TypeID" }, // annotations for the type side
-      { identifier: "TransformationID" }, // annotations for the the transformation itself
-      { identifier: "EncodedID" } // annotations for the the encoded side
-    ]
-  ) {}
+    class A extends Schema.Class<A>("A")(
+        {
+            a: Schema.NonEmptyString,
+        },
+        [
+            { identifier: "TypeID" }, // annotations for the type side
+            { identifier: "TransformationID" }, // annotations for the the transformation itself
+            { identifier: "EncodedID" }, // annotations for the the encoded side
+        ],
+    ) {}
 
-  console.log(SchemaAST.getIdentifierAnnotation(A.ast.to)) // Some("TypeID")
-  console.log(SchemaAST.getIdentifierAnnotation(A.ast)) // Some("TransformationID")
-  console.log(SchemaAST.getIdentifierAnnotation(A.ast.from)) // Some("EncodedID")
+    console.log(SchemaAST.getIdentifierAnnotation(A.ast.to)); // Some("TypeID")
+    console.log(SchemaAST.getIdentifierAnnotation(A.ast)); // Some("TransformationID")
+    console.log(SchemaAST.getIdentifierAnnotation(A.ast.from)); // Some("EncodedID")
 
-  A.make({ a: "" })
-  /*
-  ParseError: TypeID
-  └─ ["a"]
-     └─ NonEmptyString
-        └─ Predicate refinement failure
-           └─ Expected NonEmptyString, actual ""
-  */
+    A.make({ a: "" });
+    /*
+    ParseError: TypeID
+    └─ ["a"]
+       └─ NonEmptyString
+          └─ Predicate refinement failure
+             └─ Expected NonEmptyString, actual ""
+    */
 
-  Schema.encodeSync(A)({ a: "" })
-  /*
-  ParseError: TransformationID
-  └─ Type side transformation failure
-     └─ TypeID
-        └─ ["a"]
-           └─ NonEmptyString
-              └─ Predicate refinement failure
-                 └─ Expected NonEmptyString, actual ""
-  */
-  ```
+    Schema.encodeSync(A)({ a: "" });
+    /*
+    ParseError: TransformationID
+    └─ Type side transformation failure
+       └─ TypeID
+          └─ ["a"]
+             └─ NonEmptyString
+                └─ Predicate refinement failure
+                   └─ Expected NonEmptyString, actual ""
+    */
+    ```
 
 - [#4126](https://github.com/Effect-TS/effect/pull/4126) [`31c62d8`](https://github.com/Effect-TS/effect/commit/31c62d83cbdcf9850a8b5331faa239601c60f78a) Thanks @gcanti! - Rewrite the Arbitrary compiler from scratch, closes #2312
 
@@ -3951,412 +3968,412 @@
 ### Patch Changes
 
 - [#4019](https://github.com/Effect-TS/effect/pull/4019) [`9f5a6f7`](https://github.com/Effect-TS/effect/commit/9f5a6f701bf7ba31adccd1f1bcfa8ab5614c9be8) Thanks @gcanti! - Add missing `jsonSchema` annotations to the following filters:
-  - `lowercased`
-  - `capitalized`
-  - `uncapitalized`
-  - `uppercased`
+    - `lowercased`
+    - `capitalized`
+    - `uncapitalized`
+    - `uppercased`
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.Uppercased
-  })
+    const schema = Schema.Struct({
+        a: Schema.Uppercased,
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  throws:
-  Error: Missing annotation
-  details: Generating a JSON Schema for this schema requires a "jsonSchema" annotation
-  schema (Refinement): Uppercased
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    throws:
+    Error: Missing annotation
+    details: Generating a JSON Schema for this schema requires a "jsonSchema" annotation
+    schema (Refinement): Uppercased
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Uppercased
+    const schema = Schema.Uppercased;
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  Output:
-  {
-    "$ref": "#/$defs/Uppercased",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$defs": {
-      "Uppercased": {
-        "type": "string",
-        "description": "an uppercase string",
-        "title": "Uppercased",
-        "pattern": "^[^a-z]*$"
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    Output:
+    {
+      "$ref": "#/$defs/Uppercased",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "$defs": {
+        "Uppercased": {
+          "type": "string",
+          "description": "an uppercase string",
+          "title": "Uppercased",
+          "pattern": "^[^a-z]*$"
+        }
       }
     }
-  }
-  */
-  ```
+    */
+    ```
 
 - [#4111](https://github.com/Effect-TS/effect/pull/4111) [`22905cf`](https://github.com/Effect-TS/effect/commit/22905cf5addfb1ff3d2a6135c52036be958ae911) Thanks @gcanti! - JSONSchema: merge refinement fragments instead of just overwriting them.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  export const schema = Schema.String.pipe(
-    Schema.startsWith("a"), // <= overwritten!
-    Schema.endsWith("c")
-  )
+    export const schema = Schema.String.pipe(
+        Schema.startsWith("a"), // <= overwritten!
+        Schema.endsWith("c"),
+    );
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "string",
-    "description": "a string ending with \"c\"",
-    "pattern": "^.*c$" // <= overwritten!
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "string",
+      "description": "a string ending with \"c\"",
+      "pattern": "^.*c$" // <= overwritten!
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  export const schema = Schema.String.pipe(
-    Schema.startsWith("a"), // <= preserved!
-    Schema.endsWith("c")
-  )
+    export const schema = Schema.String.pipe(
+        Schema.startsWith("a"), // <= preserved!
+        Schema.endsWith("c"),
+    );
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "type": "string",
-    "description": "a string ending with \"c\"",
-    "pattern": "^.*c$",
-    "allOf": [
-      {
-        "pattern": "^a" // <= preserved!
-      }
-    ],
-    "$schema": "http://json-schema.org/draft-07/schema#"
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "type": "string",
+      "description": "a string ending with \"c\"",
+      "pattern": "^.*c$",
+      "allOf": [
+        {
+          "pattern": "^a" // <= preserved!
+        }
+      ],
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+    */
+    ```
 
 - [#4019](https://github.com/Effect-TS/effect/pull/4019) [`9f5a6f7`](https://github.com/Effect-TS/effect/commit/9f5a6f701bf7ba31adccd1f1bcfa8ab5614c9be8) Thanks @gcanti! - JSONSchema: Correct the output order when generating a JSON Schema from a Union that includes literals and primitive schemas.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Union(Schema.Literal(1, 2), Schema.String)
+    const schema = Schema.Union(Schema.Literal(1, 2), Schema.String);
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "anyOf": [
-      {
-        "type": "string"
-      },
-      {
-        "enum": [
-          1,
-          2
-        ]
-      }
-    ]
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "enum": [
+            1,
+            2
+          ]
+        }
+      ]
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Union(Schema.Literal(1, 2), Schema.String)
+    const schema = Schema.Union(Schema.Literal(1, 2), Schema.String);
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "anyOf": [
-      {
-        "enum": [
-          1,
-          2
-        ]
-      },
-      {
-        "type": "string"
-      }
-    ]
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "anyOf": [
+        {
+          "enum": [
+            1,
+            2
+          ]
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+    */
+    ```
 
 - [#4107](https://github.com/Effect-TS/effect/pull/4107) [`1e59e4f`](https://github.com/Effect-TS/effect/commit/1e59e4fd778da18296812a2a32f36ca8ae50f60d) Thanks @tim-smart! - remove FnEffect type to improve return type of Effect.fn
 
 - [#4108](https://github.com/Effect-TS/effect/pull/4108) [`8d914e5`](https://github.com/Effect-TS/effect/commit/8d914e504e7a22d0ea628e8af265ee450ff9530f) Thanks @gcanti! - JSONSchema: represent `never` as `{"not":{}}`
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Never
+    const schema = Schema.Never;
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  throws:
-  Error: Missing annotation
-  details: Generating a JSON Schema for this schema requires a "jsonSchema" annotation
-  schema (NeverKeyword): never
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    throws:
+    Error: Missing annotation
+    details: Generating a JSON Schema for this schema requires a "jsonSchema" annotation
+    schema (NeverKeyword): never
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Never
+    const schema = Schema.Never;
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$id": "/schemas/never",
-    "not": {},
-    "title": "never",
-    "$schema": "http://json-schema.org/draft-07/schema#"
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$id": "/schemas/never",
+      "not": {},
+      "title": "never",
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+    */
+    ```
 
 - [#4115](https://github.com/Effect-TS/effect/pull/4115) [`03bb00f`](https://github.com/Effect-TS/effect/commit/03bb00faa74f9e168a54a8cc0828a664fbb1ab05) Thanks @tim-smart! - avoid using non-namespaced "async" internally
 
 - [#4019](https://github.com/Effect-TS/effect/pull/4019) [`9f5a6f7`](https://github.com/Effect-TS/effect/commit/9f5a6f701bf7ba31adccd1f1bcfa8ab5614c9be8) Thanks @gcanti! - JSONSchema: fix special case in `parseJson` handling to target the "to" side of the transformation only at the top level.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.parseJson(
-    Schema.Struct({
-      a: Schema.parseJson(
+    const schema = Schema.parseJson(
         Schema.Struct({
-          b: Schema.String
-        })
-      )
-    })
-  )
+            a: Schema.parseJson(
+                Schema.Struct({
+                    b: Schema.String,
+                }),
+            ),
+        }),
+    );
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-      "a"
-    ],
-    "properties": {
-      "a": {
-        "type": "object",
-        "required": [
-          "b"
-        ],
-        "properties": {
-          "b": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "additionalProperties": false
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "a"
+      ],
+      "properties": {
+        "a": {
+          "type": "object",
+          "required": [
+            "b"
+          ],
+          "properties": {
+            "b": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.parseJson(
-    Schema.Struct({
-      a: Schema.parseJson(
+    const schema = Schema.parseJson(
         Schema.Struct({
-          b: Schema.String
-        })
-      )
-    })
-  )
+            a: Schema.parseJson(
+                Schema.Struct({
+                    b: Schema.String,
+                }),
+            ),
+        }),
+    );
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "type": "object",
-    "required": [
-      "a"
-    ],
-    "properties": {
-      "a": {
-        "type": "string",
-        "contentMediaType": "application/json"
-      }
-    },
-    "additionalProperties": false,
-    "$schema": "http://json-schema.org/draft-07/schema#"
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "type": "object",
+      "required": [
+        "a"
+      ],
+      "properties": {
+        "a": {
+          "type": "string",
+          "contentMediaType": "application/json"
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+    */
+    ```
 
 - [#4101](https://github.com/Effect-TS/effect/pull/4101) [`14e1149`](https://github.com/Effect-TS/effect/commit/14e1149f1af5a022f06eb8c2e4ba9fec17fe7426) Thanks @gcanti! - Schema: align the `make` constructor of structs with the behavior of the Class API constructors when all fields have a default.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.propertySignature(Schema.Number).pipe(
-      Schema.withConstructorDefault(() => 0)
-    )
-  })
+    const schema = Schema.Struct({
+        a: Schema.propertySignature(Schema.Number).pipe(
+            Schema.withConstructorDefault(() => 0),
+        ),
+    });
 
-  // TypeScript error: Expected 1-2 arguments, but got 0.ts(2554)
-  console.log(schema.make())
-  ```
+    // TypeScript error: Expected 1-2 arguments, but got 0.ts(2554)
+    console.log(schema.make());
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.propertySignature(Schema.Number).pipe(
-      Schema.withConstructorDefault(() => 0)
-    )
-  })
+    const schema = Schema.Struct({
+        a: Schema.propertySignature(Schema.Number).pipe(
+            Schema.withConstructorDefault(() => 0),
+        ),
+    });
 
-  console.log(schema.make())
-  // Output: { a: 0 }
-  ```
+    console.log(schema.make());
+    // Output: { a: 0 }
+    ```
 
 - [#4019](https://github.com/Effect-TS/effect/pull/4019) [`9f5a6f7`](https://github.com/Effect-TS/effect/commit/9f5a6f701bf7ba31adccd1f1bcfa8ab5614c9be8) Thanks @gcanti! - JSONSchema: Fix issue where `identifier` is ignored when a refinement is applied to a schema, closes #4012
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.NonEmptyString
+    const schema = Schema.NonEmptyString;
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "string",
-    "description": "a non empty string",
-    "title": "NonEmptyString",
-    "minLength": 1
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "string",
+      "description": "a non empty string",
+      "title": "NonEmptyString",
+      "minLength": 1
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.NonEmptyString
+    const schema = Schema.NonEmptyString;
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$ref": "#/$defs/NonEmptyString",
-    "$defs": {
-      "NonEmptyString": {
-        "type": "string",
-        "description": "a non empty string",
-        "title": "NonEmptyString",
-        "minLength": 1
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "$ref": "#/$defs/NonEmptyString",
+      "$defs": {
+        "NonEmptyString": {
+          "type": "string",
+          "description": "a non empty string",
+          "title": "NonEmptyString",
+          "minLength": 1
+        }
       }
     }
-  }
-  */
-  ```
+    */
+    ```
 
 - [#4019](https://github.com/Effect-TS/effect/pull/4019) [`9f5a6f7`](https://github.com/Effect-TS/effect/commit/9f5a6f701bf7ba31adccd1f1bcfa8ab5614c9be8) Thanks @gcanti! - JSONSchema: Use identifier with Class APIs to create a `$ref` instead of inlining the schema.
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  class A extends Schema.Class<A>("A")({
-    a: Schema.String
-  }) {}
+    class A extends Schema.Class<A>("A")({
+        a: Schema.String,
+    }) {}
 
-  console.log(JSON.stringify(JSONSchema.make(A), null, 2))
-  /*
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [
-      "a"
-    ],
-    "properties": {
-      "a": {
-        "type": "string"
-      }
-    },
-    "additionalProperties": false
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(A), null, 2));
+    /*
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [
+        "a"
+      ],
+      "properties": {
+        "a": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  class A extends Schema.Class<A>("A")({
-    a: Schema.String
-  }) {}
+    class A extends Schema.Class<A>("A")({
+        a: Schema.String,
+    }) {}
 
-  console.log(JSON.stringify(JSONSchema.make(A), null, 2))
-  /*
-  {
-    "$ref": "#/$defs/A",
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$defs": {
-      "A": {
-        "type": "object",
-        "required": [
-          "a"
-        ],
-        "properties": {
-          "a": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
+    console.log(JSON.stringify(JSONSchema.make(A), null, 2));
+    /*
+    {
+      "$ref": "#/$defs/A",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "$defs": {
+        "A": {
+          "type": "object",
+          "required": [
+            "a"
+          ],
+          "properties": {
+            "a": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
       }
     }
-  }
-  */
-  ```
+    */
+    ```
 
 ## 3.11.4
 
@@ -4374,173 +4391,173 @@
 
 - [#4080](https://github.com/Effect-TS/effect/pull/4080) [`90906f7`](https://github.com/Effect-TS/effect/commit/90906f7f154b12c7182e8f39e3c55ef3937db857) Thanks @gcanti! - Fix the `Schema.TemplateLiteral` output type when the arguments include a branded type.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteral(
-    "a ",
-    Schema.String.pipe(Schema.brand("MyBrand"))
-  )
+    const schema = Schema.TemplateLiteral(
+        "a ",
+        Schema.String.pipe(Schema.brand("MyBrand")),
+    );
 
-  // type Type = `a ${Schema.brand<typeof Schema.String, "MyBrand"> & string}`
-  // | `a ${Schema.brand<typeof Schema.String, "MyBrand"> & number}`
-  // | `a ${Schema.brand<typeof Schema.String, "MyBrand"> & bigint}`
-  // | `a ${Schema.brand<...> & false}`
-  // | `a ${Schema.brand<...> & true}`
-  type Type = typeof schema.Type
-  ```
+    // type Type = `a ${Schema.brand<typeof Schema.String, "MyBrand"> & string}`
+    // | `a ${Schema.brand<typeof Schema.String, "MyBrand"> & number}`
+    // | `a ${Schema.brand<typeof Schema.String, "MyBrand"> & bigint}`
+    // | `a ${Schema.brand<...> & false}`
+    // | `a ${Schema.brand<...> & true}`
+    type Type = typeof schema.Type;
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteral(
-    "a ",
-    Schema.String.pipe(Schema.brand("MyBrand"))
-  )
+    const schema = Schema.TemplateLiteral(
+        "a ",
+        Schema.String.pipe(Schema.brand("MyBrand")),
+    );
 
-  // type Type = `a ${string & Brand<"MyBrand">}`
-  type Type = typeof schema.Type
-  ```
+    // type Type = `a ${string & Brand<"MyBrand">}`
+    type Type = typeof schema.Type;
+    ```
 
 - [#4076](https://github.com/Effect-TS/effect/pull/4076) [`3862cd3`](https://github.com/Effect-TS/effect/commit/3862cd3c7f6a542ed65fb81255b3bd696ce2f567) Thanks @gcanti! - Schema: fix bug in `Schema.TemplateLiteralParser` resulting in a runtime error.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteralParser("a", "b")
-  // throws TypeError: Cannot read properties of undefined (reading 'replace')
-  ```
+    const schema = Schema.TemplateLiteralParser("a", "b");
+    // throws TypeError: Cannot read properties of undefined (reading 'replace')
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteralParser("a", "b")
+    const schema = Schema.TemplateLiteralParser("a", "b");
 
-  console.log(Schema.decodeUnknownSync(schema)("ab"))
-  // Output: [ 'a', 'b' ]
-  ```
+    console.log(Schema.decodeUnknownSync(schema)("ab"));
+    // Output: [ 'a', 'b' ]
+    ```
 
 - [#4076](https://github.com/Effect-TS/effect/pull/4076) [`3862cd3`](https://github.com/Effect-TS/effect/commit/3862cd3c7f6a542ed65fb81255b3bd696ce2f567) Thanks @gcanti! - SchemaAST: fix `TemplateLiteral` model.
 
-  Added `Literal` and `Union` as valid types.
+    Added `Literal` and `Union` as valid types.
 
 - [#4083](https://github.com/Effect-TS/effect/pull/4083) [`343b6aa`](https://github.com/Effect-TS/effect/commit/343b6aa6ac4a74276bfc7c63ccbf4a1d72bc1bed) Thanks @gcanti! - Preserve `MissingMessageAnnotation`s on property signature declarations when another field is a property signature transformation.
 
-  Before
+    Before
 
-  ```ts
-  import { Console, Effect, ParseResult, Schema } from "effect"
+    ```ts
+    import { Console, Effect, ParseResult, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.propertySignature(Schema.String).annotations({
-      missingMessage: () => "message1"
-    }),
-    b: Schema.propertySignature(Schema.String)
-      .annotations({ missingMessage: () => "message2" })
-      .pipe(Schema.fromKey("c")), // <= transformation
-    d: Schema.propertySignature(Schema.String).annotations({
-      missingMessage: () => "message3"
-    })
-  })
+    const schema = Schema.Struct({
+        a: Schema.propertySignature(Schema.String).annotations({
+            missingMessage: () => "message1",
+        }),
+        b: Schema.propertySignature(Schema.String)
+            .annotations({ missingMessage: () => "message2" })
+            .pipe(Schema.fromKey("c")), // <= transformation
+        d: Schema.propertySignature(Schema.String).annotations({
+            missingMessage: () => "message3",
+        }),
+    });
 
-  Effect.runPromiseExit(
-    Schema.decodeUnknown(schema, { errors: "all" })({}).pipe(
-      Effect.tapError((error) =>
-        Console.log(ParseResult.ArrayFormatter.formatErrorSync(error))
-      )
-    )
-  )
-  /*
-  Output:
-  [
-    { _tag: 'Missing', path: [ 'a' ], message: 'is missing' }, // <= wrong
-    { _tag: 'Missing', path: [ 'c' ], message: 'message2' },
-    { _tag: 'Missing', path: [ 'd' ], message: 'is missing' } // <= wrong
-  ]
-  */
-  ```
+    Effect.runPromiseExit(
+        Schema.decodeUnknown(schema, { errors: "all" })({}).pipe(
+            Effect.tapError((error) =>
+                Console.log(ParseResult.ArrayFormatter.formatErrorSync(error)),
+            ),
+        ),
+    );
+    /*
+    Output:
+    [
+      { _tag: 'Missing', path: [ 'a' ], message: 'is missing' }, // <= wrong
+      { _tag: 'Missing', path: [ 'c' ], message: 'message2' },
+      { _tag: 'Missing', path: [ 'd' ], message: 'is missing' } // <= wrong
+    ]
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Console, Effect, ParseResult, Schema } from "effect"
+    ```ts
+    import { Console, Effect, ParseResult, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.propertySignature(Schema.String).annotations({
-      missingMessage: () => "message1"
-    }),
-    b: Schema.propertySignature(Schema.String)
-      .annotations({ missingMessage: () => "message2" })
-      .pipe(Schema.fromKey("c")), // <= transformation
-    d: Schema.propertySignature(Schema.String).annotations({
-      missingMessage: () => "message3"
-    })
-  })
+    const schema = Schema.Struct({
+        a: Schema.propertySignature(Schema.String).annotations({
+            missingMessage: () => "message1",
+        }),
+        b: Schema.propertySignature(Schema.String)
+            .annotations({ missingMessage: () => "message2" })
+            .pipe(Schema.fromKey("c")), // <= transformation
+        d: Schema.propertySignature(Schema.String).annotations({
+            missingMessage: () => "message3",
+        }),
+    });
 
-  Effect.runPromiseExit(
-    Schema.decodeUnknown(schema, { errors: "all" })({}).pipe(
-      Effect.tapError((error) =>
-        Console.log(ParseResult.ArrayFormatter.formatErrorSync(error))
-      )
-    )
-  )
-  /*
-  Output:
-  [
-    { _tag: 'Missing', path: [ 'a' ], message: 'message1' },
-    { _tag: 'Missing', path: [ 'c' ], message: 'message2' },
-    { _tag: 'Missing', path: [ 'd' ], message: 'message3' }
-  ]
-  */
-  ```
+    Effect.runPromiseExit(
+        Schema.decodeUnknown(schema, { errors: "all" })({}).pipe(
+            Effect.tapError((error) =>
+                Console.log(ParseResult.ArrayFormatter.formatErrorSync(error)),
+            ),
+        ),
+    );
+    /*
+    Output:
+    [
+      { _tag: 'Missing', path: [ 'a' ], message: 'message1' },
+      { _tag: 'Missing', path: [ 'c' ], message: 'message2' },
+      { _tag: 'Missing', path: [ 'd' ], message: 'message3' }
+    ]
+    */
+    ```
 
 - [#4081](https://github.com/Effect-TS/effect/pull/4081) [`afba339`](https://github.com/Effect-TS/effect/commit/afba339adc11dad56b5a3b7ca94487e58f34d613) Thanks @gcanti! - Fix the behavior of `Schema.TemplateLiteralParser` when the arguments include literals other than string literals.
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteralParser(Schema.String, 1)
+    const schema = Schema.TemplateLiteralParser(Schema.String, 1);
 
-  console.log(Schema.decodeUnknownSync(schema)("a1"))
-  /*
-  throws
-  ParseError: (`${string}1` <-> readonly [string, 1])
-  └─ Type side transformation failure
-     └─ readonly [string, 1]
-        └─ [1]
-           └─ Expected 1, actual "1"
-  */
-  ```
+    console.log(Schema.decodeUnknownSync(schema)("a1"));
+    /*
+    throws
+    ParseError: (`${string}1` <-> readonly [string, 1])
+    └─ Type side transformation failure
+       └─ readonly [string, 1]
+          └─ [1]
+             └─ Expected 1, actual "1"
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.TemplateLiteralParser(Schema.String, 1)
+    const schema = Schema.TemplateLiteralParser(Schema.String, 1);
 
-  console.log(Schema.decodeUnknownSync(schema)("a1"))
-  // Output: [ 'a', 1 ]
-  ```
+    console.log(Schema.decodeUnknownSync(schema)("a1"));
+    // Output: [ 'a', 1 ]
+    ```
 
 ## 3.11.2
 
 ### Patch Changes
 
 - [#4063](https://github.com/Effect-TS/effect/pull/4063) [`01cee56`](https://github.com/Effect-TS/effect/commit/01cee560b58d94b24cc20e98083251b73e658b41) Thanks @tim-smart! - Micro adjustments
-  - rename Fiber to MicroFiber
-  - add Micro.fiberJoin api
-  - adjust output when inspecting Micro data types
+    - rename Fiber to MicroFiber
+    - add Micro.fiberJoin api
+    - adjust output when inspecting Micro data types
 
 ## 3.11.1
 
@@ -4556,35 +4573,35 @@
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`147434b`](https://github.com/Effect-TS/effect/commit/147434b03d5e1fd692dd9f126e5ab0910f3b76d3) Thanks @IMax153! - Ensure scopes are preserved by stream / sink / channel operations
 
-  **NOTE**: This change does modify the public signature of several `Stream` / `Sink` / `Channel` methods. Namely, certain run methods that previously removed a `Scope` from the environment will no longer do so. This was a bug with the previous implementation of how scopes were propagated, and is why this change is being made in a minor release.
+    **NOTE**: This change does modify the public signature of several `Stream` / `Sink` / `Channel` methods. Namely, certain run methods that previously removed a `Scope` from the environment will no longer do so. This was a bug with the previous implementation of how scopes were propagated, and is why this change is being made in a minor release.
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`6e69493`](https://github.com/Effect-TS/effect/commit/6e694930048bbaf98110f35f41566aeb9752d471) Thanks @tim-smart! - add Context.Reference - a Tag with a default value
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`147434b`](https://github.com/Effect-TS/effect/commit/147434b03d5e1fd692dd9f126e5ab0910f3b76d3) Thanks @IMax153! - Add `Effect.scopedWith` to run an effect that depends on a `Scope`, and then closes the `Scope` after the effect has completed
 
-  ```ts
-  import { Effect, Scope } from "effect"
+    ```ts
+    import { Effect, Scope } from "effect";
 
-  const program: Effect.Effect<void> = Effect.scopedWith((scope) =>
-    Effect.acquireRelease(Effect.log("Acquiring..."), () =>
-      Effect.log("Releasing...")
-    ).pipe(Scope.extend(scope))
-  )
+    const program: Effect.Effect<void> = Effect.scopedWith((scope) =>
+        Effect.acquireRelease(Effect.log("Acquiring..."), () =>
+            Effect.log("Releasing..."),
+        ).pipe(Scope.extend(scope)),
+    );
 
-  Effect.runPromise(program)
-  // Output:
-  // timestamp=2024-11-26T16:44:54.158Z level=INFO fiber=#0 message=Acquiring...
-  // timestamp=2024-11-26T16:44:54.165Z level=INFO fiber=#0 message=Releasing...
-  ```
+    Effect.runPromise(program);
+    // Output:
+    // timestamp=2024-11-26T16:44:54.158Z level=INFO fiber=#0 message=Acquiring...
+    // timestamp=2024-11-26T16:44:54.165Z level=INFO fiber=#0 message=Releasing...
+    ```
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`d9fe79b`](https://github.com/Effect-TS/effect/commit/d9fe79bb5a3fe105d8e7a3bc2922a8ad936a5d10) Thanks @tim-smart! - remove Env, EnvRef & FiberFlags from Micro
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`251d189`](https://github.com/Effect-TS/effect/commit/251d189420bbba71990574e91098c499065f9a9b) Thanks @KhraksMamtsov! - `Config.url` constructor has been added, which parses a string using `new URL()`
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`5a259f3`](https://github.com/Effect-TS/effect/commit/5a259f3711b4369f55d885b568bdb21136155261) Thanks @tim-smart! - use fiber based runtime for Micro module
-  - Improved performance
-  - Improved interruption model
-  - Consistency with the Effect data type
+    - Improved performance
+    - Improved interruption model
+    - Consistency with the Effect data type
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`b4ce4ea`](https://github.com/Effect-TS/effect/commit/b4ce4ea7fd514a7e572f2dcd879c98f334981b0e) Thanks @SandroMaglione! - New methods `extractAll` and `extractSchema` to `UrlParams` (added `Schema.BooleanFromString`).
 
@@ -4594,56 +4611,56 @@
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`aadb8a4`](https://github.com/Effect-TS/effect/commit/aadb8a48d2cba197c06ec9996505510e48e4e5cb) Thanks @fubhy! - Added `BigDecimal.toExponential` for scientific notation formatting of `BigDecimal` values.
 
-  The implementation of `BigDecimal.format` now uses scientific notation for values with
-  at least 16 decimal places or trailing zeroes. Previously, extremely large or small values
-  could cause `OutOfMemory` errors when formatting.
+    The implementation of `BigDecimal.format` now uses scientific notation for values with
+    at least 16 decimal places or trailing zeroes. Previously, extremely large or small values
+    could cause `OutOfMemory` errors when formatting.
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`1e2747c`](https://github.com/Effect-TS/effect/commit/1e2747c63a4820d1459cbbc88c71212983bd68bd) Thanks @KhraksMamtsov! - - JSONSchema module
-  - add `format?: string` optional field to `JsonSchema7String` interface
-  - Schema module
-    - add custom json schema annotation to `UUID` schema including `format: "uuid"`
-  - OpenApiJsonSchema module
-    - add `format?: string` optional field to `String` and ` Numeric` interfaces
+    - add `format?: string` optional field to `JsonSchema7String` interface
+    - Schema module
+        - add custom json schema annotation to `UUID` schema including `format: "uuid"`
+    - OpenApiJsonSchema module
+        - add `format?: string` optional field to `String` and ` Numeric` interfaces
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`e0b9b09`](https://github.com/Effect-TS/effect/commit/e0b9b09e70c386b2da17d1f0a15b0511861c89e8) Thanks @mikearnaldi! - Implement Effect.fn to define traced functions.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  const logExample = Effect.fn("example")(function* <N extends number>(n: N) {
-    yield* Effect.annotateCurrentSpan("n", n)
-    yield* Effect.logInfo(`got: ${n}`)
-    yield* Effect.fail(new Error())
-  }, Effect.delay("1 second"))
+    const logExample = Effect.fn("example")(function* <N extends number>(n: N) {
+        yield* Effect.annotateCurrentSpan("n", n);
+        yield* Effect.logInfo(`got: ${n}`);
+        yield* Effect.fail(new Error());
+    }, Effect.delay("1 second"));
 
-  Effect.runFork(logExample(100).pipe(Effect.catchAllCause(Effect.logError)))
-  ```
+    Effect.runFork(logExample(100).pipe(Effect.catchAllCause(Effect.logError)));
+    ```
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`c36f3b9`](https://github.com/Effect-TS/effect/commit/c36f3b95df5ce9d71b66f22f26ce12eda8d3e848) Thanks @KhraksMamtsov! - `Config.redacted` has been made more flexible and can now wrap any other config. This allows to transform or validate config values before it’s hidden.
 
-  ```ts
-  import { Config } from "effect"
+    ```ts
+    import { Config } from "effect";
 
-  Effect.gen(function* () {
-    // can be any string including empty
-    const pass1 = yield* Config.redacted("PASSWORD")
-    //    ^? Redacted<string>
+    Effect.gen(function* () {
+        // can be any string including empty
+        const pass1 = yield* Config.redacted("PASSWORD");
+        //    ^? Redacted<string>
 
-    // can't be empty string
-    const pass2 = yield* Config.redacted(Config.nonEmptyString("PASSWORD"))
-    //    ^? Redacted<string>
+        // can't be empty string
+        const pass2 = yield* Config.redacted(Config.nonEmptyString("PASSWORD"));
+        //    ^? Redacted<string>
 
-    const pass2 = yield* Config.redacted(Config.number("SECRET_NUMBER"))
-    //    ^? Redacted<number>
-  })
-  ```
+        const pass2 = yield* Config.redacted(Config.number("SECRET_NUMBER"));
+        //    ^? Redacted<number>
+    });
+    ```
 
 - [#3835](https://github.com/Effect-TS/effect/pull/3835) [`aadb8a4`](https://github.com/Effect-TS/effect/commit/aadb8a48d2cba197c06ec9996505510e48e4e5cb) Thanks @fubhy! - Added `BigDecimal.unsafeFromNumber` and `BigDecimal.safeFromNumber`.
 
-  Deprecated `BigDecimal.fromNumber` in favour of `BigDecimal.unsafeFromNumber`.
+    Deprecated `BigDecimal.fromNumber` in favour of `BigDecimal.unsafeFromNumber`.
 
-  The current implementation of `BigDecimal.fromNumber` and `BigDecimal.unsafeFromNumber` now throws
-  a `RangeError` for numbers that are not finite such as `NaN`, `+Infinity` or `-Infinity`.
+    The current implementation of `BigDecimal.fromNumber` and `BigDecimal.unsafeFromNumber` now throws
+    a `RangeError` for numbers that are not finite such as `NaN`, `+Infinity` or `-Infinity`.
 
 ### Patch Changes
 
@@ -4687,151 +4704,151 @@
 
 - [#3981](https://github.com/Effect-TS/effect/pull/3981) [`1d99867`](https://github.com/Effect-TS/effect/commit/1d998671be3cd11043f232822e91dd8c98fccfa9) Thanks @gcanti! - Stable filters such as `minItems`, `maxItems`, and `itemsCount` should be applied only if the from part fails with a `Composite` issue, closes #3980
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.Array(Schema.String).pipe(Schema.minItems(1))
-  })
+    const schema = Schema.Struct({
+        a: Schema.Array(Schema.String).pipe(Schema.minItems(1)),
+    });
 
-  Schema.decodeUnknownSync(schema)({}, { errors: "all" })
-  // throws: TypeError: Cannot read properties of undefined (reading 'length')
-  ```
+    Schema.decodeUnknownSync(schema)({}, { errors: "all" });
+    // throws: TypeError: Cannot read properties of undefined (reading 'length')
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.Array(Schema.String).pipe(Schema.minItems(1))
-  })
+    const schema = Schema.Struct({
+        a: Schema.Array(Schema.String).pipe(Schema.minItems(1)),
+    });
 
-  Schema.decodeUnknownSync(schema)({}, { errors: "all" })
-  /*
-  throws:
-  ParseError: { readonly a: an array of at least 1 items }
-  └─ ["a"]
-     └─ is missing
-  */
-  ```
+    Schema.decodeUnknownSync(schema)({}, { errors: "all" });
+    /*
+    throws:
+    ParseError: { readonly a: an array of at least 1 items }
+    └─ ["a"]
+       └─ is missing
+    */
+    ```
 
 - [#3972](https://github.com/Effect-TS/effect/pull/3972) [`6dae414`](https://github.com/Effect-TS/effect/commit/6dae4147991a97ec14a99289bd25fadae7541e8d) Thanks @tim-smart! - add support for 0 capacity to Mailbox
 
 - [#3959](https://github.com/Effect-TS/effect/pull/3959) [`6b0d737`](https://github.com/Effect-TS/effect/commit/6b0d737078bf63b97891e6bc47affc04b28f9cf7) Thanks @gcanti! - Remove `Omit` from the `Class` interface definition to align type signatures with runtime behavior. This fix addresses the issue of being unable to override base class methods in extended classes without encountering type errors, closes #3958
 
-  Before
+    Before
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  class Base extends Schema.Class<Base>("Base")({
-    a: Schema.String
-  }) {
-    f() {
-      console.log("base")
+    class Base extends Schema.Class<Base>("Base")({
+        a: Schema.String,
+    }) {
+        f() {
+            console.log("base");
+        }
     }
-  }
 
-  class Extended extends Base.extend<Extended>("Extended")({}) {
-    // Class '{ readonly a: string; } & Omit<Base, "a">' defines instance member property 'f',
-    // but extended class 'Extended' defines it as instance member function.ts(2425)
-    // @ts-expect-error
-    override f() {
-      console.log("extended")
+    class Extended extends Base.extend<Extended>("Extended")({}) {
+        // Class '{ readonly a: string; } & Omit<Base, "a">' defines instance member property 'f',
+        // but extended class 'Extended' defines it as instance member function.ts(2425)
+        // @ts-expect-error
+        override f() {
+            console.log("extended");
+        }
     }
-  }
-  ```
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "effect"
+    ```ts
+    import { Schema } from "effect";
 
-  class Base extends Schema.Class<Base>("Base")({
-    a: Schema.String
-  }) {
-    f() {
-      console.log("base")
+    class Base extends Schema.Class<Base>("Base")({
+        a: Schema.String,
+    }) {
+        f() {
+            console.log("base");
+        }
     }
-  }
 
-  class Extended extends Base.extend<Extended>("Extended")({}) {
-    // ok
-    override f() {
-      console.log("extended")
+    class Extended extends Base.extend<Extended>("Extended")({}) {
+        // ok
+        override f() {
+            console.log("extended");
+        }
     }
-  }
-  ```
+    ```
 
 - [#3971](https://github.com/Effect-TS/effect/pull/3971) [`d8356aa`](https://github.com/Effect-TS/effect/commit/d8356aad428a0c2290db52380220f81d9ec94232) Thanks @gcanti! - Refactor JSON Schema Generation to Include Transformation Annotations, closes #3016
 
-  When generating a JSON Schema, treat `TypeLiteralTransformations` (such as when `Schema.optionalWith` is used) as a special case. Annotations from the transformation itself will now be applied, unless there are user-defined annotations on the form side. This change ensures that the user's intended annotations are properly included in the schema.
+    When generating a JSON Schema, treat `TypeLiteralTransformations` (such as when `Schema.optionalWith` is used) as a special case. Annotations from the transformation itself will now be applied, unless there are user-defined annotations on the form side. This change ensures that the user's intended annotations are properly included in the schema.
 
-  **Before**
+    **Before**
 
-  Annotations set on the transformation are ignored. However while using `Schema.optionalWith` internally generates a transformation schema, this is considered a technical detail. The user's intention is to add annotations to the "struct" schema, not to the transformation.
+    Annotations set on the transformation are ignored. However while using `Schema.optionalWith` internally generates a transformation schema, this is considered a technical detail. The user's intention is to add annotations to the "struct" schema, not to the transformation.
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.optionalWith(Schema.String, { default: () => "" })
-  }).annotations({
-    identifier: "MyID",
-    description: "My description",
-    title: "My title"
-  })
+    const schema = Schema.Struct({
+        a: Schema.optionalWith(Schema.String, { default: () => "" }),
+    }).annotations({
+        identifier: "MyID",
+        description: "My description",
+        title: "My title",
+    });
 
-  console.log(JSONSchema.make(schema))
-  /*
-  Output:
-  {
-    '$schema': 'http://json-schema.org/draft-07/schema#',
-    type: 'object',
-    required: [],
-    properties: { a: { type: 'string' } },
-    additionalProperties: false
-  }
-  */
-  ```
+    console.log(JSONSchema.make(schema));
+    /*
+    Output:
+    {
+      '$schema': 'http://json-schema.org/draft-07/schema#',
+      type: 'object',
+      required: [],
+      properties: { a: { type: 'string' } },
+      additionalProperties: false
+    }
+    */
+    ```
 
-  **After**
+    **After**
 
-  Annotations set on the transformation are now considered during JSON Schema generation:
+    Annotations set on the transformation are now considered during JSON Schema generation:
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.optionalWith(Schema.String, { default: () => "" })
-  }).annotations({
-    identifier: "MyID",
-    description: "My description",
-    title: "My title"
-  })
+    const schema = Schema.Struct({
+        a: Schema.optionalWith(Schema.String, { default: () => "" }),
+    }).annotations({
+        identifier: "MyID",
+        description: "My description",
+        title: "My title",
+    });
 
-  console.log(JSONSchema.make(schema))
-  /*
-  Output:
-  {
-    '$schema': 'http://json-schema.org/draft-07/schema#',
-    '$ref': '#/$defs/MyID',
-    '$defs': {
-      MyID: {
-        type: 'object',
-        required: [],
-        properties: [Object],
-        additionalProperties: false,
-        description: 'My description',
-        title: 'My title'
+    console.log(JSONSchema.make(schema));
+    /*
+    Output:
+    {
+      '$schema': 'http://json-schema.org/draft-07/schema#',
+      '$ref': '#/$defs/MyID',
+      '$defs': {
+        MyID: {
+          type: 'object',
+          required: [],
+          properties: [Object],
+          additionalProperties: false,
+          description: 'My description',
+          title: 'My title'
+        }
       }
     }
-  }
-  */
-  ```
+    */
+    ```
 
 ## 3.10.15
 
@@ -4877,11 +4894,11 @@
 
 - [#3886](https://github.com/Effect-TS/effect/pull/3886) [`b631f40`](https://github.com/Effect-TS/effect/commit/b631f40abbe649b2a089764585b5c39f6a695ac6) Thanks @fubhy! - Optimized `Base64.decode` by not capturing the padding characters in the underlying array buffer.
 
-  Previously, the implementation first captured the padding characters in the underlying array buffer and
-  then returned a new subarray view of the buffer with the padding characters removed.
+    Previously, the implementation first captured the padding characters in the underlying array buffer and
+    then returned a new subarray view of the buffer with the padding characters removed.
 
-  By not capturing the padding characters, we avoid the creation of another typed array instance for the
-  subarray view.
+    By not capturing the padding characters, we avoid the creation of another typed array instance for the
+    subarray view.
 
 ## 3.10.9
 
@@ -4937,50 +4954,50 @@
 
 - [#3842](https://github.com/Effect-TS/effect/pull/3842) [`2367708`](https://github.com/Effect-TS/effect/commit/2367708be449f9526a2047e321302d7bfb16f18e) Thanks @gcanti! - add support for `Schema.OptionFromUndefinedOr` in JSON Schema generation, closes #3839
 
-  Before
+    Before
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.OptionFromUndefinedOr(Schema.Number)
-  })
+    const schema = Schema.Struct({
+        a: Schema.OptionFromUndefinedOr(Schema.Number),
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  throws:
-  Error: Missing annotation
-  at path: ["a"]
-  details: Generating a JSON Schema for this schema requires a "jsonSchema" annotation
-  schema (UndefinedKeyword): undefined
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    throws:
+    Error: Missing annotation
+    at path: ["a"]
+    details: Generating a JSON Schema for this schema requires a "jsonSchema" annotation
+    schema (UndefinedKeyword): undefined
+    */
+    ```
 
-  After
+    After
 
-  ```ts
-  import { JSONSchema, Schema } from "effect"
+    ```ts
+    import { JSONSchema, Schema } from "effect";
 
-  const schema = Schema.Struct({
-    a: Schema.OptionFromUndefinedOr(Schema.Number)
-  })
+    const schema = Schema.Struct({
+        a: Schema.OptionFromUndefinedOr(Schema.Number),
+    });
 
-  console.log(JSON.stringify(JSONSchema.make(schema), null, 2))
-  /*
-  Output:
-  {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "required": [],
-    "properties": {
-      "a": {
-        "type": "number"
-      }
-    },
-    "additionalProperties": false
-  }
-  */
-  ```
+    console.log(JSON.stringify(JSONSchema.make(schema), null, 2));
+    /*
+    Output:
+    {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "required": [],
+      "properties": {
+        "a": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+    */
+    ```
 
 ## 3.10.3
 
@@ -4995,7 +5012,7 @@
 - [#3820](https://github.com/Effect-TS/effect/pull/3820) [`714e119`](https://github.com/Effect-TS/effect/commit/714e11945e45e5a2554ee058e6c43f82a8e309cf) Thanks @tim-smart! - simplify Match fail keys types
 
 - [#3825](https://github.com/Effect-TS/effect/pull/3825) [`c1afd55`](https://github.com/Effect-TS/effect/commit/c1afd55c54e61f9c432823d21b3d016f79160a37) Thanks @KhraksMamtsov! - - Make `MergeRight`, `MergeLeft` and `MergeRecord` in `Types` module homomorphic (preserve original `readonly` and optionality modifiers)
-  - `MergeRecord` now is alias for `MergeLeft`
+    - `MergeRecord` now is alias for `MergeLeft`
 
 ## 3.10.1
 
@@ -5013,75 +5030,75 @@
 
 - [#3764](https://github.com/Effect-TS/effect/pull/3764) [`c79c4c1`](https://github.com/Effect-TS/effect/commit/c79c4c178390fe61ff6dda88c9e058862349343a) Thanks @gcanti! - Merge Schema into Effect.
 
-  ### Modules
+    ### Modules
 
-  Before
+    Before
 
-  ```ts
-  import {
-    Arbitrary,
-    AST,
-    FastCheck,
-    JSONSchema,
-    ParseResult,
-    Pretty,
-    Schema
-  } from "@effect/schema"
-  ```
+    ```ts
+    import {
+        Arbitrary,
+        AST,
+        FastCheck,
+        JSONSchema,
+        ParseResult,
+        Pretty,
+        Schema,
+    } from "@effect/schema";
+    ```
 
-  After
+    After
 
-  ```ts
-  import {
-    Arbitrary,
-    SchemaAST, // changed
-    FastCheck,
-    JSONSchema,
-    ParseResult,
-    Pretty,
-    Schema
-  } from "effect"
-  ```
+    ```ts
+    import {
+        Arbitrary,
+        SchemaAST, // changed
+        FastCheck,
+        JSONSchema,
+        ParseResult,
+        Pretty,
+        Schema,
+    } from "effect";
+    ```
 
-  ### Formatters
+    ### Formatters
 
-  `ArrayFormatter` / `TreeFormatter` merged into `ParseResult` module.
+    `ArrayFormatter` / `TreeFormatter` merged into `ParseResult` module.
 
-  Before
+    Before
 
-  ```ts
-  import { ArrayFormatter, TreeFormatter } from "@effect/schema"
-  ```
+    ```ts
+    import { ArrayFormatter, TreeFormatter } from "@effect/schema";
+    ```
 
-  After
+    After
 
-  ```ts
-  import { ArrayFormatter, TreeFormatter } from "effect/ParseResult"
-  ```
+    ```ts
+    import { ArrayFormatter, TreeFormatter } from "effect/ParseResult";
+    ```
 
-  ### Serializable
+    ### Serializable
 
-  Merged into `Schema` module.
+    Merged into `Schema` module.
 
-  ### Equivalence
+    ### Equivalence
 
-  Merged into `Schema` module.
+    Merged into `Schema` module.
 
-  Before
+    Before
 
-  ```ts
-  import { Equivalence } from "@effect/schema"
+    ```ts
+    import { Equivalence } from "@effect/schema";
 
-  Equivalence.make(myschema)
-  ```
+    Equivalence.make(myschema);
+    ```
 
-  After
+    After
 
-  ```ts
-  import { Schema } from "@effect/schema"
+    ```ts
+    import { Schema } from "@effect/schema";
 
-  Schema.equivalence(myschema)
-  ```
+    Schema.equivalence(myschema);
+    ```
 
 - [#3764](https://github.com/Effect-TS/effect/pull/3764) [`38d30f0`](https://github.com/Effect-TS/effect/commit/38d30f08b8da62f9c3e308b9250738cb8d17bdb5) Thanks @tim-smart! - add option to .releaseLock a ReadableStream on finalization
 
@@ -5121,19 +5138,19 @@
 
 - [#3620](https://github.com/Effect-TS/effect/pull/3620) [`5b36494`](https://github.com/Effect-TS/effect/commit/5b364942e9a9003fdb8217324f8a2d8369c969da) Thanks @KhraksMamtsov! - `Tuple.map` transforms each element of tuple using the given function, treating tuple homomorphically
 
-  ```ts
-  import { pipe, Tuple } from "effect"
+    ```ts
+    import { pipe, Tuple } from "effect";
 
-  const result = pipe(
-    //  ^? [string, string, string]
-    ["a", 1, false] as const,
-    T.map((el) => {
-      //^? "a" | 1 | false
-      return el.toString().toUppercase()
-    })
-  )
-  assert.deepStrictEqual(result, ["A", "1", "FALSE"])
-  ```
+    const result = pipe(
+        //  ^? [string, string, string]
+        ["a", 1, false] as const,
+        T.map((el) => {
+            //^? "a" | 1 | false
+            return el.toString().toUppercase();
+        }),
+    );
+    assert.deepStrictEqual(result, ["A", "1", "FALSE"]);
+    ```
 
 - [#3620](https://github.com/Effect-TS/effect/pull/3620) [`c716adb`](https://github.com/Effect-TS/effect/commit/c716adb250ebbea1d1048d818ef7fed4f621d186) Thanks @AlexGeb! - Add Array.pad function
 
@@ -5141,53 +5158,59 @@
 
 - [#3620](https://github.com/Effect-TS/effect/pull/3620) [`d75140c`](https://github.com/Effect-TS/effect/commit/d75140c7a664ceda43142d999f4ff8dcd36d6dda) Thanks @mikearnaldi! - Implement Effect.Service as a Tag and Layer with Opaque Type.
 
-  Namely the following is now possible:
+    Namely the following is now possible:
 
-  ```ts
-  class Prefix extends Effect.Service<Prefix>()("Prefix", {
-    sync: () => ({
-      prefix: "PRE"
-    })
-  }) {}
+    ```ts
+    class Prefix extends Effect.Service<Prefix>()("Prefix", {
+        sync: () => ({
+            prefix: "PRE",
+        }),
+    }) {}
 
-  class Postfix extends Effect.Service<Postfix>()("Postfix", {
-    sync: () => ({
-      postfix: "POST"
-    })
-  }) {}
+    class Postfix extends Effect.Service<Postfix>()("Postfix", {
+        sync: () => ({
+            postfix: "POST",
+        }),
+    }) {}
 
-  const messages: Array<string> = []
+    const messages: Array<string> = [];
 
-  class Logger extends Effect.Service<Logger>()("Logger", {
-    accessors: true,
-    effect: Effect.gen(function* () {
-      const { prefix } = yield* Prefix
-      const { postfix } = yield* Postfix
-      return {
-        info: (message: string) =>
-          Effect.sync(() => {
-            messages.push(`[${prefix}][${message}][${postfix}]`)
-          })
-      }
-    }),
-    dependencies: [Prefix.Default, Postfix.Default]
-  }) {}
+    class Logger extends Effect.Service<Logger>()("Logger", {
+        accessors: true,
+        effect: Effect.gen(function* () {
+            const { prefix } = yield* Prefix;
+            const { postfix } = yield* Postfix;
+            return {
+                info: (message: string) =>
+                    Effect.sync(() => {
+                        messages.push(`[${prefix}][${message}][${postfix}]`);
+                    }),
+            };
+        }),
+        dependencies: [Prefix.Default, Postfix.Default],
+    }) {}
 
-  describe("Effect", () => {
-    it.effect("Service correctly wires dependencies", () =>
-      Effect.gen(function* () {
-        const { _tag } = yield* Logger
-        expect(_tag).toEqual("Logger")
-        yield* Logger.info("Ok")
-        expect(messages).toEqual(["[PRE][Ok][POST]"])
-        const { prefix } = yield* Prefix
-        expect(prefix).toEqual("PRE")
-        const { postfix } = yield* Postfix
-        expect(postfix).toEqual("POST")
-      }).pipe(Effect.provide([Logger.Default, Prefix.Default, Postfix.Default]))
-    )
-  })
-  ```
+    describe("Effect", () => {
+        it.effect("Service correctly wires dependencies", () =>
+            Effect.gen(function* () {
+                const { _tag } = yield* Logger;
+                expect(_tag).toEqual("Logger");
+                yield* Logger.info("Ok");
+                expect(messages).toEqual(["[PRE][Ok][POST]"]);
+                const { prefix } = yield* Prefix;
+                expect(prefix).toEqual("PRE");
+                const { postfix } = yield* Postfix;
+                expect(postfix).toEqual("POST");
+            }).pipe(
+                Effect.provide([
+                    Logger.Default,
+                    Prefix.Default,
+                    Postfix.Default,
+                ]),
+            ),
+        );
+    });
+    ```
 
 - [#3620](https://github.com/Effect-TS/effect/pull/3620) [`d1387ae`](https://github.com/Effect-TS/effect/commit/d1387aebd1ff01bbebde26be46d488956e4daef6) Thanks @KhraksMamtsov! - `Resource<A, E>` is subtype of `Effect<A, E>`.
   `ScopedRed<A>` is subtype of `Effect<A>`.
@@ -5210,20 +5233,20 @@
 
 - [#3699](https://github.com/Effect-TS/effect/pull/3699) [`cdead5c`](https://github.com/Effect-TS/effect/commit/cdead5c9cfd54dc6c4f215d9732f654c4a12e991) Thanks @jessekelly881! - added Stream.mergeWithTag
 
-  Combines a struct of streams into a single stream of tagged values where the tag is the key of the struct.
+    Combines a struct of streams into a single stream of tagged values where the tag is the key of the struct.
 
-  ```ts
-  import { Stream } from "effect"
+    ```ts
+    import { Stream } from "effect";
 
-  // Stream.Stream<{ _tag: "a"; value: number; } | { _tag: "b"; value: string; }>
-  const stream = Stream.mergeWithTag(
-    {
-      a: Stream.make(0),
-      b: Stream.make("")
-    },
-    { concurrency: 1 }
-  )
-  ```
+    // Stream.Stream<{ _tag: "a"; value: number; } | { _tag: "b"; value: string; }>
+    const stream = Stream.mergeWithTag(
+        {
+            a: Stream.make(0),
+            b: Stream.make(""),
+        },
+        { concurrency: 1 },
+    );
+    ```
 
 - [#3706](https://github.com/Effect-TS/effect/pull/3706) [`766a8af`](https://github.com/Effect-TS/effect/commit/766a8af307b414aca3648d91c4eab7493a5ec862) Thanks @fubhy! - Made `BigDecimal.scale` dual.
 
@@ -5259,196 +5282,199 @@
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`fcfa6ee`](https://github.com/Effect-TS/effect/commit/fcfa6ee30ffd07d998bf22799357bf58580a116f) Thanks @Schniz! - add `Logger.withLeveledConsole`
 
-  In browsers and different platforms, `console.error` renders differently than `console.info`. This helps to distinguish between different levels of logging. `Logger.withLeveledConsole` takes any logger and calls the respective `Console` method based on the log level. For instance, `Effect.logError` will call `Console.error` and `Effect.logInfo` will call `Console.info`.
+    In browsers and different platforms, `console.error` renders differently than `console.info`. This helps to distinguish between different levels of logging. `Logger.withLeveledConsole` takes any logger and calls the respective `Console` method based on the log level. For instance, `Effect.logError` will call `Console.error` and `Effect.logInfo` will call `Console.info`.
 
-  To use it, you can replace the default logger with a `Logger.withLeveledConsole` logger:
+    To use it, you can replace the default logger with a `Logger.withLeveledConsole` logger:
 
-  ```ts
-  import { Logger, Effect } from "effect"
+    ```ts
+    import { Logger, Effect } from "effect";
 
-  const loggerLayer = Logger.withLeveledConsole(Logger.stringLogger)
+    const loggerLayer = Logger.withLeveledConsole(Logger.stringLogger);
 
-  Effect.gen(function* () {
-    yield* Effect.logError("an error")
-    yield* Effect.logInfo("an info")
-  }).pipe(Effect.provide(loggerLayer))
-  ```
+    Effect.gen(function* () {
+        yield* Effect.logError("an error");
+        yield* Effect.logInfo("an info");
+    }).pipe(Effect.provide(loggerLayer));
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`bb9931b`](https://github.com/Effect-TS/effect/commit/bb9931b62e249a3b801f2cb9d097aec0c8511af7) Thanks @KhraksMamtsov! - Made `Ref`, `SynchronizedRed` and `SubscriptionRef` a subtype of `Effect`
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`5798f76`](https://github.com/Effect-TS/effect/commit/5798f7619529de33e5ba06f551806f68fedc19db) Thanks @tim-smart! - add Semaphore.withPermitsIfAvailable
 
-  You can now use `Semaphore.withPermitsIfAvailable` to run an Effect only if the
-  Semaphore has enough permits available. This is useful when you want to run an
-  Effect only if you can acquire a permit without blocking.
+    You can now use `Semaphore.withPermitsIfAvailable` to run an Effect only if the
+    Semaphore has enough permits available. This is useful when you want to run an
+    Effect only if you can acquire a permit without blocking.
 
-  It will return an `Option.Some` with the result of the Effect if the permits were
-  available, or `None` if they were not.
+    It will return an `Option.Some` with the result of the Effect if the permits were
+    available, or `None` if they were not.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  Effect.gen(function* () {
-    const semaphore = yield* Effect.makeSemaphore(1)
-    semaphore.withPermitsIfAvailable(1)(Effect.void)
-  })
-  ```
+    Effect.gen(function* () {
+        const semaphore = yield* Effect.makeSemaphore(1);
+        semaphore.withPermitsIfAvailable(1)(Effect.void);
+    });
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`5f0bfa1`](https://github.com/Effect-TS/effect/commit/5f0bfa17205398d4e4818bfbcf9e1b505b3b1fc5) Thanks @KhraksMamtsov! - The `Deferred<A>` is now a subtype of `Effect<A>`. This change simplifies handling of deferred values, removing the need for explicit call `Deffer.await`.
 
-  ```typescript
-  import { Effect, Deferred } from "effect"
+    ```typescript
+    import { Effect, Deferred } from "effect";
 
-  Effect.gen(function* () {
-    const deferred = yield* Deferred.make<string>()
+    Effect.gen(function* () {
+        const deferred = yield* Deferred.make<string>();
 
-    const before = yield* Deferred.await(deferred)
-    const after = yield* deferred
-  })
-  ```
+        const before = yield* Deferred.await(deferred);
+        const after = yield* deferred;
+    });
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`812a4e8`](https://github.com/Effect-TS/effect/commit/812a4e86e2d1aa23b477ef5829aa0e5c07784936) Thanks @tim-smart! - add Logger.prettyLoggerDefault, to prevent duplicate pretty loggers
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`273565e`](https://github.com/Effect-TS/effect/commit/273565e7901639e8d0541930ab715aea9c80fbaa) Thanks @tim-smart! - add Effect.makeLatch, for creating a simple async latch
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  Effect.gen(function* () {
-    // Create a latch, starting in the closed state
-    const latch = yield* Effect.makeLatch(false)
+    Effect.gen(function* () {
+        // Create a latch, starting in the closed state
+        const latch = yield* Effect.makeLatch(false);
 
-    // Fork a fiber that logs "open sesame" when the latch is opened
-    const fiber = yield* Effect.log("open sesame").pipe(
-      latch.whenOpen,
-      Effect.fork
-    )
+        // Fork a fiber that logs "open sesame" when the latch is opened
+        const fiber = yield* Effect.log("open sesame").pipe(
+            latch.whenOpen,
+            Effect.fork,
+        );
 
-    // Open the latch
-    yield* latch.open
-    yield* fiber.await
-  })
-  ```
+        // Open the latch
+        yield* latch.open;
+        yield* fiber.await;
+    });
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`569a801`](https://github.com/Effect-TS/effect/commit/569a8017ef0a0bc203e4312867cbdd37b0effbd7) Thanks @KhraksMamtsov! - `Dequeue<A>` and `Queue<A>` is subtype of `Effect<A>`. This means that now it can be used as an `Effect`, and when called, it will automatically extract and return an item from the queue, without having to explicitly use the `Queue.take` function.
 
-  ```ts
-  Effect.gen(function* () {
-    const queue = yield* Queue.unbounded<number>()
-    yield* Queue.offer(queue, 1)
-    yield* Queue.offer(queue, 2)
-    const oldWay = yield* Queue.take(queue)
-    const newWay = yield* queue
-  })
-  ```
+    ```ts
+    Effect.gen(function* () {
+        const queue = yield* Queue.unbounded<number>();
+        yield* Queue.offer(queue, 1);
+        yield* Queue.offer(queue, 2);
+        const oldWay = yield* Queue.take(queue);
+        const newWay = yield* queue;
+    });
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`aa1fa53`](https://github.com/Effect-TS/effect/commit/aa1fa5301e886b9657c8eb0d38cb87cef92a8305) Thanks @vinassefranche! - Add Number.round
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`02f6b06`](https://github.com/Effect-TS/effect/commit/02f6b0660e12bee1069532a9cc18d3ab855257be) Thanks @fubhy! - Add additional `Duration` conversion apis
-  - `Duration.toMinutes`
-  - `Duration.toHours`
-  - `Duration.toDays`
-  - `Duration.toWeeks`
+    - `Duration.toMinutes`
+    - `Duration.toHours`
+    - `Duration.toDays`
+    - `Duration.toWeeks`
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`12b893e`](https://github.com/Effect-TS/effect/commit/12b893e63cc6dfada4aca7773b4783940e2edf25) Thanks @KhraksMamtsov! - The `Fiber<A, E>` is now a subtype of `Effect<A, E>`. This change removes the need for explicit call `Fiber.join`.
 
-  ```typescript
-  import { Effect, Fiber } from "effect"
+    ```typescript
+    import { Effect, Fiber } from "effect"
 
-  Effect.gen(function*() {
-    const fiber = yield* Effect.fork(Effect.succeed(1))
+    Effect.gen(function*() {
+      const fiber = yield* Effect.fork(Effect.succeed(1))
 
-    const oldWay = yield* Fiber.join(fiber)
-    const now = yield* fiber
-  }))
-  ```
+      const oldWay = yield* Fiber.join(fiber)
+      const now = yield* fiber
+    }))
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`bbad27e`](https://github.com/Effect-TS/effect/commit/bbad27ec0a90860593f759405caa877e7f4a655f) Thanks @dilame! - add `Stream.share` api
 
-  The `Stream.share` api is a ref counted variant of the broadcast apis.
+    The `Stream.share` api is a ref counted variant of the broadcast apis.
 
-  It allows you to share a stream between multiple consumers, and will close the
-  upstream when the last consumer ends.
+    It allows you to share a stream between multiple consumers, and will close the
+    upstream when the last consumer ends.
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`adf7d7a`](https://github.com/Effect-TS/effect/commit/adf7d7a7dfce3a7021e9f3b0d847dc85be89d754) Thanks @tim-smart! - add Mailbox module, a queue which can have done or failure signals
 
-  ```ts
-  import { Chunk, Effect, Mailbox } from "effect"
-  import * as assert from "node:assert"
+    ```ts
+    import { Chunk, Effect, Mailbox } from "effect";
+    import * as assert from "node:assert";
 
-  Effect.gen(function* () {
-    const mailbox = yield* Mailbox.make<number, string>()
+    Effect.gen(function* () {
+        const mailbox = yield* Mailbox.make<number, string>();
 
-    // add messages to the mailbox
-    yield* mailbox.offer(1)
-    yield* mailbox.offer(2)
-    yield* mailbox.offerAll([3, 4, 5])
+        // add messages to the mailbox
+        yield* mailbox.offer(1);
+        yield* mailbox.offer(2);
+        yield* mailbox.offerAll([3, 4, 5]);
 
-    // take messages from the mailbox
-    const [messages, done] = yield* mailbox.takeAll
-    assert.deepStrictEqual(Chunk.toReadonlyArray(messages), [1, 2, 3, 4, 5])
-    assert.strictEqual(done, false)
+        // take messages from the mailbox
+        const [messages, done] = yield* mailbox.takeAll;
+        assert.deepStrictEqual(
+            Chunk.toReadonlyArray(messages),
+            [1, 2, 3, 4, 5],
+        );
+        assert.strictEqual(done, false);
 
-    // signal that the mailbox is done
-    yield* mailbox.end
-    const [messages2, done2] = yield* mailbox.takeAll
-    assert.deepStrictEqual(messages2, Chunk.empty())
-    assert.strictEqual(done2, true)
+        // signal that the mailbox is done
+        yield* mailbox.end;
+        const [messages2, done2] = yield* mailbox.takeAll;
+        assert.deepStrictEqual(messages2, Chunk.empty());
+        assert.strictEqual(done2, true);
 
-    // signal that the mailbox is failed
-    yield* mailbox.fail("boom")
-  })
-  ```
+        // signal that the mailbox is failed
+        yield* mailbox.fail("boom");
+    });
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`007289a`](https://github.com/Effect-TS/effect/commit/007289a52d5877f8e90e2dacf38171ff9bf603fd) Thanks @mikearnaldi! - Cache some fiber references in the runtime to optimize reading in hot-paths
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`42a8f99`](https://github.com/Effect-TS/effect/commit/42a8f99740eefdaf2c4544d2c345313f97547a36) Thanks @fubhy! - Added `RcMap.keys` and `MutableHashMap.keys`.
 
-  These functions allow you to get a list of keys currently stored in the underlying hash map.
+    These functions allow you to get a list of keys currently stored in the underlying hash map.
 
-  ```ts
-  const map = MutableHashMap.make([
-    ["a", "a"],
-    ["b", "b"],
-    ["c", "c"]
-  ])
-  const keys = MutableHashMap.keys(map) // ["a", "b", "c"]
-  ```
+    ```ts
+    const map = MutableHashMap.make([
+        ["a", "a"],
+        ["b", "b"],
+        ["c", "c"],
+    ]);
+    const keys = MutableHashMap.keys(map); // ["a", "b", "c"]
+    ```
 
-  ```ts
-  Effect.gen(function* () {
-    const map = yield* RcMap.make({
-      lookup: (key) => Effect.succeed(key)
-    })
+    ```ts
+    Effect.gen(function* () {
+        const map = yield* RcMap.make({
+            lookup: (key) => Effect.succeed(key),
+        });
 
-    yield* RcMap.get(map, "a")
-    yield* RcMap.get(map, "b")
-    yield* RcMap.get(map, "c")
+        yield* RcMap.get(map, "a");
+        yield* RcMap.get(map, "b");
+        yield* RcMap.get(map, "c");
 
-    const keys = yield* RcMap.keys(map) // ["a", "b", "c"]
-  })
-  ```
+        const keys = yield* RcMap.keys(map); // ["a", "b", "c"]
+    });
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`eebfd29`](https://github.com/Effect-TS/effect/commit/eebfd29633fd5d38b505c5c0842036f61f05e913) Thanks @fubhy! - Add `Duration.parts` api
 
-  ```ts
-  const parts = Duration.parts(Duration.sum("5 minutes", "20 seconds"))
-  assert.equal(parts.minutes, 5)
-  assert.equal(parts.seconds, 20)
-  ```
+    ```ts
+    const parts = Duration.parts(Duration.sum("5 minutes", "20 seconds"));
+    assert.equal(parts.minutes, 5);
+    assert.equal(parts.seconds, 20);
+    ```
 
 - [#3541](https://github.com/Effect-TS/effect/pull/3541) [`040703d`](https://github.com/Effect-TS/effect/commit/040703d0e100cd5511e52d812c15492414262b5e) Thanks @KhraksMamtsov! - The `FiberRef<A>` is now a subtype of `Effect<A>`. This change simplifies handling of deferred values, removing the need for explicit call `FiberRef.get`.
 
-  ```typescript
-  import { Effect, FiberRef } from "effect"
+    ```typescript
+    import { Effect, FiberRef } from "effect";
 
-  Effect.gen(function* () {
-    const fiberRef = yield* FiberRef.make("value")
+    Effect.gen(function* () {
+        const fiberRef = yield* FiberRef.make("value");
 
-    const before = yield* FiberRef.get(fiberRef)
-    const after = yield* fiberRef
-  })
-  ```
+        const before = yield* FiberRef.get(fiberRef);
+        const after = yield* fiberRef;
+    });
+    ```
 
 ## 3.7.3
 
@@ -5490,54 +5516,54 @@
 
 - [#3410](https://github.com/Effect-TS/effect/pull/3410) [`8356321`](https://github.com/Effect-TS/effect/commit/8356321598da04bd77c1001f45a4e447bec5591d) Thanks @KhraksMamtsov! - add `Effect.bindAll` api
 
-  This api allows you to combine `Effect.all` with `Effect.bind`. It is useful
-  when you want to concurrently run multiple effects and then combine their
-  results in a Do notation pipeline.
+    This api allows you to combine `Effect.all` with `Effect.bind`. It is useful
+    when you want to concurrently run multiple effects and then combine their
+    results in a Do notation pipeline.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  const result = Effect.Do.pipe(
-    Effect.bind("x", () => Effect.succeed(2)),
-    Effect.bindAll(
-      ({ x }) => ({
-        a: Effect.succeed(x + 1),
-        b: Effect.succeed("foo")
-      }),
-      { concurrency: 2 }
-    )
-  )
-  assert.deepStrictEqual(Effect.runSync(result), {
-    x: 2,
-    a: 3,
-    b: "foo"
-  })
-  ```
+    const result = Effect.Do.pipe(
+        Effect.bind("x", () => Effect.succeed(2)),
+        Effect.bindAll(
+            ({ x }) => ({
+                a: Effect.succeed(x + 1),
+                b: Effect.succeed("foo"),
+            }),
+            { concurrency: 2 },
+        ),
+    );
+    assert.deepStrictEqual(Effect.runSync(result), {
+        x: 2,
+        a: 3,
+        b: "foo",
+    });
+    ```
 
 - [#3410](https://github.com/Effect-TS/effect/pull/3410) [`192f2eb`](https://github.com/Effect-TS/effect/commit/192f2ebb2c4ddbf4bfd8baedd32140b2376868f4) Thanks @tim-smart! - add `propagateInterruption` option to Fiber{Handle,Set,Map}
 
-  This option will send any external interrupts to the .join result.
+    This option will send any external interrupts to the .join result.
 
 - [#3410](https://github.com/Effect-TS/effect/pull/3410) [`718cb70`](https://github.com/Effect-TS/effect/commit/718cb70038629a6d58d02e407760e341f7c94474) Thanks @dilame! - feat(Stream): implement `race` operator, which accepts two upstreams and returns a stream that mirrors the first upstream to emit an item and interrupts the other upstream.
 
-  ```ts
-  import { Stream, Schedule, Console, Effect } from "effect"
+    ```ts
+    import { Stream, Schedule, Console, Effect } from "effect";
 
-  const stream = Stream.fromSchedule(Schedule.spaced("2 millis")).pipe(
-    Stream.race(Stream.fromSchedule(Schedule.spaced("1 millis"))),
-    Stream.take(6),
-    Stream.tap((n) => Console.log(n))
-  )
+    const stream = Stream.fromSchedule(Schedule.spaced("2 millis")).pipe(
+        Stream.race(Stream.fromSchedule(Schedule.spaced("1 millis"))),
+        Stream.take(6),
+        Stream.tap((n) => Console.log(n)),
+    );
 
-  Effect.runPromise(Stream.runDrain(stream))
-  // Output each millisecond from the first stream, the rest streams are interrupted
-  // 0
-  // 1
-  // 2
-  // 3
-  // 4
-  // 5
-  ```
+    Effect.runPromise(Stream.runDrain(stream));
+    // Output each millisecond from the first stream, the rest streams are interrupted
+    // 0
+    // 1
+    // 2
+    // 3
+    // 4
+    // 5
+    ```
 
 - [#3410](https://github.com/Effect-TS/effect/pull/3410) [`e9d0310`](https://github.com/Effect-TS/effect/commit/e9d03107acbf204d9304f3e8aea0816b7d3c7dfb) Thanks @mikearnaldi! - Avoid automatic propagation of finalizer concurrency, closes #3440
 
@@ -5615,93 +5641,93 @@
 
 - [#3380](https://github.com/Effect-TS/effect/pull/3380) [`8135294`](https://github.com/Effect-TS/effect/commit/8135294b591ea94fde7e6f94a504608f0e630520) Thanks @tim-smart! - add DateTime module
 
-  The `DateTime` module provides functionality for working with time, including
-  support for time zones and daylight saving time.
+    The `DateTime` module provides functionality for working with time, including
+    support for time zones and daylight saving time.
 
-  It has two main data types: `DateTime.Utc` and `DateTime.Zoned`.
+    It has two main data types: `DateTime.Utc` and `DateTime.Zoned`.
 
-  A `DateTime.Utc` represents a time in Coordinated Universal Time (UTC), and
-  a `DateTime.Zoned` contains both a UTC timestamp and a time zone.
+    A `DateTime.Utc` represents a time in Coordinated Universal Time (UTC), and
+    a `DateTime.Zoned` contains both a UTC timestamp and a time zone.
 
-  There is also a `CurrentTimeZone` service, for setting a time zone contextually.
+    There is also a `CurrentTimeZone` service, for setting a time zone contextually.
 
-  ```ts
-  import { DateTime, Effect } from "effect"
+    ```ts
+    import { DateTime, Effect } from "effect";
 
-  Effect.gen(function* () {
-    // Get the current time in the current time zone
-    const now = yield* DateTime.nowInCurrentZone
+    Effect.gen(function* () {
+        // Get the current time in the current time zone
+        const now = yield* DateTime.nowInCurrentZone;
 
-    // Math functions are included
-    const tomorrow = DateTime.add(now, 1, "day")
+        // Math functions are included
+        const tomorrow = DateTime.add(now, 1, "day");
 
-    // Convert to a different time zone
-    // The UTC portion of the `DateTime` is preserved and only the time zone is
-    // changed
-    const sydneyTime = tomorrow.pipe(
-      DateTime.unsafeSetZoneNamed("Australia/Sydney")
-    )
-  }).pipe(DateTime.withCurrentZoneNamed("America/New_York"))
-  ```
+        // Convert to a different time zone
+        // The UTC portion of the `DateTime` is preserved and only the time zone is
+        // changed
+        const sydneyTime = tomorrow.pipe(
+            DateTime.unsafeSetZoneNamed("Australia/Sydney"),
+        );
+    }).pipe(DateTime.withCurrentZoneNamed("America/New_York"));
+    ```
 
 - [#3380](https://github.com/Effect-TS/effect/pull/3380) [`cd255a4`](https://github.com/Effect-TS/effect/commit/cd255a48872d8fb924cf713ef73f0883a9cc6987) Thanks @tim-smart! - add Stream.asyncPush api
 
-  This api creates a stream from an external push-based resource.
+    This api creates a stream from an external push-based resource.
 
-  You can use the `emit` helper to emit values to the stream. You can also use
-  the `emit` helper to signal the end of the stream by using apis such as
-  `emit.end` or `emit.fail`.
+    You can use the `emit` helper to emit values to the stream. You can also use
+    the `emit` helper to signal the end of the stream by using apis such as
+    `emit.end` or `emit.fail`.
 
-  By default it uses an "unbounded" buffer size.
-  You can customize the buffer size and strategy by passing an object as the
-  second argument with the `bufferSize` and `strategy` fields.
+    By default it uses an "unbounded" buffer size.
+    You can customize the buffer size and strategy by passing an object as the
+    second argument with the `bufferSize` and `strategy` fields.
 
-  ```ts
-  import { Effect, Stream } from "effect"
+    ```ts
+    import { Effect, Stream } from "effect";
 
-  Stream.asyncPush<string>(
-    (emit) =>
-      Effect.acquireRelease(
-        Effect.gen(function* () {
-          yield* Effect.log("subscribing")
-          return setInterval(() => emit.single("tick"), 1000)
-        }),
-        (handle) =>
-          Effect.gen(function* () {
-            yield* Effect.log("unsubscribing")
-            clearInterval(handle)
-          })
-      ),
-    { bufferSize: 16, strategy: "dropping" }
-  )
-  ```
+    Stream.asyncPush<string>(
+        (emit) =>
+            Effect.acquireRelease(
+                Effect.gen(function* () {
+                    yield* Effect.log("subscribing");
+                    return setInterval(() => emit.single("tick"), 1000);
+                }),
+                (handle) =>
+                    Effect.gen(function* () {
+                        yield* Effect.log("unsubscribing");
+                        clearInterval(handle);
+                    }),
+            ),
+        { bufferSize: 16, strategy: "dropping" },
+    );
+    ```
 
 - [#3380](https://github.com/Effect-TS/effect/pull/3380) [`3845646`](https://github.com/Effect-TS/effect/commit/3845646828e98f3c7cda1217f6cfe5f642ac0603) Thanks @mikearnaldi! - Implement Struct.keys as a typed alternative to Object.keys
 
-  ```ts
-  import { Struct } from "effect"
+    ```ts
+    import { Struct } from "effect";
 
-  const symbol: unique symbol = Symbol()
+    const symbol: unique symbol = Symbol();
 
-  const value = {
-    a: 1,
-    b: 2,
-    [symbol]: 3
-  }
+    const value = {
+        a: 1,
+        b: 2,
+        [symbol]: 3,
+    };
 
-  const keys: Array<"a" | "b"> = Struct.keys(value)
-  ```
+    const keys: Array<"a" | "b"> = Struct.keys(value);
+    ```
 
 - [#3380](https://github.com/Effect-TS/effect/pull/3380) [`2d09078`](https://github.com/Effect-TS/effect/commit/2d09078c5948b37fc2f79ef858fe4ca3e4814085) Thanks @sukovanej! - Add `Random.choice`.
 
-  ```ts
-  import { Random } from "effect"
+    ```ts
+    import { Random } from "effect";
 
-  Effect.gen(function* () {
-    const randomItem = yield* Random.choice([1, 2, 3])
-    console.log(randomItem)
-  })
-  ```
+    Effect.gen(function* () {
+        const randomItem = yield* Random.choice([1, 2, 3]);
+        console.log(randomItem);
+    });
+    ```
 
 - [#3380](https://github.com/Effect-TS/effect/pull/3380) [`4bce5a0`](https://github.com/Effect-TS/effect/commit/4bce5a0274203550ccf117d830721891b0a3d182) Thanks @vinassefranche! - Add onlyEffect option to Effect.tap
 
@@ -5709,41 +5735,41 @@
 
 - [#3380](https://github.com/Effect-TS/effect/pull/3380) [`e74cc38`](https://github.com/Effect-TS/effect/commit/e74cc38cb420a320c4d7ef98180f19d452a8b316) Thanks @dilame! - Implement `Stream.onEnd` that adds an effect to be executed at the end of the stream.
 
-  ```ts
-  import { Console, Effect, Stream } from "effect"
+    ```ts
+    import { Console, Effect, Stream } from "effect";
 
-  const stream = Stream.make(1, 2, 3).pipe(
-    Stream.map((n) => n * 2),
-    Stream.tap((n) => Console.log(`after mapping: ${n}`)),
-    Stream.onEnd(Console.log("Stream ended"))
-  )
+    const stream = Stream.make(1, 2, 3).pipe(
+        Stream.map((n) => n * 2),
+        Stream.tap((n) => Console.log(`after mapping: ${n}`)),
+        Stream.onEnd(Console.log("Stream ended")),
+    );
 
-  Effect.runPromise(Stream.runCollect(stream)).then(console.log)
-  // after mapping: 2
-  // after mapping: 4
-  // after mapping: 6
-  // Stream ended
-  // { _id: 'Chunk', values: [ 2, 4, 6 ] }
-  ```
+    Effect.runPromise(Stream.runCollect(stream)).then(console.log);
+    // after mapping: 2
+    // after mapping: 4
+    // after mapping: 6
+    // Stream ended
+    // { _id: 'Chunk', values: [ 2, 4, 6 ] }
+    ```
 
 - [#3380](https://github.com/Effect-TS/effect/pull/3380) [`bb069b4`](https://github.com/Effect-TS/effect/commit/bb069b49ef291c532a02c1e8e74271f6d1bb32ec) Thanks @dilame! - Implement `Stream.onStart` that adds an effect to be executed at the start of the stream.
 
-  ```ts
-  import { Console, Effect, Stream } from "effect"
+    ```ts
+    import { Console, Effect, Stream } from "effect";
 
-  const stream = Stream.make(1, 2, 3).pipe(
-    Stream.onStart(Console.log("Stream started")),
-    Stream.map((n) => n * 2),
-    Stream.tap((n) => Console.log(`after mapping: ${n}`))
-  )
+    const stream = Stream.make(1, 2, 3).pipe(
+        Stream.onStart(Console.log("Stream started")),
+        Stream.map((n) => n * 2),
+        Stream.tap((n) => Console.log(`after mapping: ${n}`)),
+    );
 
-  Effect.runPromise(Stream.runCollect(stream)).then(console.log)
-  // Stream started
-  // after mapping: 2
-  // after mapping: 4
-  // after mapping: 6
-  // { _id: 'Chunk', values: [ 2, 4, 6 ] }
-  ```
+    Effect.runPromise(Stream.runCollect(stream)).then(console.log);
+    // Stream started
+    // after mapping: 2
+    // after mapping: 4
+    // after mapping: 6
+    // { _id: 'Chunk', values: [ 2, 4, 6 ] }
+    ```
 
 - [#3380](https://github.com/Effect-TS/effect/pull/3380) [`cd255a4`](https://github.com/Effect-TS/effect/commit/cd255a48872d8fb924cf713ef73f0883a9cc6987) Thanks @tim-smart! - add `bufferSize` option to Stream.fromEventListener
 
@@ -5757,20 +5783,20 @@
 
 - [#3362](https://github.com/Effect-TS/effect/pull/3362) [`7f41e42`](https://github.com/Effect-TS/effect/commit/7f41e428830bf3043b8be0d28dcd235d5747c942) Thanks @IMax153! - Add `Service` and `Identifier` to `Context.Tag`.
 
-  These helpers can be used, for example, to extract the service shape from a tag:
+    These helpers can be used, for example, to extract the service shape from a tag:
 
-  ```ts
-  import * as Context from "effect/Context"
+    ```ts
+    import * as Context from "effect/Context";
 
-  export class Foo extends Context.Tag("Foo")<
-    Foo,
-    {
-      readonly foo: Effect.Effect<void>
-    }
-  >() {}
+    export class Foo extends Context.Tag("Foo")<
+        Foo,
+        {
+            readonly foo: Effect.Effect<void>;
+        }
+    >() {}
 
-  type ServiceShape = typeof Foo.Service
-  ```
+    type ServiceShape = typeof Foo.Service;
+    ```
 
 - [#3373](https://github.com/Effect-TS/effect/pull/3373) [`f566fd1`](https://github.com/Effect-TS/effect/commit/f566fd1d7eea531a0d981dd24037f14a603a1273) Thanks @KhraksMamtsov! - Add test for Hash.number(0.1) !== Has.number(0)
 
@@ -5816,19 +5842,22 @@
 
 - [#3247](https://github.com/Effect-TS/effect/pull/3247) [`ca775ce`](https://github.com/Effect-TS/effect/commit/ca775cec53baebc1a43d9b8852a3ac6726178498) Thanks @tim-smart! - if performance.timeOrigin is 0, use performance.now() directly in Clock
 
-  This is a workaround for cloudflare, where performance.now() cannot be used in
-  the global scope to calculate the origin.
+    This is a workaround for cloudflare, where performance.now() cannot be used in
+    the global scope to calculate the origin.
 
 - [#3259](https://github.com/Effect-TS/effect/pull/3259) [`5be9cc0`](https://github.com/Effect-TS/effect/commit/5be9cc044025a9541b9b7acefa2d3fc05fa1301b) Thanks @IMax153! - expose `Channel.isChannel`
 
 - [#3250](https://github.com/Effect-TS/effect/pull/3250) [`203658f`](https://github.com/Effect-TS/effect/commit/203658f8001c132b25764ab70344b171683b554c) Thanks @gcanti! - add support for `Refinement`s to `Predicate.or`, closes #3243
 
-  ```ts
-  import { Predicate } from "effect"
+    ```ts
+    import { Predicate } from "effect";
 
-  // Refinement<unknown, string | number>
-  const isStringOrNumber = Predicate.or(Predicate.isString, Predicate.isNumber)
-  ```
+    // Refinement<unknown, string | number>
+    const isStringOrNumber = Predicate.or(
+        Predicate.isString,
+        Predicate.isNumber,
+    );
+    ```
 
 - [#3246](https://github.com/Effect-TS/effect/pull/3246) [`eb1c4d4`](https://github.com/Effect-TS/effect/commit/eb1c4d44e54b9d8d201a366d1ff94face2a6dcd3) Thanks @tim-smart! - render nested causes in Cause.pretty
 
@@ -5872,47 +5901,50 @@
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`60bc3d0`](https://github.com/Effect-TS/effect/commit/60bc3d0867b13e48b24dc22604b4dd2e7b2c1ca4) Thanks @tim-smart! - add RcRef module
 
-  An `RcRef` wraps a reference counted resource that can be acquired and released multiple times.
+    An `RcRef` wraps a reference counted resource that can be acquired and released multiple times.
 
-  The resource is lazily acquired on the first call to `get` and released when the last reference is released.
+    The resource is lazily acquired on the first call to `get` and released when the last reference is released.
 
-  ```ts
-  import { Effect, RcRef } from "effect"
+    ```ts
+    import { Effect, RcRef } from "effect";
 
-  Effect.gen(function* () {
-    const ref = yield* RcRef.make({
-      acquire: Effect.acquireRelease(Effect.succeed("foo"), () =>
-        Effect.log("release foo")
-      )
-    })
+    Effect.gen(function* () {
+        const ref = yield* RcRef.make({
+            acquire: Effect.acquireRelease(Effect.succeed("foo"), () =>
+                Effect.log("release foo"),
+            ),
+        });
 
-    // will only acquire the resource once, and release it
-    // when the scope is closed
-    yield* RcRef.get(ref).pipe(Effect.andThen(RcRef.get(ref)), Effect.scoped)
-  })
-  ```
+        // will only acquire the resource once, and release it
+        // when the scope is closed
+        yield* RcRef.get(ref).pipe(
+            Effect.andThen(RcRef.get(ref)),
+            Effect.scoped,
+        );
+    });
+    ```
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`5ab348f`](https://github.com/Effect-TS/effect/commit/5ab348f265db3d283aa091ddca6d2d49137c16f2) Thanks @tim-smart! - allowing customizing Stream pubsub strategy
 
-  ```ts
-  import { Schedule, Stream } from "effect"
+    ```ts
+    import { Schedule, Stream } from "effect";
 
-  // toPubSub
-  Stream.fromSchedule(Schedule.spaced(1000)).pipe(
-    Stream.toPubSub({
-      capacity: 16, // or "unbounded"
-      strategy: "dropping" // or "sliding" / "suspend"
-    })
-  )
+    // toPubSub
+    Stream.fromSchedule(Schedule.spaced(1000)).pipe(
+        Stream.toPubSub({
+            capacity: 16, // or "unbounded"
+            strategy: "dropping", // or "sliding" / "suspend"
+        }),
+    );
 
-  // also for the broadcast apis
-  Stream.fromSchedule(Schedule.spaced(1000)).pipe(
-    Stream.broadcastDynamic({
-      capacity: 16,
-      strategy: "dropping"
-    })
-  )
-  ```
+    // also for the broadcast apis
+    Stream.fromSchedule(Schedule.spaced(1000)).pipe(
+        Stream.broadcastDynamic({
+            capacity: 16,
+            strategy: "dropping",
+        }),
+    );
+    ```
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`60bc3d0`](https://github.com/Effect-TS/effect/commit/60bc3d0867b13e48b24dc22604b4dd2e7b2c1ca4) Thanks @tim-smart! - add Duration.isZero, for checking if a Duration is zero
 
@@ -5920,15 +5952,15 @@
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`e7fc45f`](https://github.com/Effect-TS/effect/commit/e7fc45f0c7002aafdaec7878149ac064cd104ea3) Thanks @tim-smart! - add Logger.prettyLogger and Logger.pretty
 
-  `Logger.pretty` is a new logger that leverages the features of the `console` APIs to provide a more visually appealing output.
+    `Logger.pretty` is a new logger that leverages the features of the `console` APIs to provide a more visually appealing output.
 
-  To try it out, provide it to your program:
+    To try it out, provide it to your program:
 
-  ```ts
-  import { Effect, Logger } from "effect"
+    ```ts
+    import { Effect, Logger } from "effect";
 
-  Effect.log("Hello, World!").pipe(Effect.provide(Logger.pretty))
-  ```
+    Effect.log("Hello, World!").pipe(Effect.provide(Logger.pretty));
+    ```
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`a1f5b83`](https://github.com/Effect-TS/effect/commit/a1f5b831a1bc7535988b370d68d0b3eb1123e0ce) Thanks @tim-smart! - add .groupCollapsed to UnsafeConsole
 
@@ -5936,77 +5968,77 @@
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`f01e7db`](https://github.com/Effect-TS/effect/commit/f01e7db317827255d7901f523f2e28b43298e8df) Thanks @tim-smart! - add `replay` option to PubSub constructors
 
-  This option adds a replay buffer in front of the given PubSub. The buffer will
-  replay the last `n` messages to any new subscriber.
+    This option adds a replay buffer in front of the given PubSub. The buffer will
+    replay the last `n` messages to any new subscriber.
 
-  ```ts
-  Effect.gen(function*() {
-    const messages = [1, 2, 3, 4, 5]
-    const pubsub = yield* PubSub.bounded<number>({ capacity: 16, replay: 3 })
-    yield* PubSub.publishAll(pubsub, messages)
-    const sub = yield* PubSub.subscribe(pubsub)
-    assert.deepStrictEqual(Chunk.toReadonlyArray(yield* Queue.takeAll(sub)), [3, 4, 5])
-  }))
-  ```
+    ```ts
+    Effect.gen(function*() {
+      const messages = [1, 2, 3, 4, 5]
+      const pubsub = yield* PubSub.bounded<number>({ capacity: 16, replay: 3 })
+      yield* PubSub.publishAll(pubsub, messages)
+      const sub = yield* PubSub.subscribe(pubsub)
+      assert.deepStrictEqual(Chunk.toReadonlyArray(yield* Queue.takeAll(sub)), [3, 4, 5])
+    }))
+    ```
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`60bc3d0`](https://github.com/Effect-TS/effect/commit/60bc3d0867b13e48b24dc22604b4dd2e7b2c1ca4) Thanks @tim-smart! - add RcMap module
 
-  An `RcMap` can contain multiple reference counted resources that can be indexed
-  by a key. The resources are lazily acquired on the first call to `get` and
-  released when the last reference is released.
+    An `RcMap` can contain multiple reference counted resources that can be indexed
+    by a key. The resources are lazily acquired on the first call to `get` and
+    released when the last reference is released.
 
-  Complex keys can extend `Equal` and `Hash` to allow lookups by value.
+    Complex keys can extend `Equal` and `Hash` to allow lookups by value.
 
-  ```ts
-  import { Effect, RcMap } from "effect"
+    ```ts
+    import { Effect, RcMap } from "effect";
 
-  Effect.gen(function* () {
-    const map = yield* RcMap.make({
-      lookup: (key: string) =>
-        Effect.acquireRelease(Effect.succeed(`acquired ${key}`), () =>
-          Effect.log(`releasing ${key}`)
-        )
-    })
+    Effect.gen(function* () {
+        const map = yield* RcMap.make({
+            lookup: (key: string) =>
+                Effect.acquireRelease(Effect.succeed(`acquired ${key}`), () =>
+                    Effect.log(`releasing ${key}`),
+                ),
+        });
 
-    // Get "foo" from the map twice, which will only acquire it once
-    // It will then be released once the scope closes.
-    yield* RcMap.get(map, "foo").pipe(
-      Effect.andThen(RcMap.get(map, "foo")),
-      Effect.scoped
-    )
-  })
-  ```
+        // Get "foo" from the map twice, which will only acquire it once
+        // It will then be released once the scope closes.
+        yield* RcMap.get(map, "foo").pipe(
+            Effect.andThen(RcMap.get(map, "foo")),
+            Effect.scoped,
+        );
+    });
+    ```
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`ac71f37`](https://github.com/Effect-TS/effect/commit/ac71f378f2413e5aa91c95f649ffe898d6a26114) Thanks @dilame! - Ensure `Scope` is excluded from `R` in the `Channel` / `Stream` `run*` functions.
 
-  This fix ensures that `Scope` is now properly excluded from the resulting effect environment.
-  The affected functions include `run`, `runCollect`, `runCount`, `runDrain` and other non-scoped `run*` in both `Stream` and `Channel` modules.
-  This fix brings the type declaration in line with the runtime implementation.
+    This fix ensures that `Scope` is now properly excluded from the resulting effect environment.
+    The affected functions include `run`, `runCollect`, `runCount`, `runDrain` and other non-scoped `run*` in both `Stream` and `Channel` modules.
+    This fix brings the type declaration in line with the runtime implementation.
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`8432360`](https://github.com/Effect-TS/effect/commit/8432360ce68614a419bb328083a4109d0fc8aa93) Thanks @dilame! - refactor(Stream/mergeLeft): rename `self`/`that` argument names to `left`/`right` for clarity
 
-  refactor(Stream/mergeRight): rename `self`/`that` argument names to `left`/`right` for clarity
+    refactor(Stream/mergeRight): rename `self`/`that` argument names to `left`/`right` for clarity
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`e4bf1bf`](https://github.com/Effect-TS/effect/commit/e4bf1bf2b4a970eacd77c9b77b5ea8c68bc84498) Thanks @dilame! - feat(Stream): implement "raceAll" operator, which returns a stream that mirrors the first source stream to emit an item.
 
-  ```ts
-  import { Stream, Schedule, Console, Effect } from "effect"
+    ```ts
+    import { Stream, Schedule, Console, Effect } from "effect";
 
-  const stream = Stream.raceAll(
-    Stream.fromSchedule(Schedule.spaced("1 millis")),
-    Stream.fromSchedule(Schedule.spaced("2 millis")),
-    Stream.fromSchedule(Schedule.spaced("4 millis"))
-  ).pipe(Stream.take(6), Stream.tap(Console.log))
+    const stream = Stream.raceAll(
+        Stream.fromSchedule(Schedule.spaced("1 millis")),
+        Stream.fromSchedule(Schedule.spaced("2 millis")),
+        Stream.fromSchedule(Schedule.spaced("4 millis")),
+    ).pipe(Stream.take(6), Stream.tap(Console.log));
 
-  Effect.runPromise(Stream.runDrain(stream))
-  // Output only from the first stream, the rest streams are interrupted
-  // 0
-  // 1
-  // 2
-  // 3
-  // 4
-  // 5
-  ```
+    Effect.runPromise(Stream.runDrain(stream));
+    // Output only from the first stream, the rest streams are interrupted
+    // 0
+    // 1
+    // 2
+    // 3
+    // 4
+    // 5
+    ```
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`13cb861`](https://github.com/Effect-TS/effect/commit/13cb861a5eded15c55c6cdcf6a8acde8320367a6) Thanks @dilame! - refactor(Stream): use new built-in `Types.TupleOf` instead of `Stream.DynamicTuple` and deprecate it
 
@@ -6014,19 +6046,19 @@
 
 - [#3048](https://github.com/Effect-TS/effect/pull/3048) [`9f66825`](https://github.com/Effect-TS/effect/commit/9f66825f1fce0fe8d10420c285f7dc4c71e8af8d) Thanks @tim-smart! - allow customizing the output buffer for the Stream.async\* apis
 
-  ```ts
-  import { Stream } from "effect"
+    ```ts
+    import { Stream } from "effect";
 
-  Stream.async<string>(
-    (emit) => {
-      // ...
-    },
-    {
-      bufferSize: 16,
-      strategy: "dropping" // you can also use "sliding" or "suspend"
-    }
-  )
-  ```
+    Stream.async<string>(
+        (emit) => {
+            // ...
+        },
+        {
+            bufferSize: 16,
+            strategy: "dropping", // you can also use "sliding" or "suspend"
+        },
+    );
+    ```
 
 ### Patch Changes
 
@@ -6070,88 +6102,88 @@
 
 - [#3096](https://github.com/Effect-TS/effect/pull/3096) [`5c0ceb0`](https://github.com/Effect-TS/effect/commit/5c0ceb00826cce9e50bf9d41d83e191d5352c030) Thanks @gcanti! - Micro: align with `Effect` module (renamings and new combinators).
 
-  General naming convention rule: `<reference module (start with lowercase)><api (start with Uppercase)>`.
-  - `Failure` -> `MicroCause`
-    - `Failure.Expected<E>` -> `MicroCause.Fail<E>`
-    - `Failure.Unexpected` -> `MicroCause.Die`
-    - `Failure.Aborted` -> `MicroCause.Interrupt`
-    - `FailureExpected` -> `causeFail`
-    - `FailureUnexpected` -> `causeDie`
-    - `FailureAborted` -> `causeInterrupt`
-    - `failureIsExpected` -> `causeIsFail`
-    - `failureIsExpected` -> `causeIsFail`
-    - `failureIsUnexpected` -> `causeIsDie`
-    - `failureIsAborted` -> `causeIsInterrupt`
-    - `failureSquash` -> `causeSquash`
-    - `failureWithTrace` -> `causeWithTrace`
-  - `Result` -> `MicroExit`
-    - `ResultAborted` -> `exitInterrupt`
-    - `ResultSuccess` -> `exitSucceed`
-    - `ResultFail` -> `exitFail`
-    - `ResultFailUnexpected` -> `exitDie`
-    - `ResultFailWith` -> `exitFailCause`
-    - `resultIsSuccess` -> `exitIsSuccess`
-    - `resultIsFailure` -> `exitIsFailure`
-    - `resultIsAborted` -> `exitIsInterrupt`
-    - `resultIsFailureExpected` -> `exitIsFail`
-    - `resultIsFailureUnexpected` -> `exitIsDie`
-    - `resultVoid` -> `exitVoid`
-  - `DelayFn` -> `MicroSchedule`
-    - `delayExponential` -> `scheduleExponential`
-    - `delaySpaced` -> `scheduleSpaced`
-    - `delayWithMax` -> `scheduleWithMaxDelay`
-    - `delayWithMaxElapsed` -> `scheduleWithMaxElapsed`
-    - `delayWithRecurs` -> `scheduleRecurs` and make it a constructor
-    - add `scheduleAddDelay` combinator
-    - add `scheduleUnion` combinator
-    - add `scheduleIntersect` combinator
-  - `Handle`
+    General naming convention rule: `<reference module (start with lowercase)><api (start with Uppercase)>`.
+    - `Failure` -> `MicroCause`
+        - `Failure.Expected<E>` -> `MicroCause.Fail<E>`
+        - `Failure.Unexpected` -> `MicroCause.Die`
+        - `Failure.Aborted` -> `MicroCause.Interrupt`
+        - `FailureExpected` -> `causeFail`
+        - `FailureUnexpected` -> `causeDie`
+        - `FailureAborted` -> `causeInterrupt`
+        - `failureIsExpected` -> `causeIsFail`
+        - `failureIsExpected` -> `causeIsFail`
+        - `failureIsUnexpected` -> `causeIsDie`
+        - `failureIsAborted` -> `causeIsInterrupt`
+        - `failureSquash` -> `causeSquash`
+        - `failureWithTrace` -> `causeWithTrace`
+    - `Result` -> `MicroExit`
+        - `ResultAborted` -> `exitInterrupt`
+        - `ResultSuccess` -> `exitSucceed`
+        - `ResultFail` -> `exitFail`
+        - `ResultFailUnexpected` -> `exitDie`
+        - `ResultFailWith` -> `exitFailCause`
+        - `resultIsSuccess` -> `exitIsSuccess`
+        - `resultIsFailure` -> `exitIsFailure`
+        - `resultIsAborted` -> `exitIsInterrupt`
+        - `resultIsFailureExpected` -> `exitIsFail`
+        - `resultIsFailureUnexpected` -> `exitIsDie`
+        - `resultVoid` -> `exitVoid`
+    - `DelayFn` -> `MicroSchedule`
+        - `delayExponential` -> `scheduleExponential`
+        - `delaySpaced` -> `scheduleSpaced`
+        - `delayWithMax` -> `scheduleWithMaxDelay`
+        - `delayWithMaxElapsed` -> `scheduleWithMaxElapsed`
+        - `delayWithRecurs` -> `scheduleRecurs` and make it a constructor
+        - add `scheduleAddDelay` combinator
+        - add `scheduleUnion` combinator
+        - add `scheduleIntersect` combinator
+    - `Handle`
+        - `abort` -> `interrupt`
+        - `unsafeAbort` -> `unsafeInterrupt`
+    - `provideServiceMicro` -> `provideServiceEffect`
+    - `fromResult` -> `fromExit`
+    - `fromResultSync` -> `fromExitSync`
+    - `failWith` -> `failCause`
+    - `failWithSync` -> `failCauseSync`
+    - `asResult` -> `exit`
+    - `filterOrFailWith` -> `filterOrFailCause`
+    - `repeatResult` -> `repeatExit`
+    - `catchFailure` -> `catchAllCause`
+    - `catchFailureIf` -> `catchCauseIf`
+    - `catchExpected` -> `catchAll`
+    - `catchUnexpected` -> `catchAllDefect`
+    - `tapFailure` -> `tapErrorCause`
+    - `tapFailureIf` -> `tapErrorCauseIf`
+    - `tapExpected` -> `tapError`
+    - `tapUnexpected` -> `tapDefect`
+    - `mapFailure` -> `mapErrorCause`
+    - `matchFailureMicro` -> `matchCauseEffect`
+    - `matchFailure` -> `matchCause`
+    - `matchMicro` -> `matchEffect`
+    - `onResult` -> `onExit`
+    - `onResultIf` -> `onExitIf`
+    - `onFailure` -> `onError`
+    - `onAbort` -> `onInterrupt`
     - `abort` -> `interrupt`
-    - `unsafeAbort` -> `unsafeInterrupt`
-  - `provideServiceMicro` -> `provideServiceEffect`
-  - `fromResult` -> `fromExit`
-  - `fromResultSync` -> `fromExitSync`
-  - `failWith` -> `failCause`
-  - `failWithSync` -> `failCauseSync`
-  - `asResult` -> `exit`
-  - `filterOrFailWith` -> `filterOrFailCause`
-  - `repeatResult` -> `repeatExit`
-  - `catchFailure` -> `catchAllCause`
-  - `catchFailureIf` -> `catchCauseIf`
-  - `catchExpected` -> `catchAll`
-  - `catchUnexpected` -> `catchAllDefect`
-  - `tapFailure` -> `tapErrorCause`
-  - `tapFailureIf` -> `tapErrorCauseIf`
-  - `tapExpected` -> `tapError`
-  - `tapUnexpected` -> `tapDefect`
-  - `mapFailure` -> `mapErrorCause`
-  - `matchFailureMicro` -> `matchCauseEffect`
-  - `matchFailure` -> `matchCause`
-  - `matchMicro` -> `matchEffect`
-  - `onResult` -> `onExit`
-  - `onResultIf` -> `onExitIf`
-  - `onFailure` -> `onError`
-  - `onAbort` -> `onInterrupt`
-  - `abort` -> `interrupt`
-  - `runPromiseResult` -> `runPromiseExit`
-  - `runSyncResult` -> `runSyncExit`
-  - rename `delay` option to `schedule`
+    - `runPromiseResult` -> `runPromiseExit`
+    - `runSyncResult` -> `runSyncExit`
+    - rename `delay` option to `schedule`
 
 - [#3096](https://github.com/Effect-TS/effect/pull/3096) [`5c0ceb0`](https://github.com/Effect-TS/effect/commit/5c0ceb00826cce9e50bf9d41d83e191d5352c030) Thanks @gcanti! - Micro: rename `timeout` to `timeoutOption`, and add a `timeout` that fails with a `TimeoutException`
 
 - [#3121](https://github.com/Effect-TS/effect/pull/3121) [`33735b1`](https://github.com/Effect-TS/effect/commit/33735b16b41bd26929d8f4754c190925db6323b7) Thanks @KhraksMamtsov! - Support for the tacit usage of external handlers for `Match.tag` and `Match.tagStartsWith` functions
 
-  ```ts
-  type Value = { _tag: "A"; a: string } | { _tag: "B"; b: number }
-  const handlerA = (_: { _tag: "A"; a: number }) => _.a
+    ```ts
+    type Value = { _tag: "A"; a: string } | { _tag: "B"; b: number };
+    const handlerA = (_: { _tag: "A"; a: number }) => _.a;
 
-  // $ExpectType string | number
-  pipe(
-    M.type<Value>(),
-    M.tag("A", handlerA), // <-- no type issue
-    M.orElse((_) => _.b)
-  )(value)
-  ```
+    // $ExpectType string | number
+    pipe(
+        M.type<Value>(),
+        M.tag("A", handlerA), // <-- no type issue
+        M.orElse((_) => _.b),
+    )(value);
+    ```
 
 - [#3096](https://github.com/Effect-TS/effect/pull/3096) [`5c0ceb0`](https://github.com/Effect-TS/effect/commit/5c0ceb00826cce9e50bf9d41d83e191d5352c030) Thanks @gcanti! - Micro: move MicroExit types to a namespace
 
@@ -6207,19 +6239,19 @@
 
 - [#2938](https://github.com/Effect-TS/effect/pull/2938) [`61707b6`](https://github.com/Effect-TS/effect/commit/61707b6ffc7397c2ba0dce22512b44955724f60f) Thanks @LaureRC! - Add Effect.liftPredicate
 
-  `Effect.liftPredicate` transforms a `Predicate` function into an `Effect` returning the input value if the predicate returns `true` or failing with specified error if the predicate fails.
+    `Effect.liftPredicate` transforms a `Predicate` function into an `Effect` returning the input value if the predicate returns `true` or failing with specified error if the predicate fails.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  const isPositive = (n: number): boolean => n > 0
+    const isPositive = (n: number): boolean => n > 0;
 
-  // succeeds with `1`
-  Effect.liftPredicate(1, isPositive, (n) => `${n} is not positive`)
+    // succeeds with `1`
+    Effect.liftPredicate(1, isPositive, (n) => `${n} is not positive`);
 
-  // fails with `"0 is not positive"`
-  Effect.liftPredicate(0, isPositive, (n) => `${n} is not positive`)
-  ```
+    // fails with `"0 is not positive"`
+    Effect.liftPredicate(0, isPositive, (n) => `${n} is not positive`);
+    ```
 
 - [#2938](https://github.com/Effect-TS/effect/pull/2938) [`9c1b5b3`](https://github.com/Effect-TS/effect/commit/9c1b5b39e6c19604ce834f072a114ad392c50a06) Thanks @tim-smart! - add EventListener type to Stream to avoid use of dom lib
 
@@ -6229,10 +6261,10 @@
 
 - [#2938](https://github.com/Effect-TS/effect/pull/2938) [`984d516`](https://github.com/Effect-TS/effect/commit/984d516ccd9412dc41188f6a46b748dd20dd5848) Thanks @tim-smart! - add Micro module
 
-  A lightweight alternative to Effect, for when bundle size really matters.
+    A lightweight alternative to Effect, for when bundle size really matters.
 
-  At a minimum, Micro adds 5kb gzipped to your bundle, and scales with the amount
-  of features you use.
+    At a minimum, Micro adds 5kb gzipped to your bundle, and scales with the amount
+    of features you use.
 
 - [#2938](https://github.com/Effect-TS/effect/pull/2938) [`8c3b8a2`](https://github.com/Effect-TS/effect/commit/8c3b8a2ce208eab753b6206a51605a424f104e98) Thanks @gcanti! - add `ManagedRuntime` type utils (`Context`, and `Error`)
 
@@ -6240,23 +6272,23 @@
 
 - [#2938](https://github.com/Effect-TS/effect/pull/2938) [`91bf8a2`](https://github.com/Effect-TS/effect/commit/91bf8a2e9d1959393b3cf7366cc1d584d3e666b7) Thanks @msensys! - Add `Tuple.at` api, to retrieve an element at a specified index from a tuple.
 
-  ```ts
-  import { Tuple } from "effect"
+    ```ts
+    import { Tuple } from "effect";
 
-  assert.deepStrictEqual(Tuple.at([1, "hello", true], 1), "hello")
-  ```
+    assert.deepStrictEqual(Tuple.at([1, "hello", true], 1), "hello");
+    ```
 
 - [#2938](https://github.com/Effect-TS/effect/pull/2938) [`c6a4a26`](https://github.com/Effect-TS/effect/commit/c6a4a266606575fd2c7165940c4072ad4c57d01f) Thanks @datner! - add `ensure` util for Array, used to normalize `A | ReadonlyArray<A>`
 
-  ```ts
-  import { ensure } from "effect/Array"
+    ```ts
+    import { ensure } from "effect/Array";
 
-  // lets say you are not 100% sure if it's a member or a collection
-  declare const someValue: { foo: string } | Array<{ foo: string }>
+    // lets say you are not 100% sure if it's a member or a collection
+    declare const someValue: { foo: string } | Array<{ foo: string }>;
 
-  // $ExpectType ({ foo: string })[]
-  const normalized = ensure(someValue)
-  ```
+    // $ExpectType ({ foo: string })[]
+    const normalized = ensure(someValue);
+    ```
 
 ## 3.3.5
 
@@ -6302,7 +6334,7 @@
 
 - [#2948](https://github.com/Effect-TS/effect/pull/2948) [`3a77e20`](https://github.com/Effect-TS/effect/commit/3a77e209783933bac3aaddba1b05ff6a9ac72b36) Thanks @gcanti! - Remove unnecessary `===` comparison in `getEquivalence` functions
 
-  In some `getEquivalence` functions that use `make`, there is an unnecessary `===` comparison. The `make` function already handles this comparison.
+    In some `getEquivalence` functions that use `make`, there is an unnecessary `===` comparison. The `make` function already handles this comparison.
 
 ## 3.3.0
 
@@ -6314,41 +6346,41 @@
 
 - [#2837](https://github.com/Effect-TS/effect/pull/2837) [`0f40d98`](https://github.com/Effect-TS/effect/commit/0f40d989da10f68df3ecd72b36849401ad679bfb) Thanks @tim-smart! - add `timeToLiveStrategy` to `Pool` options
 
-  The `timeToLiveStrategy` determines how items are invalidated. If set to
-  "creation", then items are invalidated based on their creation time. If set
-  to "usage", then items are invalidated based on pool usage.
+    The `timeToLiveStrategy` determines how items are invalidated. If set to
+    "creation", then items are invalidated based on their creation time. If set
+    to "usage", then items are invalidated based on pool usage.
 
-  By default, the `timeToLiveStrategy` is set to "usage".
+    By default, the `timeToLiveStrategy` is set to "usage".
 
 - [#2837](https://github.com/Effect-TS/effect/pull/2837) [`b761ef0`](https://github.com/Effect-TS/effect/commit/b761ef00eaf6c67b7ffe34798b98aae5347ab376) Thanks @tim-smart! - add Layer.annotateLogs & Layer.annotateSpans
 
-  This allows you to add log & span annotation to a Layer.
+    This allows you to add log & span annotation to a Layer.
 
-  ```ts
-  import { Effect, Layer } from "effect"
+    ```ts
+    import { Effect, Layer } from "effect";
 
-  Layer.effectDiscard(Effect.log("hello")).pipe(
-    Layer.annotateLogs({
-      service: "my-service"
-    })
-  )
-  ```
+    Layer.effectDiscard(Effect.log("hello")).pipe(
+        Layer.annotateLogs({
+            service: "my-service",
+        }),
+    );
+    ```
 
 - [#2837](https://github.com/Effect-TS/effect/pull/2837) [`b53f69b`](https://github.com/Effect-TS/effect/commit/b53f69bff1452a487b21198cd83961f844e02d36) Thanks @dilame! - Types: implement `TupleOf` and `TupleOfAtLeast` types
 
-  Predicate: implement `isTupleOf` and `isTupleOfAtLeast` type guards
+    Predicate: implement `isTupleOf` and `isTupleOfAtLeast` type guards
 
 - [#2837](https://github.com/Effect-TS/effect/pull/2837) [`0f40d98`](https://github.com/Effect-TS/effect/commit/0f40d989da10f68df3ecd72b36849401ad679bfb) Thanks @tim-smart! - add `concurrency` & `targetUtilization` option to `Pool.make` & `Pool.makeWithTTL`
 
-  This option allows you to specify the level of concurrent access per pool item.
-  I.e. setting `concurrency: 2` will allow each pool item to be in use by 2 concurrent tasks.
+    This option allows you to specify the level of concurrent access per pool item.
+    I.e. setting `concurrency: 2` will allow each pool item to be in use by 2 concurrent tasks.
 
-  `targetUtilization` determines when to create new pool items. It is a value
-  between 0 and 1, where 1 means only create new pool items when all the existing
-  items are fully utilized.
+    `targetUtilization` determines when to create new pool items. It is a value
+    between 0 and 1, where 1 means only create new pool items when all the existing
+    items are fully utilized.
 
-  A `targetUtilization` of 0.5 will create new pool items when the existing items are
-  50% utilized.
+    A `targetUtilization` of 0.5 will create new pool items when the existing items are
+    50% utilized.
 
 - [#2837](https://github.com/Effect-TS/effect/pull/2837) [`5bd549e`](https://github.com/Effect-TS/effect/commit/5bd549e4bd7144727db438ecca6b8dc9b3ef7e22) Thanks @KhraksMamtsov! - Support `this` argument for `{STM, Either, Option}.gen`
 
@@ -6416,16 +6448,16 @@
 
 - [#2787](https://github.com/Effect-TS/effect/pull/2787) [`5d9266e`](https://github.com/Effect-TS/effect/commit/5d9266e8c740746ac9e186c3df6090a1b57fbe2a) Thanks @mikearnaldi! - Prohibit name clashes in Effect.Tag
 
-  The following now correctly flags a type error given that the property `context` exists already in `Tag`:
+    The following now correctly flags a type error given that the property `context` exists already in `Tag`:
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  class LoaderArgs extends Effect.Tag("@services/LoaderContext")<
-    LoaderArgs,
-    { context: number }
-  >() {}
-  ```
+    class LoaderArgs extends Effect.Tag("@services/LoaderContext")<
+        LoaderArgs,
+        { context: number }
+    >() {}
+    ```
 
 - [#2797](https://github.com/Effect-TS/effect/pull/2797) [`9f8122e`](https://github.com/Effect-TS/effect/commit/9f8122e78884ab47c5e5f364d86eee1d1543cc61) Thanks @mikearnaldi! - Improve internalization of functions to clean stack traces
 
@@ -6445,7 +6477,7 @@
 
 - [#2778](https://github.com/Effect-TS/effect/pull/2778) [`7135748`](https://github.com/Effect-TS/effect/commit/713574813a0f64085db0b5240ba39e7a0a7c137e) Thanks [@tim-smart](https://github.com/tim-smart)! - add Cause.prettyErrors api
 
-  You can use this to extract `Error` instances from a `Cause`, that have clean stack traces and have had span information added to them.
+    You can use this to extract `Error` instances from a `Cause`, that have clean stack traces and have had span information added to them.
 
 - [#2778](https://github.com/Effect-TS/effect/pull/2778) [`963b4e7`](https://github.com/Effect-TS/effect/commit/963b4e7ac87e2468feb6a344f7ab4ee4ad711198) Thanks [@tim-smart](https://github.com/tim-smart)! - add Chunk.difference & Chunk.differenceWith
 
@@ -6453,19 +6485,19 @@
 
 - [#2778](https://github.com/Effect-TS/effect/pull/2778) [`7135748`](https://github.com/Effect-TS/effect/commit/713574813a0f64085db0b5240ba39e7a0a7c137e) Thanks [@tim-smart](https://github.com/tim-smart)! - add Effect.functionWithSpan
 
-  Allows you to define an effectful function that is wrapped with a span.
+    Allows you to define an effectful function that is wrapped with a span.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  const getTodo = Effect.functionWithSpan({
-    body: (id: number) => Effect.succeed(`Got todo ${id}!`),
-    options: (id) => ({
-      name: `getTodo-${id}`,
-      attributes: { id }
-    })
-  })
-  ```
+    const getTodo = Effect.functionWithSpan({
+        body: (id: number) => Effect.succeed(`Got todo ${id}!`),
+        options: (id) => ({
+            name: `getTodo-${id}`,
+            attributes: { id },
+        }),
+    });
+    ```
 
 - [#2778](https://github.com/Effect-TS/effect/pull/2778) [`2cbb76b`](https://github.com/Effect-TS/effect/commit/2cbb76bb52500a3f4bf27d1c91482518cbea56d7) Thanks [@tim-smart](https://github.com/tim-smart)! - Add do notation for Array
 
@@ -6529,63 +6561,63 @@
 
 - [#2543](https://github.com/Effect-TS/effect/pull/2543) [`b5de2d2`](https://github.com/Effect-TS/effect/commit/b5de2d2ce5b1afe8be90827bf898a95cec40eb2b) Thanks [@github-actions](https://github.com/apps/github-actions)! - add Effect.annotateLogsScoped
 
-  This api allows you to annotate logs until the Scope has been closed.
+    This api allows you to annotate logs until the Scope has been closed.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  Effect.gen(function* () {
-    yield* Effect.log("no annotations")
-    yield* Effect.annotateLogsScoped({ foo: "bar" })
-    yield* Effect.log("annotated with foo=bar")
-  }).pipe(Effect.scoped, Effect.andThen(Effect.log("no annotations again")))
-  ```
+    Effect.gen(function* () {
+        yield* Effect.log("no annotations");
+        yield* Effect.annotateLogsScoped({ foo: "bar" });
+        yield* Effect.log("annotated with foo=bar");
+    }).pipe(Effect.scoped, Effect.andThen(Effect.log("no annotations again")));
+    ```
 
 - [#2543](https://github.com/Effect-TS/effect/pull/2543) [`a1c7ab8`](https://github.com/Effect-TS/effect/commit/a1c7ab8ffedacd18c1fc784f4ff5844f79498b83) Thanks [@github-actions](https://github.com/apps/github-actions)! - added Stream.fromEventListener, and BrowserStream.{fromEventListenerWindow, fromEventListenerDocument} for constructing a stream from addEventListener
 
 - [#2543](https://github.com/Effect-TS/effect/pull/2543) [`a023f28`](https://github.com/Effect-TS/effect/commit/a023f28336f3865687d9a30c1883e36909906d85) Thanks [@github-actions](https://github.com/apps/github-actions)! - add `kind` property to `Tracer.Span`
 
-  This can be used to specify what kind of service created the span.
+    This can be used to specify what kind of service created the span.
 
 - [#2543](https://github.com/Effect-TS/effect/pull/2543) [`1c9454d`](https://github.com/Effect-TS/effect/commit/1c9454d532eae79b9f759aea77f59332cc6d18ed) Thanks [@github-actions](https://github.com/apps/github-actions)! - add Effect.timeoutOption
 
-  Returns an effect that will return `None` if the effect times out, otherwise it
-  will return `Some` of the produced value.
+    Returns an effect that will return `None` if the effect times out, otherwise it
+    will return `Some` of the produced value.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  // will return `None` after 500 millis
-  Effect.succeed("hello").pipe(
-    Effect.delay(1000),
-    Effect.timeoutOption("500 millis")
-  )
-  ```
+    // will return `None` after 500 millis
+    Effect.succeed("hello").pipe(
+        Effect.delay(1000),
+        Effect.timeoutOption("500 millis"),
+    );
+    ```
 
 - [#2543](https://github.com/Effect-TS/effect/pull/2543) [`92d56db`](https://github.com/Effect-TS/effect/commit/92d56dbb3f33e36636c2a2f1030c56492e39cf4d) Thanks [@github-actions](https://github.com/apps/github-actions)! - add $is & $match helpers to Data.TaggedEnum constructors
 
-  ```ts
-  import { Data } from "effect"
+    ```ts
+    import { Data } from "effect";
 
-  type HttpError = Data.TaggedEnum<{
-    NotFound: {}
-    InternalServerError: { reason: string }
-  }>
-  const { $is, $match, InternalServerError, NotFound } =
-    Data.taggedEnum<HttpError>()
+    type HttpError = Data.TaggedEnum<{
+        NotFound: {};
+        InternalServerError: { reason: string };
+    }>;
+    const { $is, $match, InternalServerError, NotFound } =
+        Data.taggedEnum<HttpError>();
 
-  // create a matcher
-  const matcher = $match({
-    NotFound: () => 0,
-    InternalServerError: () => 1
-  })
+    // create a matcher
+    const matcher = $match({
+        NotFound: () => 0,
+        InternalServerError: () => 1,
+    });
 
-  // true
-  $is("NotFound")(NotFound())
+    // true
+    $is("NotFound")(NotFound());
 
-  // false
-  $is("NotFound")(InternalServerError({ reason: "fail" }))
-  ```
+    // false
+    $is("NotFound")(InternalServerError({ reason: "fail" }));
+    ```
 
 ## 3.0.8
 
@@ -6631,15 +6663,15 @@
 
 - [#2602](https://github.com/Effect-TS/effect/pull/2602) [`9a24667`](https://github.com/Effect-TS/effect/commit/9a246672008a2b668d43fbfd2fe5508c54b2b920) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - allow use of generators (Effect.gen) without the adapter
 
-  Effect's data types now implement a Iterable that can be `yield*`'ed directly.
+    Effect's data types now implement a Iterable that can be `yield*`'ed directly.
 
-  ```ts
-  Effect.gen(function* () {
-    const a = yield* Effect.success(1)
-    const b = yield* Effect.success(2)
-    return a + b
-  })
-  ```
+    ```ts
+    Effect.gen(function* () {
+        const a = yield* Effect.success(1);
+        const b = yield* Effect.success(2);
+        return a + b;
+    });
+    ```
 
 ## 3.0.3
 
@@ -6647,18 +6679,18 @@
 
 - [#2568](https://github.com/Effect-TS/effect/pull/2568) [`a7b4b84`](https://github.com/Effect-TS/effect/commit/a7b4b84bd5a25f51aba922f9259c3a58c98c6a4e) Thanks [@tim-smart](https://github.com/tim-smart)! - add Match.withReturnType api
 
-  Which can be used to constrain the return type of a match expression.
+    Which can be used to constrain the return type of a match expression.
 
-  ```ts
-  import { Match } from "effect"
+    ```ts
+    import { Match } from "effect";
 
-  Match.type<string>().pipe(
-    Match.withReturnType<string>(),
-    Match.when("foo", () => "foo"), // valid
-    Match.when("bar", () => 123), // type error
-    Match.else(() => "baz")
-  )
-  ```
+    Match.type<string>().pipe(
+        Match.withReturnType<string>(),
+        Match.when("foo", () => "foo"), // valid
+        Match.when("bar", () => 123), // type error
+        Match.else(() => "baz"),
+    );
+    ```
 
 ## 3.0.2
 
@@ -6686,20 +6718,20 @@
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`1b5f0c7`](https://github.com/Effect-TS/effect/commit/1b5f0c77e7fd477a0026071e82129a948227f4b3) Thanks [@github-actions](https://github.com/apps/github-actions)! - close FiberHandle/FiberSet/FiberMap when it is released
 
-  When they are closed, fibers can no longer be added to them.
+    When they are closed, fibers can no longer be added to them.
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`d50a652`](https://github.com/Effect-TS/effect/commit/d50a652479f4d1d64f48da05c79fa847e6e51548) Thanks [@github-actions](https://github.com/apps/github-actions)! - add preregisteredWords option to frequency metric key type
 
-  You can use this to register a list of words to pre-populate the value of the
-  metric.
+    You can use this to register a list of words to pre-populate the value of the
+    metric.
 
-  ```ts
-  import { Metric } from "effect"
+    ```ts
+    import { Metric } from "effect";
 
-  const counts = Metric.frequency("counts", {
-    preregisteredWords: ["a", "b", "c"]
-  }).register()
-  ```
+    const counts = Metric.frequency("counts", {
+        preregisteredWords: ["a", "b", "c"],
+    }).register();
+    ```
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`9a3bd47`](https://github.com/Effect-TS/effect/commit/9a3bd47ebd0750c7e498162734f6d21895de0cb2) Thanks [@github-actions](https://github.com/apps/github-actions)! - Bump TypeScript min requirement to version 5.4
 
@@ -6711,46 +6743,46 @@
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`a18f594`](https://github.com/Effect-TS/effect/commit/a18f5948f1439a147232448b2c443472fda0eceb) Thanks [@github-actions](https://github.com/apps/github-actions)! - support variadic arguments in Effect.log
 
-  This makes Effect.log more similar to console.log:
+    This makes Effect.log more similar to console.log:
 
-  ```ts
-  Effect.log("hello", { foo: "bar" }, Cause.fail("error"))
-  ```
+    ```ts
+    Effect.log("hello", { foo: "bar" }, Cause.fail("error"));
+    ```
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`2f96d93`](https://github.com/Effect-TS/effect/commit/2f96d938b90f8c19377583279e3c7afd9b509c50) Thanks [@github-actions](https://github.com/apps/github-actions)! - Fix ConfigError `_tag`, with the previous implementation catching the `ConfigError` with `Effect.catchTag` would show `And`, `Or`, etc.
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`5a2314b`](https://github.com/Effect-TS/effect/commit/5a2314b70ec79c2c02b51cef45a5ddec8327daa1) Thanks [@github-actions](https://github.com/apps/github-actions)! - replace use of `unit` terminology with `void`
 
-  For all the data types.
+    For all the data types.
 
-  ```ts
-  Effect.unit // => Effect.void
-  Stream.unit // => Stream.void
+    ```ts
+    Effect.unit; // => Effect.void
+    Stream.unit; // => Stream.void
 
-  // etc
-  ```
+    // etc
+    ```
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`271b79f`](https://github.com/Effect-TS/effect/commit/271b79fc0b66a6c11e07a8779ff8800493a7eac2) Thanks [@github-actions](https://github.com/apps/github-actions)! - Either: fix `getEquivalence` parameter order from `Either.getEquivalence(left, right)` to `Either.getEquivalence({ left, right })`
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`53d1c2a`](https://github.com/Effect-TS/effect/commit/53d1c2a77559081fbb89667e343346375c6d6650) Thanks [@github-actions](https://github.com/apps/github-actions)! - use LazyArg for Effect.if branches
 
-  Instead of:
+    Instead of:
 
-  ```ts
-  Effect.if(true, {
-    onTrue: Effect.succeed("true"),
-    onFalse: Effect.succeed("false")
-  })
-  ```
+    ```ts
+    Effect.if(true, {
+        onTrue: Effect.succeed("true"),
+        onFalse: Effect.succeed("false"),
+    });
+    ```
 
-  You should now write:
+    You should now write:
 
-  ```ts
-  Effect.if(true, {
-    onTrue: () => Effect.succeed("true"),
-    onFalse: () => Effect.succeed("false")
-  })
-  ```
+    ```ts
+    Effect.if(true, {
+        onTrue: () => Effect.succeed("true"),
+        onFalse: () => Effect.succeed("false"),
+    });
+    ```
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`e7e1bbe`](https://github.com/Effect-TS/effect/commit/e7e1bbe68486fdf31c8f84b0880522d39adcaad3) Thanks [@github-actions](https://github.com/apps/github-actions)! - Replaced custom `NoInfer` type with the native `NoInfer` type from TypeScript 5.4
 
@@ -6765,33 +6797,35 @@
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`1b5f0c7`](https://github.com/Effect-TS/effect/commit/1b5f0c77e7fd477a0026071e82129a948227f4b3) Thanks [@github-actions](https://github.com/apps/github-actions)! - add FiberMap.has/unsafeHas api
 
 - [#2104](https://github.com/Effect-TS/effect/pull/2104) [`1499974`](https://github.com/Effect-TS/effect/commit/14999741d2e19c1747f6a7e19d68977f6429cdb8) Thanks [@IMax153](https://github.com/IMax153)! - add String casing transformation apis
-  - `snakeToCamel`
-  - `snakeToPascal`
-  - `snakeToKebab`
-  - `camelToSnake`
-  - `pascalToSnake`
-  - `kebabToSnake`
+    - `snakeToCamel`
+    - `snakeToPascal`
+    - `snakeToKebab`
+    - `camelToSnake`
+    - `pascalToSnake`
+    - `kebabToSnake`
 
 - [#2207](https://github.com/Effect-TS/effect/pull/2207) [`1b5f0c7`](https://github.com/Effect-TS/effect/commit/1b5f0c77e7fd477a0026071e82129a948227f4b3) Thanks [@github-actions](https://github.com/apps/github-actions)! - add FiberHandle module, for holding a reference to a running fiber
 
-  ```ts
-  import { Effect, FiberHandle } from "effect"
+    ```ts
+    import { Effect, FiberHandle } from "effect";
 
-  Effect.gen(function* (_) {
-    const handle = yield* _(FiberHandle.make())
+    Effect.gen(function* (_) {
+        const handle = yield* _(FiberHandle.make());
 
-    // run some effects
-    yield* _(FiberHandle.run(handle, Effect.never))
-    // this will interrupt the previous fiber
-    yield* _(FiberHandle.run(handle, Effect.never))
-    // this will not run, as a fiber is already running
-    yield* _(FiberHandle.run(handle, Effect.never, { onlyIfMissing: true }))
+        // run some effects
+        yield* _(FiberHandle.run(handle, Effect.never));
+        // this will interrupt the previous fiber
+        yield* _(FiberHandle.run(handle, Effect.never));
+        // this will not run, as a fiber is already running
+        yield* _(
+            FiberHandle.run(handle, Effect.never, { onlyIfMissing: true }),
+        );
 
-    yield* _(Effect.sleep(1000))
-  }).pipe(
-    Effect.scoped // The fiber will be interrupted when the scope is closed
-  )
-  ```
+        yield* _(Effect.sleep(1000));
+    }).pipe(
+        Effect.scoped, // The fiber will be interrupted when the scope is closed
+    );
+    ```
 
 - [#2521](https://github.com/Effect-TS/effect/pull/2521) [`6424181`](https://github.com/Effect-TS/effect/commit/64241815fe6a939e91e6947253e7dceea1306aa8) Thanks [@patroza](https://github.com/patroza)! - change return type of Fiber.joinAll to return an array
 
@@ -6809,11 +6843,11 @@
 
 - [#2472](https://github.com/Effect-TS/effect/pull/2472) [`8709856`](https://github.com/Effect-TS/effect/commit/870985694ae985c3cb9360ad8a25c60e6f785f55) Thanks [@tim-smart](https://github.com/tim-smart)! - add Subscribable trait / module
 
-  Subscribable represents a resource that has a current value and can be subscribed to for updates.
+    Subscribable represents a resource that has a current value and can be subscribed to for updates.
 
-  The following data types are subscribable:
-  - A `SubscriptionRef`
-  - An `Actor` from the experimental `Machine` module
+    The following data types are subscribable:
+    - A `SubscriptionRef`
+    - An `Actor` from the experimental `Machine` module
 
 - [#2500](https://github.com/Effect-TS/effect/pull/2500) [`232c353`](https://github.com/Effect-TS/effect/commit/232c353c2e6f743f38e57639ee30e324ffa9c2a9) Thanks [@tim-smart](https://github.com/tim-smart)! - simplify scope internals
 
@@ -6821,49 +6855,49 @@
 
 - [#2472](https://github.com/Effect-TS/effect/pull/2472) [`8709856`](https://github.com/Effect-TS/effect/commit/870985694ae985c3cb9360ad8a25c60e6f785f55) Thanks [@tim-smart](https://github.com/tim-smart)! - add Readable module / trait
 
-  `Readable` is a common interface for objects that can be read from using a `get`
-  Effect.
+    `Readable` is a common interface for objects that can be read from using a `get`
+    Effect.
 
-  For example, `Ref`'s implement `Readable`:
+    For example, `Ref`'s implement `Readable`:
 
-  ```ts
-  import { Effect, Readable, Ref } from "effect"
-  import assert from "assert"
+    ```ts
+    import { Effect, Readable, Ref } from "effect";
+    import assert from "assert";
 
-  Effect.gen(function* (_) {
-    const ref = yield* _(Ref.make(123))
-    assert(Readable.isReadable(ref))
+    Effect.gen(function* (_) {
+        const ref = yield* _(Ref.make(123));
+        assert(Readable.isReadable(ref));
 
-    const result = yield* _(ref.get)
-    assert(result === 123)
-  })
-  ```
+        const result = yield* _(ref.get);
+        assert(result === 123);
+    });
+    ```
 
 - [#2498](https://github.com/Effect-TS/effect/pull/2498) [`e983740`](https://github.com/Effect-TS/effect/commit/e9837401145605aff5bc2ec7e73004f397c5d2d1) Thanks [@jessekelly881](https://github.com/jessekelly881)! - added {Readable, Subscribable}.unwrap
 
 - [#2494](https://github.com/Effect-TS/effect/pull/2494) [`e3e0924`](https://github.com/Effect-TS/effect/commit/e3e09247d46a35430fc60e4aa4032cc50814f212) Thanks [@thewilkybarkid](https://github.com/thewilkybarkid)! - Add `Duration.divide` and `Duration.unsafeDivide`.
 
-  ```ts
-  import { Duration, Option } from "effect"
-  import assert from "assert"
+    ```ts
+    import { Duration, Option } from "effect";
+    import assert from "assert";
 
-  assert.deepStrictEqual(
-    Duration.divide("10 seconds", 2),
-    Option.some(Duration.decode("5 seconds"))
-  )
-  assert.deepStrictEqual(Duration.divide("10 seconds", 0), Option.none())
-  assert.deepStrictEqual(Duration.divide("1 nano", 1.5), Option.none())
+    assert.deepStrictEqual(
+        Duration.divide("10 seconds", 2),
+        Option.some(Duration.decode("5 seconds")),
+    );
+    assert.deepStrictEqual(Duration.divide("10 seconds", 0), Option.none());
+    assert.deepStrictEqual(Duration.divide("1 nano", 1.5), Option.none());
 
-  assert.deepStrictEqual(
-    Duration.unsafeDivide("10 seconds", 2),
-    Duration.decode("5 seconds")
-  )
-  assert.deepStrictEqual(
-    Duration.unsafeDivide("10 seconds", 0),
-    Duration.infinity
-  )
-  assert.throws(() => Duration.unsafeDivide("1 nano", 1.5))
-  ```
+    assert.deepStrictEqual(
+        Duration.unsafeDivide("10 seconds", 2),
+        Duration.decode("5 seconds"),
+    );
+    assert.deepStrictEqual(
+        Duration.unsafeDivide("10 seconds", 0),
+        Duration.infinity,
+    );
+    assert.throws(() => Duration.unsafeDivide("1 nano", 1.5));
+    ```
 
 ## 2.4.18
 
@@ -6871,14 +6905,14 @@
 
 - [#2473](https://github.com/Effect-TS/effect/pull/2473) [`dadc690`](https://github.com/Effect-TS/effect/commit/dadc6906121c512bc32be22b52adbd1ada834594) Thanks [@tim-smart](https://github.com/tim-smart)! - add Logger.withConsoleLog/withConsoleError apis
 
-  These apis send a Logger's output to console.log/console.error respectively.
+    These apis send a Logger's output to console.log/console.error respectively.
 
-  ```ts
-  import { Logger } from "effect"
+    ```ts
+    import { Logger } from "effect";
 
-  // send output to stderr
-  const stderrLogger = Logger.withConsoleError(Logger.stringLogger)
-  ```
+    // send output to stderr
+    const stderrLogger = Logger.withConsoleError(Logger.stringLogger);
+    ```
 
 ## 2.4.17
 
@@ -6892,67 +6926,67 @@
 
 - [#2415](https://github.com/Effect-TS/effect/pull/2415) [`8206caf`](https://github.com/Effect-TS/effect/commit/8206caf7c2d22c68be4313318b61cfdacf6222b6) Thanks [@tim-smart](https://github.com/tim-smart)! - add Iterable module
 
-  This module shares many apis compared to "effect/ReadonlyArray", but is fully lazy.
+    This module shares many apis compared to "effect/ReadonlyArray", but is fully lazy.
 
-  ```ts
-  import { Iterable, pipe } from "effect"
+    ```ts
+    import { Iterable, pipe } from "effect";
 
-  // Only 5 items will be generated & transformed
-  pipe(
-    Iterable.range(1, 100),
-    Iterable.map((i) => `item ${i}`),
-    Iterable.take(5)
-  )
-  ```
+    // Only 5 items will be generated & transformed
+    pipe(
+        Iterable.range(1, 100),
+        Iterable.map((i) => `item ${i}`),
+        Iterable.take(5),
+    );
+    ```
 
 - [#2438](https://github.com/Effect-TS/effect/pull/2438) [`7ddd654`](https://github.com/Effect-TS/effect/commit/7ddd65415b65ccb654ad04f4dbefe39402f15117) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Support Heterogeneous Effects in Effect Iterable apis
 
-  Including:
-  - `Effect.allSuccesses`
-  - `Effect.firstSuccessOf`
-  - `Effect.mergeAll`
-  - `Effect.reduceEffect`
-  - `Effect.raceAll`
-  - `Effect.forkAll`
+    Including:
+    - `Effect.allSuccesses`
+    - `Effect.firstSuccessOf`
+    - `Effect.mergeAll`
+    - `Effect.reduceEffect`
+    - `Effect.raceAll`
+    - `Effect.forkAll`
 
-  For example:
+    For example:
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  class Foo extends Effect.Tag("Foo")<Foo, 3>() {}
-  class Bar extends Effect.Tag("Bar")<Bar, 4>() {}
+    class Foo extends Effect.Tag("Foo")<Foo, 3>() {}
+    class Bar extends Effect.Tag("Bar")<Bar, 4>() {}
 
-  // const program: Effect.Effect<(1 | 2 | 3 | 4)[], never, Foo | Bar>
-  export const program = Effect.allSuccesses([
-    Effect.succeed(1 as const),
-    Effect.succeed(2 as const),
-    Foo,
-    Bar
-  ])
-  ```
+    // const program: Effect.Effect<(1 | 2 | 3 | 4)[], never, Foo | Bar>
+    export const program = Effect.allSuccesses([
+        Effect.succeed(1 as const),
+        Effect.succeed(2 as const),
+        Foo,
+        Bar,
+    ]);
+    ```
 
-  The above is now possible while before it was expecting all Effects to conform to the same type
+    The above is now possible while before it was expecting all Effects to conform to the same type
 
 - [#2438](https://github.com/Effect-TS/effect/pull/2438) [`7ddd654`](https://github.com/Effect-TS/effect/commit/7ddd65415b65ccb654ad04f4dbefe39402f15117) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - add Effect.filterMap api
 
-  Which allows you to filter and map an Iterable of Effects in one step.
+    Which allows you to filter and map an Iterable of Effects in one step.
 
-  ```ts
-  import { Effect, Option } from "effect"
+    ```ts
+    import { Effect, Option } from "effect";
 
-  // resolves with `["even: 2"]
-  Effect.filterMap(
-    [Effect.succeed(1), Effect.succeed(2), Effect.succeed(3)],
-    (i) => (i % 2 === 0 ? Option.some(`even: ${i}`) : Option.none())
-  )
-  ```
+    // resolves with `["even: 2"]
+    Effect.filterMap(
+        [Effect.succeed(1), Effect.succeed(2), Effect.succeed(3)],
+        (i) => (i % 2 === 0 ? Option.some(`even: ${i}`) : Option.none()),
+    );
+    ```
 
 - [#2461](https://github.com/Effect-TS/effect/pull/2461) [`8fdfda6`](https://github.com/Effect-TS/effect/commit/8fdfda6618be848c01b399d13bc05a9a3adfb613) Thanks [@tim-smart](https://github.com/tim-smart)! - use Inspectable.toStringUnknown for absurd runtime errors
 
 - [#2460](https://github.com/Effect-TS/effect/pull/2460) [`f456ba2`](https://github.com/Effect-TS/effect/commit/f456ba273bae21a6dcf8c966c50c97b5f0897d9f) Thanks [@tim-smart](https://github.com/tim-smart)! - use const type parameter for Config.withDefault
 
-  Which ensures that the fallback value type is not widened for literals.
+    Which ensures that the fallback value type is not widened for literals.
 
 ## 2.4.16
 
@@ -6966,15 +7000,15 @@
 
 - [#2407](https://github.com/Effect-TS/effect/pull/2407) [`d7688c0`](https://github.com/Effect-TS/effect/commit/d7688c0c72717fe7876c871567f6946dabfc0546) Thanks [@thewilkybarkid](https://github.com/thewilkybarkid)! - Add Config.duration
 
-  This can be used to parse Duration's from environment variables:
+    This can be used to parse Duration's from environment variables:
 
-  ```ts
-  import { Config, Effect } from "effect"
+    ```ts
+    import { Config, Effect } from "effect"
 
-  Config.duration("CACHE_TTL").pipe(
-    Effect.andThen((duration) => ...)
-  )
-  ```
+    Config.duration("CACHE_TTL").pipe(
+      Effect.andThen((duration) => ...)
+    )
+    ```
 
 - [#2416](https://github.com/Effect-TS/effect/pull/2416) [`b3a4fac`](https://github.com/Effect-TS/effect/commit/b3a4face2acaca422f0b0530436e8f13129f3b3a) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Collect exits on forEach interrupt of residual requests
 
@@ -7008,17 +7042,17 @@
 
 - [#2381](https://github.com/Effect-TS/effect/pull/2381) [`37ca592`](https://github.com/Effect-TS/effect/commit/37ca592a4101ad90adbf8c8b3f727faf3110cae5) Thanks [@tim-smart](https://github.com/tim-smart)! - add fiber ref for disabling the tracer
 
-  You can use it with the Effect.withTracerEnabled api:
+    You can use it with the Effect.withTracerEnabled api:
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  Effect.succeed(42).pipe(
-    Effect.withSpan("my-span"),
-    // the span will not be registered with the tracer
-    Effect.withTracerEnabled(false)
-  )
-  ```
+    Effect.succeed(42).pipe(
+        Effect.withSpan("my-span"),
+        // the span will not be registered with the tracer
+        Effect.withTracerEnabled(false),
+    );
+    ```
 
 - [#2383](https://github.com/Effect-TS/effect/pull/2383) [`317b5b8`](https://github.com/Effect-TS/effect/commit/317b5b8e8c8c2207469b3ebfcf72bf3a9f7cbc60) Thanks [@tim-smart](https://github.com/tim-smart)! - add Duration.isFinite api, to determine if a duration is not Infinity
 
@@ -7042,17 +7076,17 @@
 
 - [#2354](https://github.com/Effect-TS/effect/pull/2354) [`bb0b69e`](https://github.com/Effect-TS/effect/commit/bb0b69e519698c7c76aa68217de423c78ad16566) Thanks [@tim-smart](https://github.com/tim-smart)! - add overload to Effect.filterOrFail that fails with NoSuchElementException
 
-  This allows you to perform a filterOrFail without providing a fallback failure
-  function.
+    This allows you to perform a filterOrFail without providing a fallback failure
+    function.
 
-  Example:
+    Example:
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  // fails with NoSuchElementException
-  Effect.succeed(1).pipe(Effect.filterOrFail((n) => n === 0))
-  ```
+    // fails with NoSuchElementException
+    Effect.succeed(1).pipe(Effect.filterOrFail((n) => n === 0));
+    ```
 
 - [#2336](https://github.com/Effect-TS/effect/pull/2336) [`6b20bad`](https://github.com/Effect-TS/effect/commit/6b20badebb3a7ca4d38857753e8ecaa09d02ccfb) Thanks [@jessekelly881](https://github.com/jessekelly881)! - added Predicate.isTruthy
 
@@ -7078,8 +7112,8 @@
 
 - [#2311](https://github.com/Effect-TS/effect/pull/2311) [`9971186`](https://github.com/Effect-TS/effect/commit/99711862722188fbb5ed3ee75126ad5edf13f72f) Thanks [@tim-smart](https://github.com/tim-smart)! - add Channel.splitLines api
 
-  It splits strings on newlines. Handles both Windows newlines (`\r\n`) and UNIX
-  newlines (`\n`).
+    It splits strings on newlines. Handles both Windows newlines (`\r\n`) and UNIX
+    newlines (`\n`).
 
 ## 2.4.5
 
@@ -7095,26 +7129,26 @@
 
 - [#2172](https://github.com/Effect-TS/effect/pull/2172) [`5d47ee0`](https://github.com/Effect-TS/effect/commit/5d47ee0855e492532085b6092879b1b952d84949) Thanks [@gcanti](https://github.com/gcanti)! - Brand: add `refined` overload
 
-  ```ts
-  export function refined<A extends Brand<any>>(
-    f: (unbranded: Brand.Unbranded<A>) => Option.Option<Brand.BrandErrors>
-  ): Brand.Constructor<A>
-  ```
+    ```ts
+    export function refined<A extends Brand<any>>(
+        f: (unbranded: Brand.Unbranded<A>) => Option.Option<Brand.BrandErrors>,
+    ): Brand.Constructor<A>;
+    ```
 
 - [#2285](https://github.com/Effect-TS/effect/pull/2285) [`817a04c`](https://github.com/Effect-TS/effect/commit/817a04cb2df0f4140984dc97eb3e1bb14a6c4a38) Thanks [@tim-smart](https://github.com/tim-smart)! - add support for AbortSignal's to runPromise
 
-  If the signal is aborted, the effect execution will be interrupted.
+    If the signal is aborted, the effect execution will be interrupted.
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  const controller = new AbortController()
+    const controller = new AbortController();
 
-  Effect.runPromise(Effect.never, { signal: controller.signal })
+    Effect.runPromise(Effect.never, { signal: controller.signal });
 
-  // abort after 1 second
-  setTimeout(() => controller.abort(), 1000)
-  ```
+    // abort after 1 second
+    setTimeout(() => controller.abort(), 1000);
+    ```
 
 - [#2293](https://github.com/Effect-TS/effect/pull/2293) [`d90a99d`](https://github.com/Effect-TS/effect/commit/d90a99d03d074adc7cd2533f15419138264da5a2) Thanks [@tim-smart](https://github.com/tim-smart)! - add AbortSignal support to ManagedRuntime
 
@@ -7130,37 +7164,37 @@
 
 - [#2211](https://github.com/Effect-TS/effect/pull/2211) [`20e63fb`](https://github.com/Effect-TS/effect/commit/20e63fb9207210f3fe2d136ec40d0a2dbff3225e) Thanks [@tim-smart](https://github.com/tim-smart)! - add ManagedRuntime module, to make incremental adoption easier
 
-  You can use a ManagedRuntime to run Effect's that can use the
-  dependencies from the given Layer. For example:
+    You can use a ManagedRuntime to run Effect's that can use the
+    dependencies from the given Layer. For example:
 
-  ```ts
-  import { Console, Effect, Layer, ManagedRuntime } from "effect"
+    ```ts
+    import { Console, Effect, Layer, ManagedRuntime } from "effect";
 
-  class Notifications extends Effect.Tag("Notifications")<
-    Notifications,
-    { readonly notify: (message: string) => Effect.Effect<void> }
-  >() {
-    static Live = Layer.succeed(this, {
-      notify: (message) => Console.log(message)
-    })
-  }
+    class Notifications extends Effect.Tag("Notifications")<
+        Notifications,
+        { readonly notify: (message: string) => Effect.Effect<void> }
+    >() {
+        static Live = Layer.succeed(this, {
+            notify: (message) => Console.log(message),
+        });
+    }
 
-  async function main() {
-    const runtime = ManagedRuntime.make(Notifications.Live)
-    await runtime.runPromise(Notifications.notify("Hello, world!"))
-    await runtime.dispose()
-  }
+    async function main() {
+        const runtime = ManagedRuntime.make(Notifications.Live);
+        await runtime.runPromise(Notifications.notify("Hello, world!"));
+        await runtime.dispose();
+    }
 
-  main()
-  ```
+    main();
+    ```
 
 - [#2211](https://github.com/Effect-TS/effect/pull/2211) [`20e63fb`](https://github.com/Effect-TS/effect/commit/20e63fb9207210f3fe2d136ec40d0a2dbff3225e) Thanks [@tim-smart](https://github.com/tim-smart)! - add Layer.toRuntimeWithMemoMap api
 
-  Similar to Layer.toRuntime, but allows you to share a Layer.MemoMap between
-  layer builds.
+    Similar to Layer.toRuntime, but allows you to share a Layer.MemoMap between
+    layer builds.
 
-  By sharing the MemoMap, layers are shared between each build - ensuring layers
-  are only built once between multiple calls to Layer.toRuntimeWithMemoMap.
+    By sharing the MemoMap, layers are shared between each build - ensuring layers
+    are only built once between multiple calls to Layer.toRuntimeWithMemoMap.
 
 ## 2.4.2
 
@@ -7170,87 +7204,87 @@
 
 - [#2225](https://github.com/Effect-TS/effect/pull/2225) [`ac41d84`](https://github.com/Effect-TS/effect/commit/ac41d84776484cdce8165b7ca2c9c9b6377eee2d) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Add Effect.Tag to simplify access to service.
 
-  This change allows to define tags in the following way:
+    This change allows to define tags in the following way:
 
-  ```ts
-  class DemoTag extends Effect.Tag("DemoTag")<
-    DemoTag,
-    {
-      readonly getNumbers: () => Array<number>
-      readonly strings: Array<string>
-    }
-  >() {}
-  ```
+    ```ts
+    class DemoTag extends Effect.Tag("DemoTag")<
+        DemoTag,
+        {
+            readonly getNumbers: () => Array<number>;
+            readonly strings: Array<string>;
+        }
+    >() {}
+    ```
 
-  And use them like:
+    And use them like:
 
-  ```ts
-  DemoTag.getNumbers()
-  DemoTag.strings
-  ```
+    ```ts
+    DemoTag.getNumbers();
+    DemoTag.strings;
+    ```
 
-  This fuses together `serviceFunctions` and `serviceConstants` in the static side of the tag.
+    This fuses together `serviceFunctions` and `serviceConstants` in the static side of the tag.
 
-  Additionally it allows using the service like:
+    Additionally it allows using the service like:
 
-  ```ts
-  DemoTag.use((_) => _.getNumbers())
-  ```
+    ```ts
+    DemoTag.use((_) => _.getNumbers());
+    ```
 
-  This is especially useful when having functions that contain generics in the service given that those can't be reliably transformed at the type level and because of that we can't put them on the tag.
+    This is especially useful when having functions that contain generics in the service given that those can't be reliably transformed at the type level and because of that we can't put them on the tag.
 
 - [#2238](https://github.com/Effect-TS/effect/pull/2238) [`6137533`](https://github.com/Effect-TS/effect/commit/613753300c7705518ab1fea2f370b032851c2750) Thanks [@JJayet](https://github.com/JJayet)! - Request: swap Success and Error params
 
 - [#2270](https://github.com/Effect-TS/effect/pull/2270) [`f373529`](https://github.com/Effect-TS/effect/commit/f373529999f4b8bc92b634f6ea14f19271388eed) Thanks [@tim-smart](https://github.com/tim-smart)! - add structured logging apis
-  - Logger.json / Logger.jsonLogger
-  - Logger.structured / Logger.structuredLogger
+    - Logger.json / Logger.jsonLogger
+    - Logger.structured / Logger.structuredLogger
 
-  `Logger.json` logs JSON serialized strings to the console.
+    `Logger.json` logs JSON serialized strings to the console.
 
-  `Logger.structured` logs structured objects, which is useful in the browser
-  where you can inspect objects logged to the console.
+    `Logger.structured` logs structured objects, which is useful in the browser
+    where you can inspect objects logged to the console.
 
 - [#2257](https://github.com/Effect-TS/effect/pull/2257) [`1bf9f31`](https://github.com/Effect-TS/effect/commit/1bf9f31f07667de677673f7c29a4e7a26ebad3c8) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Make sure Effect.Tag works on primitives.
 
-  This change allows the following to work just fine:
+    This change allows the following to work just fine:
 
-  ```ts
-  import { Effect, Layer } from "effect"
+    ```ts
+    import { Effect, Layer } from "effect";
 
-  class DateTag extends Effect.Tag("DateTag")<DateTag, Date>() {
-    static date = new Date(1970, 1, 1)
-    static Live = Layer.succeed(this, this.date)
-  }
+    class DateTag extends Effect.Tag("DateTag")<DateTag, Date>() {
+        static date = new Date(1970, 1, 1);
+        static Live = Layer.succeed(this, this.date);
+    }
 
-  class MapTag extends Effect.Tag("MapTag")<MapTag, Map<string, string>>() {
-    static Live = Layer.effect(
-      this,
-      Effect.sync(() => new Map())
-    )
-  }
+    class MapTag extends Effect.Tag("MapTag")<MapTag, Map<string, string>>() {
+        static Live = Layer.effect(
+            this,
+            Effect.sync(() => new Map()),
+        );
+    }
 
-  class NumberTag extends Effect.Tag("NumberTag")<NumberTag, number>() {
-    static Live = Layer.succeed(this, 100)
-  }
-  ```
+    class NumberTag extends Effect.Tag("NumberTag")<NumberTag, number>() {
+        static Live = Layer.succeed(this, 100);
+    }
+    ```
 
 - [#2244](https://github.com/Effect-TS/effect/pull/2244) [`e3ff789`](https://github.com/Effect-TS/effect/commit/e3ff789226f89e71eb28ca38ce79f90af6a03f1a) Thanks [@tim-smart](https://github.com/tim-smart)! - add FiberMap/FiberSet.join api
 
-  This api can be used to propogate failures back to a parent fiber, in case any of the fibers added to the FiberMap/FiberSet fail with an error.
+    This api can be used to propogate failures back to a parent fiber, in case any of the fibers added to the FiberMap/FiberSet fail with an error.
 
-  Example:
+    Example:
 
-  ```ts
-  import { Effect, FiberSet } from "effect"
+    ```ts
+    import { Effect, FiberSet } from "effect";
 
-  Effect.gen(function* (_) {
-    const set = yield* _(FiberSet.make())
-    yield* _(FiberSet.add(set, Effect.runFork(Effect.fail("error"))))
+    Effect.gen(function* (_) {
+        const set = yield* _(FiberSet.make());
+        yield* _(FiberSet.add(set, Effect.runFork(Effect.fail("error"))));
 
-    // parent fiber will fail with "error"
-    yield* _(FiberSet.join(set))
-  })
-  ```
+        // parent fiber will fail with "error"
+        yield* _(FiberSet.join(set));
+    });
+    ```
 
 - [#2238](https://github.com/Effect-TS/effect/pull/2238) [`6137533`](https://github.com/Effect-TS/effect/commit/613753300c7705518ab1fea2f370b032851c2750) Thanks [@JJayet](https://github.com/JJayet)! - make Effect.request dual
 
@@ -7260,28 +7294,28 @@
 
 - [#2270](https://github.com/Effect-TS/effect/pull/2270) [`f373529`](https://github.com/Effect-TS/effect/commit/f373529999f4b8bc92b634f6ea14f19271388eed) Thanks [@tim-smart](https://github.com/tim-smart)! - add Logger.batched, for batching logger output
 
-  It takes a duration window and an effectful function that processes the batched output.
+    It takes a duration window and an effectful function that processes the batched output.
 
-  Example:
+    Example:
 
-  ```ts
-  import { Console, Effect, Logger } from "effect"
+    ```ts
+    import { Console, Effect, Logger } from "effect";
 
-  const LoggerLive = Logger.replaceScoped(
-    Logger.defaultLogger,
-    Logger.logfmtLogger.pipe(
-      Logger.batched("500 millis", (messages) =>
-        Console.log("BATCH", messages.join("\n"))
-      )
-    )
-  )
+    const LoggerLive = Logger.replaceScoped(
+        Logger.defaultLogger,
+        Logger.logfmtLogger.pipe(
+            Logger.batched("500 millis", (messages) =>
+                Console.log("BATCH", messages.join("\n")),
+            ),
+        ),
+    );
 
-  Effect.gen(function* (_) {
-    yield* _(Effect.log("one"))
-    yield* _(Effect.log("two"))
-    yield* _(Effect.log("three"))
-  }).pipe(Effect.provide(LoggerLive), Effect.runFork)
-  ```
+    Effect.gen(function* (_) {
+        yield* _(Effect.log("one"));
+        yield* _(Effect.log("two"));
+        yield* _(Effect.log("three"));
+    }).pipe(Effect.provide(LoggerLive), Effect.runFork);
+    ```
 
 - [#2233](https://github.com/Effect-TS/effect/pull/2233) [`de74eb8`](https://github.com/Effect-TS/effect/commit/de74eb80a79eebde5ff645033765e7a617e92f27) Thanks [@gcanti](https://github.com/gcanti)! - Struct: make `pick` / `omit` dual
 
@@ -7302,121 +7336,121 @@
 - [#2101](https://github.com/Effect-TS/effect/pull/2101) [`5de7be5`](https://github.com/Effect-TS/effect/commit/5de7be5beca2e963b503e6029dcc3217848187d2) Thanks [@github-actions](https://github.com/apps/github-actions)! - remove ReadonlyRecord.fromIterable (duplicate of fromEntries)
 
 - [#2101](https://github.com/Effect-TS/effect/pull/2101) [`489fcf3`](https://github.com/Effect-TS/effect/commit/489fcf363ff2b2a953166b740cb9a62d7fc2a101) Thanks [@github-actions](https://github.com/apps/github-actions)! - - swap `Schedule` type parameters from `Schedule<out Env, in In, out Out>` to `Schedule<out Out, in In = unknown, out R = never>`, closes #2154
-  - swap `ScheduleDriver` type parameters from `ScheduleDriver<out Env, in In, out Out>` to `ScheduleDriver<out Out, in In = unknown, out R = never>`
+    - swap `ScheduleDriver` type parameters from `ScheduleDriver<out Env, in In, out Out>` to `ScheduleDriver<out Out, in In = unknown, out R = never>`
 
 - [#2101](https://github.com/Effect-TS/effect/pull/2101) [`7d9c3bf`](https://github.com/Effect-TS/effect/commit/7d9c3bff6c18d451e0e4781042945ec5c7be1b9f) Thanks [@github-actions](https://github.com/apps/github-actions)! - Consolidate `Effect.asyncOption`, `Effect.asyncEither`, `Stream.asyncOption`, `Stream.asyncEither`, and `Stream.asyncInterrupt`
 
-  This PR removes `Effect.asyncOption` and `Effect.asyncEither` as their behavior can be entirely implemented with the new signature of `Effect.async`, which optionally returns a cleanup `Effect` from the registration callback.
+    This PR removes `Effect.asyncOption` and `Effect.asyncEither` as their behavior can be entirely implemented with the new signature of `Effect.async`, which optionally returns a cleanup `Effect` from the registration callback.
 
-  ```ts
-  declare const async: <A, E = never, R = never>(
-    register: (
-      callback: (_: Effect<A, E, R>) => void,
-      signal: AbortSignal
-    ) => void | Effect<void, never, R>,
-    blockingOn?: FiberId
-  ) => Effect<A, E, R>
-  ```
+    ```ts
+    declare const async: <A, E = never, R = never>(
+        register: (
+            callback: (_: Effect<A, E, R>) => void,
+            signal: AbortSignal,
+        ) => void | Effect<void, never, R>,
+        blockingOn?: FiberId,
+    ) => Effect<A, E, R>;
+    ```
 
-  Additionally, this PR removes `Stream.asyncOption`, `Stream.asyncEither`, and `Stream.asyncInterrupt` as their behavior can be entirely implemented with the new signature of `Stream.async`, which can optionally return a cleanup `Effect` from the registration callback.
+    Additionally, this PR removes `Stream.asyncOption`, `Stream.asyncEither`, and `Stream.asyncInterrupt` as their behavior can be entirely implemented with the new signature of `Stream.async`, which can optionally return a cleanup `Effect` from the registration callback.
 
-  ```ts
-  declare const async: <A, E = never, R = never>(
-    register: (emit: Emit<R, E, A, void>) => Effect<void, never, R> | void,
-    outputBuffer?: number
-  ) => Stream<A, E, R>
-  ```
+    ```ts
+    declare const async: <A, E = never, R = never>(
+        register: (emit: Emit<R, E, A, void>) => Effect<void, never, R> | void,
+        outputBuffer?: number,
+    ) => Stream<A, E, R>;
+    ```
 
 - [#2101](https://github.com/Effect-TS/effect/pull/2101) [`d8d278b`](https://github.com/Effect-TS/effect/commit/d8d278b2efb2966947029885e01f7b68348a021f) Thanks [@github-actions](https://github.com/apps/github-actions)! - swap `GroupBy` type parameters from `GroupBy<out R, out E, out K, out V>` to `GroupBy<out K, out V, out E = never, out R = never>`
 
 - [#2101](https://github.com/Effect-TS/effect/pull/2101) [`14c5711`](https://github.com/Effect-TS/effect/commit/14c57110078f0862b8da5c7a2c5d980f54447484) Thanks [@github-actions](https://github.com/apps/github-actions)! - Remove Effect.unified and Effect.unifiedFn in favour of Unify.unify.
 
-  The `Unify` module fully replaces the need for specific unify functions, when before you did:
+    The `Unify` module fully replaces the need for specific unify functions, when before you did:
 
-  ```ts
-  import { Effect } from "effect"
+    ```ts
+    import { Effect } from "effect";
 
-  const effect = Effect.unified(
-    Math.random() > 0.5 ? Effect.succeed("OK") : Effect.fail("NO")
-  )
-  const effectFn = Effect.unifiedFn((n: number) =>
-    Math.random() > 0.5 ? Effect.succeed("OK") : Effect.fail("NO")
-  )
-  ```
+    const effect = Effect.unified(
+        Math.random() > 0.5 ? Effect.succeed("OK") : Effect.fail("NO"),
+    );
+    const effectFn = Effect.unifiedFn((n: number) =>
+        Math.random() > 0.5 ? Effect.succeed("OK") : Effect.fail("NO"),
+    );
+    ```
 
-  You can now do:
+    You can now do:
 
-  ```ts
-  import { Effect, Unify } from "effect"
+    ```ts
+    import { Effect, Unify } from "effect";
 
-  const effect = Unify.unify(
-    Math.random() > 0.5 ? Effect.succeed("OK") : Effect.fail("NO")
-  )
-  const effectFn = Unify.unify((n: number) =>
-    Math.random() > 0.5 ? Effect.succeed("OK") : Effect.fail("NO")
-  )
-  ```
+    const effect = Unify.unify(
+        Math.random() > 0.5 ? Effect.succeed("OK") : Effect.fail("NO"),
+    );
+    const effectFn = Unify.unify((n: number) =>
+        Math.random() > 0.5 ? Effect.succeed("OK") : Effect.fail("NO"),
+    );
+    ```
 
 - [#2101](https://github.com/Effect-TS/effect/pull/2101) [`5de7be5`](https://github.com/Effect-TS/effect/commit/5de7be5beca2e963b503e6029dcc3217848187d2) Thanks [@github-actions](https://github.com/apps/github-actions)! - add key type to ReadonlyRecord
 
 - [#2101](https://github.com/Effect-TS/effect/pull/2101) [`585fcce`](https://github.com/Effect-TS/effect/commit/585fcce162d0f07a48d7cd984a9b722966fbebbe) Thanks [@github-actions](https://github.com/apps/github-actions)! - add support for optional property keys to `pick`, `omit` and `get`
 
-  Before:
+    Before:
 
-  ```ts
-  import { pipe } from "effect/Function"
-  import * as S from "effect/Struct"
+    ```ts
+    import { pipe } from "effect/Function";
+    import * as S from "effect/Struct";
 
-  const struct: {
-    a?: string
-    b: number
-    c: boolean
-  } = { b: 1, c: true }
+    const struct: {
+        a?: string;
+        b: number;
+        c: boolean;
+    } = { b: 1, c: true };
 
-  // error
-  const x = pipe(struct, S.pick("a", "b"))
+    // error
+    const x = pipe(struct, S.pick("a", "b"));
 
-  const record: Record<string, number> = {}
+    const record: Record<string, number> = {};
 
-  const y = pipe(record, S.pick("a", "b"))
-  console.log(y) // => { a: undefined, b: undefined }
+    const y = pipe(record, S.pick("a", "b"));
+    console.log(y); // => { a: undefined, b: undefined }
 
-  // error
-  console.log(pipe(struct, S.get("a")))
-  ```
+    // error
+    console.log(pipe(struct, S.get("a")));
+    ```
 
-  Now
+    Now
 
-  ```ts
-  import { pipe } from "effect/Function"
-  import * as S from "effect/Struct"
+    ```ts
+    import { pipe } from "effect/Function";
+    import * as S from "effect/Struct";
 
-  const struct: {
-    a?: string
-    b: number
-    c: boolean
-  } = { b: 1, c: true }
+    const struct: {
+        a?: string;
+        b: number;
+        c: boolean;
+    } = { b: 1, c: true };
 
-  const x = pipe(struct, S.pick("a", "b"))
-  console.log(x) // => { b: 1 }
+    const x = pipe(struct, S.pick("a", "b"));
+    console.log(x); // => { b: 1 }
 
-  const record: Record<string, number> = {}
+    const record: Record<string, number> = {};
 
-  const y = pipe(record, S.pick("a", "b"))
-  console.log(y) // => {}
+    const y = pipe(record, S.pick("a", "b"));
+    console.log(y); // => {}
 
-  console.log(pipe(struct, S.get("a"))) // => undefined
-  ```
+    console.log(pipe(struct, S.get("a"))); // => undefined
+    ```
 
 - [#2101](https://github.com/Effect-TS/effect/pull/2101) [`a025b12`](https://github.com/Effect-TS/effect/commit/a025b121235ba01cfce8d62a775491880c575561) Thanks [@github-actions](https://github.com/apps/github-actions)! - Swap type params of Either from `Either<E, A>` to `Either<R, L = never>`.
 
-  Along the same line of the other changes this allows to shorten the most common types such as:
+    Along the same line of the other changes this allows to shorten the most common types such as:
 
-  ```ts
-  import { Either } from "effect"
+    ```ts
+    import { Either } from "effect";
 
-  const right: Either.Either<string> = Either.right("ok")
-  ```
+    const right: Either.Either<string> = Either.right("ok");
+    ```
 
 ### Patch Changes
 
@@ -7434,20 +7468,20 @@
 
 - [#2167](https://github.com/Effect-TS/effect/pull/2167) [`5ad2eec`](https://github.com/Effect-TS/effect/commit/5ad2eece0280b6db6a749d25cac1dcf6d33659a9) Thanks [@tim-smart](https://github.com/tim-smart)! - add Hash.cached
 
-  This api assists with adding a layer of caching, when hashing immutable data structures.
+    This api assists with adding a layer of caching, when hashing immutable data structures.
 
-  ```ts
-  import { Data, Hash } from "effect"
+    ```ts
+    import { Data, Hash } from "effect";
 
-  class User extends Data.Class<{
-    id: number
-    name: string
-  }> {
-    [Hash.symbol]() {
-      return Hash.cached(this, Hash.string(`${this.id}-${this.name}`))
+    class User extends Data.Class<{
+        id: number;
+        name: string;
+    }> {
+        [Hash.symbol]() {
+            return Hash.cached(this, Hash.string(`${this.id}-${this.name}`));
+        }
     }
-  }
-  ```
+    ```
 
 - [#2187](https://github.com/Effect-TS/effect/pull/2187) [`e6d36c0`](https://github.com/Effect-TS/effect/commit/e6d36c0813d836f17eabb6a9c7849baffca12dbf) Thanks [@tim-smart](https://github.com/tim-smart)! - update development dependencies
 
@@ -7457,35 +7491,35 @@
 
 - [#2142](https://github.com/Effect-TS/effect/pull/2142) [`bc8404d`](https://github.com/Effect-TS/effect/commit/bc8404d54fd42072d200c0399cb39672837afa9f) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Expose version control via ModuleVersion.
 
-  This enables low level framework authors to run their own effect version which won't conflict with any other effect versions running on the same process.
+    This enables low level framework authors to run their own effect version which won't conflict with any other effect versions running on the same process.
 
-  Imagine cases where for example a function runtime is built on effect, we don't want lifecycle of the runtime to clash with lifecycle of user-land provided code.
+    Imagine cases where for example a function runtime is built on effect, we don't want lifecycle of the runtime to clash with lifecycle of user-land provided code.
 
-  To manually control the module version one can use:
+    To manually control the module version one can use:
 
-  ```ts
-  import * as ModuleVersion from "effect/ModuleVersion"
+    ```ts
+    import * as ModuleVersion from "effect/ModuleVersion";
 
-  ModuleVersion.setCurrentVersion(
-    `my-effect-runtime-${ModuleVersion.getCurrentVersion()}`
-  )
-  ```
+    ModuleVersion.setCurrentVersion(
+        `my-effect-runtime-${ModuleVersion.getCurrentVersion()}`,
+    );
+    ```
 
-  Note that this code performs side effects and should be executed before any module is imported ideally via an init script.
+    Note that this code performs side effects and should be executed before any module is imported ideally via an init script.
 
-  The resulting order of execution has to be:
+    The resulting order of execution has to be:
 
-  ```ts
-  import * as ModuleVersion from "effect/ModuleVersion"
+    ```ts
+    import * as ModuleVersion from "effect/ModuleVersion";
 
-  ModuleVersion.setCurrentVersion(
-    `my-effect-runtime-${ModuleVersion.getCurrentVersion()}`
-  )
+    ModuleVersion.setCurrentVersion(
+        `my-effect-runtime-${ModuleVersion.getCurrentVersion()}`,
+    );
 
-  import { Effect } from "effect"
+    import { Effect } from "effect";
 
-  // rest of code
-  ```
+    // rest of code
+    ```
 
 - [#2159](https://github.com/Effect-TS/effect/pull/2159) [`2c5cbcd`](https://github.com/Effect-TS/effect/commit/2c5cbcd1161b4f40dab184999291e817314107de) Thanks [@IMax153](https://github.com/IMax153)! - Avoid incrementing cache hits for expired entries
 
@@ -7497,66 +7531,67 @@
 
 - [#2145](https://github.com/Effect-TS/effect/pull/2145) [`b1163b2`](https://github.com/Effect-TS/effect/commit/b1163b2bd67b65bafbbb39fc4c67576e5cbaf444) Thanks [@tim-smart](https://github.com/tim-smart)! - add RequestResolver.aroundRequests api
 
-  This can be used to run side effects that introspect the requests being
-  executed.
+    This can be used to run side effects that introspect the requests being
+    executed.
 
-  Example:
+    Example:
 
-  ```ts
-  import { Effect, Request, RequestResolver } from "effect"
+    ```ts
+    import { Effect, Request, RequestResolver } from "effect";
 
-  interface GetUserById extends Request.Request<unknown> {
-    readonly id: number
-  }
+    interface GetUserById extends Request.Request<unknown> {
+        readonly id: number;
+    }
 
-  declare const resolver: RequestResolver.RequestResolver<GetUserById>
+    declare const resolver: RequestResolver.RequestResolver<GetUserById>;
 
-  RequestResolver.aroundRequests(
-    resolver,
-    (requests) => Effect.log(`got ${requests.length} requests`),
-    (requests, _) => Effect.log(`finised running ${requests.length} requests`)
-  )
-  ```
+    RequestResolver.aroundRequests(
+        resolver,
+        (requests) => Effect.log(`got ${requests.length} requests`),
+        (requests, _) =>
+            Effect.log(`finised running ${requests.length} requests`),
+    );
+    ```
 
 - [#2148](https://github.com/Effect-TS/effect/pull/2148) [`b46b869`](https://github.com/Effect-TS/effect/commit/b46b869e59a6da5aa235a9fcc25e1e0d24e9e8f8) Thanks [@riordanpawley](https://github.com/riordanpawley)! - Flipped scheduleForked types to match new <A, E, R> signature
 
 - [#2139](https://github.com/Effect-TS/effect/pull/2139) [`de1b226`](https://github.com/Effect-TS/effect/commit/de1b226282b5ab6c2809dd93f3bdb066f24a1333) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Introduce FiberId.Single, make FiberId.None behave like FiberId.Runtime, relax FiberRefs to use Single instead of Runtime.
 
-  This change is a precursor to enable easier APIs to modify the Runtime when patching FiberRefs.
+    This change is a precursor to enable easier APIs to modify the Runtime when patching FiberRefs.
 
 - [#2137](https://github.com/Effect-TS/effect/pull/2137) [`a663390`](https://github.com/Effect-TS/effect/commit/a66339090ae7b960f8a8b90a0dcdc505de5aaf3e) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Expose Random Tag and functions to use a specific random service implementation
 
 - [#2143](https://github.com/Effect-TS/effect/pull/2143) [`ff88f80`](https://github.com/Effect-TS/effect/commit/ff88f808c4ed9947a148045849e7410b00acad0a) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Fix Cause.pretty when toString is invalid
 
-  ```ts
-  import { Cause } from "effect"
+    ```ts
+    import { Cause } from "effect";
 
-  console.log(Cause.pretty(Cause.fail([{ toString: "" }])))
-  ```
+    console.log(Cause.pretty(Cause.fail([{ toString: "" }])));
+    ```
 
-  The code above used to throw now it prints:
+    The code above used to throw now it prints:
 
-  ```bash
-  Error: [{"toString":""}]
-  ```
+    ```bash
+    Error: [{"toString":""}]
+    ```
 
 - [#2080](https://github.com/Effect-TS/effect/pull/2080) [`11be07b`](https://github.com/Effect-TS/effect/commit/11be07bf65d82cfdf994cdb9d8ca937f995cb4f0) Thanks [@KhraksMamtsov](https://github.com/KhraksMamtsov)! - Add functional analogue of `satisfies` operator.
   This is a convenient operator to use in the `pipe` chain to localize type errors closer to their source.
 
-  ```ts
-  import { satisfies } from "effect/Function"
+    ```ts
+    import { satisfies } from "effect/Function";
 
-  const test1 = satisfies<number>()(5 as const)
-  // ^? const test: 5
+    const test1 = satisfies<number>()(5 as const);
+    // ^? const test: 5
 
-  // @ts-expect-error
-  const test2 = satisfies<string>()(5)
-  // ^? Argument of type 'number' is not assignable to parameter of type 'string'
-  ```
+    // @ts-expect-error
+    const test2 = satisfies<string>()(5);
+    // ^? Argument of type 'number' is not assignable to parameter of type 'string'
+    ```
 
 - [#2147](https://github.com/Effect-TS/effect/pull/2147) [`c568645`](https://github.com/Effect-TS/effect/commit/c5686451c87d26382135a1c63b00ef171bb24f62) Thanks [@tim-smart](https://github.com/tim-smart)! - generate a random span id for the built-in tracer
 
-  This ensures the same span id isn't used between application runs.
+    This ensures the same span id isn't used between application runs.
 
 - [#2144](https://github.com/Effect-TS/effect/pull/2144) [`88835e5`](https://github.com/Effect-TS/effect/commit/88835e575a0bfbeff9a3696a332f32192c940e12) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Fix withRandom and withClock types
 
@@ -7564,22 +7599,22 @@
 
 - [#2149](https://github.com/Effect-TS/effect/pull/2149) [`ff8046f`](https://github.com/Effect-TS/effect/commit/ff8046f57dfd073eba60ce6d3144ab060fbf93ce) Thanks [@tim-smart](https://github.com/tim-smart)! - add Runtime.updateFiberRefs/setFiberRef/deleteFiberRef
 
-  This change allows you to update fiber ref values inside a Runtime object.
+    This change allows you to update fiber ref values inside a Runtime object.
 
-  Example:
+    Example:
 
-  ```ts
-  import { Effect, FiberRef, Runtime } from "effect"
+    ```ts
+    import { Effect, FiberRef, Runtime } from "effect";
 
-  const ref = FiberRef.unsafeMake(0)
+    const ref = FiberRef.unsafeMake(0);
 
-  const updatedRuntime = Runtime.defaultRuntime.pipe(
-    Runtime.setFiberRef(ref, 1)
-  )
+    const updatedRuntime = Runtime.defaultRuntime.pipe(
+        Runtime.setFiberRef(ref, 1),
+    );
 
-  // returns 1
-  const result = Runtime.runSync(updatedRuntime)(FiberRef.get(ref))
-  ```
+    // returns 1
+    const result = Runtime.runSync(updatedRuntime)(FiberRef.get(ref));
+    ```
 
 ## 2.3.5
 
@@ -7599,72 +7634,72 @@
 
 - [#2090](https://github.com/Effect-TS/effect/pull/2090) [`efd41d8`](https://github.com/Effect-TS/effect/commit/efd41d8131c3d90867608969ef7c4eef490eb5e6) Thanks [@hsubra89](https://github.com/hsubra89)! - Update `RateLimiter` to support passing in a custom `cost` per effect. This is really useful for API(s) that have a "credit cost" per endpoint.
 
-  Usage Example :
+    Usage Example :
 
-  ```ts
-  import { Effect, RateLimiter } from "effect"
-  import { compose } from "effect/Function"
+    ```ts
+    import { Effect, RateLimiter } from "effect";
+    import { compose } from "effect/Function";
 
-  const program = Effect.scoped(
-    Effect.gen(function* ($) {
-      // Create a rate limiter that has an hourly limit of 1000 credits
-      const rateLimiter = yield* $(RateLimiter.make(1000, "1 hours"))
-      // Query API costs 1 credit per call ( 1 is the default cost )
-      const queryAPIRL = compose(rateLimiter, RateLimiter.withCost(1))
-      // Mutation API costs 5 credits per call
-      const mutationAPIRL = compose(rateLimiter, RateLimiter.withCost(5))
-      // ...
-      // Use the pre-defined rate limiters
-      yield* $(queryAPIRL(Effect.log("Sample Query")))
-      yield* $(mutationAPIRL(Effect.log("Sample Mutation")))
+    const program = Effect.scoped(
+        Effect.gen(function* ($) {
+            // Create a rate limiter that has an hourly limit of 1000 credits
+            const rateLimiter = yield* $(RateLimiter.make(1000, "1 hours"));
+            // Query API costs 1 credit per call ( 1 is the default cost )
+            const queryAPIRL = compose(rateLimiter, RateLimiter.withCost(1));
+            // Mutation API costs 5 credits per call
+            const mutationAPIRL = compose(rateLimiter, RateLimiter.withCost(5));
+            // ...
+            // Use the pre-defined rate limiters
+            yield* $(queryAPIRL(Effect.log("Sample Query")));
+            yield* $(mutationAPIRL(Effect.log("Sample Mutation")));
 
-      // Or set a cost on-the-fly
-      yield* $(
-        rateLimiter(Effect.log("Another query with a different cost")).pipe(
-          RateLimiter.withCost(3)
-        )
-      )
-    })
-  )
-  ```
+            // Or set a cost on-the-fly
+            yield* $(
+                rateLimiter(
+                    Effect.log("Another query with a different cost"),
+                ).pipe(RateLimiter.withCost(3)),
+            );
+        }),
+    );
+    ```
 
 - [#2097](https://github.com/Effect-TS/effect/pull/2097) [`0f83515`](https://github.com/Effect-TS/effect/commit/0f83515a9c01d13c7c15a3f026e02d22c3c6bb7f) Thanks [@IMax153](https://github.com/IMax153)! - Updates the `RateLimiter.make` constructor to take an object of `RateLimiter.Options`, which allows for specifying the rate-limiting algorithm to utilize:
 
-  You can choose from either the `token-bucket` or the `fixed-window` algorithms for rate-limiting.
+    You can choose from either the `token-bucket` or the `fixed-window` algorithms for rate-limiting.
 
-  ```ts
-  export declare namespace RateLimiter {
-    export interface Options {
-      /**
-       * The maximum number of requests that should be allowed.
-       */
-      readonly limit: number
-      /**
-       * The interval to utilize for rate-limiting requests. The semantics of the
-       * specified `interval` vary depending on the chosen `algorithm`:
-       *
-       * `token-bucket`: The maximum number of requests will be spread out over
-       * the provided interval if no tokens are available.
-       *
-       * For example, for a `RateLimiter` using the `token-bucket` algorithm with
-       * a `limit` of `10` and an `interval` of `1 seconds`, `1` request can be
-       * made every `100 millis`.
-       *
-       * `fixed-window`: The maximum number of requests will be reset during each
-       * interval. For example, for a `RateLimiter` using the `fixed-window`
-       * algorithm with a `limit` of `10` and an `interval` of `1 seconds`, a
-       * maximum of `10` requests can be made each second.
-       */
-      readonly interval: DurationInput
-      /**
-       * The algorithm to utilize for rate-limiting requests.
-       *
-       * Defaults to `token-bucket`.
-       */
-      readonly algorithm?: "fixed-window" | "token-bucket"
+    ```ts
+    export declare namespace RateLimiter {
+        export interface Options {
+            /**
+             * The maximum number of requests that should be allowed.
+             */
+            readonly limit: number;
+            /**
+             * The interval to utilize for rate-limiting requests. The semantics of the
+             * specified `interval` vary depending on the chosen `algorithm`:
+             *
+             * `token-bucket`: The maximum number of requests will be spread out over
+             * the provided interval if no tokens are available.
+             *
+             * For example, for a `RateLimiter` using the `token-bucket` algorithm with
+             * a `limit` of `10` and an `interval` of `1 seconds`, `1` request can be
+             * made every `100 millis`.
+             *
+             * `fixed-window`: The maximum number of requests will be reset during each
+             * interval. For example, for a `RateLimiter` using the `fixed-window`
+             * algorithm with a `limit` of `10` and an `interval` of `1 seconds`, a
+             * maximum of `10` requests can be made each second.
+             */
+            readonly interval: DurationInput;
+            /**
+             * The algorithm to utilize for rate-limiting requests.
+             *
+             * Defaults to `token-bucket`.
+             */
+            readonly algorithm?: "fixed-window" | "token-bucket";
+        }
     }
-  }
-  ```
+    ```
 
 - [#2097](https://github.com/Effect-TS/effect/pull/2097) [`0f83515`](https://github.com/Effect-TS/effect/commit/0f83515a9c01d13c7c15a3f026e02d22c3c6bb7f) Thanks [@IMax153](https://github.com/IMax153)! - return the resulting available permits from Semaphore.release
 
@@ -7674,52 +7709,54 @@
 
 - [#2096](https://github.com/Effect-TS/effect/pull/2096) [`6654f5f`](https://github.com/Effect-TS/effect/commit/6654f5f0f6b9d97165ede5e04ca16776e2599328) Thanks [@tim-smart](https://github.com/tim-smart)! - default to `never` for Runtime returning functions
 
-  This includes:
-  - Effect.runtime
-  - FiberSet.makeRuntime
+    This includes:
+    - Effect.runtime
+    - FiberSet.makeRuntime
 
-  It prevents `unknown` from creeping into types, as well as `never` being a
-  useful default type for propogating Fiber Refs and other context.
+    It prevents `unknown` from creeping into types, as well as `never` being a
+    useful default type for propogating Fiber Refs and other context.
 
 - [#2094](https://github.com/Effect-TS/effect/pull/2094) [`2eb11b4`](https://github.com/Effect-TS/effect/commit/2eb11b47752cedf233ef4c4395d9c4efc9b9e180) Thanks [@tim-smart](https://github.com/tim-smart)! - revert some type param adjustments in FiberSet
 
-  `makeRuntime` now has the R parameter first again.
+    `makeRuntime` now has the R parameter first again.
 
-  Default to `unknown` for the A and E parameters instead of never.
+    Default to `unknown` for the A and E parameters instead of never.
 
 - [#2103](https://github.com/Effect-TS/effect/pull/2103) [`56c09bd`](https://github.com/Effect-TS/effect/commit/56c09bd369279a6a7785209d172739935818cba6) Thanks [@patroza](https://github.com/patroza)! - Expand Either and Option `andThen` to support the `map` case like Effects' `andThen`
 
-  For example:
+    For example:
 
-  ```ts
-  expect(pipe(Either.right(1), Either.andThen(2))).toStrictEqual(
-    Either.right(2)
-  )
-  expect(
-    pipe(
-      Either.right(1),
-      Either.andThen(() => 2)
-    )
-  ).toStrictEqual(Either.right(2))
+    ```ts
+    expect(pipe(Either.right(1), Either.andThen(2))).toStrictEqual(
+        Either.right(2),
+    );
+    expect(
+        pipe(
+            Either.right(1),
+            Either.andThen(() => 2),
+        ),
+    ).toStrictEqual(Either.right(2));
 
-  expect(pipe(Option.some(1), Option.andThen(2))).toStrictEqual(Option.some(2))
-  expect(
-    pipe(
-      Option.some(1),
-      Option.andThen(() => 2)
-    )
-  ).toStrictEqual(Option.some(2))
-  ```
+    expect(pipe(Option.some(1), Option.andThen(2))).toStrictEqual(
+        Option.some(2),
+    );
+    expect(
+        pipe(
+            Option.some(1),
+            Option.andThen(() => 2),
+        ),
+    ).toStrictEqual(Option.some(2));
+    ```
 
 - [#2098](https://github.com/Effect-TS/effect/pull/2098) [`71aa5b1`](https://github.com/Effect-TS/effect/commit/71aa5b1c180dcb8b53aefe232d12a97bd06b5447) Thanks [@ethanniser](https://github.com/ethanniser)! - removed `./internal/timeout` and replaced all usages with `setTimeout` directly
 
-  previously it was required to abstract away conditionally solving an bun had an issue with `setTimeout`, that caused incorrect behavior
-  that bug has since been fixed, and the `isBun` check is no longer needed
-  as such the timeout module is also no longer needed
+    previously it was required to abstract away conditionally solving an bun had an issue with `setTimeout`, that caused incorrect behavior
+    that bug has since been fixed, and the `isBun` check is no longer needed
+    as such the timeout module is also no longer needed
 
 - [#2099](https://github.com/Effect-TS/effect/pull/2099) [`1700af8`](https://github.com/Effect-TS/effect/commit/1700af8af1131602887da721914c8562b6342393) Thanks [@tim-smart](https://github.com/tim-smart)! - optimize Effect.zip{Left,Right}
 
-  for the sequential case, avoid using Effect.all internally
+    for the sequential case, avoid using Effect.all internally
 
 ## 2.3.1
 
@@ -7743,53 +7780,53 @@
 
 - [#2006](https://github.com/Effect-TS/effect/pull/2006) [`9a2d1c1`](https://github.com/Effect-TS/effect/commit/9a2d1c1468ea0789b34767ad683da074f061ea9c) Thanks [@github-actions](https://github.com/apps/github-actions)! - With this change we now require a string key to be provided for all tags and renames the dear old `Tag` to `GenericTag`, so when previously you could do:
 
-  ```ts
-  import { Effect, Context } from "effect"
-  interface Service {
-    readonly _: unique symbol
-  }
-  const Service = Context.Tag<
-    Service,
-    {
-      number: Effect.Effect<never, never, number>
+    ```ts
+    import { Effect, Context } from "effect";
+    interface Service {
+        readonly _: unique symbol;
     }
-  >()
-  ```
+    const Service = Context.Tag<
+        Service,
+        {
+            number: Effect.Effect<never, never, number>;
+        }
+    >();
+    ```
 
-  you are now mandated to do:
+    you are now mandated to do:
 
-  ```ts
-  import { Effect, Context } from "effect"
-  interface Service {
-    readonly _: unique symbol
-  }
-  const Service = Context.GenericTag<
-    Service,
-    {
-      number: Effect.Effect<never, never, number>
+    ```ts
+    import { Effect, Context } from "effect";
+    interface Service {
+        readonly _: unique symbol;
     }
-  >("Service")
-  ```
+    const Service = Context.GenericTag<
+        Service,
+        {
+            number: Effect.Effect<never, never, number>;
+        }
+    >("Service");
+    ```
 
-  This makes by default all tags globals and ensures better debuggaility when unexpected errors arise.
+    This makes by default all tags globals and ensures better debuggaility when unexpected errors arise.
 
-  Furthermore we introduce a new way of constructing tags that should be considered the new default:
+    Furthermore we introduce a new way of constructing tags that should be considered the new default:
 
-  ```ts
-  import { Effect, Context } from "effect"
-  class Service extends Context.Tag("Service")<
-    Service,
-    {
-      number: Effect.Effect<never, never, number>
-    }
-  >() {}
+    ```ts
+    import { Effect, Context } from "effect";
+    class Service extends Context.Tag("Service")<
+        Service,
+        {
+            number: Effect.Effect<never, never, number>;
+        }
+    >() {}
 
-  const program = Effect.flatMap(Service, ({ number }) => number).pipe(
-    Effect.flatMap((_) => Effect.log(`number: ${_}`))
-  )
-  ```
+    const program = Effect.flatMap(Service, ({ number }) => number).pipe(
+        Effect.flatMap((_) => Effect.log(`number: ${_}`)),
+    );
+    ```
 
-  this will use "Service" as the key and will create automatically an opaque identifier (the class) to be used at the type level, it does something similar to the above in a single shot.
+    this will use "Service" as the key and will create automatically an opaque identifier (the class) to be used at the type level, it does something similar to the above in a single shot.
 
 - [#2006](https://github.com/Effect-TS/effect/pull/2006) [`1a77f72`](https://github.com/Effect-TS/effect/commit/1a77f72cdaf43d6cdc91b6060f82832edcdbbcb3) Thanks [@github-actions](https://github.com/apps/github-actions)! - change `Effect` type parameters order from `Effect<R, E, A>` to `Effect<A, E = never, R = never>`
 
@@ -7803,29 +7840,29 @@
 
 - [#2006](https://github.com/Effect-TS/effect/pull/2006) [`02c3461`](https://github.com/Effect-TS/effect/commit/02c34615d02f91269ea04036d0306fccf4e39e18) Thanks [@github-actions](https://github.com/apps/github-actions)! - With this change we remove the `Data.Data` type and we make `Equal.Equal` & `Hash.Hash` implicit traits.
 
-  The main reason is that `Data.Data<A>` was structurally equivalent to `A & Equal.Equal` but extending `Equal.Equal` doesn't mean that the equality is implemented by-value, so the type was simply adding noise without gaining any level of safety.
+    The main reason is that `Data.Data<A>` was structurally equivalent to `A & Equal.Equal` but extending `Equal.Equal` doesn't mean that the equality is implemented by-value, so the type was simply adding noise without gaining any level of safety.
 
-  The module `Data` remains unchanged at the value level, all the functions previously available are supposed to work in exactly the same manner.
+    The module `Data` remains unchanged at the value level, all the functions previously available are supposed to work in exactly the same manner.
 
-  At the type level instead the functions return `Readonly` variants, so for example we have:
+    At the type level instead the functions return `Readonly` variants, so for example we have:
 
-  ```ts
-  import { Data } from "effect"
+    ```ts
+    import { Data } from "effect";
 
-  const obj = Data.struct({
-    a: 0,
-    b: 1
-  })
-  ```
+    const obj = Data.struct({
+        a: 0,
+        b: 1,
+    });
+    ```
 
-  will have the `obj` typed as:
+    will have the `obj` typed as:
 
-  ```ts
-  declare const obj: {
-    readonly a: number
-    readonly b: number
-  }
-  ```
+    ```ts
+    declare const obj: {
+        readonly a: number;
+        readonly b: number;
+    };
+    ```
 
 - [#2006](https://github.com/Effect-TS/effect/pull/2006) [`0e56e99`](https://github.com/Effect-TS/effect/commit/0e56e998ab9815c4d096c239a553cb86a0f99af9) Thanks [@github-actions](https://github.com/apps/github-actions)! - change `Deferred` type parameters order from `Deferred<E, A>` to `Deferred<A, E>`
 
@@ -7851,32 +7888,32 @@
 
 - [#2006](https://github.com/Effect-TS/effect/pull/2006) [`9a2d1c1`](https://github.com/Effect-TS/effect/commit/9a2d1c1468ea0789b34767ad683da074f061ea9c) Thanks [@github-actions](https://github.com/apps/github-actions)! - This change enables `Effect.serviceConstants` and `Effect.serviceMembers` to access any constant in the service, not only the effects, namely it is now possible to do:
 
-  ```ts
-  import { Effect, Context } from "effect"
+    ```ts
+    import { Effect, Context } from "effect";
 
-  class NumberRepo extends Context.TagClass("NumberRepo")<
-    NumberRepo,
-    {
-      readonly numbers: Array<number>
+    class NumberRepo extends Context.TagClass("NumberRepo")<
+        NumberRepo,
+        {
+            readonly numbers: Array<number>;
+        }
+    >() {
+        static numbers = Effect.serviceConstants(NumberRepo).numbers;
     }
-  >() {
-    static numbers = Effect.serviceConstants(NumberRepo).numbers
-  }
-  ```
+    ```
 
 - [#2006](https://github.com/Effect-TS/effect/pull/2006) [`5127afe`](https://github.com/Effect-TS/effect/commit/5127afec1c519e0a3d7460844a9101a96272f29e) Thanks [@github-actions](https://github.com/apps/github-actions)! - Rename ReadonlyRecord.update to .replace
 
 - [#2006](https://github.com/Effect-TS/effect/pull/2006) [`8ee2931`](https://github.com/Effect-TS/effect/commit/8ee293159b4f7cb7af8558287a0a047f3a69743d) Thanks [@github-actions](https://github.com/apps/github-actions)! - enhance DX by swapping type parameters and adding defaults to:
-  - Effect
-    - async
-    - asyncOption
-    - asyncEither
-  - Stream
-    - asyncEffect
-    - asyncInterrupt
-    - asyncOption
-    - asyncScoped
-    - identity
+    - Effect
+        - async
+        - asyncOption
+        - asyncEither
+    - Stream
+        - asyncEffect
+        - asyncInterrupt
+        - asyncOption
+        - asyncScoped
+        - identity
 
 - [#2006](https://github.com/Effect-TS/effect/pull/2006) [`6727474`](https://github.com/Effect-TS/effect/commit/672747497490a30d36dd49c06db19aabf09dc7f0) Thanks [@github-actions](https://github.com/apps/github-actions)! - change `Sink` type parameters order from `Sink<out R, out E, in In, out L, out Z>` to `Sink<out A, in In = unknown, out L = never, out E = never, out R = never>`
 
@@ -7888,64 +7925,64 @@
 
 - [#2083](https://github.com/Effect-TS/effect/pull/2083) [`be19ce0`](https://github.com/Effect-TS/effect/commit/be19ce0b8bdf1fac80bb8d7e0b06a86986b47409) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Add `Ratelimiter` which limits the number of calls to a resource within a time window using the token bucket algorithm.
 
-  Usage Example:
+    Usage Example:
 
-  ```ts
-  import { Effect, RateLimiter } from "effect"
+    ```ts
+    import { Effect, RateLimiter } from "effect";
 
-  // we need a scope because the rate limiter needs to allocate a state and a background job
-  const program = Effect.scoped(
-    Effect.gen(function* ($) {
-      // create a rate limiter that executes up to 10 requests within 2 seconds
-      const rateLimit = yield* $(RateLimiter.make(10, "2 seconds"))
-      // simulate repeated calls
-      for (let n = 0; n < 100; n++) {
-        // wrap the effect we want to limit with rateLimit
-        yield* $(rateLimit(Effect.log("Calling RateLimited Effect")))
-      }
-    })
-  )
+    // we need a scope because the rate limiter needs to allocate a state and a background job
+    const program = Effect.scoped(
+        Effect.gen(function* ($) {
+            // create a rate limiter that executes up to 10 requests within 2 seconds
+            const rateLimit = yield* $(RateLimiter.make(10, "2 seconds"));
+            // simulate repeated calls
+            for (let n = 0; n < 100; n++) {
+                // wrap the effect we want to limit with rateLimit
+                yield* $(rateLimit(Effect.log("Calling RateLimited Effect")));
+            }
+        }),
+    );
 
-  // will print 10 calls immediately and then throttle
-  program.pipe(Effect.runFork)
-  ```
+    // will print 10 calls immediately and then throttle
+    program.pipe(Effect.runFork);
+    ```
 
-  Or, in a more real world scenario, with a dedicated Service + Layer:
+    Or, in a more real world scenario, with a dedicated Service + Layer:
 
-  ```ts
-  import { Context, Effect, Layer, RateLimiter } from "effect"
+    ```ts
+    import { Context, Effect, Layer, RateLimiter } from "effect";
 
-  class ApiLimiter extends Context.Tag("@services/ApiLimiter")<
-    ApiLimiter,
-    RateLimiter.RateLimiter
-  >() {
-    static Live = RateLimiter.make(10, "2 seconds").pipe(
-      Layer.scoped(ApiLimiter)
-    )
-  }
-
-  const program = Effect.gen(function* ($) {
-    const rateLimit = yield* $(ApiLimiter)
-    for (let n = 0; n < 100; n++) {
-      yield* $(rateLimit(Effect.log("Calling RateLimited Effect")))
+    class ApiLimiter extends Context.Tag("@services/ApiLimiter")<
+        ApiLimiter,
+        RateLimiter.RateLimiter
+    >() {
+        static Live = RateLimiter.make(10, "2 seconds").pipe(
+            Layer.scoped(ApiLimiter),
+        );
     }
-  })
 
-  program.pipe(Effect.provide(ApiLimiter.Live), Effect.runFork)
-  ```
+    const program = Effect.gen(function* ($) {
+        const rateLimit = yield* $(ApiLimiter);
+        for (let n = 0; n < 100; n++) {
+            yield* $(rateLimit(Effect.log("Calling RateLimited Effect")));
+        }
+    });
+
+    program.pipe(Effect.provide(ApiLimiter.Live), Effect.runFork);
+    ```
 
 - [#2084](https://github.com/Effect-TS/effect/pull/2084) [`4a5d01a`](https://github.com/Effect-TS/effect/commit/4a5d01a409e9b6dd53893e65f8e5c9247f568021) Thanks [@tim-smart](https://github.com/tim-smart)! - simplify RateLimiter implementation using semaphore
 
 - [#2084](https://github.com/Effect-TS/effect/pull/2084) [`4a5d01a`](https://github.com/Effect-TS/effect/commit/4a5d01a409e9b6dd53893e65f8e5c9247f568021) Thanks [@tim-smart](https://github.com/tim-smart)! - add Number.nextPow2
 
-  This function returns the next power of 2 from the given number.
+    This function returns the next power of 2 from the given number.
 
-  ```ts
-  import { nextPow2 } from "effect/Number"
+    ```ts
+    import { nextPow2 } from "effect/Number";
 
-  assert.deepStrictEqual(nextPow2(5), 8)
-  assert.deepStrictEqual(nextPow2(17), 32)
-  ```
+    assert.deepStrictEqual(nextPow2(5), 8);
+    assert.deepStrictEqual(nextPow2(17), 32);
+    ```
 
 ## 2.2.5
 
@@ -7953,31 +7990,31 @@
 
 - [#2075](https://github.com/Effect-TS/effect/pull/2075) [`3ddfdbf`](https://github.com/Effect-TS/effect/commit/3ddfdbf914edea536aef207cec6695f33496258c) Thanks [@tim-smart](https://github.com/tim-smart)! - add apis for manipulating context to the Runtime module
 
-  These include:
-  - `Runtime.updateContext` for modifying the `Context` directly
-  - `Runtime.provideService` for adding services to an existing Runtime
+    These include:
+    - `Runtime.updateContext` for modifying the `Context` directly
+    - `Runtime.provideService` for adding services to an existing Runtime
 
-  Example:
+    Example:
 
-  ```ts
-  import { Context, Runtime } from "effect"
+    ```ts
+    import { Context, Runtime } from "effect";
 
-  interface Name {
-    readonly _: unique symbol
-  }
-  const Name = Context.Tag<Name, string>("Name")
+    interface Name {
+        readonly _: unique symbol;
+    }
+    const Name = Context.Tag<Name, string>("Name");
 
-  const runtime: Runtime.Runtime<Name> = Runtime.defaultRuntime.pipe(
-    Runtime.provideService(Name, "John")
-  )
-  ```
+    const runtime: Runtime.Runtime<Name> = Runtime.defaultRuntime.pipe(
+        Runtime.provideService(Name, "John"),
+    );
+    ```
 
 - [#2075](https://github.com/Effect-TS/effect/pull/2075) [`3ddfdbf`](https://github.com/Effect-TS/effect/commit/3ddfdbf914edea536aef207cec6695f33496258c) Thanks [@tim-smart](https://github.com/tim-smart)! - add apis for patching runtime flags to the Runtime module
 
-  The apis include:
-  - `Runtime.updateRuntimeFlags` for updating all the flags at once
-  - `Runtime.enableRuntimeFlag` for enabling a single runtime flag
-  - `Runtime.disableRuntimeFlag` for disabling a single runtime flag
+    The apis include:
+    - `Runtime.updateRuntimeFlags` for updating all the flags at once
+    - `Runtime.enableRuntimeFlag` for enabling a single runtime flag
+    - `Runtime.disableRuntimeFlag` for disabling a single runtime flag
 
 ## 2.2.4
 
@@ -7985,33 +8022,33 @@
 
 - [#2067](https://github.com/Effect-TS/effect/pull/2067) [`d0b911c`](https://github.com/Effect-TS/effect/commit/d0b911c75f284c7aa87f25aa96926e6bde7690d0) Thanks [@tim-smart](https://github.com/tim-smart)! - add releaseAll api to Semaphore
 
-  You can use `semphore.releaseAll` to atomically release all the permits of a
-  Semaphore.
+    You can use `semphore.releaseAll` to atomically release all the permits of a
+    Semaphore.
 
 - [#2071](https://github.com/Effect-TS/effect/pull/2071) [`330e1a4`](https://github.com/Effect-TS/effect/commit/330e1a4e2c1fc0af6c80c80c81dd38c3e50fab78) Thanks [@tim-smart](https://github.com/tim-smart)! - add Option.orElseSome
 
-  Allows you to specify a default value for an Option, similar to
-  Option.getOrElse, except the return value is still an Option.
+    Allows you to specify a default value for an Option, similar to
+    Option.getOrElse, except the return value is still an Option.
 
-  ```ts
-  import * as O from "effect/Option"
-  import { pipe } from "effect/Function"
+    ```ts
+    import * as O from "effect/Option";
+    import { pipe } from "effect/Function";
 
-  assert.deepStrictEqual(
-    pipe(
-      O.none(),
-      O.orElseSome(() => "b")
-    ),
-    O.some("b")
-  )
-  assert.deepStrictEqual(
-    pipe(
-      O.some("a"),
-      O.orElseSome(() => "b")
-    ),
-    O.some("a")
-  )
-  ```
+    assert.deepStrictEqual(
+        pipe(
+            O.none(),
+            O.orElseSome(() => "b"),
+        ),
+        O.some("b"),
+    );
+    assert.deepStrictEqual(
+        pipe(
+            O.some("a"),
+            O.orElseSome(() => "b"),
+        ),
+        O.some("a"),
+    );
+    ```
 
 - [#2057](https://github.com/Effect-TS/effect/pull/2057) [`6928a2b`](https://github.com/Effect-TS/effect/commit/6928a2b0bae86a4bdfbece0aa32924207c2d5a70) Thanks [@joepjoosten](https://github.com/joepjoosten)! - Fix for possible stack overflow errors when using Array.push with spread operator arguments
 
@@ -8323,9 +8360,9 @@
 
 - [#1706](https://github.com/Effect-TS/effect/pull/1706) [`8a1e98ce3`](https://github.com/Effect-TS/effect/commit/8a1e98ce33344347f6edec0fc89c4c22d8393e90) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Improve consistency between request batching and fiber environment.
 
-  In prior releases request batching required operators that act on fiber context such as `Effect.locally` to be aware of batching in order to avoid bugs where the effect executed post batching would lose the fiber environment (context, refs, and flags).
+    In prior releases request batching required operators that act on fiber context such as `Effect.locally` to be aware of batching in order to avoid bugs where the effect executed post batching would lose the fiber environment (context, refs, and flags).
 
-  This change restructure how batching internally works, inside the fiber we now slice up the stack and restore the exact context that was destroyed, by rewriting the internals of forEach batching is now transparent to any other function that deals with fiber state.
+    This change restructure how batching internally works, inside the fiber we now slice up the stack and restore the exact context that was destroyed, by rewriting the internals of forEach batching is now transparent to any other function that deals with fiber state.
 
 - [#1687](https://github.com/Effect-TS/effect/pull/1687) [`e4d90ed38`](https://github.com/Effect-TS/effect/commit/e4d90ed3896f6d00e8470e73e0d9f597504fc888) Thanks [@matheuspuel](https://github.com/matheuspuel)! - fix YieldableError.toString crashing on react-native
 
@@ -8615,9 +8652,9 @@
 
 - [#1547](https://github.com/Effect-TS/effect/pull/1547) [`c0569f8fe`](https://github.com/Effect-TS/effect/commit/c0569f8fe91707c2088adebd86562ec455a62bab) Thanks [@gcanti](https://github.com/gcanti)! - Data: improve DX (displayed types)
 
-  Previously, the displayed types of data used the Omit type to exclude certain fields.
-  This commit removes the use of Omit from the displayed types of data. This makes the types simpler and easier to understand.
-  It also enforces all fields as readonly.
+    Previously, the displayed types of data used the Omit type to exclude certain fields.
+    This commit removes the use of Omit from the displayed types of data. This makes the types simpler and easier to understand.
+    It also enforces all fields as readonly.
 
 - [#1549](https://github.com/Effect-TS/effect/pull/1549) [`f82208687`](https://github.com/Effect-TS/effect/commit/f82208687e04fe191f8c18a56ceb10eb61376152) Thanks [@mikearnaldi](https://github.com/mikearnaldi)! - Fix missing globalValue in Logger and Query
 
@@ -8642,20 +8679,20 @@
 - [#1537](https://github.com/Effect-TS/effect/pull/1537) [`9bd70154b`](https://github.com/Effect-TS/effect/commit/9bd70154b62c2f101b85a8d509e480d5281abe4b) Thanks [@patroza](https://github.com/patroza)! - fix: Either/Option gen when no yield executes, just a plain return
 
 - [#1526](https://github.com/Effect-TS/effect/pull/1526) [`656955944`](https://github.com/Effect-TS/effect/commit/6569559440e8304c596edaaa21bcae4c8dba2568) Thanks [@gcanti](https://github.com/gcanti)! - ReadonlyRecord: add missing APIs:
-  - keys
-  - values
-  - upsert
-  - update
-  - isSubrecord
-  - isSubrecordBy
-  - reduce
-  - every
-  - some
-  - union
-  - intersection
-  - difference
-  - getEquivalence
-  - singleton
+    - keys
+    - values
+    - upsert
+    - update
+    - isSubrecord
+    - isSubrecordBy
+    - reduce
+    - every
+    - some
+    - union
+    - intersection
+    - difference
+    - getEquivalence
+    - singleton
 
 - [#1536](https://github.com/Effect-TS/effect/pull/1536) [`80800bfb0`](https://github.com/Effect-TS/effect/commit/80800bfb044585c836b8af585946881f2160ebb1) Thanks [@fubhy](https://github.com/fubhy)! - avoid use of bigint literals
 

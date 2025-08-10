@@ -1,23 +1,23 @@
 /**
  * @since 1.0.0
  */
-import { dual } from "effect/Function"
-import * as Predicate from "effect/Predicate"
-import * as Schema from "effect/Schema"
-import * as AiResponse from "./AiResponse.js"
-import * as InternalCommon from "./internal/common.js"
+import { dual } from "effect/Function";
+import * as Predicate from "effect/Predicate";
+import * as Schema from "effect/Schema";
+import * as AiResponse from "./AiResponse.js";
+import * as InternalCommon from "./internal/common.js";
 
 /**
  * @since 1.0.0
  * @category Type Ids
  */
-export const TypeId = Symbol.for("@effect/ai/AiInput")
+export const TypeId = Symbol.for("@effect/ai/AiInput");
 
 /**
  * @since 1.0.0
  * @category Type Ids
  */
-export type TypeId = typeof TypeId
+export type TypeId = typeof TypeId;
 
 /**
  * Represents input to a large language model.
@@ -25,22 +25,20 @@ export type TypeId = typeof TypeId
  * @since 1.0.0
  * @category Models
  */
-export class AiInput extends Schema.Class<AiInput>(
-  "@effect/ai/AiInput"
-)({
-  messages: Schema.Array(Schema.suspend(() => Message))
+export class AiInput extends Schema.Class<AiInput>("@effect/ai/AiInput")({
+    messages: Schema.Array(Schema.suspend(() => Message)),
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [TypeId]: TypeId = TypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [TypeId]: TypeId = TypeId;
 }
 
 /**
  * @since 1.0.0
  * @category Models
  */
-export const FromJson = Schema.parseJson(AiInput)
+export const FromJson = Schema.parseJson(AiInput);
 
 /**
  * Represents raw input types that can be converted into an `AiInput`.
@@ -49,13 +47,13 @@ export const FromJson = Schema.parseJson(AiInput)
  * @category Models
  */
 export type Raw =
-  | string
-  | Message
-  | Iterable<Message>
-  | AiInput
-  | AiResponse.AiResponse
-  | AiResponse.WithStructuredOutput<any>
-  | AiResponse.WithToolCallResults<any>
+    | string
+    | Message
+    | Iterable<Message>
+    | AiInput
+    | AiResponse.AiResponse
+    | AiResponse.WithStructuredOutput<any>
+    | AiResponse.WithToolCallResults<any>;
 
 // =============================================================================
 // Message
@@ -65,28 +63,28 @@ export type Raw =
  * @since 1.0.0
  * @category Type Ids
  */
-export const MessageTypeId = Symbol.for("@effect/ai/AiInput/Message")
+export const MessageTypeId = Symbol.for("@effect/ai/AiInput/Message");
 
 /**
  * @since 1.0.0
  * @category Type Ids
  */
-export type MessageTypeId = typeof MessageTypeId
+export type MessageTypeId = typeof MessageTypeId;
 
 /**
  * @since 1.0.0
  * @category Models
  */
 export class UserMessage extends Schema.TaggedClass<UserMessage>(
-  "@effect/ai/AiInput/Message/UserMessage"
+    "@effect/ai/AiInput/Message/UserMessage",
 )("UserMessage", {
-  parts: Schema.Array(Schema.suspend(() => UserMessagePart)),
-  userName: Schema.optional(Schema.String)
+    parts: Schema.Array(Schema.suspend(() => UserMessagePart)),
+    userName: Schema.optional(Schema.String),
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [MessageTypeId]: MessageTypeId = MessageTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [MessageTypeId]: MessageTypeId = MessageTypeId;
 }
 
 /**
@@ -94,14 +92,14 @@ export class UserMessage extends Schema.TaggedClass<UserMessage>(
  * @category Models
  */
 export class AssistantMessage extends Schema.TaggedClass<AssistantMessage>(
-  "@effect/ai/AiInput/Message/AssistantMessage"
+    "@effect/ai/AiInput/Message/AssistantMessage",
 )("AssistantMessage", {
-  parts: Schema.Array(Schema.suspend(() => AssistantMessagePart))
+    parts: Schema.Array(Schema.suspend(() => AssistantMessagePart)),
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [MessageTypeId]: MessageTypeId = MessageTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [MessageTypeId]: MessageTypeId = MessageTypeId;
 }
 
 /**
@@ -109,35 +107,29 @@ export class AssistantMessage extends Schema.TaggedClass<AssistantMessage>(
  * @category Models
  */
 export class ToolMessage extends Schema.TaggedClass<ToolMessage>(
-  "@effect/ai/AiInput/Message/ToolMessage"
+    "@effect/ai/AiInput/Message/ToolMessage",
 )("ToolMessage", {
-  parts: Schema.Array(Schema.suspend(() => ToolMessagePart))
+    parts: Schema.Array(Schema.suspend(() => ToolMessagePart)),
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [MessageTypeId]: MessageTypeId = MessageTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [MessageTypeId]: MessageTypeId = MessageTypeId;
 }
 
 /**
  * @since 1.0.0
  * @category Models
  */
-export const Message: Schema.Union<[
-  typeof UserMessage,
-  typeof AssistantMessage,
-  typeof ToolMessage
-]> = Schema.Union(
-  UserMessage,
-  AssistantMessage,
-  ToolMessage
-)
+export const Message: Schema.Union<
+    [typeof UserMessage, typeof AssistantMessage, typeof ToolMessage]
+> = Schema.Union(UserMessage, AssistantMessage, ToolMessage);
 
 /**
  * @since 1.0.0
  * @category Models
  */
-export type Message = typeof Message.Type
+export type Message = typeof Message.Type;
 
 // =============================================================================
 // Part
@@ -147,13 +139,13 @@ export type Message = typeof Message.Type
  * @since 1.0.0
  * @category Type Ids
  */
-export const PartTypeId = Symbol.for("@effect/ai/AiInput/Message/Part")
+export const PartTypeId = Symbol.for("@effect/ai/AiInput/Message/Part");
 
 /**
  * @since 1.0.0
  * @category Type Ids
  */
-export type PartTypeId = typeof PartTypeId
+export type PartTypeId = typeof PartTypeId;
 
 /**
  * Represents a text part of a message.
@@ -162,17 +154,17 @@ export type PartTypeId = typeof PartTypeId
  * @category Models
  */
 export class TextPart extends Schema.TaggedClass<TextPart>(
-  "@effect/ai/AiInput/TextPart"
+    "@effect/ai/AiInput/TextPart",
 )("TextPart", {
-  /**
-   * The text content.
-   */
-  text: Schema.String
+    /**
+     * The text content.
+     */
+    text: Schema.String,
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 }
 
 /**
@@ -182,21 +174,21 @@ export class TextPart extends Schema.TaggedClass<TextPart>(
  * @category Models
  */
 export class ImagePart extends Schema.TaggedClass<ImagePart>(
-  "@effect/ai/AiInput/ImagePart"
+    "@effect/ai/AiInput/ImagePart",
 )("ImagePart", {
-  /**
-   * The binary image data.
-   */
-  data: Schema.Uint8ArrayFromBase64,
-  /**
-   * The optional MIME type for the image.
-   */
-  mediaType: Schema.optional(Schema.String)
+    /**
+     * The binary image data.
+     */
+    data: Schema.Uint8ArrayFromBase64,
+    /**
+     * The optional MIME type for the image.
+     */
+    mediaType: Schema.optional(Schema.String),
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 }
 
 /**
@@ -206,17 +198,17 @@ export class ImagePart extends Schema.TaggedClass<ImagePart>(
  * @category Models
  */
 export class ImageUrlPart extends Schema.TaggedClass<ImageUrlPart>(
-  "@effect/ai/AiInput/ImageUrlPart"
+    "@effect/ai/AiInput/ImageUrlPart",
 )("ImageUrlPart", {
-  /**
-   * The URL that points to the image.
-   */
-  url: Schema.URL
+    /**
+     * The URL that points to the image.
+     */
+    url: Schema.URL,
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 }
 
 /**
@@ -226,25 +218,25 @@ export class ImageUrlPart extends Schema.TaggedClass<ImageUrlPart>(
  * @category Models
  */
 export class FilePart extends Schema.TaggedClass<FilePart>(
-  "@effect/ai/AiInput/FilePart"
+    "@effect/ai/AiInput/FilePart",
 )("FilePart", {
-  /**
-   * The binary file data.
-   */
-  data: Schema.Uint8ArrayFromBase64,
-  /**
-   * The optional name of the file.
-   */
-  name: Schema.optional(Schema.String),
-  /**
-   * The optional MIME type for the image.
-   */
-  mediaType: Schema.optional(Schema.String)
+    /**
+     * The binary file data.
+     */
+    data: Schema.Uint8ArrayFromBase64,
+    /**
+     * The optional name of the file.
+     */
+    name: Schema.optional(Schema.String),
+    /**
+     * The optional MIME type for the image.
+     */
+    mediaType: Schema.optional(Schema.String),
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 }
 
 /**
@@ -254,17 +246,17 @@ export class FilePart extends Schema.TaggedClass<FilePart>(
  * @category Models
  */
 export class FileUrlPart extends Schema.TaggedClass<FileUrlPart>(
-  "@effect/ai/AiInput/FileUrlPart"
+    "@effect/ai/AiInput/FileUrlPart",
 )("FileUrlPart", {
-  /**
-   * The URL that points to the file.
-   */
-  url: Schema.URL
+    /**
+     * The URL that points to the file.
+     */
+    url: Schema.URL,
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 }
 
 /**
@@ -275,22 +267,22 @@ export class FileUrlPart extends Schema.TaggedClass<FileUrlPart>(
  * @category Models
  */
 export class ReasoningPart extends Schema.TaggedClass<ReasoningPart>(
-  "@effect/ai/AiInput/ReasoningPart"
+    "@effect/ai/AiInput/ReasoningPart",
 )("ReasoningPart", {
-  /**
-   * The reasoning text that the model used to return the output.
-   */
-  reasoningText: Schema.String,
-  /**
-   * An optional signature which verifies that the reasoning text was generated
-   * by the model.
-   */
-  signature: Schema.optional(Schema.String)
+    /**
+     * The reasoning text that the model used to return the output.
+     */
+    reasoningText: Schema.String,
+    /**
+     * An optional signature which verifies that the reasoning text was generated
+     * by the model.
+     */
+    signature: Schema.optional(Schema.String),
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 }
 
 /**
@@ -301,18 +293,18 @@ export class ReasoningPart extends Schema.TaggedClass<ReasoningPart>(
  * @category Models
  */
 export class RedactedReasoningPart extends Schema.TaggedClass<RedactedReasoningPart>(
-  "@effect/ai/AiInput/RedactedReasoningPart"
+    "@effect/ai/AiInput/RedactedReasoningPart",
 )("RedactedReasoningPart", {
-  /**
-   * The content in the reasoning that was encrypted by the model provider for
-   * safety reasons.
-   */
-  redactedText: Schema.String
+    /**
+     * The content in the reasoning that was encrypted by the model provider for
+     * safety reasons.
+     */
+    redactedText: Schema.String,
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 }
 
 /**
@@ -321,13 +313,16 @@ export class RedactedReasoningPart extends Schema.TaggedClass<RedactedReasoningP
  * @since 1.0.0
  * @category Models
  */
-export const ToolCallId: Schema.brand<typeof Schema.String, "@effect/ai/ToolCallId"> = InternalCommon.ToolCallId
+export const ToolCallId: Schema.brand<
+    typeof Schema.String,
+    "@effect/ai/ToolCallId"
+> = InternalCommon.ToolCallId;
 
 /**
  * @since 1.0.0
  * @category Models
  */
-export type ToolCallId = typeof ToolCallId.Type
+export type ToolCallId = typeof ToolCallId.Type;
 
 /**
  * Represents a part of a message containing a tool call that the model has
@@ -337,30 +332,30 @@ export type ToolCallId = typeof ToolCallId.Type
  * @category Models
  */
 export class ToolCallPart extends Schema.TaggedClass<ToolCallPart>(
-  "@effect/ai/AiInput/ToolCallPart"
+    "@effect/ai/AiInput/ToolCallPart",
 )("ToolCallPart", {
-  /**
-   * The identifier generated by a model when requesting a tool call.
-   */
-  id: ToolCallId,
-  /**
-   * The name of the tool to call.
-   */
-  name: Schema.String,
-  /**
-   * The arguments to call the tool with as a JSON-serializable object that
-   * matches the tool call input schema.
-   */
-  params: Schema.Unknown
+    /**
+     * The identifier generated by a model when requesting a tool call.
+     */
+    id: ToolCallId,
+    /**
+     * The name of the tool to call.
+     */
+    name: Schema.String,
+    /**
+     * The arguments to call the tool with as a JSON-serializable object that
+     * matches the tool call input schema.
+     */
+    params: Schema.Unknown,
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 
-  constructor(props: any, options?: Schema.MakeOptions) {
-    super(props, options)
-  }
+    constructor(props: any, options?: Schema.MakeOptions) {
+        super(props, options);
+    }
 }
 
 /**
@@ -371,25 +366,25 @@ export class ToolCallPart extends Schema.TaggedClass<ToolCallPart>(
  * @category Models
  */
 export class ToolCallResultPart extends Schema.TaggedClass<ToolCallResultPart>(
-  "@effect/ai/AiInput/ToolCallResultPart"
+    "@effect/ai/AiInput/ToolCallResultPart",
 )("ToolCallResultPart", {
-  /**
-   * The identifier generated by a model when requesting a tool call.
-   */
-  id: ToolCallId,
-  /**
-   * The name of the tool that was called.
-   */
-  name: Schema.String,
-  /**
-   * The result of the tool call as a JSON-serializable object.
-   */
-  result: Schema.Unknown
+    /**
+     * The identifier generated by a model when requesting a tool call.
+     */
+    id: ToolCallId,
+    /**
+     * The name of the tool that was called.
+     */
+    name: Schema.String,
+    /**
+     * The result of the tool call as a JSON-serializable object.
+     */
+    result: Schema.Unknown,
 }) {
-  /**
-   * @since 1.0.0
-   */
-  readonly [PartTypeId]: PartTypeId = PartTypeId
+    /**
+     * @since 1.0.0
+     */
+    readonly [PartTypeId]: PartTypeId = PartTypeId;
 }
 
 /**
@@ -398,25 +393,21 @@ export class ToolCallResultPart extends Schema.TaggedClass<ToolCallResultPart>(
  * @since 1.0.0
  * @category Models
  */
-export const UserMessagePart: Schema.Union<[
-  typeof TextPart,
-  typeof ImagePart,
-  typeof ImageUrlPart,
-  typeof FilePart,
-  typeof FileUrlPart
-]> = Schema.Union(
-  TextPart,
-  ImagePart,
-  ImageUrlPart,
-  FilePart,
-  FileUrlPart
-)
+export const UserMessagePart: Schema.Union<
+    [
+        typeof TextPart,
+        typeof ImagePart,
+        typeof ImageUrlPart,
+        typeof FilePart,
+        typeof FileUrlPart,
+    ]
+> = Schema.Union(TextPart, ImagePart, ImageUrlPart, FilePart, FileUrlPart);
 
 /**
  * @since 1.0.0
  * @category Models
  */
-export type UserMessagePart = typeof UserMessagePart.Type
+export type UserMessagePart = typeof UserMessagePart.Type;
 
 /**
  * The valid parts of an assistant message.
@@ -424,23 +415,20 @@ export type UserMessagePart = typeof UserMessagePart.Type
  * @since 1.0.0
  * @category Models
  */
-export const AssistantMessagePart: Schema.Union<[
-  typeof TextPart,
-  typeof ReasoningPart,
-  typeof RedactedReasoningPart,
-  typeof ToolCallPart
-]> = Schema.Union(
-  TextPart,
-  ReasoningPart,
-  RedactedReasoningPart,
-  ToolCallPart
-)
+export const AssistantMessagePart: Schema.Union<
+    [
+        typeof TextPart,
+        typeof ReasoningPart,
+        typeof RedactedReasoningPart,
+        typeof ToolCallPart,
+    ]
+> = Schema.Union(TextPart, ReasoningPart, RedactedReasoningPart, ToolCallPart);
 
 /**
  * @since 1.0.0
  * @category Models
  */
-export type AssistantMessagePart = typeof AssistantMessagePart.Type
+export type AssistantMessagePart = typeof AssistantMessagePart.Type;
 
 /**
  * The valid parts of a tool message.
@@ -448,38 +436,42 @@ export type AssistantMessagePart = typeof AssistantMessagePart.Type
  * @since 1.0.0
  * @category Models
  */
-export const ToolMessagePart: typeof ToolCallResultPart = ToolCallResultPart
+export const ToolMessagePart: typeof ToolCallResultPart = ToolCallResultPart;
 
 /**
  * @since 1.0.0
  * @category Models
  */
-export type ToolMessagePart = typeof ToolMessagePart.Type
+export type ToolMessagePart = typeof ToolMessagePart.Type;
 
 /**
  * @since 1.0.0
  * @category Guards
  */
-export const is = (u: unknown): u is AiInput => Predicate.hasProperty(u, TypeId)
+export const is = (u: unknown): u is AiInput =>
+    Predicate.hasProperty(u, TypeId);
 
 /**
  * @since 1.0.0
  * @category Guards
  */
-export const isMessage = (u: unknown): u is Message => Predicate.hasProperty(u, MessageTypeId)
+export const isMessage = (u: unknown): u is Message =>
+    Predicate.hasProperty(u, MessageTypeId);
 
 /**
  * @since 1.0.0
  * @category Guards
  */
-export const isPart = (u: unknown): u is UserMessagePart | AssistantMessagePart | ToolMessagePart =>
-  Predicate.hasProperty(u, PartTypeId)
+export const isPart = (
+    u: unknown,
+): u is UserMessagePart | AssistantMessagePart | ToolMessagePart =>
+    Predicate.hasProperty(u, PartTypeId);
 
 /**
  * @since 1.0.0
  * @category Constructors
  */
-export const empty: AiInput = new AiInput({ messages: [] })
+export const empty: AiInput = new AiInput({ messages: [] });
 
 /**
  * Constructs a new `AiInput` from raw user input.
@@ -488,72 +480,70 @@ export const empty: AiInput = new AiInput({ messages: [] })
  * @category Constructors
  */
 export const make = (input: Raw): AiInput => {
-  if (Predicate.isString(input)) {
-    const textPart = new TextPart({ text: input })
-    const message = new UserMessage({ parts: [textPart] })
-    return new AiInput({ messages: [message] })
-  }
-  if (isMessage(input)) {
-    return new AiInput({ messages: [input] })
-  }
-  if (Predicate.isIterable(input)) {
-    return new AiInput({ messages: Array.from(input) })
-  }
-  if (is(input)) {
-    return input
-  }
-  if (AiResponse.isStructured(input)) {
-    const assistantMessages = fromResponse(input).messages
-    const toolPart = new ToolCallResultPart({
-      id: input.id,
-      name: input.name,
-      result: input.value
-    })
-    const toolMessage = new ToolMessage({ parts: [toolPart] })
-    return new AiInput({ messages: [...assistantMessages, toolMessage] })
-  }
-  if (AiResponse.hasToolCallResults(input)) {
-    const assistantMessages = fromResponse(input).messages
-    const toolParts: Array<ToolCallResultPart> = []
-    for (const [id, { name, result }] of input.encodedResults) {
-      toolParts.push(new ToolCallResultPart({ id, name, result }))
+    if (Predicate.isString(input)) {
+        const textPart = new TextPart({ text: input });
+        const message = new UserMessage({ parts: [textPart] });
+        return new AiInput({ messages: [message] });
     }
-    const toolMessage = new ToolMessage({ parts: toolParts })
-    return new AiInput({ messages: [...assistantMessages, toolMessage] })
-  }
-  return fromResponse(input)
-}
+    if (isMessage(input)) {
+        return new AiInput({ messages: [input] });
+    }
+    if (Predicate.isIterable(input)) {
+        return new AiInput({ messages: Array.from(input) });
+    }
+    if (is(input)) {
+        return input;
+    }
+    if (AiResponse.isStructured(input)) {
+        const assistantMessages = fromResponse(input).messages;
+        const toolPart = new ToolCallResultPart({
+            id: input.id,
+            name: input.name,
+            result: input.value,
+        });
+        const toolMessage = new ToolMessage({ parts: [toolPart] });
+        return new AiInput({ messages: [...assistantMessages, toolMessage] });
+    }
+    if (AiResponse.hasToolCallResults(input)) {
+        const assistantMessages = fromResponse(input).messages;
+        const toolParts: Array<ToolCallResultPart> = [];
+        for (const [id, { name, result }] of input.encodedResults) {
+            toolParts.push(new ToolCallResultPart({ id, name, result }));
+        }
+        const toolMessage = new ToolMessage({ parts: toolParts });
+        return new AiInput({ messages: [...assistantMessages, toolMessage] });
+    }
+    return fromResponse(input);
+};
 
 const EXCLUDED_RESPONSE_PARTS: Array<AiResponse.Part["_tag"]> = [
-  "MetadataPart",
-  "ReasoningPart",
-  "RedactedReasoningPart",
-  "FinishPart"
-]
+    "MetadataPart",
+    "ReasoningPart",
+    "RedactedReasoningPart",
+    "FinishPart",
+];
 
-const validResponseParts = (part: AiResponse.Part): part is AiResponse.TextPart | AiResponse.ToolCallPart =>
-  !EXCLUDED_RESPONSE_PARTS.includes(part._tag)
+const validResponseParts = (
+    part: AiResponse.Part,
+): part is AiResponse.TextPart | AiResponse.ToolCallPart =>
+    !EXCLUDED_RESPONSE_PARTS.includes(part._tag);
 
-const fromResponse = (
-  response: AiResponse.AiResponse
-): AiInput => {
-  if (response.parts.length === 0) {
-    return empty
-  }
-  const parts = response.parts
-    .filter(validResponseParts)
-    .map((part) =>
-      part._tag === "TextPart"
-        ? new TextPart({ text: part.text })
-        : new ToolCallPart({
-          id: part.id,
-          name: part.name,
-          params: part.params
-        })
-    )
-  const message = new AssistantMessage({ parts })
-  return new AiInput({ messages: [message] })
-}
+const fromResponse = (response: AiResponse.AiResponse): AiInput => {
+    if (response.parts.length === 0) {
+        return empty;
+    }
+    const parts = response.parts.filter(validResponseParts).map((part) =>
+        part._tag === "TextPart"
+            ? new TextPart({ text: part.text })
+            : new ToolCallPart({
+                  id: part.id,
+                  name: part.name,
+                  params: part.params,
+              }),
+    );
+    const message = new AssistantMessage({ parts });
+    return new AiInput({ messages: [message] });
+};
 
 /**
  * Concatenates the messages of one `AiInput` onto the messages of another,
@@ -563,12 +553,13 @@ const fromResponse = (
  * @category Combination
  */
 export const concat: {
-  (other: AiInput): (self: AiInput) => AiInput
-  (self: AiInput, other: AiInput): AiInput
+    (other: AiInput): (self: AiInput) => AiInput;
+    (self: AiInput, other: AiInput): AiInput;
 } = dual<
-  (other: AiInput) => (self: AiInput) => AiInput,
-  (self: AiInput, other: AiInput) => AiInput
+    (other: AiInput) => (self: AiInput) => AiInput,
+    (self: AiInput, other: AiInput) => AiInput
 >(2, (self, other) =>
-  AiInput.make({
-    messages: [...self.messages, ...other.messages]
-  }))
+    AiInput.make({
+        messages: [...self.messages, ...other.messages],
+    }),
+);

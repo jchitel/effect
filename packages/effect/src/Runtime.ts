@@ -1,28 +1,28 @@
 /**
  * @since 2.0.0
  */
-import type { Cause } from "./Cause.js"
-import type * as Context from "./Context.js"
-import type * as Effect from "./Effect.js"
-import type * as Exit from "./Exit.js"
-import type * as Fiber from "./Fiber.js"
-import type * as FiberId from "./FiberId.js"
-import type * as FiberRef from "./FiberRef.js"
-import type * as FiberRefs from "./FiberRefs.js"
-import type { Inspectable } from "./Inspectable.js"
-import * as internal from "./internal/runtime.js"
-import type { Pipeable } from "./Pipeable.js"
-import type * as RuntimeFlags from "./RuntimeFlags.js"
-import type { Scheduler } from "./Scheduler.js"
-import type { Scope } from "./Scope.js"
+import type { Cause } from "./Cause.js";
+import type * as Context from "./Context.js";
+import type * as Effect from "./Effect.js";
+import type * as Exit from "./Exit.js";
+import type * as Fiber from "./Fiber.js";
+import type * as FiberId from "./FiberId.js";
+import type * as FiberRef from "./FiberRef.js";
+import type * as FiberRefs from "./FiberRefs.js";
+import type { Inspectable } from "./Inspectable.js";
+import * as internal from "./internal/runtime.js";
+import type { Pipeable } from "./Pipeable.js";
+import type * as RuntimeFlags from "./RuntimeFlags.js";
+import type { Scheduler } from "./Scheduler.js";
+import type { Scope } from "./Scope.js";
 
 /**
  * @since 2.0.0
  * @category models
  */
 export interface AsyncFiberException<out A, out E = never> {
-  readonly _tag: "AsyncFiberException"
-  readonly fiber: Fiber.RuntimeFiber<A, E>
+    readonly _tag: "AsyncFiberException";
+    readonly fiber: Fiber.RuntimeFiber<A, E>;
 }
 
 /**
@@ -30,7 +30,10 @@ export interface AsyncFiberException<out A, out E = never> {
  * @category models
  */
 export interface Cancel<out A, out E = never> {
-  (fiberId?: FiberId.FiberId, options?: RunCallbackOptions<A, E> | undefined): void
+    (
+        fiberId?: FiberId.FiberId,
+        options?: RunCallbackOptions<A, E> | undefined,
+    ): void;
 }
 
 /**
@@ -38,29 +41,33 @@ export interface Cancel<out A, out E = never> {
  * @category models
  */
 export interface Runtime<in R> extends Pipeable {
-  /**
-   * The context used as initial for forks
-   */
-  readonly context: Context.Context<R>
-  /**
-   * The runtime flags used as initial for forks
-   */
-  readonly runtimeFlags: RuntimeFlags.RuntimeFlags
-  /**
-   * The fiber references used as initial for forks
-   */
-  readonly fiberRefs: FiberRefs.FiberRefs
+    /**
+     * The context used as initial for forks
+     */
+    readonly context: Context.Context<R>;
+    /**
+     * The runtime flags used as initial for forks
+     */
+    readonly runtimeFlags: RuntimeFlags.RuntimeFlags;
+    /**
+     * The fiber references used as initial for forks
+     */
+    readonly fiberRefs: FiberRefs.FiberRefs;
 }
 
 /**
  * @since 3.12.0
  */
 export declare namespace Runtime {
-  /**
-   * @since 3.12.0
-   * @category Type Extractors
-   */
-  export type Context<T extends Runtime<never>> = [T] extends [Runtime<infer R>] ? R : never
+    /**
+     * @since 3.12.0
+     * @category Type Extractors
+     */
+    export type Context<T extends Runtime<never>> = [T] extends [
+        Runtime<infer R>,
+    ]
+        ? R
+        : never;
 }
 
 /**
@@ -68,10 +75,15 @@ export declare namespace Runtime {
  * @category models
  */
 export interface RunForkOptions {
-  readonly scheduler?: Scheduler | undefined
-  readonly updateRefs?: ((refs: FiberRefs.FiberRefs, fiberId: FiberId.Runtime) => FiberRefs.FiberRefs) | undefined
-  readonly immediate?: boolean
-  readonly scope?: Scope
+    readonly scheduler?: Scheduler | undefined;
+    readonly updateRefs?:
+        | ((
+              refs: FiberRefs.FiberRefs,
+              fiberId: FiberId.Runtime,
+          ) => FiberRefs.FiberRefs)
+        | undefined;
+    readonly immediate?: boolean;
+    readonly scope?: Scope;
 }
 
 /**
@@ -82,15 +94,18 @@ export interface RunForkOptions {
  * @category execution
  */
 export const runFork: {
-  <R>(
-    runtime: Runtime<R>
-  ): <A, E>(effect: Effect.Effect<A, E, R>, options?: RunForkOptions | undefined) => Fiber.RuntimeFiber<A, E>
-  <R, A, E>(
-    runtime: Runtime<R>,
-    effect: Effect.Effect<A, E, R>,
-    options?: RunForkOptions | undefined
-  ): Fiber.RuntimeFiber<A, E>
-} = internal.unsafeFork
+    <R>(
+        runtime: Runtime<R>,
+    ): <A, E>(
+        effect: Effect.Effect<A, E, R>,
+        options?: RunForkOptions | undefined,
+    ) => Fiber.RuntimeFiber<A, E>;
+    <R, A, E>(
+        runtime: Runtime<R>,
+        effect: Effect.Effect<A, E, R>,
+        options?: RunForkOptions | undefined,
+    ): Fiber.RuntimeFiber<A, E>;
+} = internal.unsafeFork;
 
 /**
  * Executes the effect synchronously returning the exit.
@@ -102,9 +117,14 @@ export const runFork: {
  * @category execution
  */
 export const runSyncExit: {
-  <A, E, R>(runtime: Runtime<R>, effect: Effect.Effect<A, E, R>): Exit.Exit<A, E>
-  <R>(runtime: Runtime<R>): <A, E>(effect: Effect.Effect<A, E, R>) => Exit.Exit<A, E>
-} = internal.unsafeRunSyncExit
+    <A, E, R>(
+        runtime: Runtime<R>,
+        effect: Effect.Effect<A, E, R>,
+    ): Exit.Exit<A, E>;
+    <R>(
+        runtime: Runtime<R>,
+    ): <A, E>(effect: Effect.Effect<A, E, R>) => Exit.Exit<A, E>;
+} = internal.unsafeRunSyncExit;
 
 /**
  * Executes the effect synchronously throwing in case of errors or async boundaries.
@@ -116,16 +136,16 @@ export const runSyncExit: {
  * @category execution
  */
 export const runSync: {
-  <A, E, R>(runtime: Runtime<R>, effect: Effect.Effect<A, E, R>): A
-  <R>(runtime: Runtime<R>): <A, E>(effect: Effect.Effect<A, E, R>) => A
-} = internal.unsafeRunSync
+    <A, E, R>(runtime: Runtime<R>, effect: Effect.Effect<A, E, R>): A;
+    <R>(runtime: Runtime<R>): <A, E>(effect: Effect.Effect<A, E, R>) => A;
+} = internal.unsafeRunSync;
 
 /**
  * @since 2.0.0
  * @category models
  */
 export interface RunCallbackOptions<in A, in E = never> extends RunForkOptions {
-  readonly onExit?: ((exit: Exit.Exit<A, E>) => void) | undefined
+    readonly onExit?: ((exit: Exit.Exit<A, E>) => void) | undefined;
 }
 
 /**
@@ -139,18 +159,24 @@ export interface RunCallbackOptions<in A, in E = never> extends RunForkOptions {
  * @category execution
  */
 export const runCallback: {
-  <R>(
-    runtime: Runtime<R>
-  ): <A, E>(
-    effect: Effect.Effect<A, E, R>,
-    options?: RunCallbackOptions<A, E> | undefined
-  ) => (fiberId?: FiberId.FiberId, options?: RunCallbackOptions<A, E> | undefined) => void
-  <R, A, E>(
-    runtime: Runtime<R>,
-    effect: Effect.Effect<A, E, R>,
-    options?: RunCallbackOptions<A, E> | undefined
-  ): (fiberId?: FiberId.FiberId, options?: RunCallbackOptions<A, E> | undefined) => void
-} = internal.unsafeRunCallback
+    <R>(
+        runtime: Runtime<R>,
+    ): <A, E>(
+        effect: Effect.Effect<A, E, R>,
+        options?: RunCallbackOptions<A, E> | undefined,
+    ) => (
+        fiberId?: FiberId.FiberId,
+        options?: RunCallbackOptions<A, E> | undefined,
+    ) => void;
+    <R, A, E>(
+        runtime: Runtime<R>,
+        effect: Effect.Effect<A, E, R>,
+        options?: RunCallbackOptions<A, E> | undefined,
+    ): (
+        fiberId?: FiberId.FiberId,
+        options?: RunCallbackOptions<A, E> | undefined,
+    ) => void;
+} = internal.unsafeRunCallback;
 
 /**
  * Runs the `Effect`, returning a JavaScript `Promise` that will be resolved
@@ -164,15 +190,18 @@ export const runCallback: {
  * @category execution
  */
 export const runPromise: {
-  <R>(
-    runtime: Runtime<R>
-  ): <A, E>(effect: Effect.Effect<A, E, R>, options?: { readonly signal?: AbortSignal } | undefined) => Promise<A>
-  <R, A, E>(
-    runtime: Runtime<R>,
-    effect: Effect.Effect<A, E, R>,
-    options?: { readonly signal?: AbortSignal } | undefined
-  ): Promise<A>
-} = internal.unsafeRunPromise
+    <R>(
+        runtime: Runtime<R>,
+    ): <A, E>(
+        effect: Effect.Effect<A, E, R>,
+        options?: { readonly signal?: AbortSignal } | undefined,
+    ) => Promise<A>;
+    <R, A, E>(
+        runtime: Runtime<R>,
+        effect: Effect.Effect<A, E, R>,
+        options?: { readonly signal?: AbortSignal } | undefined,
+    ): Promise<A>;
+} = internal.unsafeRunPromise;
 
 /**
  * Runs the `Effect`, returning a JavaScript `Promise` that will be resolved
@@ -185,129 +214,142 @@ export const runPromise: {
  * @category execution
  */
 export const runPromiseExit: {
-  <R>(
-    runtime: Runtime<R>
-  ): <A, E>(
-    effect: Effect.Effect<A, E, R>,
-    options?: { readonly signal?: AbortSignal } | undefined
-  ) => Promise<Exit.Exit<A, E>>
-  <R, A, E>(
-    runtime: Runtime<R>,
-    effect: Effect.Effect<A, E, R>,
-    options?: { readonly signal?: AbortSignal } | undefined
-  ): Promise<Exit.Exit<A, E>>
-} = internal.unsafeRunPromiseExit
+    <R>(
+        runtime: Runtime<R>,
+    ): <A, E>(
+        effect: Effect.Effect<A, E, R>,
+        options?: { readonly signal?: AbortSignal } | undefined,
+    ) => Promise<Exit.Exit<A, E>>;
+    <R, A, E>(
+        runtime: Runtime<R>,
+        effect: Effect.Effect<A, E, R>,
+        options?: { readonly signal?: AbortSignal } | undefined,
+    ): Promise<Exit.Exit<A, E>>;
+} = internal.unsafeRunPromiseExit;
 
 /**
  * @since 2.0.0
  * @category constructors
  */
-export const defaultRuntime: Runtime<never> = internal.defaultRuntime
+export const defaultRuntime: Runtime<never> = internal.defaultRuntime;
 
 /**
  * @since 2.0.0
  * @category constructors
  */
-export const defaultRuntimeFlags: RuntimeFlags.RuntimeFlags = internal.defaultRuntimeFlags
+export const defaultRuntimeFlags: RuntimeFlags.RuntimeFlags =
+    internal.defaultRuntimeFlags;
 
 /**
  * @since 2.0.0
  * @category constructors
  */
-export const make: <R>(
-  options: {
-    readonly context: Context.Context<R>
-    readonly runtimeFlags: RuntimeFlags.RuntimeFlags
-    readonly fiberRefs: FiberRefs.FiberRefs
-  }
-) => Runtime<R> = internal.make
+export const make: <R>(options: {
+    readonly context: Context.Context<R>;
+    readonly runtimeFlags: RuntimeFlags.RuntimeFlags;
+    readonly fiberRefs: FiberRefs.FiberRefs;
+}) => Runtime<R> = internal.make;
 
 /**
  * @since 2.0.0
  * @category symbols
  */
-export const FiberFailureId = Symbol.for("effect/Runtime/FiberFailure")
+export const FiberFailureId = Symbol.for("effect/Runtime/FiberFailure");
 /**
  * @since 2.0.0
  * @category symbols
  */
-export type FiberFailureId = typeof FiberFailureId
+export type FiberFailureId = typeof FiberFailureId;
 
 /**
  * @since 2.0.0
  * @category symbols
  */
-export const FiberFailureCauseId: unique symbol = internal.FiberFailureCauseId
+export const FiberFailureCauseId: unique symbol = internal.FiberFailureCauseId;
 
 /**
  * @since 2.0.0
  * @category exports
  */
-export type FiberFailureCauseId = typeof FiberFailureCauseId
+export type FiberFailureCauseId = typeof FiberFailureCauseId;
 
 /**
  * @since 2.0.0
  * @category models
  */
 export interface FiberFailure extends Error, Inspectable {
-  readonly [FiberFailureId]: FiberFailureId
-  readonly [FiberFailureCauseId]: Cause<unknown>
+    readonly [FiberFailureId]: FiberFailureId;
+    readonly [FiberFailureCauseId]: Cause<unknown>;
 }
 
 /**
  * @since 2.0.0
  * @category guards
  */
-export const isAsyncFiberException: (u: unknown) => u is AsyncFiberException<unknown, unknown> =
-  internal.isAsyncFiberException
+export const isAsyncFiberException: (
+    u: unknown,
+) => u is AsyncFiberException<unknown, unknown> =
+    internal.isAsyncFiberException;
 
 /**
  * @since 2.0.0
  * @category guards
  */
-export const isFiberFailure: (u: unknown) => u is FiberFailure = internal.isFiberFailure
+export const isFiberFailure: (u: unknown) => u is FiberFailure =
+    internal.isFiberFailure;
 
 /**
  * @since 2.0.0
  * @category constructors
  */
-export const makeFiberFailure: <E>(cause: Cause<E>) => FiberFailure = internal.fiberFailure
+export const makeFiberFailure: <E>(cause: Cause<E>) => FiberFailure =
+    internal.fiberFailure;
 
 /**
  * @since 2.0.0
  * @category runtime flags
  */
 export const updateRuntimeFlags: {
-  (f: (flags: RuntimeFlags.RuntimeFlags) => RuntimeFlags.RuntimeFlags): <R>(self: Runtime<R>) => Runtime<R>
-  <R>(self: Runtime<R>, f: (flags: RuntimeFlags.RuntimeFlags) => RuntimeFlags.RuntimeFlags): Runtime<R>
-} = internal.updateRuntimeFlags
+    (
+        f: (flags: RuntimeFlags.RuntimeFlags) => RuntimeFlags.RuntimeFlags,
+    ): <R>(self: Runtime<R>) => Runtime<R>;
+    <R>(
+        self: Runtime<R>,
+        f: (flags: RuntimeFlags.RuntimeFlags) => RuntimeFlags.RuntimeFlags,
+    ): Runtime<R>;
+} = internal.updateRuntimeFlags;
 
 /**
  * @since 2.0.0
  * @category runtime flags
  */
 export const enableRuntimeFlag: {
-  (flag: RuntimeFlags.RuntimeFlag): <R>(self: Runtime<R>) => Runtime<R>
-  <R>(self: Runtime<R>, flag: RuntimeFlags.RuntimeFlag): Runtime<R>
-} = internal.enableRuntimeFlag
+    (flag: RuntimeFlags.RuntimeFlag): <R>(self: Runtime<R>) => Runtime<R>;
+    <R>(self: Runtime<R>, flag: RuntimeFlags.RuntimeFlag): Runtime<R>;
+} = internal.enableRuntimeFlag;
 
 /**
  * @since 2.0.0
  * @category runtime flags
  */
 export const disableRuntimeFlag: {
-  (flag: RuntimeFlags.RuntimeFlag): <R>(self: Runtime<R>) => Runtime<R>
-  <R>(self: Runtime<R>, flag: RuntimeFlags.RuntimeFlag): Runtime<R>
-} = internal.disableRuntimeFlag
+    (flag: RuntimeFlags.RuntimeFlag): <R>(self: Runtime<R>) => Runtime<R>;
+    <R>(self: Runtime<R>, flag: RuntimeFlags.RuntimeFlag): Runtime<R>;
+} = internal.disableRuntimeFlag;
 
 /**
  * @since 2.0.0
  * @category context
  */
 export const updateContext: {
-  <R, R2>(f: (context: Context.Context<R>) => Context.Context<R2>): (self: Runtime<R>) => Runtime<R2>
-  <R, R2>(self: Runtime<R>, f: (context: Context.Context<R>) => Context.Context<R2>): Runtime<R2>
-} = internal.updateContext
+    <R, R2>(
+        f: (context: Context.Context<R>) => Context.Context<R2>,
+    ): (self: Runtime<R>) => Runtime<R2>;
+    <R, R2>(
+        self: Runtime<R>,
+        f: (context: Context.Context<R>) => Context.Context<R2>,
+    ): Runtime<R2>;
+} = internal.updateContext;
 
 /**
  * @since 2.0.0
@@ -324,18 +366,30 @@ export const updateContext: {
  * ```
  */
 export const provideService: {
-  <I, S>(tag: Context.Tag<I, S>, service: S): <R>(self: Runtime<R>) => Runtime<I | R>
-  <R, I, S>(self: Runtime<R>, tag: Context.Tag<I, S>, service: S): Runtime<R | I>
-} = internal.provideService
+    <I, S>(
+        tag: Context.Tag<I, S>,
+        service: S,
+    ): <R>(self: Runtime<R>) => Runtime<I | R>;
+    <R, I, S>(
+        self: Runtime<R>,
+        tag: Context.Tag<I, S>,
+        service: S,
+    ): Runtime<R | I>;
+} = internal.provideService;
 
 /**
  * @since 2.0.0
  * @category fiber refs
  */
 export const updateFiberRefs: {
-  (f: (fiberRefs: FiberRefs.FiberRefs) => FiberRefs.FiberRefs): <R>(self: Runtime<R>) => Runtime<R>
-  <R>(self: Runtime<R>, f: (fiberRefs: FiberRefs.FiberRefs) => FiberRefs.FiberRefs): Runtime<R>
-} = internal.updateFiberRefs
+    (
+        f: (fiberRefs: FiberRefs.FiberRefs) => FiberRefs.FiberRefs,
+    ): <R>(self: Runtime<R>) => Runtime<R>;
+    <R>(
+        self: Runtime<R>,
+        f: (fiberRefs: FiberRefs.FiberRefs) => FiberRefs.FiberRefs,
+    ): Runtime<R>;
+} = internal.updateFiberRefs;
 
 /**
  * @since 2.0.0
@@ -355,9 +409,16 @@ export const updateFiberRefs: {
  * ```
  */
 export const setFiberRef: {
-  <A>(fiberRef: FiberRef.FiberRef<A>, value: A): <R>(self: Runtime<R>) => Runtime<R>
-  <R, A>(self: Runtime<R>, fiberRef: FiberRef.FiberRef<A>, value: A): Runtime<R>
-} = internal.setFiberRef
+    <A>(
+        fiberRef: FiberRef.FiberRef<A>,
+        value: A,
+    ): <R>(self: Runtime<R>) => Runtime<R>;
+    <R, A>(
+        self: Runtime<R>,
+        fiberRef: FiberRef.FiberRef<A>,
+        value: A,
+    ): Runtime<R>;
+} = internal.setFiberRef;
 
 /**
  * @since 2.0.0
@@ -378,6 +439,6 @@ export const setFiberRef: {
  * ```
  */
 export const deleteFiberRef: {
-  <A>(fiberRef: FiberRef.FiberRef<A>): <R>(self: Runtime<R>) => Runtime<R>
-  <R, A>(self: Runtime<R>, fiberRef: FiberRef.FiberRef<A>): Runtime<R>
-} = internal.deleteFiberRef
+    <A>(fiberRef: FiberRef.FiberRef<A>): <R>(self: Runtime<R>) => Runtime<R>;
+    <R, A>(self: Runtime<R>, fiberRef: FiberRef.FiberRef<A>): Runtime<R>;
+} = internal.deleteFiberRef;

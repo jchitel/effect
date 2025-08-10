@@ -1,18 +1,18 @@
 # Pretty Printer for Effect-TS
 
 - [Pretty Printer for Effect-TS](#pretty-printer-for-effect-ts)
-  - [Installation](#installation)
-    - [`@effect/printer`](#effectprinter)
-  - [Overview](#overview)
-  - [Simple Example](#simple-example)
-  - [General Workflow](#general-workflow)
-  - [How the Layout Works](#how-the-layout-works)
-    - [Available Width](#available-width)
-    - [Grouping](#grouping)
-  - [Things the Pretty Printer Cannot Do](#things-the-pretty-printer-cannot-do)
-  - [Helpful Tips](#helpful-tips)
-    - [Which kind of annotation should I use?](#which-kind-of-annotation-should-i-use)
-  - [Acknowledgements](#acknowledgements)
+    - [Installation](#installation)
+        - [`@effect/printer`](#effectprinter)
+    - [Overview](#overview)
+    - [Simple Example](#simple-example)
+    - [General Workflow](#general-workflow)
+    - [How the Layout Works](#how-the-layout-works)
+        - [Available Width](#available-width)
+        - [Grouping](#grouping)
+    - [Things the Pretty Printer Cannot Do](#things-the-pretty-printer-cannot-do)
+    - [Helpful Tips](#helpful-tips)
+        - [Which kind of annotation should I use?](#which-kind-of-annotation-should-i-use)
+    - [Acknowledgements](#acknowledgements)
 
 ## Installation
 
@@ -29,9 +29,11 @@ pnpm install @effect/printer
 ```bash
 yarn add @effect/printer
 ```
+
 ```bash
 deno add npm:@effect/printer
 ```
+
 ```bash
 bun add @effect/printer
 ```
@@ -41,8 +43,9 @@ bun add @effect/printer
 This module defines a pretty printer to format text in a flexible and convenient way. The idea is to combine a `Doc`ument out of many small components, then using a layouter to convert it to an easily renderable `DocStream`, which can then be rendered to a variety of formats.
 
 The document consists of several parts:
- 1. Just below is some general information about the library
- 2. The actual library with extensive documentation and examples
+
+1.  Just below is some general information about the library
+2.  The actual library with extensive documentation and examples
 
 ## Simple Example
 
@@ -55,29 +58,27 @@ example :: Int -> Bool -> Char -> IO ()
 First, let's setup the imports we need:
 
 ```ts
-import * as Doc from "@effect/printer/Doc"
-import * as Array from "effect/Array"
-import { pipe } from "effect/Function"
+import * as Doc from "@effect/printer/Doc";
+import * as Array from "effect/Array";
+import { pipe } from "effect/Function";
 ```
 
 Next, we intersperse the `"->"` character between our types and add a leading `"::"` character:
 
 ```ts
 const prettyTypes = (types: ReadonlyArray<string>): Doc.Doc<never> => {
-  const symbolDocuments = pipe(
-    Array.makeBy(types.length - 1, () => Doc.text("->")),
-    Array.prepend(Doc.text("::"))
-  )
-  const typeDocuments = types.map(Doc.text)
-  const documents = pipe(
-    Array.zipWith(
-      symbolDocuments,
-      typeDocuments,
-      (left, right) => Doc.catWithSpace(left, right)
-    )
-  )
-  return Doc.align(Doc.seps(documents))
-}
+    const symbolDocuments = pipe(
+        Array.makeBy(types.length - 1, () => Doc.text("->")),
+        Array.prepend(Doc.text("::")),
+    );
+    const typeDocuments = types.map(Doc.text);
+    const documents = pipe(
+        Array.zipWith(symbolDocuments, typeDocuments, (left, right) =>
+            Doc.catWithSpace(left, right),
+        ),
+    );
+    return Doc.align(Doc.seps(documents));
+};
 ```
 
 The `seps` function is one way of concatenating documents, but there are many others (e.g. `vsep`, `cat` and `fillSep`, etc.). In our example, `seps` is used to space-separate all documents if there is space remaining in the current line, and newlines if the remaining line is too short.
@@ -86,17 +87,17 @@ Next, we prepend the name to the type,
 
 ```ts
 const prettyDeclaration = (
-  name: string,
-  types: ReadonlyArray<string>
-): Doc.Doc<never> => Doc.catWithSpace(Doc.text(name), prettyTypes(types))
+    name: string,
+    types: ReadonlyArray<string>,
+): Doc.Doc<never> => Doc.catWithSpace(Doc.text(name), prettyTypes(types));
 ```
 
 Now we can define a document that contains some type signature:
 
 ```ts
-const name = "example"
-const types = ["Int", "Bool", "Char", "IO ()"]
-const doc: Doc.Doc<never> = prettyDeclaration(name, types)
+const name = "example";
+const types = ["Int", "Bool", "Char", "IO ()"];
+const doc: Doc.Doc<never> = prettyDeclaration(name, types);
 ```
 
 This document can now be printed! And as a bonus, it automatically adapts to available space.
@@ -104,16 +105,19 @@ This document can now be printed! And as a bonus, it automatically adapts to ava
 If the page is wide enough (`80` characters in this case), the definitions are space-separated.
 
 ```ts
-const rendered = Doc.render(doc, { style: 'pretty' })
-console.log(rendered)
+const rendered = Doc.render(doc, { style: "pretty" });
+console.log(rendered);
 // example :: Int -> Bool -> Char -> IO ()
 ```
 
 If we narrow the page width to only `20` characters, the same document renders vertically aligned:
 
 ```ts
-const rendered = Doc.render(doc, { style: 'pretty', options: { lineWidth: 20 } })
-console.log(rendered)
+const rendered = Doc.render(doc, {
+    style: "pretty",
+    options: { lineWidth: 20 },
+});
+console.log(rendered);
 // example :: Int
 //         -> Bool
 //         -> Char
@@ -197,7 +201,7 @@ While both versions would work equally well, and would create identical output, 
 
 **Modularity**: Changing the color of `Keyword`s after laying out a `Doc`ument means that there is only one modification needed (namely the call to `DocStream.reAnnotate`) should the color of `Keyword`s need to be changed in the future. If you have directly annotated `Doc`uments with the color `Red`, a full text search/replacement would be required should the color need to be changed.
 
-**Extensibility**: Adding a different rendering of a `Keyword` in the recommended version is as simple as adding a variant of `DocStream.reAnnotate` to convert the `Doc` annotation to something else. On the other hand, let's assume you have `Red` as an annotation in the `Doc` and the backend you would like to implement does not have the notion of color  (think of plain text or a website where red doesn’t work well with the rest of the style). You now need to worry what to map *redness* to, which in this case has no canonical answer. Should it be omitted? What does *red* mean in the context of the new backend? Additionally, consider the case where keywords and variables have already been annotated as red, but you want to change only the color of variables.
+**Extensibility**: Adding a different rendering of a `Keyword` in the recommended version is as simple as adding a variant of `DocStream.reAnnotate` to convert the `Doc` annotation to something else. On the other hand, let's assume you have `Red` as an annotation in the `Doc` and the backend you would like to implement does not have the notion of color (think of plain text or a website where red doesn’t work well with the rest of the style). You now need to worry what to map _redness_ to, which in this case has no canonical answer. Should it be omitted? What does _red_ mean in the context of the new backend? Additionally, consider the case where keywords and variables have already been annotated as red, but you want to change only the color of variables.
 
 ## Acknowledgements
 
