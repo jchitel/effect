@@ -1,11 +1,7 @@
-/**
- * @since 2.0.0
- */
 import type { TypeLambda } from "./HKT.js";
 
 /**
  * @category type lambdas
- * @since 2.0.0
  */
 export interface FunctionTypeLambda extends TypeLambda {
     readonly type: (a: this["In"]) => this["Target"];
@@ -24,7 +20,6 @@ export interface FunctionTypeLambda extends TypeLambda {
  * ```
  *
  * @category guards
- * @since 2.0.0
  */
 export const isFunction = (input: unknown): input is Function =>
     typeof input === "function";
@@ -90,8 +85,6 @@ export const isFunction = (input: unknown): input is Function =>
  * console.log(sum(2, 3)) // 5
  * console.log(pipe(2, sum(3))) // 5
  * ```
- *
- * @since 2.0.0
  */
 export const dual: {
     <
@@ -188,8 +181,6 @@ export const dual: {
  *
  * assert.deepStrictEqual(pipe(length, apply("hello")), 5)
  * ```
- *
- * @since 2.0.0
  */
 export const apply =
     <A extends ReadonlyArray<unknown>>(...a: A) =>
@@ -206,8 +197,6 @@ export const apply =
  *
  * const constNull: LazyArg<null> = constant(null)
  * ```
- *
- * @since 2.0.0
  */
 export interface LazyArg<A> {
     (): A;
@@ -221,8 +210,6 @@ export interface LazyArg<A> {
  *
  * const sum: FunctionN<[number, number], number> = (a, b) => a + b
  * ```
- *
- * @since 2.0.0
  */
 export interface FunctionN<A extends ReadonlyArray<unknown>, B> {
     (...args: A): B;
@@ -238,8 +225,6 @@ export interface FunctionN<A extends ReadonlyArray<unknown>, B> {
  *
  * assert.deepStrictEqual(identity(5), 5)
  * ```
- *
- * @since 2.0.0
  */
 export const identity = <A>(a: A): A => a;
 
@@ -260,8 +245,6 @@ export const identity = <A>(a: A): A => a;
  *
  * assert.deepStrictEqual(satisfies<number>()(5), 5)
  * ```
- *
- * @since 2.0.0
  */
 export const satisfies =
     <A>() =>
@@ -278,8 +261,6 @@ export const satisfies =
  *
  * assert.deepStrictEqual(unsafeCoerce, identity)
  * ```
- *
- * @since 2.0.0
  */
 export const unsafeCoerce: <A, B>(a: A) => B = identity as any;
 
@@ -299,8 +280,6 @@ export const unsafeCoerce: <A, B>(a: A) => B = identity as any;
  * assert.deepStrictEqual(constNull(), null)
  * assert.deepStrictEqual(constNull(), null)
  * ```
- *
- * @since 2.0.0
  */
 export const constant =
     <A>(value: A): LazyArg<A> =>
@@ -317,8 +296,6 @@ export const constant =
  *
  * assert.deepStrictEqual(constTrue(), true)
  * ```
- *
- * @since 2.0.0
  */
 export const constTrue: LazyArg<boolean> = constant(true);
 
@@ -332,8 +309,6 @@ export const constTrue: LazyArg<boolean> = constant(true);
  *
  * assert.deepStrictEqual(constFalse(), false)
  * ```
- *
- * @since 2.0.0
  */
 export const constFalse: LazyArg<boolean> = constant(false);
 
@@ -347,8 +322,6 @@ export const constFalse: LazyArg<boolean> = constant(false);
  *
  * assert.deepStrictEqual(constNull(), null)
  * ```
- *
- * @since 2.0.0
  */
 export const constNull: LazyArg<null> = constant(null);
 
@@ -362,8 +335,6 @@ export const constNull: LazyArg<null> = constant(null);
  *
  * assert.deepStrictEqual(constUndefined(), undefined)
  * ```
- *
- * @since 2.0.0
  */
 export const constUndefined: LazyArg<undefined> = constant(undefined);
 
@@ -377,8 +348,6 @@ export const constUndefined: LazyArg<undefined> = constant(undefined);
  *
  * assert.deepStrictEqual(constVoid(), undefined)
  * ```
- *
- * @since 2.0.0
  */
 export const constVoid: LazyArg<void> = constUndefined;
 
@@ -394,8 +363,6 @@ export const constVoid: LazyArg<void> = constUndefined;
  *
  * assert.deepStrictEqual(flip(f)('aaa')(2), -1)
  * ```
- *
- * @since 2.0.0
  */
 export const flip =
     <A extends Array<unknown>, B extends Array<unknown>, C>(
@@ -419,8 +386,6 @@ export const flip =
  *
  * assert.strictEqual(compose(increment, square)(2), 9);
  * ```
- *
- * @since 2.0.0
  */
 export const compose: {
     <B, C>(bc: (b: B) => C): <A>(self: (a: A) => B) => (a: A) => C;
@@ -437,8 +402,6 @@ export const compose: {
  * meaning that it should be impossible for this code to be executed.
  *
  * This function is particularly useful when it's necessary to specify that certain cases are impossible.
- *
- * @since 2.0.0
  */
 export const absurd = <A>(_: never): A => {
     throw new Error("Called `absurd` function which should be uncallable");
@@ -456,8 +419,6 @@ export const absurd = <A>(_: never): A => {
  *
  * assert.deepStrictEqual(sumTupled([1, 2]), 3)
  * ```
- *
- * @since 2.0.0
  */
 export const tupled =
     <A extends ReadonlyArray<unknown>, B>(f: (...a: A) => B): ((a: A) => B) =>
@@ -476,8 +437,6 @@ export const tupled =
  *
  * assert.deepStrictEqual(getFirst(1, 2), 1)
  * ```
- *
- * @since 2.0.0
  */
 export const untupled =
     <A extends ReadonlyArray<unknown>, B>(f: (a: A) => B): ((...a: A) => B) =>
@@ -549,8 +508,6 @@ export const untupled =
  * console.log(result)
  * // Output: 2
  * ```
- *
- * @since 2.0.0
  */
 export function pipe<A>(a: A): A;
 export function pipe<A, B = never>(a: A, ab: (a: A) => B): B;
@@ -1057,8 +1014,6 @@ export function pipe(
  *
  * assert.strictEqual(f('aaa'), 6)
  * ```
- *
- * @since 2.0.0
  */
 export function flow<A extends ReadonlyArray<unknown>, B = never>(
     ab: (...a: A) => B,
@@ -1233,8 +1188,6 @@ export function flow(
 
 /**
  * Type hole simulation.
- *
- * @since 2.0.0
  */
 export const hole: <T>() => T = unsafeCoerce(absurd);
 
@@ -1251,7 +1204,5 @@ export const hole: <T>() => T = unsafeCoerce(absurd);
  *
  * assert.deepStrictEqual(SK(0, "hello"), "hello")
  * ```
- *
- * @since 2.0.0
  */
 export const SK = <A, B>(_: A, b: B): B => b;

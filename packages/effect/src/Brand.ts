@@ -380,6 +380,7 @@ export const all: <
     };
     // @ts-expect-error
     return Object.assign(
+        // @ts-expect-error
         (args) =>
             Either.match(either(args), {
                 onLeft: (e) => {

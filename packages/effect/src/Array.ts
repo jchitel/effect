@@ -1,7 +1,5 @@
 /**
  * This module provides utility functions for working with arrays in TypeScript.
- *
- * @since 2.0.0
  */
 
 import * as Either from "./Either.js";
@@ -22,7 +20,6 @@ import type { NoInfer } from "./Types.js";
 
 /**
  * @category type lambdas
- * @since 2.0.0
  */
 export interface ReadonlyArrayTypeLambda extends TypeLambda {
     readonly type: ReadonlyArray<this["Target"]>;
@@ -30,13 +27,11 @@ export interface ReadonlyArrayTypeLambda extends TypeLambda {
 
 /**
  * @category models
- * @since 2.0.0
  */
 export type NonEmptyReadonlyArray<A> = readonly [A, ...Array<A>];
 
 /**
  * @category models
- * @since 2.0.0
  */
 export type NonEmptyArray<A> = [A, ...Array<A>];
 
@@ -53,7 +48,6 @@ export type NonEmptyArray<A> = [A, ...Array<A>];
  * ```
  *
  * @category constructors
- * @since 2.0.0
  */
 export const make = <Elements extends NonEmptyArray<any>>(
     ...elements: Elements
@@ -72,7 +66,6 @@ export const make = <Elements extends NonEmptyArray<any>>(
  * ```
  *
  * @category constructors
- * @since 2.0.0
  */
 export const allocate = <A = never>(n: number): Array<A | undefined> =>
     new Array(n);
@@ -92,7 +85,6 @@ export const allocate = <A = never>(n: number): Array<A | undefined> =>
  * ```
  *
  * @category constructors
- * @since 2.0.0
  */
 export const makeBy: {
     <A>(f: (i: number) => A): (n: number) => NonEmptyArray<A>;
@@ -119,7 +111,6 @@ export const makeBy: {
  * ```
  *
  * @category constructors
- * @since 2.0.0
  */
 export const range = (start: number, end: number): NonEmptyArray<number> =>
     start <= end ? makeBy(end - start + 1, (i) => start + i) : [start];
@@ -139,7 +130,6 @@ export const range = (start: number, end: number): NonEmptyArray<number> =>
  * ```
  *
  * @category constructors
- * @since 2.0.0
  */
 export const replicate: {
     (n: number): <A>(a: A) => NonEmptyArray<A>;
@@ -161,7 +151,6 @@ export const replicate: {
  * ```
  *
  * @category constructors
- * @since 2.0.0
  */
 export const fromIterable = <A>(collection: Iterable<A>): Array<A> =>
     Array.isArray(collection) ? collection : Array.from(collection);
@@ -180,7 +169,6 @@ export const fromIterable = <A>(collection: Iterable<A>): Array<A> =>
  * ```
  *
  * @category constructors
- * @since 3.3.0
  */
 export const ensure = <A>(self: ReadonlyArray<A> | A): Array<A> =>
     Array.isArray(self) ? self : [self as A];
@@ -198,7 +186,6 @@ export const ensure = <A>(self: ReadonlyArray<A> | A): Array<A> =>
  * ```
  *
  * @category conversions
- * @since 2.0.0
  */
 export const fromRecord: <K extends string, A>(
     self: Readonly<Record<K, A>>,
@@ -217,7 +204,6 @@ export const fromRecord: <K extends string, A>(
  * ```
  *
  * @category conversions
- * @since 2.0.0
  */
 export const fromOption: <A>(self: Option.Option<A>) => Array<A> =
     Option.toArray;
@@ -239,7 +225,6 @@ export const fromOption: <A>(self: Option.Option<A>) => Array<A> =
  * ```
  *
  * @category pattern matching
- * @since 2.0.0
  */
 export const match: {
     <B, A, C = B>(options: {
@@ -284,7 +269,6 @@ export const match: {
  * ```
  *
  * @category pattern matching
- * @since 2.0.0
  */
 export const matchLeft: {
     <B, A, C = B>(options: {
@@ -332,7 +316,6 @@ export const matchLeft: {
  * ```
  *
  * @category pattern matching
- * @since 2.0.0
  */
 export const matchRight: {
     <B, A, C = B>(options: {
@@ -376,7 +359,6 @@ export const matchRight: {
  * ```
  *
  * @category concatenating
- * @since 2.0.0
  */
 export const prepend: {
     <B>(head: B): <A>(self: Iterable<A>) => NonEmptyArray<A | B>;
@@ -400,7 +382,6 @@ export const prepend: {
  * ```
  *
  * @category concatenating
- * @since 2.0.0
  */
 export const prependAll: {
     <S extends Iterable<any>, T extends Iterable<any>>(
@@ -440,7 +421,6 @@ export const prependAll: {
  * ```
  *
  * @category concatenating
- * @since 2.0.0
  */
 export const append: {
     <B>(last: B): <A>(self: Iterable<A>) => NonEmptyArray<A | B>;
@@ -455,7 +435,6 @@ export const append: {
  * If either array is non-empty, the result is also a non-empty array.
  *
  * @category concatenating
- * @since 2.0.0
  */
 export const appendAll: {
     <S extends Iterable<any>, T extends Iterable<any>>(
@@ -503,7 +482,6 @@ export const appendAll: {
  * ```
  *
  * @category folding
- * @since 2.0.0
  */
 export const scan: {
     <B, A>(b: B, f: (b: B, a: A) => B): (self: Iterable<A>) => NonEmptyArray<B>;
@@ -536,7 +514,6 @@ export const scan: {
  * ```
  *
  * @category folding
- * @since 2.0.0
  */
 export const scanRight: {
     <B, A>(b: B, f: (b: B, a: A) => B): (self: Iterable<A>) => NonEmptyArray<B>;
@@ -567,7 +544,6 @@ export const scanRight: {
  * ```
  *
  * @category guards
- * @since 2.0.0
  */
 export const isArray: {
     (self: unknown): self is Array<unknown>;
@@ -587,7 +563,6 @@ export const isArray: {
  * ```
  *
  * @category guards
- * @since 2.0.0
  */
 export const isEmptyArray = <A>(self: Array<A>): self is [] =>
     self.length === 0;
@@ -605,7 +580,6 @@ export const isEmptyArray = <A>(self: Array<A>): self is [] =>
  * ```
  *
  * @category guards
- * @since 2.0.0
  */
 export const isEmptyReadonlyArray: <A>(
     self: ReadonlyArray<A>,
@@ -626,7 +600,6 @@ export const isEmptyReadonlyArray: <A>(
  * ```
  *
  * @category guards
- * @since 2.0.0
  */
 export const isNonEmptyArray: <A>(self: Array<A>) => self is NonEmptyArray<A> =
     internalArray.isNonEmptyArray;
@@ -646,7 +619,6 @@ export const isNonEmptyArray: <A>(self: Array<A>) => self is NonEmptyArray<A> =
  * ```
  *
  * @category guards
- * @since 2.0.0
  */
 export const isNonEmptyReadonlyArray: <A>(
     self: ReadonlyArray<A>,
@@ -656,7 +628,6 @@ export const isNonEmptyReadonlyArray: <A>(
  * Return the number of elements in a `ReadonlyArray`.
  *
  * @category getters
- * @since 2.0.0
  */
 export const length = <A>(self: ReadonlyArray<A>): number => self.length;
 
@@ -670,7 +641,6 @@ const clamp = <A>(i: number, as: ReadonlyArray<A>): number =>
  * This function provides a safe way to read a value at a particular index from a `ReadonlyArray`.
  *
  * @category getters
- * @since 2.0.0
  */
 export const get: {
     (index: number): <A>(self: ReadonlyArray<A>) => Option.Option<A>;
@@ -683,7 +653,6 @@ export const get: {
 /**
  * Gets an element unsafely, will throw on out of bounds.
  *
- * @since 2.0.0
  * @category unsafe
  */
 export const unsafeGet: {
@@ -710,7 +679,6 @@ export const unsafeGet: {
  * ```
  *
  * @category splitting
- * @since 2.0.0
  */
 export const unprepend = <A>(
     self: NonEmptyReadonlyArray<A>,
@@ -732,7 +700,6 @@ export const unprepend = <A>(
  * ```
  *
  * @category splitting
- * @since 2.0.0
  */
 export const unappend = <A>(
     self: NonEmptyReadonlyArray<A>,
@@ -745,7 +712,6 @@ export const unappend = <A>(
  * Get the first element of a `ReadonlyArray`, or `None` if the `ReadonlyArray` is empty.
  *
  * @category getters
- * @since 2.0.0
  */
 export const head: <A>(self: ReadonlyArray<A>) => Option.Option<A> = get(0);
 
@@ -762,7 +728,6 @@ export const head: <A>(self: ReadonlyArray<A>) => Option.Option<A> = get(0);
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const headNonEmpty: <A>(self: NonEmptyReadonlyArray<A>) => A =
     unsafeGet(0);
@@ -771,7 +736,6 @@ export const headNonEmpty: <A>(self: NonEmptyReadonlyArray<A>) => A =
  * Get the last element in a `ReadonlyArray`, or `None` if the `ReadonlyArray` is empty.
  *
  * @category getters
- * @since 2.0.0
  */
 export const last = <A>(self: ReadonlyArray<A>): Option.Option<A> =>
     isNonEmptyReadonlyArray(self)
@@ -791,7 +755,6 @@ export const last = <A>(self: ReadonlyArray<A>): Option.Option<A> =>
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const lastNonEmpty = <A>(self: NonEmptyReadonlyArray<A>): A =>
     self[self.length - 1];
@@ -800,7 +763,6 @@ export const lastNonEmpty = <A>(self: NonEmptyReadonlyArray<A>): A =>
  * Get all but the first element of an `Iterable`, creating a new `Array`, or `None` if the `Iterable` is empty.
  *
  * @category getters
- * @since 2.0.0
  */
 export const tail = <A>(self: Iterable<A>): Option.Option<Array<A>> => {
     const input = fromIterable(self);
@@ -822,7 +784,6 @@ export const tail = <A>(self: Iterable<A>): Option.Option<Array<A>> => {
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const tailNonEmpty = <A>(self: NonEmptyReadonlyArray<A>): Array<A> =>
     self.slice(1);
@@ -831,7 +792,6 @@ export const tailNonEmpty = <A>(self: NonEmptyReadonlyArray<A>): Array<A> =>
  * Get all but the last element of an `Iterable`, creating a new `Array`, or `None` if the `Iterable` is empty.
  *
  * @category getters
- * @since 2.0.0
  */
 export const init = <A>(self: Iterable<A>): Option.Option<Array<A>> => {
     const input = fromIterable(self);
@@ -853,7 +813,6 @@ export const init = <A>(self: Iterable<A>): Option.Option<Array<A>> => {
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const initNonEmpty = <A>(self: NonEmptyReadonlyArray<A>): Array<A> =>
     self.slice(0, -1);
@@ -873,7 +832,6 @@ export const initNonEmpty = <A>(self: NonEmptyReadonlyArray<A>): Array<A> =>
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const take: {
     (n: number): <A>(self: Iterable<A>) => Array<A>;
@@ -898,7 +856,6 @@ export const take: {
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const takeRight: {
     (n: number): <A>(self: Iterable<A>) => Array<A>;
@@ -928,7 +885,6 @@ export const takeRight: {
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const takeWhile: {
     <A, B extends A>(
@@ -982,7 +938,6 @@ const spanIndex = <A>(
  * 2. the remaining elements
  *
  * @category splitting
- * @since 2.0.0
  */
 export const span: {
     <A, B extends A>(
@@ -1023,7 +978,6 @@ export const span: {
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const drop: {
     (n: number): <A>(self: Iterable<A>) => Array<A>;
@@ -1048,7 +1002,6 @@ export const drop: {
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const dropRight: {
     (n: number): <A>(self: Iterable<A>) => Array<A>;
@@ -1071,7 +1024,6 @@ export const dropRight: {
  * ```
  *
  * @category getters
- * @since 2.0.0
  */
 export const dropWhile: {
     <A>(
@@ -1097,7 +1049,6 @@ export const dropWhile: {
  * ```
  *
  * @category elements
- * @since 2.0.0
  */
 export const findFirstIndex: {
     <A>(
@@ -1137,7 +1088,6 @@ export const findFirstIndex: {
  * ```
  *
  * @category elements
- * @since 2.0.0
  */
 export const findLastIndex: {
     <A>(
@@ -1177,7 +1127,6 @@ export const findLastIndex: {
  * ```
  *
  * @category elements
- * @since 2.0.0
  */
 export const findFirst: {
     <A, B>(
@@ -1217,7 +1166,6 @@ export const findFirst: {
  * ```
  *
  * @category elements
- * @since 2.0.0
  */
 export const findLast: {
     <A, B>(
@@ -1281,7 +1229,6 @@ export const findLast: {
  * ```
  *
  * @category elements
- * @since 3.17.0
  */
 export const findFirstWithIndex: {
     <A, B>(
@@ -1344,7 +1291,6 @@ export const findFirstWithIndex: {
  * ```
  *
  * @category folding
- * @since 3.16.0
  */
 export const countBy: {
     <A>(
@@ -1375,8 +1321,6 @@ export const countBy: {
  * const result = Array.insertAt(['a', 'b', 'c', 'e'], 3, 'd')
  * console.log(result) // Option.some(['a', 'b', 'c', 'd', 'e'])
  * ```
- *
- * @since 2.0.0
  */
 export const insertAt: {
     <B>(
@@ -1417,8 +1361,6 @@ export const insertAt: {
  * const result = Array.replace(['a', 'b', 'c', 'd'], 1, 'z')
  * console.log(result) // ['a', 'z', 'c', 'd']
  * ```
- *
- * @since 2.0.0
  */
 export const replace: {
     <B>(
@@ -1449,8 +1391,6 @@ export const replace: {
  * const result = Array.replaceOption([1, 2, 3], 1, 4)
  * console.log(result) // Option.some([1, 4, 3])
  * ```
- *
- * @since 2.0.0
  */
 export const replaceOption: {
     <B>(
@@ -1482,8 +1422,6 @@ export const replaceOption: {
  * const result = Array.modify([1, 2, 3, 4], 2, (n) => n * 2)
  * console.log(result) // [1, 2, 6, 4]
  * ```
- *
- * @since 2.0.0
  */
 export const modify: {
     <A, B, S extends Iterable<A> = Iterable<A>>(
@@ -1524,8 +1462,6 @@ export const modify: {
  * const outOfBoundsResult = Array.modifyOption(input, 5, (n) => n * 2)
  * console.log(outOfBoundsResult) // Option.none()
  * ```
- *
- * @since 2.0.0
  */
 export const modifyOption: {
     <A, B, S extends Iterable<A> = Iterable<A>>(
@@ -1573,8 +1509,6 @@ export const modifyOption: {
  * const outOfBoundsResult = Array.remove(input, 5)
  * console.log(outOfBoundsResult) // [1, 2, 3, 4]
  * ```
- *
- * @since 2.0.0
  */
 export const remove: {
     (i: number): <A>(self: Iterable<A>) => Array<A>;
@@ -1604,8 +1538,6 @@ export const remove: {
  * const outOfBoundsResult = Array.removeOption(numbers, 5)
  * assert.deepStrictEqual(outOfBoundsResult, Option.none())
  * ```
- *
- * @since 3.16.0
  */
 export const removeOption: {
     (i: number): <A>(self: Iterable<A>) => Option.Option<Array<A>>;
@@ -1633,7 +1565,6 @@ export const removeOption: {
  * ```
  *
  * @category elements
- * @since 2.0.0
  */
 export const reverse = <S extends Iterable<any>>(
     self: S,
@@ -1648,7 +1579,6 @@ export const reverse = <S extends Iterable<any>>(
  * If the input is a `NonEmptyReadonlyArray`, the output will also be a `NonEmptyReadonlyArray`.
  *
  * @category sorting
- * @since 2.0.0
  */
 export const sort: {
     <B>(
@@ -1689,7 +1619,6 @@ export const sort: {
  * // be sorted in ascending order.
  * ```
  *
- * @since 2.0.0
  * @category elements
  */
 export const sortWith: {
@@ -1753,7 +1682,6 @@ export const sortWith: {
  * ```
  *
  * @category sorting
- * @since 2.0.0
  */
 export const sortBy = <S extends Iterable<any>>(
     ...orders: ReadonlyArray<Order.Order<ReadonlyArray.Infer<S>>>
@@ -1789,7 +1717,6 @@ export const sortBy = <S extends Iterable<any>>(
  * ```
  *
  * @category zipping
- * @since 2.0.0
  */
 export const zip: {
     <B>(
@@ -1821,7 +1748,6 @@ export const zip: {
  * ```
  *
  * @category zipping
- * @since 2.0.0
  */
 export const zipWith: {
     <B, A, C>(
@@ -1876,8 +1802,6 @@ export const zipWith: {
  * const result = Array.unzip([[1, "a"], [2, "b"], [3, "c"]])
  * console.log(result) // [[1, 2, 3], ['a', 'b', 'c']]
  * ```
- *
- * @since 2.0.0
  */
 export const unzip: <S extends Iterable<readonly [any, any]>>(
     self: S,
@@ -1913,8 +1837,6 @@ export const unzip: <S extends Iterable<readonly [any, any]>>(
  * const result = Array.intersperse([1, 2, 3], 0)
  * console.log(result) // [1, 0, 2, 0, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const intersperse: {
     <B>(
@@ -1951,8 +1873,6 @@ export const intersperse: {
  * const result = Array.modifyNonEmptyHead([1, 2, 3], n => n * 10)
  * console.log(result) // [10, 2, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const modifyNonEmptyHead: {
     <A, B>(
@@ -1981,8 +1901,6 @@ export const modifyNonEmptyHead: {
  * const result = Array.setNonEmptyHead([1, 2, 3], 10)
  * console.log(result) // [10, 2, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const setNonEmptyHead: {
     <B>(b: B): <A>(self: NonEmptyReadonlyArray<A>) => NonEmptyArray<A | B>;
@@ -2004,8 +1922,6 @@ export const setNonEmptyHead: {
  * const result = Array.modifyNonEmptyLast([1, 2, 3], n => n * 2)
  * console.log(result) // [1, 2, 6]
  * ```
- *
- * @since 2.0.0
  */
 export const modifyNonEmptyLast: {
     <A, B>(
@@ -2035,8 +1951,6 @@ export const modifyNonEmptyLast: {
  * const result = Array.setNonEmptyLast([1, 2, 3], 4)
  * console.log(result) // [1, 2, 4]
  * ```
- *
- * @since 2.0.0
  */
 export const setNonEmptyLast: {
     <B>(b: B): <A>(self: NonEmptyReadonlyArray<A>) => NonEmptyArray<A | B>;
@@ -2059,8 +1973,6 @@ export const setNonEmptyLast: {
  * const result = Array.rotate(['a', 'b', 'c', 'd', 'e'], 2)
  * console.log(result) // [ 'd', 'e', 'a', 'b', 'c' ]
  * ```
- *
- * @since 2.0.0
  */
 export const rotate: {
     (
@@ -2103,7 +2015,6 @@ export const rotate: {
  * ```
  *
  * @category elements
- * @since 2.0.0
  */
 export const containsWith = <A>(
     isEquivalent: (self: A, that: A) => boolean,
@@ -2135,7 +2046,6 @@ const _equivalence = Equal.equivalence();
  * ```
  *
  * @category elements
- * @since 2.0.0
  */
 export const contains: {
     <A>(a: A): (self: Iterable<A>) => boolean;
@@ -2160,8 +2070,6 @@ export const contains: {
  * // The `chop` function applies this `chopFunction` recursively to the input array `[1, 2, 3, 4, 5]`,
  * // resulting in a new array `[2, 4, 6, 8, 10]`.
  * ```
- *
- * @since 2.0.0
  */
 export const chop: {
     <S extends Iterable<any>, B>(
@@ -2213,7 +2121,6 @@ export const chop: {
  * ```
  *
  * @category splitting
- * @since 2.0.0
  */
 export const splitAt: {
     (
@@ -2249,7 +2156,6 @@ export const splitAt: {
  * ```
  *
  * @category splitting
- * @since 2.0.0
  */
 export const splitNonEmptyAt: {
     (
@@ -2286,7 +2192,6 @@ export const splitNonEmptyAt: {
  * console.log(result) // [[1, 2, 3], [4, 5, 6], [7, 8]]
  * ```
  *
- * @since 2.0.0
  * @category splitting
  */
 export const split: {
@@ -2311,7 +2216,6 @@ export const split: {
  * ```
  *
  * @category splitting
- * @since 2.0.0
  */
 export const splitWhere: {
     <A>(
@@ -2341,8 +2245,6 @@ export const splitWhere: {
  * const result = Array.copy([1, 2, 3])
  * console.log(result) // [1, 2, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const copy: {
     <A>(self: NonEmptyReadonlyArray<A>): NonEmptyArray<A>;
@@ -2363,8 +2265,6 @@ export const copy: {
  * const result = Array.pad([1, 2, 3], 6, 0)
  * console.log(result) // [1, 2, 3, 0, 0, 0]
  * ```
- *
- * @since 3.8.4
  */
 export const pad: {
     <A, T>(n: number, fill: T): (self: Array<A>) => Array<A | T>;
@@ -2406,7 +2306,6 @@ export const pad: {
  * ```
  *
  * @category splitting
- * @since 2.0.0
  */
 export const chunksOf: {
     (
@@ -2443,7 +2342,6 @@ export const chunksOf: {
  * ```
  *
  * @category splitting
- * @since 3.13.2
  */
 export const window: {
     (n: number): <A>(self: Iterable<A>) => Array<Array<A>>;
@@ -2471,7 +2369,6 @@ export const window: {
  * ```
  *
  * @category grouping
- * @since 2.0.0
  */
 export const groupWith: {
     <A>(
@@ -2516,7 +2413,6 @@ export const groupWith: {
  * ```
  *
  * @category grouping
- * @since 2.0.0
  */
 export const group: <A>(
     self: NonEmptyReadonlyArray<A>,
@@ -2546,7 +2442,6 @@ export const group: <A>(
  * ```
  *
  * @category grouping
- * @since 2.0.0
  */
 export const groupBy: {
     <A, K extends string | symbol>(
@@ -2588,8 +2483,6 @@ export const groupBy: {
  * const union = Array.unionWith([1, 2], [2, 3], (a, b) => a === b)
  * console.log(union) // [1, 2, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const unionWith: {
     <S extends Iterable<any>, T extends Iterable<any>>(
@@ -2651,8 +2544,6 @@ export const unionWith: {
  * const result = Array.union([1, 2], [2, 3])
  * console.log(result) // [1, 2, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const union: {
     <T extends Iterable<any>>(
@@ -2694,8 +2585,6 @@ export const union: {
  * const result = Array.intersectionWith(isEquivalent)(array2)(array1)
  * console.log(result) // [{ id: 1 }, { id: 3 }]
  * ```
- *
- * @since 2.0.0
  */
 export const intersectionWith = <A>(
     isEquivalent: (self: A, that: A) => boolean,
@@ -2723,8 +2612,6 @@ export const intersectionWith = <A>(
  * const result = Array.intersection([1, 2, 3], [3, 4, 1])
  * console.log(result) // [1, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const intersection: {
     <B>(that: Iterable<B>): <A>(self: Iterable<A>) => Array<A & B>;
@@ -2745,8 +2632,6 @@ export const intersection: {
  * const difference = Array.differenceWith<number>((a, b) => a === b)(array1, array2)
  * console.log(difference) // [1]
  * ```
- *
- * @since 2.0.0
  */
 export const differenceWith = <A>(
     isEquivalent: (self: A, that: A) => boolean,
@@ -2774,8 +2659,6 @@ export const differenceWith = <A>(
  * const difference = Array.difference([1, 2, 3], [2, 3, 4])
  * console.log(difference) // [1]
  * ```
- *
- * @since 2.0.0
  */
 export const difference: {
     <A>(that: Iterable<A>): (self: Iterable<A>) => Array<A>;
@@ -2784,7 +2667,6 @@ export const difference: {
 
 /**
  * @category constructors
- * @since 2.0.0
  */
 export const empty: <A = never>() => Array<A> = () => [];
 
@@ -2792,17 +2674,10 @@ export const empty: <A = never>() => Array<A> = () => [];
  * Constructs a new `NonEmptyArray<A>` from the specified value.
  *
  * @category constructors
- * @since 2.0.0
  */
 export const of = <A>(a: A): NonEmptyArray<A> => [a];
 
-/**
- * @since 2.0.0
- */
 export declare namespace ReadonlyArray {
-    /**
-     * @since 2.0.0
-     */
     export type Infer<S extends Iterable<any>> =
         S extends ReadonlyArray<infer A>
             ? A
@@ -2810,15 +2685,9 @@ export declare namespace ReadonlyArray {
               ? A
               : never;
 
-    /**
-     * @since 2.0.0
-     */
     export type With<S extends Iterable<any>, A> =
         S extends NonEmptyReadonlyArray<any> ? NonEmptyArray<A> : Array<A>;
 
-    /**
-     * @since 2.0.0
-     */
     export type OrNonEmpty<
         S extends Iterable<any>,
         T extends Iterable<any>,
@@ -2830,9 +2699,6 @@ export declare namespace ReadonlyArray {
               ? NonEmptyArray<A>
               : Array<A>;
 
-    /**
-     * @since 2.0.0
-     */
     export type AndNonEmpty<
         S extends Iterable<any>,
         T extends Iterable<any>,
@@ -2844,9 +2710,6 @@ export declare namespace ReadonlyArray {
                 : Array<A>
             : Array<A>;
 
-    /**
-     * @since 2.0.0
-     */
     export type Flatten<T extends ReadonlyArray<ReadonlyArray<any>>> =
         T extends NonEmptyReadonlyArray<NonEmptyReadonlyArray<infer A>>
             ? NonEmptyArray<A>
@@ -2857,7 +2720,6 @@ export declare namespace ReadonlyArray {
 
 /**
  * @category mapping
- * @since 2.0.0
  */
 export const map: {
     <S extends ReadonlyArray<any>, B>(
@@ -2877,7 +2739,6 @@ export const map: {
  * Applies a function to each element in an array and returns a new array containing the concatenated mapped elements.
  *
  * @category sequencing
- * @since 2.0.0
  */
 export const flatMap: {
     <S extends ReadonlyArray<any>, T extends ReadonlyArray<any>>(
@@ -2926,7 +2787,6 @@ export const flatMap: {
  * ```
  *
  * @category sequencing
- * @since 2.0.0
  */
 export const flatten: <S extends ReadonlyArray<ReadonlyArray<any>>>(
     self: S,
@@ -2948,7 +2808,6 @@ export const flatten: <S extends ReadonlyArray<ReadonlyArray<any>>>(
  * ```
  *
  * @category filtering
- * @since 2.0.0
  */
 export const filterMap: {
     <A, B>(
@@ -2993,7 +2852,6 @@ export const filterMap: {
  * ```
  *
  * @category filtering
- * @since 2.0.0
  */
 export const filterMapWhile: {
     <A, B>(
@@ -3045,7 +2903,6 @@ export const filterMapWhile: {
  * ```
  *
  * @category filtering
- * @since 2.0.0
  */
 export const partitionMap: {
     <A, B, C>(
@@ -3089,7 +2946,6 @@ export const partitionMap: {
  * ```
  *
  * @category filtering
- * @since 2.0.0
  */
 
 export const getSomes: <T extends Iterable<Option.Option<X>>, X = any>(
@@ -3111,7 +2967,6 @@ export const getSomes: <T extends Iterable<Option.Option<X>>, X = any>(
  * ```
  *
  * @category filtering
- * @since 2.0.0
  */
 export const getLefts = <T extends Iterable<Either.Either<any, any>>>(
     self: T,
@@ -3139,7 +2994,6 @@ export const getLefts = <T extends Iterable<Either.Either<any, any>>>(
  * ```
  *
  * @category filtering
- * @since 2.0.0
  */
 export const getRights = <T extends Iterable<Either.Either<any, any>>>(
     self: T,
@@ -3156,7 +3010,6 @@ export const getRights = <T extends Iterable<Either.Either<any, any>>>(
 
 /**
  * @category filtering
- * @since 2.0.0
  */
 export const filter: {
     <A, B extends A>(
@@ -3200,7 +3053,6 @@ export const filter: {
  * ```
  *
  * @category filtering
- * @since 2.0.0
  */
 export const partition: {
     <A, B extends A>(
@@ -3243,7 +3095,6 @@ export const partition: {
  * Separates an `Iterable` into two arrays based on a predicate.
  *
  * @category filtering
- * @since 2.0.0
  */
 export const separate: <T extends Iterable<Either.Either<any, any>>>(
     self: T,
@@ -3265,7 +3116,6 @@ export const separate: <T extends Iterable<Either.Either<any, any>>>(
  * ```
  *
  * @category folding
- * @since 2.0.0
  */
 export const reduce: {
     <B, A>(b: B, f: (b: B, a: A, i: number) => B): (self: Iterable<A>) => B;
@@ -3289,7 +3139,6 @@ export const reduce: {
  * ```
  *
  * @category folding
- * @since 2.0.0
  */
 export const reduceRight: {
     <B, A>(b: B, f: (b: B, a: A, i: number) => B): (self: Iterable<A>) => B;
@@ -3315,7 +3164,6 @@ export const reduceRight: {
  * ```
  *
  * @category lifting
- * @since 2.0.0
  */
 export const liftPredicate: {
     // Note: I intentionally avoid using the NoInfer pattern here.
@@ -3330,7 +3178,6 @@ export const liftPredicate: {
 
 /**
  * @category lifting
- * @since 2.0.0
  */
 export const liftOption =
     <A extends Array<unknown>, B>(f: (...a: A) => Option.Option<B>) =>
@@ -3339,14 +3186,12 @@ export const liftOption =
 
 /**
  * @category conversions
- * @since 2.0.0
  */
 export const fromNullable = <A>(a: A): Array<NonNullable<A>> =>
     a == null ? empty() : [a as NonNullable<A>];
 
 /**
  * @category lifting
- * @since 2.0.0
  */
 export const liftNullable =
     <A extends Array<unknown>, B>(
@@ -3373,7 +3218,6 @@ export const liftNullable =
  * ```
  *
  * @category sequencing
- * @since 2.0.0
  */
 export const flatMapNullable: {
     <A, B>(
@@ -3419,7 +3263,6 @@ export const flatMapNullable: {
  * ```
  *
  * @category lifting
- * @since 2.0.0
  */
 export const liftEither =
     <A extends Array<unknown>, E, B>(f: (...a: A) => Either.Either<B, E>) =>
@@ -3432,7 +3275,6 @@ export const liftEither =
  * Check if a predicate holds true for every `ReadonlyArray` element.
  *
  * @category elements
- * @since 2.0.0
  */
 export const every: {
     <A, B extends A>(
@@ -3461,7 +3303,6 @@ export const every: {
  * Check if a predicate holds true for some `ReadonlyArray` element.
  *
  * @category elements
- * @since 2.0.0
  */
 export const some: {
     <A>(
@@ -3496,8 +3337,6 @@ export const some: {
  * // The lengths are: 3, 2, 1.
  * // Therefore, the result is [3, 2, 1].
  * ```
- *
- * @since 2.0.0
  */
 export const extend: {
     <A, B>(
@@ -3521,8 +3360,6 @@ export const extend: {
  * const result = Array.min([3, 1, 2], Order.number)
  * console.log(result) // 1
  * ```
- *
- * @since 2.0.0
  */
 export const min: {
     <A>(O: Order.Order<A>): (self: NonEmptyReadonlyArray<A>) => A;
@@ -3544,8 +3381,6 @@ export const min: {
  * const result = Array.max([3, 1, 2], Order.number)
  * console.log(result) // 3
  * ```
- *
- * @since 2.0.0
  */
 export const max: {
     <A>(O: Order.Order<A>): (self: NonEmptyReadonlyArray<A>) => A;
@@ -3558,7 +3393,6 @@ export const max: {
 
 /**
  * @category constructors
- * @since 2.0.0
  */
 export const unfold = <B, A>(
     b: B,
@@ -3582,7 +3416,6 @@ export const unfold = <B, A>(
  * It is useful when you need to compare two arrays of the same type and you have a specific way of comparing each element of the array.
  *
  * @category instances
- * @since 2.0.0
  */
 export const getOrder: <A>(O: Order.Order<A>) => Order.Order<ReadonlyArray<A>> =
     Order.array;
@@ -3600,7 +3433,6 @@ export const getOrder: <A>(O: Order.Order<A>) => Order.Order<ReadonlyArray<A>> =
  * ```
  *
  * @category instances
- * @since 2.0.0
  */
 export const getEquivalence: <A>(
     isEquivalent: Equivalence.Equivalence<A>,
@@ -3616,8 +3448,6 @@ export const getEquivalence: <A>(
  *
  * Array.forEach([1, 2, 3], n => console.log(n)) // 1, 2, 3
  * ```
- *
- * @since 2.0.0
  */
 export const forEach: {
     <A>(f: (a: A, i: number) => void): (self: Iterable<A>) => void;
@@ -3638,8 +3468,6 @@ export const forEach: {
  * const result = Array.dedupeWith([1, 2, 2, 3, 3, 3], (a, b) => a === b)
  * console.log(result) // [1, 2, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const dedupeWith: {
     <S extends Iterable<any>>(
@@ -3680,8 +3508,6 @@ export const dedupeWith: {
 /**
  * Remove duplicates from an `Iterable`, preserving the order of the first occurrence of each element.
  * The equivalence used to compare elements is provided by `Equal.equivalence()` from the `Equal` module.
- *
- * @since 2.0.0
  */
 export const dedupe = <S extends Iterable<any>>(
     self: S,
@@ -3702,8 +3528,6 @@ export const dedupe = <S extends Iterable<any>>(
  * const result = Array.dedupeAdjacentWith([1, 1, 2, 2, 3, 3], (a, b) => a === b)
  * console.log(result) // [1, 2, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const dedupeAdjacentWith: {
     <A>(
@@ -3742,8 +3566,6 @@ export const dedupeAdjacentWith: {
  * const result = Array.dedupeAdjacent([1, 1, 2, 2, 3, 3])
  * console.log(result) // [1, 2, 3]
  * ```
- *
- * @since 2.0.0
  */
 export const dedupeAdjacent: <A>(self: Iterable<A>) => Array<A> =
     dedupeAdjacentWith(Equal.equivalence());
@@ -3761,7 +3583,6 @@ export const dedupeAdjacent: <A>(self: Iterable<A>) => Array<A> =
  * console.log(joined) // "a-b-c"
  * ```
  *
- * @since 2.0.0
  * @category folding
  */
 export const join: {
@@ -3783,7 +3604,6 @@ export const join: {
  * console.log(result) // [6, [1, 3, 6]]
  * ```
  *
- * @since 2.0.0
  * @category folding
  */
 export const mapAccum: {
@@ -3828,7 +3648,6 @@ export const mapAccum: {
  * console.log(result) // ["1-a", "1-b", "2-a", "2-b"]
  * ```
  *
- * @since 2.0.0
  * @category elements
  */
 export const cartesianWith: {
@@ -3862,7 +3681,6 @@ export const cartesianWith: {
  * console.log(result) // [[1, "a"], [1, "b"], [2, "a"], [2, "b"]]
  * ```
  *
- * @since 2.0.0
  * @category elements
  */
 export const cartesian: {
@@ -3923,7 +3741,6 @@ export const cartesian: {
  * @see {@link let_ let}
  *
  * @category do notation
- * @since 3.2.0
  */
 export const Do: ReadonlyArray<{}> = of({});
 
@@ -3972,7 +3789,6 @@ export const Do: ReadonlyArray<{}> = of({});
  * @see {@link let_ let}
  *
  * @category do notation
- * @since 3.2.0
  */
 export const bind: {
     <A extends object, N extends string, B>(
@@ -4033,7 +3849,6 @@ export const bind: {
  * @see {@link let_ let}
  *
  * @category do notation
- * @since 3.2.0
  */
 export const bindTo: {
     <N extends string>(
@@ -4106,7 +3921,6 @@ export {
      * @see {@link Do}
      *
      * @category do notation
-     * @since 3.2.0
      */
     let_ as let,
 };

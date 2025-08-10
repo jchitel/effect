@@ -1,24 +1,18 @@
-/**
- * @since 2.0.0
- */
 import type * as FiberRefs from "./FiberRefs.js";
 import { globalValue } from "./GlobalValue.js";
 import { hasProperty, isFunction } from "./Predicate.js";
 
 /**
- * @since 2.0.0
  * @category symbols
  */
 export const NodeInspectSymbol = Symbol.for("nodejs.util.inspect.custom");
 
 /**
- * @since 2.0.0
  * @category symbols
  */
 export type NodeInspectSymbol = typeof NodeInspectSymbol;
 
 /**
- * @since 2.0.0
  * @category models
  */
 export interface Inspectable {
@@ -27,9 +21,6 @@ export interface Inspectable {
     [NodeInspectSymbol](): unknown;
 }
 
-/**
- * @since 2.0.0
- */
 export const toJSON = (x: unknown): unknown => {
     try {
         if (
@@ -47,14 +38,8 @@ export const toJSON = (x: unknown): unknown => {
     return redact(x);
 };
 
-/**
- * @since 2.0.0
- */
 export const format = (x: unknown): string => JSON.stringify(x, null, 2);
 
-/**
- * @since 2.0.0
- */
 export const BaseProto: Inspectable = {
     toJSON() {
         return toJSON(this);
@@ -67,31 +52,16 @@ export const BaseProto: Inspectable = {
     },
 };
 
-/**
- * @since 2.0.0
- */
 export abstract class Class {
-    /**
-     * @since 2.0.0
-     */
     abstract toJSON(): unknown;
-    /**
-     * @since 2.0.0
-     */
     [NodeInspectSymbol]() {
         return this.toJSON();
     }
-    /**
-     * @since 2.0.0
-     */
     toString() {
         return format(this.toJSON());
     }
 }
 
-/**
- * @since 2.0.0
- */
 export const toStringUnknown = (
     u: unknown,
     whitespace: number | string | undefined = 2,
@@ -108,9 +78,6 @@ export const toStringUnknown = (
     }
 };
 
-/**
- * @since 2.0.0
- */
 export const stringifyCircular = (
     obj: unknown,
     whitespace?: number | string | undefined,
@@ -135,7 +102,6 @@ export const stringifyCircular = (
 };
 
 /**
- * @since 3.10.0
  * @category redactable
  */
 export interface Redactable {
@@ -143,7 +109,6 @@ export interface Redactable {
 }
 
 /**
- * @since 3.10.0
  * @category redactable
  */
 export const symbolRedactable: unique symbol = Symbol.for(
@@ -151,7 +116,6 @@ export const symbolRedactable: unique symbol = Symbol.for(
 );
 
 /**
- * @since 3.10.0
  * @category redactable
  */
 export const isRedactable = (u: unknown): u is Redactable =>
@@ -165,7 +129,6 @@ const redactableState = globalValue(
 );
 
 /**
- * @since 3.10.0
  * @category redactable
  */
 export const withRedactableContext = <A>(
@@ -182,7 +145,6 @@ export const withRedactableContext = <A>(
 };
 
 /**
- * @since 3.10.0
  * @category redactable
  */
 export const redact = (u: unknown): unknown => {

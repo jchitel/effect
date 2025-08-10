@@ -7,7 +7,7 @@ import * as ConfigError from "effect/ConfigError";
 import * as Console from "effect/Console";
 import * as Effect from "effect/Effect";
 import * as Either from "effect/Either";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as Inspectable from "effect/Inspectable";
 import * as Option from "effect/Option";
 import * as ParseResult from "effect/ParseResult";
@@ -336,51 +336,42 @@ export const text = (config?: Args.Args.BaseArgsConfig): Args.Args<string> =>
 // =============================================================================
 
 /** @internal */
-export const atLeast = dual<
-    {
-        (times: 0): <A>(self: Args.Args<A>) => Args.Args<Array<A>>;
-        (
-            times: number,
-        ): <A>(self: Args.Args<A>) => Args.Args<Arr.NonEmptyArray<A>>;
-    },
-    {
-        <A>(self: Args.Args<A>, times: 0): Args.Args<Array<A>>;
-        <A>(self: Args.Args<A>, times: number): Args.Args<Arr.NonEmptyArray<A>>;
-    }
->(
-    2,
-    (self, times) =>
-        makeVariadic(self, Option.some(times), Option.none()) as any,
-);
+export function atLeast<A>(self: Args.Args<A>, times: 0): Args.Args<Array<A>>;
+export function atLeast<A>(
+    self: Args.Args<A>,
+    times: number,
+): Args.Args<Arr.NonEmptyArray<A>>;
+export function atLeast<A>(
+    self: Args.Args<A>,
+    times: number,
+): Args.Args<Array<A>> {
+    return makeVariadic(self, Option.some(times), Option.none()) as any;
+}
 
 /** @internal */
-export const atMost = dual<
-    (times: number) => <A>(self: Args.Args<A>) => Args.Args<Array<A>>,
-    <A>(self: Args.Args<A>, times: number) => Args.Args<Array<A>>
->(2, (self, times) => makeVariadic(self, Option.none(), Option.some(times)));
+export const atMost = <A>(
+    self: Args.Args<A>,
+    times: number,
+): Args.Args<Array<A>> => makeVariadic(self, Option.none(), Option.some(times));
 
 /** @internal */
-export const between = dual<
-    {
-        (min: 0, max: number): <A>(self: Args.Args<A>) => Args.Args<Array<A>>;
-        (
-            min: number,
-            max: number,
-        ): <A>(self: Args.Args<A>) => Args.Args<Arr.NonEmptyArray<A>>;
-    },
-    {
-        <A>(self: Args.Args<A>, min: 0, max: number): Args.Args<Array<A>>;
-        <A>(
-            self: Args.Args<A>,
-            min: number,
-            max: number,
-        ): Args.Args<Arr.NonEmptyArray<A>>;
-    }
->(
-    3,
-    (self, min, max) =>
-        makeVariadic(self, Option.some(min), Option.some(max)) as any,
-);
+export function between<A>(
+    self: Args.Args<A>,
+    min: 0,
+    max: number,
+): Args.Args<Array<A>>;
+export function between<A>(
+    self: Args.Args<A>,
+    min: number,
+    max: number,
+): Args.Args<Arr.NonEmptyArray<A>>;
+export function between<A>(
+    self: Args.Args<A>,
+    min: number,
+    max: number,
+): Args.Args<Array<A>> {
+    return makeVariadic(self, Option.some(min), Option.some(max)) as any;
+}
 
 /** @internal */
 export const getHelp = <A>(self: Args.Args<A>): HelpDoc.HelpDoc =>
@@ -403,54 +394,34 @@ export const getUsage = <A>(self: Args.Args<A>): Usage.Usage =>
     getUsageInternal(self as Instruction);
 
 /** @internal */
-export const map = dual<
-    <A, B>(f: (a: A) => B) => (self: Args.Args<A>) => Args.Args<B>,
-    <A, B>(self: Args.Args<A>, f: (a: A) => B) => Args.Args<B>
->(2, (self, f) => mapEffect(self, (a) => Effect.succeed(f(a))));
+export const map = <A, B>(self: Args.Args<A>, f: (a: A) => B): Args.Args<B> =>
+    mapEffect(self, (a) => Effect.succeed(f(a)));
 
 /** @internal */
-export const mapEffect = dual<
-    <A, B>(
-        f: (
-            a: A,
-        ) => Effect.Effect<
-            B,
-            HelpDoc.HelpDoc,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => (self: Args.Args<A>) => Args.Args<B>,
-    <A, B>(
-        self: Args.Args<A>,
-        f: (
-            a: A,
-        ) => Effect.Effect<
-            B,
-            HelpDoc.HelpDoc,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => Args.Args<B>
->(2, (self, f) => makeMap(self, f));
+export const mapEffect = <A, B>(
+    self: Args.Args<A>,
+    f: (
+        a: A,
+    ) => Effect.Effect<
+        B,
+        HelpDoc.HelpDoc,
+        FileSystem.FileSystem | Path.Path | Terminal.Terminal
+    >,
+): Args.Args<B> => makeMap(self, f);
 
 /** @internal */
-export const mapTryCatch = dual<
-    <A, B>(
-        f: (a: A) => B,
-        onError: (e: unknown) => HelpDoc.HelpDoc,
-    ) => (self: Args.Args<A>) => Args.Args<B>,
-    <A, B>(
-        self: Args.Args<A>,
-        f: (a: A) => B,
-        onError: (e: unknown) => HelpDoc.HelpDoc,
-    ) => Args.Args<B>
->(3, (self, f, onError) =>
+export const mapTryCatch = <A, B>(
+    self: Args.Args<A>,
+    f: (a: A) => B,
+    onError: (e: unknown) => HelpDoc.HelpDoc,
+): Args.Args<B> =>
     mapEffect(self, (a) => {
         try {
             return Either.right(f(a));
         } catch (e) {
             return Either.left(onError(e));
         }
-    }),
-);
+    });
 
 /** @internal */
 export const optional = <A>(self: Args.Args<A>): Args.Args<Option.Option<A>> =>
@@ -461,46 +432,27 @@ export const repeated = <A>(self: Args.Args<A>): Args.Args<Array<A>> =>
     makeVariadic(self, Option.none(), Option.none());
 
 /** @internal */
-export const validate = dual<
-    (
-        args: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => <A>(
-        self: Args.Args<A>,
-    ) => Effect.Effect<
-        [Array<string>, A],
-        ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >,
-    <A>(
-        self: Args.Args<A>,
-        args: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<
-        [Array<string>, A],
-        ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >
->(3, (self, args, config) =>
-    validateInternal(self as Instruction, args, config),
-);
+export const validate = <A>(
+    self: Args.Args<A>,
+    args: ReadonlyArray<string>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<
+    [Array<string>, A],
+    ValidationError.ValidationError,
+    FileSystem.FileSystem | Path.Path | Terminal.Terminal
+> => validateInternal(self as Instruction, args, config);
 
 /** @internal */
-export const withDefault = dual<
-    <const B>(fallback: B) => <A>(self: Args.Args<A>) => Args.Args<A | B>,
-    <A, const B>(self: Args.Args<A>, fallback: B) => Args.Args<A | B>
->(2, (self, fallback) => makeWithDefault(self, fallback));
+export const withDefault = <A, const B>(
+    self: Args.Args<A>,
+    fallback: B,
+): Args.Args<A | B> => makeWithDefault(self, fallback);
 
 /** @internal */
-export const withFallbackConfig: {
-    <B>(config: Config.Config<B>): <A>(self: Args.Args<A>) => Args.Args<B | A>;
-    <A, B>(self: Args.Args<A>, config: Config.Config<B>): Args.Args<A | B>;
-} = dual<
-    <B>(
-        config: Config.Config<B>,
-    ) => <A>(self: Args.Args<A>) => Args.Args<A | B>,
-    <A, B>(self: Args.Args<A>, config: Config.Config<B>) => Args.Args<A | B>
->(2, (self, config) => {
+export const withFallbackConfig = <A, B>(
+    self: Args.Args<A>,
+    config: Config.Config<B>,
+): Args.Args<A | B> => {
     if (isInstruction(self) && isWithDefault(self)) {
         return makeWithDefault(
             withFallbackConfig(self.args, config),
@@ -508,62 +460,40 @@ export const withFallbackConfig: {
         );
     }
     return makeWithFallbackConfig(self, config);
-});
+};
 
 /** @internal */
-export const withSchema = dual<
-    <A, I extends A, B>(
-        schema: Schema.Schema<
-            B,
-            I,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => (self: Args.Args<A>) => Args.Args<B>,
-    <A, I extends A, B>(
-        self: Args.Args<A>,
-        schema: Schema.Schema<
-            B,
-            I,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => Args.Args<B>
->(2, (self, schema) => {
+export const withSchema = <A, I extends A, B>(
+    self: Args.Args<A>,
+    schema: Schema.Schema<
+        B,
+        I,
+        FileSystem.FileSystem | Path.Path | Terminal.Terminal
+    >,
+): Args.Args<B> => {
     const decode = ParseResult.decode(schema);
     return mapEffect(self, (_) =>
         Effect.mapError(decode(_ as any), (issue) =>
             InternalHelpDoc.p(ParseResult.TreeFormatter.formatIssueSync(issue)),
         ),
     );
-});
+};
 
 /** @internal */
-export const withDescription = dual<
-    (description: string) => <A>(self: Args.Args<A>) => Args.Args<A>,
-    <A>(self: Args.Args<A>, description: string) => Args.Args<A>
->(2, (self, description) =>
-    withDescriptionInternal(self as Instruction, description),
-);
+export const withDescription = <A>(
+    self: Args.Args<A>,
+    description: string,
+): Args.Args<A> => withDescriptionInternal(self as Instruction, description);
 
 /** @internal */
-export const wizard = dual<
-    (
-        config: CliConfig.CliConfig,
-    ) => <A>(
-        self: Args.Args<A>,
-    ) => Effect.Effect<
-        Array<string>,
-        Terminal.QuitException | ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >,
-    <A>(
-        self: Args.Args<A>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<
-        Array<string>,
-        Terminal.QuitException | ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >
->(2, (self, config) => wizardInternal(self as Instruction, config));
+export const wizard = <A>(
+    self: Args.Args<A>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<
+    Array<string>,
+    Terminal.QuitException | ValidationError.ValidationError,
+    FileSystem.FileSystem | Path.Path | Terminal.Terminal
+> => wizardInternal(self as Instruction, config);
 
 // =============================================================================
 // Internals
@@ -1160,9 +1090,8 @@ const wizardInternal = (
             const repeatHelp = InternalHelpDoc.p(
                 "How many times should this argument should be repeated?",
             );
-            const message = pipe(
-                getHelpInternal(self),
-                InternalHelpDoc.sequence(repeatHelp),
+            const message = pipe(getHelpInternal(self), (x) =>
+                InternalHelpDoc.sequence(x, repeatHelp),
             );
             return InternalNumberPrompt.integer({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),
@@ -1199,7 +1128,7 @@ const wizardInternal = (
             );
             const message = pipe(
                 getHelpInternal(self.args as Instruction),
-                InternalHelpDoc.sequence(defaultHelp),
+                (x) => InternalHelpDoc.sequence(x, defaultHelp),
             );
             return InternalSelectPrompt.select({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),
@@ -1225,7 +1154,7 @@ const wizardInternal = (
             );
             const message = pipe(
                 getHelpInternal(self.args as Instruction),
-                InternalHelpDoc.sequence(defaultHelp),
+                (x) => InternalHelpDoc.sequence(x, defaultHelp),
             );
             return InternalSelectPrompt.select({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),

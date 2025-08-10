@@ -141,14 +141,6 @@ export declare namespace Command {
  * @category constructors
  */
 export const fromDescriptor: {
-    (): <A extends { readonly name: string }>(
-        command: Descriptor.Command<A>,
-    ) => Command<A["name"], never, never, A>;
-
-    <A extends { readonly name: string }, R, E>(
-        handler: (_: A) => Effect<void, E, R>,
-    ): (command: Descriptor.Command<A>) => Command<A["name"], R, E, A>;
-
     <A extends { readonly name: string }>(
         descriptor: Descriptor.Command<A>,
     ): Command<A["name"], never, never, A>;
@@ -254,226 +246,124 @@ export const prompt: <Name extends string, A, R, E>(
  * @since 1.0.0
  * @category combinators
  */
-export const provide: {
-    <A, LR, LE, LA>(
-        layer: Layer<LA, LE, LR> | ((_: A) => Layer<LA, LE, LR>),
-    ): <Name extends string, R, E>(
-        self: Command<Name, R, E, A>,
-    ) => Command<Name, LR | Exclude<R, LA>, LE | E, A>;
-    <Name extends string, R, E, A, LR, LE, LA>(
-        self: Command<Name, R, E, A>,
-        layer: Layer<LA, LE, LR> | ((_: A) => Layer<LA, LE, LR>),
-    ): Command<Name, LR | Exclude<R, LA>, E | LE, A>;
-} = Internal.provide;
+export const provide: <Name extends string, R, E, A, LR, LE, LA>(
+    self: Command<Name, R, E, A>,
+    layer: Layer<LA, LE, LR> | ((_: A) => Layer<LA, LE, LR>),
+) => Command<Name, LR | Exclude<R, LA>, E | LE, A> = Internal.provide;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const provideEffect: {
-    <I, S, A, R2, E2>(
-        tag: Tag<I, S>,
-        effect: Effect<S, E2, R2> | ((_: A) => Effect<S, E2, R2>),
-    ): <Name extends string, R, E>(
-        self: Command<Name, R, E, A>,
-    ) => Command<Name, R2 | Exclude<R, I>, E2 | E, A>;
-    <Name extends string, R, E, A, I, S, R2, E2>(
-        self: Command<Name, R, E, A>,
-        tag: Tag<I, S>,
-        effect: Effect<S, E2, R2> | ((_: A) => Effect<S, E2, R2>),
-    ): Command<Name, R2 | Exclude<R, I>, E | E2, A>;
-} = Internal.provideEffect;
+export const provideEffect: <Name extends string, R, E, A, I, S, R2, E2>(
+    self: Command<Name, R, E, A>,
+    tag: Tag<I, S>,
+    effect: Effect<S, E2, R2> | ((_: A) => Effect<S, E2, R2>),
+) => Command<Name, R2 | Exclude<R, I>, E | E2, A> = Internal.provideEffect;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const provideEffectDiscard: {
-    <A, R2, E2, _>(
-        effect: Effect<_, E2, R2> | ((_: A) => Effect<_, E2, R2>),
-    ): <Name extends string, R, E>(
-        self: Command<Name, R, E, A>,
-    ) => Command<Name, R2 | R, E2 | E, A>;
-    <Name extends string, R, E, A, R2, E2, _>(
-        self: Command<Name, R, E, A>,
-        effect: Effect<_, E2, R2> | ((_: A) => Effect<_, E2, R2>),
-    ): Command<Name, R | R2, E | E2, A>;
-} = Internal.provideEffectDiscard;
+export const provideEffectDiscard: <Name extends string, R, E, A, R2, E2, _>(
+    self: Command<Name, R, E, A>,
+    effect: Effect<_, E2, R2> | ((_: A) => Effect<_, E2, R2>),
+) => Command<Name, R | R2, E | E2, A> = Internal.provideEffectDiscard;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const provideSync: {
-    <I, S, A>(
-        tag: Tag<I, S>,
-        service: S | ((_: A) => S),
-    ): <Name extends string, R, E>(
-        self: Command<Name, R, E, A>,
-    ) => Command<Name, Exclude<R, I>, E, A>;
-    <Name extends string, R, E, A, I, S>(
-        self: Command<Name, R, E, A>,
-        tag: Tag<I, S>,
-        service: S | ((_: A) => S),
-    ): Command<Name, Exclude<R, I>, E, A>;
-} = Internal.provideSync;
+export const provideSync: <Name extends string, R, E, A, I, S>(
+    self: Command<Name, R, E, A>,
+    tag: Tag<I, S>,
+    service: S | ((_: A) => S),
+) => Command<Name, Exclude<R, I>, E, A> = Internal.provideSync;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const transformHandler: {
-    <R, E, A, R2, E2>(
-        f: (effect: Effect<void, E, R>, config: A) => Effect<void, E2, R2>,
-    ): <Name extends string>(
-        self: Command<Name, R, E, A>,
-    ) => Command<Name, R | R2, E | E2, A>;
-    <Name extends string, R, E, A, R2, E2>(
-        self: Command<Name, R, E, A>,
-        f: (effect: Effect<void, E, R>, config: A) => Effect<void, E2, R2>,
-    ): Command<Name, R | R2, E | E2, A>;
-} = Internal.transformHandler;
+export const transformHandler: <Name extends string, R, E, A, R2, E2>(
+    self: Command<Name, R, E, A>,
+    f: (effect: Effect<void, E, R>, config: A) => Effect<void, E2, R2>,
+) => Command<Name, R | R2, E | E2, A> = Internal.transformHandler;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withDescription: {
-    (
-        help: string | HelpDoc,
-    ): <Name extends string, R, E, A>(
-        self: Command<Name, R, E, A>,
-    ) => Command<Name, R, E, A>;
-    <Name extends string, R, E, A>(
-        self: Command<Name, R, E, A>,
-        help: string | HelpDoc,
-    ): Command<Name, R, E, A>;
-} = Internal.withDescription;
+export const withDescription: <Name extends string, R, E, A>(
+    self: Command<Name, R, E, A>,
+    help: string | HelpDoc,
+) => Command<Name, R, E, A> = Internal.withDescription;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withHandler: {
-    <A, R, E>(
-        handler: (_: A) => Effect<void, E, R>,
-    ): <Name extends string, XR, XE>(
-        self: Command<Name, XR, XE, A>,
-    ) => Command<Name, R, E, A>;
-    <Name extends string, XR, XE, A, R, E>(
-        self: Command<Name, XR, XE, A>,
-        handler: (_: A) => Effect<void, E, R>,
-    ): Command<Name, R, E, A>;
-} = Internal.withHandler;
+export const withHandler: <Name extends string, XR, XE, A, R, E>(
+    self: Command<Name, XR, XE, A>,
+    handler: (_: A) => Effect<void, E, R>,
+) => Command<Name, R, E, A> = Internal.withHandler;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withSubcommands: {
-    <
-        Subcommand extends readonly [
-            Command<any, any, any, any>,
-            ...Array<Command<any, any, any, any>>,
-        ],
-    >(
-        subcommands: Subcommand,
-    ): <Name extends string, R, E, A>(
-        self: Command<Name, R, E, A>,
-    ) => Command<
-        Name,
-        | R
-        | Exclude<
-              Effect.Context<ReturnType<Subcommand[number]["handler"]>>,
-              Command.Context<Name>
-          >,
-        E | Effect.Error<ReturnType<Subcommand[number]["handler"]>>,
-        Descriptor.Command.ComputeParsedType<
-            A &
-                Readonly<{
-                    subcommand: Option<
-                        Descriptor.Command.GetParsedType<
-                            Subcommand[number]["descriptor"]
-                        >
-                    >;
-                }>
-        >
-    >;
-    <
-        Name extends string,
-        R,
-        E,
-        A,
-        Subcommand extends readonly [
-            Command<any, any, any, any>,
-            ...Array<Command<any, any, any, any>>,
-        ],
-    >(
-        self: Command<Name, R, E, A>,
-        subcommands: Subcommand,
-    ): Command<
-        Name,
-        | R
-        | Exclude<
-              Effect.Context<ReturnType<Subcommand[number]["handler"]>>,
-              Command.Context<Name>
-          >,
-        E | Effect.Error<ReturnType<Subcommand[number]["handler"]>>,
-        Descriptor.Command.ComputeParsedType<
-            A &
-                Readonly<{
-                    subcommand: Option<
-                        Descriptor.Command.GetParsedType<
-                            Subcommand[number]["descriptor"]
-                        >
-                    >;
-                }>
-        >
-    >;
-} = Internal.withSubcommands;
+export const withSubcommands: <
+    Name extends string,
+    R,
+    E,
+    A,
+    Subcommand extends readonly [
+        Command<any, any, any, any>,
+        ...Array<Command<any, any, any, any>>,
+    ],
+>(
+    self: Command<Name, R, E, A>,
+    subcommands: Subcommand,
+) => Command<
+    Name,
+    | R
+    | Exclude<
+          Effect.Context<ReturnType<Subcommand[number]["handler"]>>,
+          Command.Context<Name>
+      >,
+    E | Effect.Error<ReturnType<Subcommand[number]["handler"]>>,
+    Descriptor.Command.ComputeParsedType<
+        A &
+            Readonly<{
+                subcommand: Option<
+                    Descriptor.Command.GetParsedType<
+                        Subcommand[number]["descriptor"]
+                    >
+                >;
+            }>
+    >
+> = Internal.withSubcommands as any;
 
 /**
  * @since 1.0.0
  * @category accessors
  */
-export const wizard: {
-    (
-        prefix: ReadonlyArray<string>,
-        config: CliConfig,
-    ): <Name extends string, R, E, A>(
-        self: Command<Name, R, E, A>,
-    ) => Effect<
-        Array<string>,
-        QuitException | ValidationError,
-        FileSystem | Path | Terminal
-    >;
-    <Name extends string, R, E, A>(
-        self: Command<Name, R, E, A>,
-        prefix: ReadonlyArray<string>,
-        config: CliConfig,
-    ): Effect<
-        Array<string>,
-        QuitException | ValidationError,
-        FileSystem | Path | Terminal
-    >;
-} = Internal.wizard;
+export const wizard: <Name extends string, R, E, A>(
+    self: Command<Name, R, E, A>,
+    prefix: ReadonlyArray<string>,
+    config: CliConfig,
+) => Effect<
+    Array<string>,
+    QuitException | ValidationError,
+    FileSystem | Path | Terminal
+> = Internal.wizard;
 
 /**
  * @since 1.0.0
  * @category conversions
  */
-export const run: {
-    (
-        config: Omit<CliApp.ConstructorArgs<never>, "command">,
-    ): <Name extends string, R, E, A>(
-        self: Command<Name, R, E, A>,
-    ) => (
-        args: ReadonlyArray<string>,
-    ) => Effect<void, E | ValidationError, R | CliApp.Environment>;
-    <Name extends string, R, E, A>(
-        self: Command<Name, R, E, A>,
-        config: Omit<CliApp.ConstructorArgs<never>, "command">,
-    ): (
-        args: ReadonlyArray<string>,
-    ) => Effect<void, E | ValidationError, R | CliApp.Environment>;
-} = Internal.run;
+export const run: <Name extends string, R, E, A>(
+    self: Command<Name, R, E, A>,
+    config: Omit<CliApp.ConstructorArgs<never>, "command">,
+) => (
+    args: ReadonlyArray<string>,
+) => Effect<void, E | ValidationError, R | CliApp.Environment> = Internal.run;

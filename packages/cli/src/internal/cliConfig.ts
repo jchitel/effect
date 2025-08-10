@@ -1,5 +1,4 @@
 import * as Context from "effect/Context";
-import { dual } from "effect/Function";
 import * as Layer from "effect/Layer";
 import type * as CliConfig from "../CliConfig.js";
 
@@ -38,7 +37,7 @@ export const layer = (
 ): Layer.Layer<CliConfig.CliConfig> => Layer.succeed(Tag, make(config));
 
 /** @internal */
-export const normalizeCase = dual<
-    (text: string) => (self: CliConfig.CliConfig) => string,
-    (self: CliConfig.CliConfig, text: string) => string
->(2, (self, text) => (self.isCaseSensitive ? text : text.toLowerCase()));
+export const normalizeCase = (
+    self: CliConfig.CliConfig,
+    text: string,
+): string => (self.isCaseSensitive ? text : text.toLowerCase());

@@ -4,7 +4,7 @@ import * as Arr from "effect/Array";
 import * as Console from "effect/Console";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as HashMap from "effect/HashMap";
 import * as Logger from "effect/Logger";
 import * as Option from "effect/Option";
@@ -54,137 +54,114 @@ export const make = <A>(
 // =============================================================================
 
 /** @internal */
-export const run = dual<
-    <R, E, A>(
-        args: ReadonlyArray<string>,
-        execute: (a: A) => Effect.Effect<void, E, R>,
-    ) => (
-        self: CliApp.CliApp<A>,
-    ) => Effect.Effect<
-        void,
-        E | ValidationError.ValidationError,
-        R | CliApp.CliApp.Environment
-    >,
-    <R, E, A>(
-        self: CliApp.CliApp<A>,
-        args: ReadonlyArray<string>,
-        execute: (a: A) => Effect.Effect<void, E, R>,
-    ) => Effect.Effect<
-        void,
-        E | ValidationError.ValidationError,
-        R | CliApp.CliApp.Environment
-    >
->(
-    3,
-    <R, E, A>(
-        self: CliApp.CliApp<A>,
-        args: ReadonlyArray<string>,
-        execute: (a: A) => Effect.Effect<void, E, R>,
-    ): Effect.Effect<
-        void,
-        E | ValidationError.ValidationError,
-        R | CliApp.CliApp.Environment
-    > =>
-        Effect.contextWithEffect(
-            (context: Context.Context<CliApp.CliApp.Environment>) => {
-                // Attempt to parse the CliConfig from the environment, falling back to the
-                // default CliConfig if none was provided
-                const config = Option.getOrElse(
-                    Context.getOption(context, InternalCliConfig.Tag),
-                    () => InternalCliConfig.defaultConfig,
-                );
-                // Remove the executable from the command line arguments
-                const [executable, filteredArgs] = splitExecutable(self, args);
-                // Prefix the command name to the command line arguments
-                const prefixedArgs = Arr.appendAll(
-                    prefixCommand(self.command),
-                    filteredArgs,
-                );
-                // Handle the command
-                return Effect.matchEffect(
-                    InternalCommand.parse(self.command, prefixedArgs, config),
-                    {
-                        onFailure: (e) =>
-                            Effect.zipRight(printDocs(e.error), Effect.fail(e)),
-                        onSuccess: Unify.unify((directive) => {
-                            switch (directive._tag) {
-                                case "UserDefined": {
-                                    return Arr.matchLeft(directive.leftover, {
-                                        onEmpty: () =>
-                                            execute(directive.value).pipe(
-                                                Effect.catchSome((e) =>
-                                                    InternalValidationError.isValidationError(
-                                                        e,
-                                                    ) &&
-                                                    InternalValidationError.isHelpRequested(
-                                                        e,
-                                                    )
-                                                        ? Option.some(
-                                                              handleBuiltInOption(
-                                                                  self,
-                                                                  executable,
-                                                                  filteredArgs,
-                                                                  InternalBuiltInOptions.showHelp(
-                                                                      InternalCommand.getUsage(
-                                                                          e.command,
-                                                                      ),
-                                                                      InternalCommand.getHelp(
-                                                                          e.command,
-                                                                          config,
-                                                                      ),
+export const run = <R, E, A>(
+    self: CliApp.CliApp<A>,
+    args: ReadonlyArray<string>,
+    execute: (a: A) => Effect.Effect<void, E, R>,
+): Effect.Effect<
+    void,
+    E | ValidationError.ValidationError,
+    R | CliApp.CliApp.Environment
+> =>
+    Effect.contextWithEffect(
+        (context: Context.Context<CliApp.CliApp.Environment>) => {
+            // Attempt to parse the CliConfig from the environment, falling back to the
+            // default CliConfig if none was provided
+            const config = Option.getOrElse(
+                Context.getOption(context, InternalCliConfig.Tag),
+                () => InternalCliConfig.defaultConfig,
+            );
+            // Remove the executable from the command line arguments
+            const [executable, filteredArgs] = splitExecutable(self, args);
+            // Prefix the command name to the command line arguments
+            const prefixedArgs = Arr.appendAll(
+                prefixCommand(self.command),
+                filteredArgs,
+            );
+            // Handle the command
+            return Effect.matchEffect(
+                InternalCommand.parse(self.command, prefixedArgs, config),
+                {
+                    onFailure: (e) =>
+                        Effect.zipRight(printDocs(e.error), Effect.fail(e)),
+                    onSuccess: Unify.unify((directive) => {
+                        switch (directive._tag) {
+                            case "UserDefined": {
+                                return Arr.matchLeft(directive.leftover, {
+                                    onEmpty: () =>
+                                        execute(directive.value).pipe(
+                                            Effect.catchSome((e) =>
+                                                InternalValidationError.isValidationError(
+                                                    e,
+                                                ) &&
+                                                InternalValidationError.isHelpRequested(
+                                                    e,
+                                                )
+                                                    ? Option.some(
+                                                          handleBuiltInOption(
+                                                              self,
+                                                              executable,
+                                                              filteredArgs,
+                                                              InternalBuiltInOptions.showHelp(
+                                                                  InternalCommand.getUsage(
+                                                                      e.command,
                                                                   ),
-                                                                  execute,
-                                                                  config,
+                                                                  InternalCommand.getHelp(
+                                                                      e.command,
+                                                                      config,
+                                                                  ),
                                                               ),
-                                                          )
-                                                        : Option.none(),
+                                                              execute,
+                                                              config,
+                                                          ),
+                                                      )
+                                                    : Option.none(),
+                                            ),
+                                        ),
+                                    onNonEmpty: (head) => {
+                                        const error = InternalHelpDoc.p(
+                                            `Received unknown argument: '${head}'`,
+                                        );
+                                        return Effect.zipRight(
+                                            printDocs(error),
+                                            Effect.fail(
+                                                InternalValidationError.invalidValue(
+                                                    error,
                                                 ),
                                             ),
-                                        onNonEmpty: (head) => {
-                                            const error = InternalHelpDoc.p(
-                                                `Received unknown argument: '${head}'`,
-                                            );
-                                            return Effect.zipRight(
-                                                printDocs(error),
-                                                Effect.fail(
-                                                    InternalValidationError.invalidValue(
-                                                        error,
-                                                    ),
-                                                ),
-                                            );
-                                        },
-                                    });
-                                }
-                                case "BuiltIn": {
-                                    return handleBuiltInOption(
-                                        self,
-                                        executable,
-                                        filteredArgs,
-                                        directive.option,
-                                        execute,
-                                        config,
-                                    ).pipe(
-                                        Effect.catchSome((e) =>
-                                            InternalValidationError.isValidationError(
-                                                e,
-                                            )
-                                                ? Option.some(
-                                                      Effect.zipRight(
-                                                          printDocs(e.error),
-                                                          Effect.fail(e),
-                                                      ),
-                                                  )
-                                                : Option.none(),
-                                        ),
-                                    );
-                                }
+                                        );
+                                    },
+                                });
                             }
-                        }),
-                    },
-                );
-            },
-        ),
-);
+                            case "BuiltIn": {
+                                return handleBuiltInOption(
+                                    self,
+                                    executable,
+                                    filteredArgs,
+                                    directive.option,
+                                    execute,
+                                    config,
+                                ).pipe(
+                                    Effect.catchSome((e) =>
+                                        InternalValidationError.isValidationError(
+                                            e,
+                                        )
+                                            ? Option.some(
+                                                  Effect.zipRight(
+                                                      printDocs(e.error),
+                                                      Effect.fail(e),
+                                                  ),
+                                              )
+                                            : Option.none(),
+                                    ),
+                                );
+                            }
+                        }
+                    }),
+                },
+            );
+        },
+    );
 
 // =============================================================================
 // Internals
@@ -271,10 +248,10 @@ const handleBuiltInOption = <R, E, A>(
             );
             const helpDoc = pipe(
                 banner,
-                InternalHelpDoc.sequence(header),
-                InternalHelpDoc.sequence(usage),
-                InternalHelpDoc.sequence(builtIn.helpDoc),
-                InternalHelpDoc.sequence(self.footer),
+                (x) => InternalHelpDoc.sequence(x, header),
+                (x) => InternalHelpDoc.sequence(x, usage),
+                (x) => InternalHelpDoc.sequence(x, builtIn.helpDoc),
+                (x) => InternalHelpDoc.sequence(x, self.footer),
             );
             return Console.log(InternalHelpDoc.toAnsiText(helpDoc));
         }

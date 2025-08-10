@@ -48,9 +48,7 @@
         "coverage": "vitest --coverage"
     },
     "peerDependencies": {
-        "@effect/cluster": "workspace:^",
         "@effect/platform": "workspace:^",
-        "@effect/rpc": "workspace:^",
         "@effect/sql": "workspace:^",
         "effect": "workspace:^"
     },
@@ -59,9 +57,7 @@
         "multipasta": "^0.2.7"
     },
     "devDependencies": {
-        "@effect/cluster": "workspace:^",
         "@effect/platform": "workspace:^",
-        "@effect/rpc": "workspace:^",
         "@effect/sql": "workspace:^",
         "@types/bun": "^1.2.2",
         "effect": "workspace:^"

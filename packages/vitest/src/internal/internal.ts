@@ -209,15 +209,13 @@ export const prop: Vitest.Vitest.Methods["prop"] = (
         const arbs = arbitraries.map((arbitrary) =>
             Schema.isSchema(arbitrary) ? Arbitrary.make(arbitrary) : arbitrary,
         );
-        return V.it(
-            name,
-            testOptions(timeout),
+        return V.it(name, testOptions(timeout), (ctx) =>
             // @ts-ignore
-            (ctx) =>
-                fc.assert(
-                    fc.property(...arbs, (...as) => self(as, ctx)),
-                    isObject(timeout) ? timeout?.fastCheck : {},
-                ),
+            fc.assert(
+                // @ts-ignore
+                fc.property(...arbs, (...as) => self(as, ctx)),
+                isObject(timeout) ? timeout?.fastCheck : {},
+            ),
         );
     }
 
@@ -233,15 +231,13 @@ export const prop: Vitest.Vitest.Methods["prop"] = (
         ),
     );
 
-    return V.it(
-        name,
-        testOptions(timeout),
+    return V.it(name, testOptions(timeout), (ctx) =>
         // @ts-ignore
-        (ctx) =>
-            fc.assert(
-                fc.property(arbs, (as) => self(as, ctx)),
-                isObject(timeout) ? timeout?.fastCheck : {},
-            ),
+        fc.assert(
+            // @ts-ignore
+            fc.property(arbs, (as) => self(as, ctx)),
+            isObject(timeout) ? timeout?.fastCheck : {},
+        ),
     );
 };
 

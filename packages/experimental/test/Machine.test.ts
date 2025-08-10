@@ -247,8 +247,8 @@ describe("Machine", () => {
             const booted = yield* _(Machine.boot(delayedCounter, 2));
             assert.strictEqual(yield* _(booted.get), 2);
             assert.deepStrictEqual(
-                // @ts-expect-error
                 yield* _(
+                    // @ts-expect-error
                     booted.send(new IncrementBy({ number: 2 })),
                     Effect.exit,
                 ),

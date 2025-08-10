@@ -18,7 +18,7 @@ const runEffect = <E, A>(
 describe("Args", () => {
     it("validates an valid argument with a default", () =>
         Effect.gen(function* (_) {
-            const args = Args.integer().pipe(Args.withDefault(0));
+            const args = Args.integer().pipe((x) => Args.withDefault(x, 0));
             const result = yield* _(
                 Args.validate(args, Array.empty(), CliConfig.defaultConfig),
             );
@@ -41,7 +41,7 @@ describe("Args", () => {
 
     it("does not validate an invalid argument even when there is a default", () =>
         Effect.gen(function* (_) {
-            const args = Args.integer().pipe(Args.withDefault(0));
+            const args = Args.integer().pipe((x) => Args.withDefault(x, 0));
             const result = yield* _(
                 Effect.flip(
                     Args.validate(
@@ -137,7 +137,9 @@ describe("Args", () => {
 
     it("validates an valid argument with a Schema", () =>
         Effect.gen(function* (_) {
-            const args = Args.integer().pipe(Args.withSchema(Schema.Positive));
+            const args = Args.integer().pipe((x) =>
+                Args.withSchema(x, Schema.Positive),
+            );
             const result = yield* _(
                 Args.validate(args, ["123"], CliConfig.defaultConfig),
             );
@@ -146,7 +148,9 @@ describe("Args", () => {
 
     it("does not validate an invalid argument with a Schema", () =>
         Effect.gen(function* (_) {
-            const args = Args.integer().pipe(Args.withSchema(Schema.Positive));
+            const args = Args.integer().pipe((x) =>
+                Args.withSchema(x, Schema.Positive),
+            );
             const result = yield* _(
                 Effect.flip(
                     Args.validate(

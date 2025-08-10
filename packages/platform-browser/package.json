@@ -53,7 +53,6 @@
     },
     "devDependencies": {
         "@effect/platform": "workspace:^",
-        "@effect/rpc": "workspace:^",
         "effect": "workspace:^",
         "happy-dom": "^17.4.7",
         "mock-xmlhttprequest": "^8.4.1"

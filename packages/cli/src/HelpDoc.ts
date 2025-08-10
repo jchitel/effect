@@ -189,33 +189,24 @@ export const getSpan: (self: HelpDoc) => Span = InternalHelpDoc.getSpan;
  * @since 1.0.0
  * @category combinators
  */
-export const sequence: {
-    (that: HelpDoc): (self: HelpDoc) => HelpDoc;
-    (self: HelpDoc, that: HelpDoc): HelpDoc;
-} = InternalHelpDoc.sequence;
+export const sequence: (self: HelpDoc, that: HelpDoc) => HelpDoc =
+    InternalHelpDoc.sequence;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const orElse: {
-    (that: HelpDoc): (self: HelpDoc) => HelpDoc;
-    (self: HelpDoc, that: HelpDoc): HelpDoc;
-} = InternalHelpDoc.orElse;
+export const orElse: (self: HelpDoc, that: HelpDoc) => HelpDoc =
+    InternalHelpDoc.orElse;
 
 /**
  * @since 1.0.0
  * @category mapping
  */
-export const mapDescriptionList: {
-    (
-        f: (span: Span, helpDoc: HelpDoc) => [Span, HelpDoc],
-    ): (self: HelpDoc) => HelpDoc;
-    (
-        self: HelpDoc,
-        f: (span: Span, helpDoc: HelpDoc) => [Span, HelpDoc],
-    ): HelpDoc;
-} = InternalHelpDoc.mapDescriptionList;
+export const mapDescriptionList: (
+    self: HelpDoc,
+    f: (span: Span, helpDoc: HelpDoc) => [Span, HelpDoc],
+) => HelpDoc = InternalHelpDoc.mapDescriptionList;
 
 /**
  * @since 1.0.0

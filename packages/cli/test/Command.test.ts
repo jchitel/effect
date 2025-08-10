@@ -5,21 +5,22 @@ import { Config, ConfigProvider, Context, Effect, Layer } from "effect";
 
 const git = Command.make("git", {
     verbose: Options.boolean("verbose").pipe(
-        Options.withAlias("v"),
-        Options.withFallbackConfig(Config.boolean("VERBOSE")),
+        (x) => Options.withAlias(x, "v"),
+        (x) => Options.withFallbackConfig(x, Config.boolean("VERBOSE")),
     ),
 }).pipe(
-    Command.withDescription("the stupid content tracker"),
-    Command.provideEffectDiscard(() =>
-        Effect.flatMap(Messages, (_) => _.log("shared")),
-    ),
+    (x) => Command.withDescription(x, "the stupid content tracker"),
+    (x) =>
+        Command.provideEffectDiscard(x, () =>
+            Effect.flatMap(Messages, (_) => _.log("shared")),
+        ),
 );
 
 const clone = Command.make(
     "clone",
     {
-        repository: Args.text({ name: "repository" }).pipe(
-            Args.withFallbackConfig(Config.string("REPOSITORY")),
+        repository: Args.text({ name: "repository" }).pipe((x) =>
+            Args.withFallbackConfig(x, Config.string("REPOSITORY")),
         ),
     },
     ({ repository }) =>
@@ -32,37 +33,42 @@ const clone = Command.make(
                 yield* _(log("Cloning"));
             }
         }),
-).pipe(Command.withDescription("Clone a repository into a new directory"));
+).pipe((x) =>
+    Command.withDescription(x, "Clone a repository into a new directory"),
+);
 
 const AddService = Context.GenericTag<"AddService">("AddService");
 
 const add = Command.make("add", {
     pathspec: Args.text({ name: "pathspec" }),
 }).pipe(
-    Command.withHandler(({ pathspec }) =>
-        Effect.gen(function* (_) {
-            yield* _(AddService);
-            const { log } = yield* _(Messages);
-            const { verbose } = yield* _(git);
-            if (verbose) {
-                yield* _(log(`Adding ${pathspec}`));
-            } else {
-                yield* _(log(`Adding`));
-            }
-        }),
-    ),
-    Command.withDescription("Add file contents to the index"),
-    Command.provideEffect(AddService, (_) =>
-        Effect.succeed("AddService" as const),
-    ),
+    (x) =>
+        Command.withHandler(x, ({ pathspec }) =>
+            Effect.gen(function* (_) {
+                yield* _(AddService);
+                const { log } = yield* _(Messages);
+                const { verbose } = yield* _(git);
+                if (verbose) {
+                    yield* _(log(`Adding ${pathspec}`));
+                } else {
+                    yield* _(log(`Adding`));
+                }
+            }),
+        ),
+    (x) => Command.withDescription(x, "Add file contents to the index"),
+    (x) =>
+        Command.provideEffect(x, AddService, (_) =>
+            Effect.succeed("AddService" as const),
+        ),
 );
 
 const run = git.pipe(
-    Command.withSubcommands([clone, add]),
-    Command.run({
-        name: "git",
-        version: "1.0.0",
-    }),
+    (x) => Command.withSubcommands(x, [clone, add]),
+    (x) =>
+        Command.run(x, {
+            name: "git",
+            version: "1.0.0",
+        }),
 );
 
 describe("Command", () => {

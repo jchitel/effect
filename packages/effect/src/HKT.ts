@@ -1,23 +1,11 @@
-/**
- * @since 2.0.0
- */
 import type * as Types from "./Types.js";
 
-/**
- * @since 2.0.0
- */
-export declare const URI: unique symbol;
+declare const URI: unique symbol;
 
-/**
- * @since 2.0.0
- */
 export interface TypeClass<F extends TypeLambda> {
     readonly [URI]?: F;
 }
 
-/**
- * @since 2.0.0
- */
 export interface TypeLambda {
     readonly In: unknown;
     readonly Out2: unknown;
@@ -25,9 +13,6 @@ export interface TypeLambda {
     readonly Target: unknown;
 }
 
-/**
- * @since 2.0.0
- */
 export type Kind<F extends TypeLambda, In, Out2, Out1, Target> = F extends {
     readonly type: unknown;
 }

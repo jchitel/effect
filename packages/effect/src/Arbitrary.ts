@@ -1,7 +1,3 @@
-/**
- * @since 3.10.0
- */
-
 import * as Arr from "./Array.js";
 import * as FastCheck from "./FastCheck.js";
 import { globalValue } from "./GlobalValue.js";
@@ -16,7 +12,6 @@ import type * as Types from "./Types.js";
 
 /**
  * @category model
- * @since 3.10.0
  */
 export interface LazyArbitrary<A> {
     (fc: typeof FastCheck): FastCheck.Arbitrary<A>;
@@ -24,7 +19,6 @@ export interface LazyArbitrary<A> {
 
 /**
  * @category annotations
- * @since 3.10.0
  */
 export interface ArbitraryGenerationContext {
     readonly maxDepth: number;
@@ -39,7 +33,6 @@ export interface ArbitraryGenerationContext {
 
 /**
  * @category annotations
- * @since 3.10.0
  */
 export type ArbitraryAnnotation<
     A,
@@ -59,7 +52,6 @@ export type ArbitraryAnnotation<
  * Returns a LazyArbitrary for the `A` type of the provided schema.
  *
  * @category arbitrary
- * @since 3.10.0
  */
 export const makeLazy = <A, I, R>(
     schema: Schema.Schema<A, I, R>,
@@ -72,7 +64,6 @@ export const makeLazy = <A, I, R>(
  * Returns a fast-check Arbitrary for the `A` type of the provided schema.
  *
  * @category arbitrary
- * @since 3.10.0
  */
 export const make = <A, I, R>(
     schema: Schema.Schema<A, I, R>,

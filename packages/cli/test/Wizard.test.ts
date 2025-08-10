@@ -29,8 +29,8 @@ describe("Wizard", () => {
         Effect.gen(function* (_) {
             const cli = Command.make("foo", {
                 message: Options.text("message"),
-            }).pipe(
-                Command.run({
+            }).pipe((x) =>
+                Command.run(x, {
                     name: "Test",
                     version: "1.0.0",
                 }),

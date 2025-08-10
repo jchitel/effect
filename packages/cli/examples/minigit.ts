@@ -21,8 +21,8 @@ const minigit = Command.make("minigit", { configs }, ({ configs }) =>
 // minigit add   [-v | --verbose] [--] [<pathspec>...]
 const pathspec = Args.text({ name: "pathspec" }).pipe(Args.repeated);
 const verbose = Options.boolean("verbose").pipe(
-    Options.withAlias("v"),
-    Options.withFallbackConfig(Config.boolean("VERBOSE")),
+    (x) => Options.withAlias(x, "v"),
+    (x) => Options.withFallbackConfig(x, Config.boolean("VERBOSE")),
 );
 const minigitAdd = Command.make(
     "add",
@@ -42,7 +42,7 @@ const minigitAdd = Command.make(
 const repository = Args.text({ name: "repository" });
 const directory = Args.directory().pipe(Args.optional);
 const depth = Options.integer("depth").pipe(
-    Options.withFallbackConfig(Config.integer("DEPTH")),
+    (x) => Options.withFallbackConfig(x, Config.integer("DEPTH")),
     Options.optional,
 );
 const minigitClone = Command.make(
@@ -75,8 +75,8 @@ const minigitClone = Command.make(
         }),
 );
 
-const command = minigit.pipe(
-    Command.withSubcommands([minigitAdd, minigitClone]),
+const command = minigit.pipe((x) =>
+    Command.withSubcommands(x, [minigitAdd, minigitClone]),
 );
 
 const cli = Command.run(command, {

@@ -62,16 +62,9 @@ export const make: <A>(config: CliApp.ConstructorArgs<A>) => CliApp<A> =
  * @since 1.0.0
  * @category execution
  */
-export const run: {
-    <R, E, A>(
-        args: ReadonlyArray<string>,
-        execute: (a: A) => Effect<void, E, R>,
-    ): (
-        self: CliApp<A>,
-    ) => Effect<void | E, CliApp.Environment | R, ValidationError>;
-    <R, E, A>(
-        self: CliApp<A>,
-        args: ReadonlyArray<string>,
-        execute: (a: A) => Effect<void, E, R>,
-    ): Effect<void | E, CliApp.Environment | R, ValidationError>;
-} = InternalCliApp.run;
+export const run: <R, E, A>(
+    self: CliApp<A>,
+    args: ReadonlyArray<string>,
+    execute: (a: A) => Effect<void, E, R>,
+) => Effect<void, E | ValidationError, CliApp.Environment | R> =
+    InternalCliApp.run;

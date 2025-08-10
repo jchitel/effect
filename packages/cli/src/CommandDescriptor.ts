@@ -172,50 +172,31 @@ export const getUsage: <A>(self: Command<A>) => Usage = Internal.getUsage;
  * @since 1.0.0
  * @category combinators
  */
-export const map: {
-    <A, B>(f: (a: A) => B): (self: Command<A>) => Command<B>;
-    <A, B>(self: Command<A>, f: (a: A) => B): Command<B>;
-} = Internal.map;
+export const map: <A, B>(self: Command<A>, f: (a: A) => B) => Command<B> =
+    Internal.map;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const mapEffect: {
-    <A, B>(
-        f: (a: A) => Effect<B, ValidationError, FileSystem | Path | Terminal>,
-    ): (self: Command<A>) => Command<B>;
-    <A, B>(
-        self: Command<A>,
-        f: (a: A) => Effect<B, ValidationError, FileSystem | Path | Terminal>,
-    ): Command<B>;
-} = Internal.mapEffect;
+export const mapEffect: <A, B>(
+    self: Command<A>,
+    f: (a: A) => Effect<B, ValidationError, FileSystem | Path | Terminal>,
+) => Command<B> = Internal.mapEffect;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const parse: {
-    (
-        args: ReadonlyArray<string>,
-        config: CliConfig,
-    ): <A>(
-        self: Command<A>,
-    ) => Effect<
-        CommandDirective<A>,
-        ValidationError,
-        FileSystem | Path | Terminal
-    >;
-    <A>(
-        self: Command<A>,
-        args: ReadonlyArray<string>,
-        config: CliConfig,
-    ): Effect<
-        CommandDirective<A>,
-        ValidationError,
-        FileSystem | Path | Terminal
-    >;
-} = Internal.parse;
+export const parse: <A>(
+    self: Command<A>,
+    args: ReadonlyArray<string>,
+    config: CliConfig,
+) => Effect<
+    CommandDirective<A>,
+    ValidationError,
+    FileSystem | Path | Terminal
+> = Internal.parse;
 
 /**
  * @since 1.0.0
@@ -244,74 +225,43 @@ export const make: <Name extends string, OptionsType = void, ArgsType = void>(
  * @since 1.0.0
  * @category combinators
  */
-export const withDescription: {
-    (description: string | HelpDoc): <A>(self: Command<A>) => Command<A>;
-    <A>(self: Command<A>, description: string | HelpDoc): Command<A>;
-} = Internal.withDescription;
+export const withDescription: <A>(
+    self: Command<A>,
+    description: string | HelpDoc,
+) => Command<A> = Internal.withDescription;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withSubcommands: {
-    <
-        const Subcommands extends readonly [
-            readonly [id: unknown, command: Command<any>],
-            ...Array<readonly [id: unknown, command: Command<any>]>,
-        ],
-    >(
-        subcommands: [...Subcommands],
-    ): <A>(
-        self: Command<A>,
-    ) => Command<
-        Command.ComputeParsedType<
-            A &
-                Readonly<{
-                    subcommand: Option<Command.Subcommands<Subcommands>>;
-                }>
-        >
-    >;
-    <
-        A,
-        const Subcommands extends readonly [
-            readonly [id: unknown, command: Command<any>],
-            ...Array<readonly [id: unknown, command: Command<any>]>,
-        ],
-    >(
-        self: Command<A>,
-        subcommands: [...Subcommands],
-    ): Command<
-        Command.ComputeParsedType<
-            A &
-                Readonly<{
-                    subcommand: Option<Command.Subcommands<Subcommands>>;
-                }>
-        >
-    >;
-} = Internal.withSubcommands;
+export const withSubcommands: <
+    A,
+    const Subcommands extends readonly [
+        readonly [id: unknown, command: Command<any>],
+        ...Array<readonly [id: unknown, command: Command<any>]>,
+    ],
+>(
+    self: Command<A>,
+    subcommands: [...Subcommands],
+) => Command<
+    Command.ComputeParsedType<
+        A &
+            Readonly<{
+                subcommand: Option<Command.Subcommands<Subcommands>>;
+            }>
+    >
+> = Internal.withSubcommands;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const wizard: {
-    (
-        prefix: ReadonlyArray<string>,
-        config: CliConfig,
-    ): <A>(
-        self: Command<A>,
-    ) => Effect<
-        Array<string>,
-        ValidationError | QuitException,
-        FileSystem | Path | Terminal
-    >;
-    <A>(
-        self: Command<A>,
-        prefix: ReadonlyArray<string>,
-        config: CliConfig,
-    ): Effect<
-        Array<string>,
-        ValidationError | QuitException,
-        FileSystem | Path | Terminal
-    >;
-} = Internal.wizard;
+export const wizard: <A>(
+    self: Command<A>,
+    prefix: ReadonlyArray<string>,
+    config: CliConfig,
+) => Effect<
+    Array<string>,
+    ValidationError | QuitException,
+    FileSystem | Path | Terminal
+> = Internal.wizard;

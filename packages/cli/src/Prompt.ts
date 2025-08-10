@@ -650,15 +650,10 @@ export const file: (options?: Prompt.FileOptions) => Prompt<string> =
  * @since 1.0.0
  * @category combinators
  */
-export const flatMap: {
-    <Output, Output2>(
-        f: (output: Output) => Prompt<Output2>,
-    ): (self: Prompt<Output>) => Prompt<Output2>;
-    <Output, Output2>(
-        self: Prompt<Output>,
-        f: (output: Output) => Prompt<Output2>,
-    ): Prompt<Output2>;
-} = InternalPrompt.flatMap;
+export const flatMap: <Output, Output2>(
+    self: Prompt<Output>,
+    f: (output: Output) => Prompt<Output2>,
+) => Prompt<Output2> = InternalPrompt.flatMap;
 
 /**
  * @since 1.0.0
@@ -692,15 +687,10 @@ export const list: (options: Prompt.ListOptions) => Prompt<Array<string>> =
  * @since 1.0.0
  * @category combinators
  */
-export const map: {
-    <Output, Output2>(
-        f: (output: Output) => Output2,
-    ): (self: Prompt<Output>) => Prompt<Output2>;
-    <Output, Output2>(
-        self: Prompt<Output>,
-        f: (output: Output) => Output2,
-    ): Prompt<Output2>;
-} = InternalPrompt.map;
+export const map: <Output, Output2>(
+    self: Prompt<Output>,
+    f: (output: Output) => Output2,
+) => Prompt<Output2> = InternalPrompt.map;
 
 /**
  * @since 1.0.0

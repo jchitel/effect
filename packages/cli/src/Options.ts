@@ -382,18 +382,14 @@ export const text: (name: string) => Options<string> = InternalOptions.text;
  * @since 1.0.0
  * @category combinators
  */
-export const atMost: {
-    (times: number): <A>(self: Options<A>) => Options<Array<A>>;
-    <A>(self: Options<A>, times: number): Options<Array<A>>;
-} = InternalOptions.atMost;
+export const atMost: <A>(self: Options<A>, times: number) => Options<Array<A>> =
+    InternalOptions.atMost;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
 export const atLeast: {
-    (times: 0): <A>(self: Options<A>) => Options<Array<A>>;
-    (times: number): <A>(self: Options<A>) => Options<NonEmptyArray<A>>;
     <A>(self: Options<A>, times: 0): Options<Array<A>>;
     <A>(self: Options<A>, times: number): Options<NonEmptyArray<A>>;
 } = InternalOptions.atLeast;
@@ -403,11 +399,6 @@ export const atLeast: {
  * @category combinators
  */
 export const between: {
-    (min: 0, max: number): <A>(self: Options<A>) => Options<Array<A>>;
-    (
-        min: number,
-        max: number,
-    ): <A>(self: Options<A>) => Options<NonEmptyArray<A>>;
     <A>(self: Options<A>, min: 0, max: number): Options<Array<A>>;
     <A>(self: Options<A>, min: number, max: number): Options<NonEmptyArray<A>>;
 } = InternalOptions.between;
@@ -416,17 +407,11 @@ export const between: {
  * @since 1.0.0
  * @category combinators
  */
-export const filterMap: {
-    <A, B>(
-        f: (a: A) => Option<B>,
-        message: string,
-    ): (self: Options<A>) => Options<B>;
-    <A, B>(
-        self: Options<A>,
-        f: (a: A) => Option<B>,
-        message: string,
-    ): Options<B>;
-} = InternalOptions.filterMap;
+export const filterMap: <A, B>(
+    self: Options<A>,
+    f: (a: A) => Option<B>,
+    message: string,
+) => Options<B> = InternalOptions.filterMap;
 
 /**
  * Returns `true` if the specified `Options` is a boolean flag, `false`
@@ -441,40 +426,27 @@ export const isBool: <A>(self: Options<A>) => boolean = InternalOptions.isBool;
  * @since 1.0.0
  * @category combinators
  */
-export const map: {
-    <A, B>(f: (a: A) => B): (self: Options<A>) => Options<B>;
-    <A, B>(self: Options<A>, f: (a: A) => B): Options<B>;
-} = InternalOptions.map;
+export const map: <A, B>(self: Options<A>, f: (a: A) => B) => Options<B> =
+    InternalOptions.map;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const mapEffect: {
-    <A, B>(
-        f: (a: A) => Effect<B, ValidationError, FileSystem | Path | Terminal>,
-    ): (self: Options<A>) => Options<B>;
-    <A, B>(
-        self: Options<A>,
-        f: (a: A) => Effect<B, ValidationError, FileSystem | Path | Terminal>,
-    ): Options<B>;
-} = InternalOptions.mapEffect;
+export const mapEffect: <A, B>(
+    self: Options<A>,
+    f: (a: A) => Effect<B, ValidationError, FileSystem | Path | Terminal>,
+) => Options<B> = InternalOptions.mapEffect;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const mapTryCatch: {
-    <A, B>(
-        f: (a: A) => B,
-        onError: (e: unknown) => HelpDoc,
-    ): (self: Options<A>) => Options<B>;
-    <A, B>(
-        self: Options<A>,
-        f: (a: A) => B,
-        onError: (e: unknown) => HelpDoc,
-    ): Options<B>;
-} = InternalOptions.mapTryCatch;
+export const mapTryCatch: <A, B>(
+    self: Options<A>,
+    f: (a: A) => B,
+    onError: (e: unknown) => HelpDoc,
+) => Options<B> = InternalOptions.mapTryCatch;
 
 /**
  * @since 1.0.0
@@ -487,35 +459,29 @@ export const optional: <A>(self: Options<A>) => Options<Option<A>> =
  * @since 1.0.0
  * @category combinators
  */
-export const orElse: {
-    <A>(that: Options<A>): <B>(self: Options<B>) => Options<A | B>;
-    <A, B>(self: Options<A>, that: Options<B>): Options<A | B>;
-} = InternalOptions.orElse;
+export const orElse: <A, B>(
+    self: Options<A>,
+    that: Options<B>,
+) => Options<A | B> = InternalOptions.orElse;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const orElseEither: {
-    <A>(that: Options<A>): <B>(self: Options<B>) => Options<Either<A, B>>;
-    <A, B>(self: Options<A>, that: Options<B>): Options<Either<A, B>>;
-} = InternalOptions.orElseEither;
+export const orElseEither: <A, B>(
+    self: Options<A>,
+    that: Options<B>,
+) => Options<Either<B, A>> = InternalOptions.orElseEither;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const parse: {
-    (
-        args: HashMap<string, ReadonlyArray<string>>,
-        config: CliConfig,
-    ): <A>(self: Options<A>) => Effect<A, ValidationError, FileSystem>;
-    <A>(
-        self: Options<A>,
-        args: HashMap<string, ReadonlyArray<string>>,
-        config: CliConfig,
-    ): Effect<A, ValidationError, FileSystem>;
-} = InternalOptions.parse;
+export const parse: <A>(
+    self: Options<A>,
+    args: HashMap<string, ReadonlyArray<string>>,
+    config: CliConfig,
+) => Effect<A, ValidationError, FileSystem> = InternalOptions.parse;
 
 /**
  * Indicates that the specified command-line option can be repeated `0` or more
@@ -544,116 +510,86 @@ export const repeated: <A>(self: Options<A>) => Options<Array<A>> =
  * @since 1.0.0
  * @category combinators
  */
-export const processCommandLine: {
-    (
-        args: ReadonlyArray<string>,
-        config: CliConfig,
-    ): <A>(
-        self: Options<A>,
-    ) => Effect<
-        [Option<ValidationError>, Array<string>, A],
-        ValidationError,
-        FileSystem | Path | Terminal
-    >;
-    <A>(
-        self: Options<A>,
-        args: ReadonlyArray<string>,
-        config: CliConfig,
-    ): Effect<
-        [Option<ValidationError>, Array<string>, A],
-        ValidationError,
-        FileSystem | Path | Terminal
-    >;
-} = InternalOptions.processCommandLine;
+export const processCommandLine: <A>(
+    self: Options<A>,
+    args: ReadonlyArray<string>,
+    config: CliConfig,
+) => Effect<
+    [Option<ValidationError>, Array<string>, A],
+    ValidationError,
+    FileSystem | Path | Terminal
+> = InternalOptions.processCommandLine;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withAlias: {
-    (alias: string): <A>(self: Options<A>) => Options<A>;
-    <A>(self: Options<A>, alias: string): Options<A>;
-} = InternalOptions.withAlias;
+export const withAlias: <A>(self: Options<A>, alias: string) => Options<A> =
+    InternalOptions.withAlias;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withDefault: {
-    <const B>(fallback: B): <A>(self: Options<A>) => Options<B | A>;
-    <A, const B>(self: Options<A>, fallback: B): Options<A | B>;
-} = InternalOptions.withDefault;
+export const withDefault: <A, const B>(
+    self: Options<A>,
+    fallback: B,
+) => Options<A | B> = InternalOptions.withDefault;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withFallbackConfig: {
-    <B>(config: Config<B>): <A>(self: Options<A>) => Options<B | A>;
-    <A, B>(self: Options<A>, config: Config<B>): Options<A | B>;
-} = InternalOptions.withFallbackConfig;
+export const withFallbackConfig: <A, B>(
+    self: Options<A>,
+    config: Config<B>,
+) => Options<A | B> = InternalOptions.withFallbackConfig;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withFallbackPrompt: {
-    <B>(prompt: Prompt<B>): <A>(self: Options<A>) => Options<B | A>;
-    <A, B>(self: Options<A>, prompt: Prompt<B>): Options<A | B>;
-} = InternalOptions.withFallbackPrompt;
+export const withFallbackPrompt: <A, B>(
+    self: Options<A>,
+    prompt: Prompt<B>,
+) => Options<A | B> = InternalOptions.withFallbackPrompt;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withDescription: {
-    (description: string): <A>(self: Options<A>) => Options<A>;
-    <A>(self: Options<A>, description: string): Options<A>;
-} = InternalOptions.withDescription;
+export const withDescription: <A>(
+    self: Options<A>,
+    description: string,
+) => Options<A> = InternalOptions.withDescription;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withPseudoName: {
-    (pseudoName: string): <A>(self: Options<A>) => Options<A>;
-    <A>(self: Options<A>, pseudoName: string): Options<A>;
-} = InternalOptions.withPseudoName;
+export const withPseudoName: <A>(
+    self: Options<A>,
+    pseudoName: string,
+) => Options<A> = InternalOptions.withPseudoName;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const withSchema: {
-    <A, I extends A, B>(
-        schema: Schema<B, I, FileSystem | Path | Terminal>,
-    ): (self: Options<A>) => Options<B>;
-    <A, I extends A, B>(
-        self: Options<A>,
-        schema: Schema<B, I, FileSystem | Path | Terminal>,
-    ): Options<B>;
-} = InternalOptions.withSchema;
+export const withSchema: <A, I extends A, B>(
+    self: Options<A>,
+    schema: Schema<B, I, FileSystem | Path | Terminal>,
+) => Options<B> = InternalOptions.withSchema;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const wizard: {
-    (
-        config: CliConfig,
-    ): <A>(
-        self: Options<A>,
-    ) => Effect<
-        Array<string>,
-        QuitException | ValidationError,
-        FileSystem | Path | Terminal
-    >;
-    <A>(
-        self: Options<A>,
-        config: CliConfig,
-    ): Effect<
-        Array<string>,
-        QuitException | ValidationError,
-        FileSystem | Path | Terminal
-    >;
-} = InternalOptions.wizard;
+export const wizard: <A>(
+    self: Options<A>,
+    config: CliConfig,
+) => Effect<
+    Array<string>,
+    QuitException | ValidationError,
+    FileSystem | Path | Terminal
+> = InternalOptions.wizard;

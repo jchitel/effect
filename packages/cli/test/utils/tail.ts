@@ -2,8 +2,8 @@ import * as Args from "@effect/cli/Args";
 import * as Descriptor from "@effect/cli/CommandDescriptor";
 import * as Options from "@effect/cli/Options";
 
-export const options: Options.Options<number> = Options.integer("n").pipe(
-    Options.withDefault(10),
+export const options: Options.Options<number> = Options.integer("n").pipe((x) =>
+    Options.withDefault(x, 10),
 );
 
 export const args: Args.Args<string> = Args.file({ name: "file" });

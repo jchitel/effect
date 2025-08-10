@@ -1,37 +1,12 @@
-/**
- * @since 2.0.0
- */
-
 import { identity } from "./Function.js";
 
-/**
- * @since 2.0.0
- */
 export declare const unifySymbol: unique symbol;
-
-/**
- * @since 2.0.0
- */
 export type unifySymbol = typeof unifySymbol;
 
-/**
- * @since 2.0.0
- */
 export declare const typeSymbol: unique symbol;
-
-/**
- * @since 2.0.0
- */
 export type typeSymbol = typeof typeSymbol;
 
-/**
- * @since 2.0.0
- */
 export declare const ignoreSymbol: unique symbol;
-
-/**
- * @since 2.0.0
- */
 export type ignoreSymbol = typeof ignoreSymbol;
 
 type MaybeReturn<F> = F extends () => infer R ? R : NonNullable<F>;
@@ -67,17 +42,11 @@ type FilterOut<A> = A extends any
         : A
     : never;
 
-/**
- * @since 2.0.0
- */
 export type Unify<A> =
     Values<ExtractTypes<FilterIn<A> & { [typeSymbol]: A }>> extends infer Z
         ? Z | Exclude<A, Z> | FilterOut<A>
         : never;
 
-/**
- * @since 2.0.0
- */
 export const unify: {
     <
         Args extends Array<any>,

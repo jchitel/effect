@@ -169,17 +169,11 @@ export const text: Primitive<string> = InternalPrimitive.text;
  * @since 1.0.0
  * @category combinators
  */
-export const validate: {
-    (
-        value: Option<string>,
-        config: CliConfig,
-    ): <A>(self: Primitive<A>) => Effect<A, string, FileSystem>;
-    <A>(
-        self: Primitive<A>,
-        value: Option<string>,
-        config: CliConfig,
-    ): Effect<A, string, FileSystem>;
-} = InternalPrimitive.validate;
+export const validate: <A>(
+    self: Primitive<A>,
+    value: Option<string>,
+    config: CliConfig,
+) => Effect<A, string, FileSystem> = InternalPrimitive.validate;
 
 /**
  * Runs a wizard that will prompt the user for input matching the specified
@@ -188,7 +182,5 @@ export const validate: {
  * @since 1.0.0
  * @category combinators
  */
-export const wizard: {
-    (help: HelpDoc): <A>(self: Primitive<A>) => Prompt<A>;
-    <A>(self: Primitive<A>, help: HelpDoc): Prompt<A>;
-} = InternalPrimitive.wizard;
+export const wizard: <A>(self: Primitive<A>, help: HelpDoc) => Prompt<A> =
+    InternalPrimitive.wizard;

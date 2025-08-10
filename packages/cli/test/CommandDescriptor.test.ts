@@ -244,10 +244,12 @@ describe("Command", () => {
     });
 
     describe("Subcommands without Options or Arguments", () => {
-        const options = Options.boolean("verbose").pipe(Options.withAlias("v"));
+        const options = Options.boolean("verbose").pipe((x) =>
+            Options.withAlias(x, "v"),
+        );
 
-        const git = Descriptor.make("git", options).pipe(
-            Descriptor.withSubcommands([
+        const git = Descriptor.make("git", options).pipe((x) =>
+            Descriptor.withSubcommands(x, [
                 ["remote", Descriptor.make("remote")],
                 ["log", Descriptor.make("log")],
             ]),
@@ -351,13 +353,13 @@ describe("Command", () => {
     describe("Subcommands with Options and Arguments", () => {
         const options = Options.all([
             Options.boolean("i"),
-            Options.text("empty").pipe(Options.withDefault("drop")),
+            Options.text("empty").pipe((x) => Options.withDefault(x, "drop")),
         ]);
 
         const args = Args.all([Args.text(), Args.text()]);
 
-        const git = Descriptor.make("git").pipe(
-            Descriptor.withSubcommands([
+        const git = Descriptor.make("git").pipe((x) =>
+            Descriptor.withSubcommands(x, [
                 ["rebase", Descriptor.make("rebase", options, args)],
             ]),
         );
@@ -426,12 +428,12 @@ describe("Command", () => {
     });
 
     describe("Nested Subcommands", () => {
-        const command = Descriptor.make("command").pipe(
-            Descriptor.withSubcommands([
+        const command = Descriptor.make("command").pipe((x) =>
+            Descriptor.withSubcommands(x, [
                 [
                     "sub",
-                    Descriptor.make("sub").pipe(
-                        Descriptor.withSubcommands([
+                    Descriptor.make("sub").pipe((x) =>
+                        Descriptor.withSubcommands(x, [
                             [
                                 "subsub",
                                 Descriptor.make(
@@ -489,8 +491,8 @@ describe("Command", () => {
         it("should allow adding help documentation to a command", () =>
             Effect.gen(function* (_) {
                 const config = CliConfig.make({ showBuiltIns: false });
-                const cmd = Descriptor.make("tldr").pipe(
-                    Descriptor.withDescription("this is some help"),
+                const cmd = Descriptor.make("tldr").pipe((x) =>
+                    Descriptor.withDescription(x, "this is some help"),
                 );
                 const args = Array.of("tldr");
                 const result = yield* _(
@@ -513,12 +515,12 @@ describe("Command", () => {
 
         it("should allow adding help documentation to subcommands", () => {
             const config = CliConfig.make({ showBuiltIns: false });
-            const cmd = Descriptor.make("command").pipe(
-                Descriptor.withSubcommands([
+            const cmd = Descriptor.make("command").pipe((x) =>
+                Descriptor.withSubcommands(x, [
                     [
                         "sub",
-                        Descriptor.make("sub").pipe(
-                            Descriptor.withDescription("this is some help"),
+                        Descriptor.make("sub").pipe((x) =>
+                            Descriptor.withDescription(x, "this is some help"),
                         ),
                     ],
                 ]),
@@ -532,15 +534,15 @@ describe("Command", () => {
 
         it("should correctly display help documentation for a command", () => {
             const config = CliConfig.make({ showBuiltIns: false });
-            const child2 = Descriptor.make("child2").pipe(
-                Descriptor.withDescription("help 2"),
+            const child2 = Descriptor.make("child2").pipe((x) =>
+                Descriptor.withDescription(x, "help 2"),
             );
             const child1 = Descriptor.make("child1").pipe(
-                Descriptor.withSubcommands([["child2", child2]]),
-                Descriptor.withDescription("help 1"),
+                (x) => Descriptor.withSubcommands(x, [["child2", child2]]),
+                (x) => Descriptor.withDescription(x, "help 1"),
             );
-            const parent = Descriptor.make("parent").pipe(
-                Descriptor.withSubcommands([["child1", child1]]),
+            const parent = Descriptor.make("parent").pipe((x) =>
+                Descriptor.withSubcommands(x, [["child1", child1]]),
             );
             const result = Doc.render(
                 Doc.unAnnotate(
@@ -653,7 +655,9 @@ describe("Command", () => {
             "cmd",
             Options.all([
                 Options.optional(Options.text("something")),
-                Options.boolean("verbose").pipe(Options.withAlias("v")),
+                Options.boolean("verbose").pipe((x) =>
+                    Options.withAlias(x, "v"),
+                ),
             ]),
             Args.repeated(Args.text()),
         );
@@ -720,23 +724,29 @@ describe("Command", () => {
     });
 
     describe("Completions", () => {
-        const command = Descriptor.make("forge").pipe(
-            Descriptor.withSubcommands([
+        const command = Descriptor.make("forge").pipe((x) =>
+            Descriptor.withSubcommands(x, [
                 [
                     "cache",
                     Descriptor.make(
                         "cache",
-                        Options.boolean("verbose").pipe(
-                            Options.withDescription("Output in verbose mode"),
+                        Options.boolean("verbose").pipe((x) =>
+                            Options.withDescription(
+                                x,
+                                "Output in verbose mode",
+                            ),
                         ),
                     ).pipe(
-                        Descriptor.withDescription(
-                            "The cache command does cache things",
-                        ),
-                        Descriptor.withSubcommands([
-                            ["clean", Descriptor.make("clean")],
-                            ["ls", Descriptor.make("ls")],
-                        ]),
+                        (x) =>
+                            Descriptor.withDescription(
+                                x,
+                                "The cache command does cache things",
+                            ),
+                        (x) =>
+                            Descriptor.withSubcommands(x, [
+                                ["clean", Descriptor.make("clean")],
+                                ["ls", Descriptor.make("ls")],
+                            ]),
                     ),
                 ],
             ]),

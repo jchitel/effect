@@ -124,18 +124,16 @@ export const make = <
                         ),
                     ),
                 invalidate: (key) =>
-                    store
-                        .remove(key as any)
-                        .pipe(
-                            Effect.zipRight(
-                                inMemoryCache.invalidate(
-                                    new CacheRequest({
-                                        key,
-                                        span: Option.none(),
-                                    }),
-                                ),
+                    store.remove(key as any).pipe(
+                        Effect.zipRight(
+                            inMemoryCache.invalidate(
+                                new CacheRequest({
+                                    key,
+                                    span: Option.none(),
+                                }),
                             ),
                         ),
+                    ),
             }),
         ),
     );

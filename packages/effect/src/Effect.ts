@@ -1,6 +1,3 @@
-/**
- * @since 2.0.0
- */
 import type * as RA from "./Array.js";
 import type * as Cause from "./Cause.js";
 import type * as Chunk from "./Chunk.js";
@@ -75,13 +72,11 @@ import type * as Unify from "./Unify.js";
 import { isGeneratorFunction, type YieldWrap } from "./Utils.js";
 
 /**
- * @since 2.0.0
  * @category Symbols
  */
 export const EffectTypeId: unique symbol = core.EffectTypeId;
 
 /**
- * @since 2.0.0
  * @category Symbols
  */
 export type EffectTypeId = typeof EffectTypeId;
@@ -105,7 +100,6 @@ export type EffectTypeId = typeof EffectTypeId;
  * To execute an `Effect` value, you need a `Runtime`, which provides the
  * environment necessary to run and manage the computation.
  *
- * @since 2.0.0
  * @category Models
  */
 export interface Effect<out A, out E = never, out R = never>
@@ -118,7 +112,6 @@ export interface Effect<out A, out E = never, out R = never>
 }
 
 /**
- * @since 3.0.0
  * @category Models
  */
 export interface EffectGenerator<T extends Effect<any, any, any>> {
@@ -128,7 +121,6 @@ export interface EffectGenerator<T extends Effect<any, any, any>> {
 }
 
 /**
- * @since 2.0.0
  * @category Models
  */
 export interface EffectUnify<A extends { [Unify.typeSymbol]?: any }>
@@ -144,7 +136,6 @@ export interface EffectUnify<A extends { [Unify.typeSymbol]?: any }>
 
 /**
  * @category Models
- * @since 2.0.0
  */
 export interface EffectUnifyIgnore {
     Tag?: true;
@@ -161,7 +152,6 @@ export interface EffectTypeLambda extends TypeLambda {
 }
 
 /**
- * @since 2.0.0
  * @category Models
  */
 export interface Blocked<out A, out E> extends Effect<A, E> {
@@ -171,7 +161,6 @@ export interface Blocked<out A, out E> extends Effect<A, E> {
 }
 
 /**
- * @since 2.0.0
  * @category Models
  */
 declare module "./Context.js" {
@@ -189,7 +178,6 @@ declare module "./Context.js" {
 }
 
 /**
- * @since 2.0.0
  * @category Models
  */
 declare module "./Either.js" {
@@ -209,7 +197,6 @@ declare module "./Either.js" {
 }
 
 /**
- * @since 2.0.0
  * @category Models
  */
 declare module "./Option.js" {
@@ -228,19 +215,14 @@ declare module "./Option.js" {
     }
 }
 
-/**
- * @since 2.0.0
- */
 export declare namespace Effect {
     /**
-     * @since 2.0.0
      * @category Models
      */
     export interface Variance<out A, out E, out R> {
         readonly [EffectTypeId]: VarianceStruct<A, E, R>;
     }
     /**
-     * @since 2.0.0
      * @category Models
      */
     export interface VarianceStruct<out A, out E, out R> {
@@ -250,7 +232,6 @@ export declare namespace Effect {
         readonly _R: Covariant<R>;
     }
     /**
-     * @since 2.0.0
      * @category Effect Type Extractors
      */
     export type Context<T extends Effect<any, any, any>> = [T] extends [
@@ -259,7 +240,6 @@ export declare namespace Effect {
         ? _R
         : never;
     /**
-     * @since 2.0.0
      * @category Effect Type Extractors
      */
     export type Error<T extends Effect<any, any, any>> = [T] extends [
@@ -268,7 +248,6 @@ export declare namespace Effect {
         ? _E
         : never;
     /**
-     * @since 2.0.0
      * @category Effect Type Extractors
      */
     export type Success<T extends Effect<any, any, any>> = [T] extends [
@@ -277,7 +256,6 @@ export declare namespace Effect {
         ? _A
         : never;
     /**
-     * @since 3.15.5
      * @category Effect Type Extractors
      */
     export type AsEffect<T extends Effect<any, any, any>> = Effect<
@@ -297,7 +275,6 @@ export declare namespace Effect {
  * `Effect.isEffect` to check the type of a value before using it as an argument
  * to a function that expects an `Effect` value.
  *
- * @since 2.0.0
  * @category Guards
  */
 export const isEffect: (u: unknown) => u is Effect<unknown, unknown, unknown> =
@@ -367,7 +344,6 @@ export const isEffect: (u: unknown) => u is Effect<unknown, unknown, unknown> =
  * @see {@link cachedInvalidateWithTTL} for a similar function that includes an
  * additional effect for manually invalidating the cached value.
  *
- * @since 2.0.0
  * @category Caching
  */
 export const cachedWithTTL: {
@@ -447,7 +423,6 @@ export const cachedWithTTL: {
  * @see {@link cachedWithTTL} for a similar function that caches the result for
  * a specified duration but does not include an effect for manual invalidation.
  *
- * @since 2.0.0
  * @category Caching
  */
 export const cachedInvalidateWithTTL: {
@@ -523,7 +498,6 @@ export const cachedInvalidateWithTTL: {
  * @see {@link cachedInvalidateWithTTL} for a similar function that includes an
  * additional effect for manually invalidating the cached value.
  *
- * @since 2.0.0
  * @category Caching
  */
 export const cached: <A, E, R>(
@@ -583,7 +557,6 @@ export const cached: <A, E, R>(
  * // 5
  * ```
  *
- * @since 2.0.0
  * @category Caching
  */
 export const cachedFunction: <A, B, E, R>(
@@ -629,7 +602,6 @@ export const cachedFunction: <A, B, E, R>(
  * // task2
  * ```
  *
- * @since 2.0.0
  * @category Caching
  */
 export const once: <A, E, R>(
@@ -852,7 +824,6 @@ export const once: <A, E, R>(
  * @see {@link forEach} for iterating over elements and applying an effect.
  * @see {@link allWith} for a data-last version of this function.
  *
- * @since 2.0.0
  * @category Collecting
  */
 export const all: <
@@ -911,7 +882,6 @@ export const all: <
  * // [ 1, 'hello' ]
  * ```
  *
- * @since 2.0.0
  * @category Collecting
  */
 export const allWith: <
@@ -935,18 +905,9 @@ export const allWith: <
     arg: Arg,
 ) => All.Return<Arg, O> = fiberRuntime.allWith;
 
-/**
- * @since 2.0.0
- */
 export declare namespace All {
-    /**
-     * @since 2.0.0
-     */
     export type EffectAny = Effect<any, any, any>;
 
-    /**
-     * @since 2.0.0
-     */
     export type ReturnIterable<
         T extends Iterable<EffectAny>,
         Discard extends boolean,
@@ -967,9 +928,6 @@ export declare namespace All {
           >
         : never;
 
-    /**
-     * @since 2.0.0
-     */
     export type ReturnTuple<
         T extends ReadonlyArray<unknown>,
         Discard extends boolean,
@@ -1023,9 +981,6 @@ export declare namespace All {
             ? X
             : never;
 
-    /**
-     * @since 2.0.0
-     */
     export type ReturnObject<T, Discard extends boolean, Mode> = [T] extends [
         { [K: string]: EffectAny },
     ]
@@ -1074,25 +1029,16 @@ export declare namespace All {
           >
         : never;
 
-    /**
-     * @since 2.0.0
-     */
     export type IsDiscard<A> = [
         Extract<A, { readonly discard: true }>,
     ] extends [never]
         ? false
         : true;
 
-    /**
-     * @since 2.0.0
-     */
     export type ExtractMode<A> = [A] extends [{ mode: infer M }]
         ? M
         : "default";
 
-    /**
-     * @since 2.0.0
-     */
     export type Return<
         Arg extends Iterable<EffectAny> | Record<string, EffectAny>,
         O extends NoExcessProperties<
@@ -1153,7 +1099,6 @@ export declare namespace All {
  *
  * ```
  *
- * @since 2.0.0
  * @category Collecting
  */
 export const allSuccesses: <X extends Effect<any, any, any>>(
@@ -1211,7 +1156,6 @@ export const allSuccesses: <X extends Effect<any, any, any>>(
  * @see {@link dropWhile} for a similar function that drops elements while the
  * predicate returns `true`.
  *
- * @since 2.0.0
  * @category Collecting
  */
 export const dropUntil: {
@@ -1266,7 +1210,6 @@ export const dropUntil: {
  * @see {@link dropUntil} for a similar function that drops elements until the
  * predicate returns `true`.
  *
- * @since 2.0.0
  * @category Collecting
  */
 export const dropWhile: {
@@ -1325,7 +1268,6 @@ export const dropWhile: {
  * @see {@link takeWhile} for a similar function that takes elements while the
  * predicate returns `true`.
  *
- * @since 2.0.0
  * @category Collecting
  */
 export const takeUntil: {
@@ -1373,7 +1315,6 @@ export const takeUntil: {
  *
  * @see {@link takeUntil} for a similar function that takes elements until the predicate returns `true`.
  *
- * @since 2.0.0
  * @category Collecting
  */
 export const takeWhile: {
@@ -1427,7 +1368,6 @@ export const takeWhile: {
  * @see {@link exists} for a similar function that returns a boolean indicating
  * whether **any** element satisfies the predicate.
  *
- * @since 2.0.0
  * @category Condition Checking
  */
 export const every: {
@@ -1482,7 +1422,6 @@ export const every: {
  * @see {@link every} for a similar function that checks if **all** elements
  * satisfy the predicate.
  *
- * @since 2.0.0
  * @category Condition Checking
  */
 export const exists: {

@@ -6,6 +6,8 @@ import * as InternalTextPrompt from "./text.js";
 export const list = (
     options: Prompt.Prompt.ListOptions,
 ): Prompt.Prompt<Array<string>> =>
-    InternalTextPrompt.text(options).pipe(
-        InternalPrompt.map((output) => output.split(options.delimiter || ",")),
+    InternalTextPrompt.text(options).pipe((x) =>
+        InternalPrompt.map(x, (output) =>
+            output.split(options.delimiter || ","),
+        ),
     );

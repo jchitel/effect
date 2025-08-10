@@ -5,7 +5,7 @@ import * as Arr from "effect/Array";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Effectable from "effect/Effectable";
-import { dual, identity } from "effect/Function";
+import { identity } from "effect/Function";
 import { globalValue } from "effect/GlobalValue";
 import type * as HashMap from "effect/HashMap";
 import type * as HashSet from "effect/HashSet";
@@ -172,46 +172,31 @@ const makeDerive = <Name extends string, R, E, A>(
 };
 
 /** @internal */
-export const fromDescriptor = dual<
-    {
-        (): <A extends { readonly name: string }>(
-            command: Descriptor.Command<A>,
-        ) => Command.Command<A["name"], never, never, A>;
-        <A extends { readonly name: string }, R, E>(
-            handler: (_: A) => Effect.Effect<void, E, R>,
-        ): (
-            command: Descriptor.Command<A>,
-        ) => Command.Command<A["name"], R, E, A>;
-    },
-    {
-        <A extends { readonly name: string }>(
-            descriptor: Descriptor.Command<A>,
-        ): Command.Command<A["name"], never, never, A>;
-        <A extends { readonly name: string }, R, E>(
-            descriptor: Descriptor.Command<A>,
-            handler: (_: A) => Effect.Effect<void, E, R>,
-        ): Command.Command<A["name"], R, E, A>;
-    }
->(
-    (args) => InternalDescriptor.isCommand(args[0]),
-    (
-        descriptor: Descriptor.Command<any>,
-        handler?: (_: any) => Effect.Effect<any, any, any>,
-    ) => {
-        const self: Command.Command<any, any, any, any> = makeProto(
-            descriptor,
-            handler ??
-                ((_) =>
-                    Effect.failSync(() =>
-                        ValidationError.helpRequested(getDescriptor(self)),
-                    )),
-            Context.GenericTag(
-                `@effect/cli/Command/(${Arr.fromIterable(InternalDescriptor.getNames(descriptor)).join("|")})`,
-            ),
-        );
-        return self as any;
-    },
-);
+export const fromDescriptor: {
+    <A extends { readonly name: string }>(
+        descriptor: Descriptor.Command<A>,
+    ): Command.Command<A["name"], never, never, A>;
+    <A extends { readonly name: string }, R, E>(
+        descriptor: Descriptor.Command<A>,
+        handler: (_: A) => Effect.Effect<void, E, R>,
+    ): Command.Command<A["name"], R, E, A>;
+} = (
+    descriptor: Descriptor.Command<any>,
+    handler?: (_: any) => Effect.Effect<any, any, any>,
+) => {
+    const self: Command.Command<any, any, any, any> = makeProto(
+        descriptor,
+        handler ??
+            ((_) =>
+                Effect.failSync(() =>
+                    ValidationError.helpRequested(getDescriptor(self)),
+                )),
+        Context.GenericTag(
+            `@effect/cli/Command/(${Arr.fromIterable(InternalDescriptor.getNames(descriptor)).join("|")})`,
+        ),
+    );
+    return self as any;
+};
 
 const makeDescriptor = <const Config extends Command.Command.Config>(
     name: string,
@@ -303,17 +288,11 @@ export const getUsage = <Name extends string, R, E, A>(
     self: Command.Command<Name, R, E, A>,
 ): Usage.Usage => InternalDescriptor.getUsage(self.descriptor);
 
-const mapDescriptor = dual<
-    <A>(
-        f: (_: Descriptor.Command<A>) => Descriptor.Command<A>,
-    ) => <Name extends string, R, E>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Command.Command<Name, R, E, A>,
-    <Name extends string, R, E, A>(
-        self: Command.Command<Name, R, E, A>,
-        f: (_: Descriptor.Command<A>) => Descriptor.Command<A>,
-    ) => Command.Command<Name, R, E, A>
->(2, (self, f) => makeDerive(self, { descriptor: f(self.descriptor) }));
+const mapDescriptor = <Name extends string, R, E, A>(
+    self: Command.Command<Name, R, E, A>,
+    f: (_: Descriptor.Command<A>) => Descriptor.Command<A>,
+): Command.Command<Name, R, E, A> =>
+    makeDerive(self, { descriptor: f(self.descriptor) });
 
 /** @internal */
 export const prompt = <Name extends string, A, R, E>(
@@ -331,199 +310,113 @@ export const prompt = <Name extends string, A, R, E>(
     );
 
 /** @internal */
-export const withHandler = dual<
-    <A, R, E>(
-        handler: (_: A) => Effect.Effect<void, E, R>,
-    ) => <Name extends string, XR, XE>(
-        self: Command.Command<Name, XR, XE, A>,
-    ) => Command.Command<Name, R, E, A>,
-    <Name extends string, XR, XE, A, R, E>(
-        self: Command.Command<Name, XR, XE, A>,
-        handler: (_: A) => Effect.Effect<void, E, R>,
-    ) => Command.Command<Name, R, E, A>
->(2, (self, handler) => makeDerive(self, { handler, transform: identity }));
+export const withHandler = <Name extends string, XR, XE, A, R, E>(
+    self: Command.Command<Name, XR, XE, A>,
+    handler: (_: A) => Effect.Effect<void, E, R>,
+): Command.Command<Name, R, E, A> =>
+    makeDerive(self, { handler, transform: identity });
 
 /** @internal */
-export const transformHandler = dual<
-    <R, E, A, R2, E2>(
-        f: (
-            effect: Effect.Effect<void, E, R>,
-            config: A,
-        ) => Effect.Effect<void, E2, R2>,
-    ) => <Name extends string>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Command.Command<Name, R | R2, E | E2, A>,
-    <Name extends string, R, E, A, R2, E2>(
-        self: Command.Command<Name, R, E, A>,
-        f: (
-            effect: Effect.Effect<void, E, R>,
-            config: A,
-        ) => Effect.Effect<void, E2, R2>,
-    ) => Command.Command<Name, R | R2, E | E2, A>
->(2, (self, f) => makeDerive(self, { transform: f }));
+export const transformHandler = <Name extends string, R, E, A, R2, E2>(
+    self: Command.Command<Name, R, E, A>,
+    f: (
+        effect: Effect.Effect<void, E, R>,
+        config: A,
+    ) => Effect.Effect<void, E2, R2>,
+): Command.Command<Name, R | R2, E | E2, A> =>
+    makeDerive(self, { transform: f });
 
 /** @internal */
-export const provide = dual<
-    <A, LR, LE, LA>(
-        layer: Layer.Layer<LA, LE, LR> | ((_: A) => Layer.Layer<LA, LE, LR>),
-    ) => <Name extends string, R, E>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Command.Command<Name, Exclude<R, LA> | LR, E | LE, A>,
-    <Name extends string, R, E, A, LR, LE, LA>(
-        self: Command.Command<Name, R, E, A>,
-        layer: Layer.Layer<LA, LE, LR> | ((_: A) => Layer.Layer<LA, LE, LR>),
-    ) => Command.Command<Name, Exclude<R, LA> | LR, E | LE, A>
->(2, (self, layer) =>
+export const provide = <Name extends string, R, E, A, LR, LE, LA>(
+    self: Command.Command<Name, R, E, A>,
+    layer: Layer.Layer<LA, LE, LR> | ((_: A) => Layer.Layer<LA, LE, LR>),
+): Command.Command<Name, Exclude<R, LA> | LR, E | LE, A> =>
     makeDerive(self, {
         transform: (effect, config) =>
             Effect.provide(
                 effect,
                 typeof layer === "function" ? layer(config) : layer,
             ),
-    }),
-);
+    });
 
 /** @internal */
-export const provideEffect = dual<
-    <I, S, A, R2, E2>(
-        tag: Context.Tag<I, S>,
-        effect: Effect.Effect<S, E2, R2> | ((_: A) => Effect.Effect<S, E2, R2>),
-    ) => <Name extends string, R, E>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Command.Command<Name, Exclude<R, I> | R2, E | E2, A>,
-    <Name extends string, R, E, A, I, S, R2, E2>(
-        self: Command.Command<Name, R, E, A>,
-        tag: Context.Tag<I, S>,
-        effect: Effect.Effect<S, E2, R2> | ((_: A) => Effect.Effect<S, E2, R2>),
-    ) => Command.Command<Name, Exclude<R, I> | R2, E | E2, A>
->(3, (self, tag, effect_) =>
+export const provideEffect = <Name extends string, R, E, A, I, S, R2, E2>(
+    self: Command.Command<Name, R, E, A>,
+    tag: Context.Tag<I, S>,
+    effect_: Effect.Effect<S, E2, R2> | ((_: A) => Effect.Effect<S, E2, R2>),
+): Command.Command<Name, Exclude<R, I> | R2, E | E2, A> =>
     makeDerive(self, {
         transform: (self, config) => {
             const effect =
                 typeof effect_ === "function" ? effect_(config) : effect_;
             return Effect.provideServiceEffect(self, tag, effect);
         },
-    }),
-);
+    });
 
 /** @internal */
-export const provideEffectDiscard = dual<
-    <A, R2, E2, _>(
-        effect: Effect.Effect<_, E2, R2> | ((_: A) => Effect.Effect<_, E2, R2>),
-    ) => <Name extends string, R, E>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Command.Command<Name, R | R2, E | E2, A>,
-    <Name extends string, R, E, A, R2, E2, _>(
-        self: Command.Command<Name, R, E, A>,
-        effect: Effect.Effect<_, E2, R2> | ((_: A) => Effect.Effect<_, E2, R2>),
-    ) => Command.Command<Name, R | R2, E | E2, A>
->(2, (self, effect_) =>
+export const provideEffectDiscard = <Name extends string, R, E, A, R2, E2, _>(
+    self: Command.Command<Name, R, E, A>,
+    effect_: Effect.Effect<_, E2, R2> | ((_: A) => Effect.Effect<_, E2, R2>),
+): Command.Command<Name, R | R2, E | E2, A> =>
     makeDerive(self, {
         transform: (self, config) => {
             const effect =
                 typeof effect_ === "function" ? effect_(config) : effect_;
             return Effect.zipRight(effect, self);
         },
-    }),
-);
+    });
 
 /** @internal */
-export const provideSync = dual<
-    <I, S, A>(
-        tag: Context.Tag<I, S>,
-        service: S | ((_: A) => S),
-    ) => <Name extends string, R, E>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Command.Command<Name, Exclude<R, I>, E, A>,
-    <Name extends string, R, E, A, I, S>(
-        self: Command.Command<Name, R, E, A>,
-        tag: Context.Tag<I, S>,
-        service: S | ((_: A) => S),
-    ) => Command.Command<Name, Exclude<R, I>, E, A>
->(3, (self, tag, f) =>
+export const provideSync = <Name extends string, R, E, A, I, S>(
+    self: Command.Command<Name, R, E, A>,
+    tag: Context.Tag<I, S>,
+    f: S | ((_: A) => S),
+): Command.Command<Name, Exclude<R, I>, E, A> =>
     makeDerive(self, {
         transform: (self, config) => {
             const service = typeof f === "function" ? (f as any)(config) : f;
             return Effect.provideService(self, tag, service);
         },
-    }),
-);
+    });
 
 /** @internal */
-export const withDescription = dual<
-    (
-        help: string | HelpDoc.HelpDoc,
-    ) => <Name extends string, R, E, A>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Command.Command<Name, R, E, A>,
-    <Name extends string, R, E, A>(
-        self: Command.Command<Name, R, E, A>,
-        help: string | HelpDoc.HelpDoc,
-    ) => Command.Command<Name, R, E, A>
->(2, (self, help) =>
-    mapDescriptor(self, InternalDescriptor.withDescription(help)),
-);
+export const withDescription = <Name extends string, R, E, A>(
+    self: Command.Command<Name, R, E, A>,
+    help: string | HelpDoc.HelpDoc,
+): Command.Command<Name, R, E, A> =>
+    mapDescriptor(self, (x) => InternalDescriptor.withDescription(x, help));
 
 /** @internal */
-export const withSubcommands = dual<
-    <
-        Subcommand extends Arr.NonEmptyReadonlyArray<
-            Command.Command<any, any, any, any>
-        >,
-    >(
-        subcommands: Subcommand,
-    ) => <Name extends string, R, E, A>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Command.Command<
-        Name,
-        | R
-        | Exclude<
-              Effect.Effect.Context<ReturnType<Subcommand[number]["handler"]>>,
-              Descriptor.Command<Name>
-          >,
-        E | Effect.Effect.Error<ReturnType<Subcommand[number]["handler"]>>,
-        Descriptor.Command.ComputeParsedType<
-            A &
-                Readonly<{
-                    subcommand: Option.Option<
-                        Descriptor.Command.GetParsedType<
-                            Subcommand[number]["descriptor"]
-                        >
-                    >;
-                }>
-        >
+export const withSubcommands = <
+    Name extends string,
+    R,
+    E,
+    A,
+    Subcommand extends Arr.NonEmptyReadonlyArray<
+        Command.Command<any, any, any, any>
     >,
-    <
-        Name extends string,
-        R,
-        E,
-        A,
-        Subcommand extends Arr.NonEmptyReadonlyArray<
-            Command.Command<any, any, any, any>
-        >,
-    >(
-        self: Command.Command<Name, R, E, A>,
-        subcommands: Subcommand,
-    ) => Command.Command<
-        Name,
-        | R
-        | Exclude<
-              Effect.Effect.Context<ReturnType<Subcommand[number]["handler"]>>,
-              Descriptor.Command<Name>
-          >,
-        E | Effect.Effect.Error<ReturnType<Subcommand[number]["handler"]>>,
-        Descriptor.Command.ComputeParsedType<
-            A &
-                Readonly<{
-                    subcommand: Option.Option<
-                        Descriptor.Command.GetParsedType<
-                            Subcommand[number]["descriptor"]
-                        >
-                    >;
-                }>
-        >
+>(
+    self: Command.Command<Name, R, E, A>,
+    subcommands: Subcommand,
+): Command.Command<
+    Name,
+    | R
+    | Exclude<
+          Effect.Effect.Context<ReturnType<Subcommand[number]["handler"]>>,
+          Descriptor.Command<Name>
+      >,
+    E | Effect.Effect.Error<ReturnType<Subcommand[number]["handler"]>>,
+    Descriptor.Command.ComputeParsedType<
+        A &
+            Readonly<{
+                subcommand: Option.Option<
+                    Descriptor.Command.GetParsedType<
+                        Subcommand[number]["descriptor"]
+                    >
+                >;
+            }>
     >
->(2, (self, subcommands) => {
+> => {
     const command = InternalDescriptor.withSubcommands(
         self.descriptor,
         Arr.map(subcommands, (_) => [_.tag, _.descriptor]),
@@ -562,57 +455,30 @@ export const withSubcommands = dual<
         descriptor: command as any,
         handler,
     }) as any;
-});
+};
 
 /** @internal */
-export const wizard = dual<
-    (
-        prefix: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => <Name extends string, R, E, A>(
-        self: Command.Command<Name, R, E, A>,
-    ) => Effect.Effect<
-        Array<string>,
-        Terminal.QuitException | ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >,
-    <Name extends string, R, E, A>(
-        self: Command.Command<Name, R, E, A>,
-        prefix: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<
-        Array<string>,
-        Terminal.QuitException | ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >
->(3, (self, prefix, config) =>
-    InternalDescriptor.wizard(self.descriptor, prefix, config),
-);
+export const wizard = <Name extends string, R, E, A>(
+    self: Command.Command<Name, R, E, A>,
+    prefix: ReadonlyArray<string>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<
+    Array<string>,
+    Terminal.QuitException | ValidationError.ValidationError,
+    FileSystem.FileSystem | Path.Path | Terminal.Terminal
+> => InternalDescriptor.wizard(self.descriptor, prefix, config);
 
 /** @internal */
-export const run = dual<
-    (
-        config: Omit<CliApp.CliApp.ConstructorArgs<never>, "command">,
-    ) => <Name extends string, R, E, A>(
-        self: Command.Command<Name, R, E, A>,
-    ) => (
-        args: ReadonlyArray<string>,
-    ) => Effect.Effect<
-        void,
-        E | ValidationError.ValidationError,
-        R | CliApp.CliApp.Environment
-    >,
-    <Name extends string, R, E, A>(
-        self: Command.Command<Name, R, E, A>,
-        config: Omit<CliApp.CliApp.ConstructorArgs<never>, "command">,
-    ) => (
-        args: ReadonlyArray<string>,
-    ) => Effect.Effect<
-        void,
-        E | ValidationError.ValidationError,
-        R | CliApp.CliApp.Environment
-    >
->(2, (self, config) => {
+export const run = <Name extends string, R, E, A>(
+    self: Command.Command<Name, R, E, A>,
+    config: Omit<CliApp.CliApp.ConstructorArgs<never>, "command">,
+): ((
+    args: ReadonlyArray<string>,
+) => Effect.Effect<
+    void,
+    E | ValidationError.ValidationError,
+    R | CliApp.CliApp.Environment
+>) => {
     const app = InternalCliApp.make({
         ...config,
         command: self.descriptor,
@@ -620,4 +486,4 @@ export const run = dual<
     registeredDescriptors.set(self.tag, self.descriptor);
     const handler = (args: any) => self.transform(self.handler(args), args);
     return (args) => InternalCliApp.run(app, args, handler);
-});
+};

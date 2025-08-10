@@ -764,11 +764,11 @@ export class FiberRuntime<in out A, in out E = never>
         let cur = cur0;
         while (this._queue.length > 0) {
             const message = this._queue.splice(0, 1)[0];
-            // @ts-expect-error
             cur = drainQueueWhileRunningTable[message._tag](
                 this,
                 runtimeFlags,
                 cur,
+                // @ts-expect-error
                 message,
             );
         }
@@ -1278,9 +1278,9 @@ export class FiberRuntime<in out A, in out E = never>
                 // @ts-expect-error
                 absurd(cont);
             }
-            // @ts-expect-error
             return contOpSuccess[cont._op](
                 this,
+                // @ts-expect-error
                 cont,
                 oldCur.effect_instruction_i0,
             );

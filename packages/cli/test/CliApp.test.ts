@@ -85,8 +85,8 @@ describe("CliApp", () => {
         it("should set the minimum log level for a command", () =>
             Effect.gen(function* () {
                 let logLevel: LogLevel.LogLevel | undefined = undefined;
-                const logging = Command.make("logging").pipe(
-                    Command.withHandler(() =>
+                const logging = Command.make("logging").pipe((x) =>
+                    Command.withHandler(x, () =>
                         Effect.gen(function* () {
                             logLevel = yield* FiberRef.get(
                                 FiberRef.currentMinimumLogLevel,

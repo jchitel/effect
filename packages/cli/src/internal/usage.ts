@@ -1,5 +1,5 @@
 import * as Arr from "effect/Array";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as Option from "effect/Option";
 import type * as CliConfig from "../CliConfig.js";
 import type * as HelpDoc from "../HelpDoc.js";
@@ -45,24 +45,21 @@ export const repeated = (self: Usage.Usage): Usage.Usage => ({
     usage: self,
 });
 
-export const alternation = dual<
-    (that: Usage.Usage) => (self: Usage.Usage) => Usage.Usage,
-    (self: Usage.Usage, that: Usage.Usage) => Usage.Usage
->(2, (self, that) => ({
+export const alternation = (
+    self: Usage.Usage,
+    that: Usage.Usage,
+): Usage.Usage => ({
     _tag: "Alternation",
     left: self,
     right: that,
-}));
+});
 
 /** @internal */
-export const concat = dual<
-    (that: Usage.Usage) => (self: Usage.Usage) => Usage.Usage,
-    (self: Usage.Usage, that: Usage.Usage) => Usage.Usage
->(2, (self, that) => ({
+export const concat = (self: Usage.Usage, that: Usage.Usage): Usage.Usage => ({
     _tag: "Concat",
     left: self,
     right: that,
-}));
+});
 
 // =============================================================================
 // Combinators
@@ -88,10 +85,10 @@ export const getHelp = (self: Usage.Usage): HelpDoc.HelpDoc => {
 };
 
 /** @internal */
-export const enumerate = dual<
-    (config: CliConfig.CliConfig) => (self: Usage.Usage) => Array<Span.Span>,
-    (self: Usage.Usage, config: CliConfig.CliConfig) => Array<Span.Span>
->(2, (self, config) => render(simplify(self, config), config));
+export const enumerate = (
+    self: Usage.Usage,
+    config: CliConfig.CliConfig,
+): Array<Span.Span> => render(simplify(self, config), config);
 
 // =============================================================================
 // Internals

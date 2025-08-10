@@ -1,7 +1,7 @@
 import * as FileSystem from "@effect/platform/FileSystem";
 import * as Arr from "effect/Array";
 import * as Effect from "effect/Effect";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as Option from "effect/Option";
 import { pipeArguments } from "effect/Pipeable";
 import * as EffectRedacted from "effect/Redacted";
@@ -255,29 +255,18 @@ export const getTypeName = <A>(self: Primitive.Primitive<A>): string =>
     getTypeNameInternal(self as Instruction);
 
 /** @internal */
-export const validate = dual<
-    (
-        value: Option.Option<string>,
-        config: CliConfig.CliConfig,
-    ) => <A>(
-        self: Primitive.Primitive<A>,
-    ) => Effect.Effect<A, string, FileSystem.FileSystem>,
-    <A>(
-        self: Primitive.Primitive<A>,
-        value: Option.Option<string>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<A, string, FileSystem.FileSystem>
->(3, (self, value, config) =>
-    validateInternal(self as Instruction, value, config),
-);
+export const validate = <A>(
+    self: Primitive.Primitive<A>,
+    value: Option.Option<string>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<A, string, FileSystem.FileSystem> =>
+    validateInternal(self as Instruction, value, config);
 
 /** @internal */
-export const wizard = dual<
-    (
-        help: HelpDoc.HelpDoc,
-    ) => <A>(self: Primitive.Primitive<A>) => Prompt.Prompt<A>,
-    <A>(self: Primitive.Primitive<A>, help: HelpDoc.HelpDoc) => Prompt.Prompt<A>
->(2, (self, help) => wizardInternal(self as Instruction, help));
+export const wizard = <A>(
+    self: Primitive.Primitive<A>,
+    help: HelpDoc.HelpDoc,
+): Prompt.Prompt<A> => wizardInternal(self as Instruction, help);
 
 // =============================================================================
 // Internals
@@ -620,7 +609,7 @@ const wizardInternal = (
                 initial,
                 active: "true",
                 inactive: "false",
-            }).pipe(InternalPrompt.map((bool) => `${bool}`));
+            }).pipe((x) => InternalPrompt.map(x, (bool) => `${bool}`));
         }
         case "Choice": {
             const primitiveHelp = InternalHelpDoc.p(
@@ -640,7 +629,7 @@ const wizardInternal = (
             const message = InternalHelpDoc.sequence(help, primitiveHelp);
             return InternalDatePrompt.date({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),
-            }).pipe(InternalPrompt.map((date) => date.toISOString()));
+            }).pipe((x) => InternalPrompt.map(x, (date) => date.toISOString()));
         }
         case "Float": {
             const primitiveHelp = InternalHelpDoc.p(
@@ -649,14 +638,14 @@ const wizardInternal = (
             const message = InternalHelpDoc.sequence(help, primitiveHelp);
             return InternalNumberPrompt.float({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),
-            }).pipe(InternalPrompt.map((value) => `${value}`));
+            }).pipe((x) => InternalPrompt.map(x, (value) => `${value}`));
         }
         case "Integer": {
             const primitiveHelp = InternalHelpDoc.p("Enter an integer");
             const message = InternalHelpDoc.sequence(help, primitiveHelp);
             return InternalNumberPrompt.integer({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),
-            }).pipe(InternalPrompt.map((value) => `${value}`));
+            }).pipe((x) => InternalPrompt.map(x, (value) => `${value}`));
         }
         case "Path": {
             const primitiveHelp = InternalHelpDoc.p(

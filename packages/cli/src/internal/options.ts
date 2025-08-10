@@ -7,7 +7,7 @@ import * as ConfigError from "effect/ConfigError";
 import * as Console from "effect/Console";
 import * as Effect from "effect/Effect";
 import * as Either from "effect/Either";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as HashMap from "effect/HashMap";
 import * as Inspectable from "effect/Inspectable";
 import * as Option from "effect/Option";
@@ -377,17 +377,11 @@ export const fileText = (
     );
 
 /** @internal */
-export const filterMap = dual<
-    <A, B>(
-        f: (a: A) => Option.Option<B>,
-        message: string,
-    ) => (self: Options.Options<A>) => Options.Options<B>,
-    <A, B>(
-        self: Options.Options<A>,
-        f: (a: A) => Option.Option<B>,
-        message: string,
-    ) => Options.Options<B>
->(3, (self, f, message) =>
+export const filterMap = <A, B>(
+    self: Options.Options<A>,
+    f: (a: A) => Option.Option<B>,
+    message: string,
+): Options.Options<B> =>
     mapEffect(self, (a) =>
         Option.match(f(a), {
             onNone: () =>
@@ -398,8 +392,7 @@ export const filterMap = dual<
                 ),
             onSome: Either.right,
         }),
-    ),
-);
+    );
 
 /** @internal */
 export const float = (name: string): Options.Options<number> =>
@@ -450,71 +443,36 @@ export const text = (name: string): Options.Options<string> =>
 // =============================================================================
 
 /** @internal */
-export const atLeast = dual<
-    {
-        (times: 0): <A>(self: Options.Options<A>) => Options.Options<Array<A>>;
-        (
-            times: number,
-        ): <A>(
-            self: Options.Options<A>,
-        ) => Options.Options<Arr.NonEmptyArray<A>>;
-    },
-    {
-        <A>(self: Options.Options<A>, times: 0): Options.Options<Array<A>>;
-        <A>(
-            self: Options.Options<A>,
-            times: number,
-        ): Options.Options<Arr.NonEmptyArray<A>>;
-    }
->(
-    2,
-    (self, times) =>
-        makeVariadic(self, Option.some(times), Option.none()) as any,
-);
-
-/** @internal */
-export const atMost = dual<
-    (
+export const atLeast: {
+    <A>(self: Options.Options<A>, times: 0): Options.Options<Array<A>>;
+    <A>(
+        self: Options.Options<A>,
         times: number,
-    ) => <A>(self: Options.Options<A>) => Options.Options<Array<A>>,
-    <A>(self: Options.Options<A>, times: number) => Options.Options<Array<A>>
->(
-    2,
-    (self, times) =>
-        makeVariadic(self, Option.none(), Option.some(times)) as any,
-);
+    ): Options.Options<Arr.NonEmptyArray<A>>;
+} = (self, times) =>
+    makeVariadic(self, Option.some(times), Option.none()) as any;
 
 /** @internal */
-export const between = dual<
-    {
-        (
-            min: 0,
-            max: number,
-        ): <A>(self: Options.Options<A>) => Options.Options<Array<A>>;
-        (
-            min: number,
-            max: number,
-        ): <A>(
-            self: Options.Options<A>,
-        ) => Options.Options<Arr.NonEmptyArray<A>>;
-    },
-    {
-        <A>(
-            self: Options.Options<A>,
-            min: 0,
-            max: number,
-        ): Options.Options<Array<A>>;
-        <A>(
-            self: Options.Options<A>,
-            min: number,
-            max: number,
-        ): Options.Options<Arr.NonEmptyArray<A>>;
-    }
->(
-    3,
-    (self, min, max) =>
-        makeVariadic(self, Option.some(min), Option.some(max)) as any,
-);
+export const atMost = <A>(
+    self: Options.Options<A>,
+    times: number,
+): Options.Options<Array<A>> =>
+    makeVariadic(self, Option.none(), Option.some(times)) as any;
+
+/** @internal */
+export const between: {
+    <A>(
+        self: Options.Options<A>,
+        min: 0,
+        max: number,
+    ): Options.Options<Array<A>>;
+    <A>(
+        self: Options.Options<A>,
+        min: number,
+        max: number,
+    ): Options.Options<Arr.NonEmptyArray<A>>;
+} = (self, min, max) =>
+    makeVariadic(self, Option.some(min), Option.some(max)) as any;
 
 /** @internal */
 export const isBool = <A>(self: Options.Options<A>): boolean =>
@@ -542,46 +500,29 @@ export const getUsage = <A>(self: Options.Options<A>): Usage.Usage =>
     getUsageInternal(self as Instruction);
 
 /** @internal */
-export const map = dual<
-    <A, B>(f: (a: A) => B) => (self: Options.Options<A>) => Options.Options<B>,
-    <A, B>(self: Options.Options<A>, f: (a: A) => B) => Options.Options<B>
->(2, (self, f) => makeMap(self, (a) => Either.right(f(a))));
+export const map = <A, B>(
+    self: Options.Options<A>,
+    f: (a: A) => B,
+): Options.Options<B> => makeMap(self, (a) => Either.right(f(a)));
 
 /** @internal */
-export const mapEffect = dual<
-    <A, B>(
-        f: (
-            a: A,
-        ) => Effect.Effect<
-            B,
-            ValidationError.ValidationError,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => (self: Options.Options<A>) => Options.Options<B>,
-    <A, B>(
-        self: Options.Options<A>,
-        f: (
-            a: A,
-        ) => Effect.Effect<
-            B,
-            ValidationError.ValidationError,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => Options.Options<B>
->(2, (self, f) => makeMap(self, f));
+export const mapEffect = <A, B>(
+    self: Options.Options<A>,
+    f: (
+        a: A,
+    ) => Effect.Effect<
+        B,
+        ValidationError.ValidationError,
+        FileSystem.FileSystem | Path.Path | Terminal.Terminal
+    >,
+): Options.Options<B> => makeMap(self, f);
 
 /** @internal */
-export const mapTryCatch = dual<
-    <A, B>(
-        f: (a: A) => B,
-        onError: (e: unknown) => HelpDoc.HelpDoc,
-    ) => (self: Options.Options<A>) => Options.Options<B>,
-    <A, B>(
-        self: Options.Options<A>,
-        f: (a: A) => B,
-        onError: (e: unknown) => HelpDoc.HelpDoc,
-    ) => Options.Options<B>
->(3, (self, f, onError) =>
+export const mapTryCatch = <A, B>(
+    self: Options.Options<A>,
+    f: (a: A) => B,
+    onError: (e: unknown) => HelpDoc.HelpDoc,
+): Options.Options<B> =>
     mapEffect(self, (a) => {
         try {
             return Either.right(f(a));
@@ -590,8 +531,7 @@ export const mapTryCatch = dual<
                 InternalValidationError.invalidValue(onError(e)),
             );
         }
-    }),
-);
+    });
 
 /** @internal */
 export const optional = <A>(
@@ -600,76 +540,36 @@ export const optional = <A>(
     withDefault(map(self, Option.some), Option.none());
 
 /** @internal */
-export const orElse = dual<
-    <B>(
-        that: Options.Options<B>,
-    ) => <A>(self: Options.Options<A>) => Options.Options<A | B>,
-    <A, B>(
-        self: Options.Options<A>,
-        that: Options.Options<B>,
-    ) => Options.Options<A | B>
->(2, (self, that) => orElseEither(self, that).pipe(map(Either.merge)));
+export const orElse = <A, B>(
+    self: Options.Options<A>,
+    that: Options.Options<B>,
+): Options.Options<A | B> =>
+    orElseEither(self, that).pipe((x) => map(x, Either.merge));
 
 /** @internal */
-export const orElseEither = dual<
-    <B>(
-        that: Options.Options<B>,
-    ) => <A>(self: Options.Options<A>) => Options.Options<Either.Either<B, A>>,
-    <A, B>(
-        self: Options.Options<A>,
-        that: Options.Options<B>,
-    ) => Options.Options<Either.Either<B, A>>
->(2, (self, that) => makeOrElse(self, that));
+export const orElseEither = <A, B>(
+    self: Options.Options<A>,
+    that: Options.Options<B>,
+): Options.Options<Either.Either<B, A>> => makeOrElse(self, that);
 
 /** @internal */
-export const parse = dual<
-    (
-        args: HashMap.HashMap<string, ReadonlyArray<string>>,
-        config: CliConfig.CliConfig,
-    ) => <A>(
-        self: Options.Options<A>,
-    ) => Effect.Effect<
-        A,
-        ValidationError.ValidationError,
-        FileSystem.FileSystem
-    >,
-    <A>(
-        self: Options.Options<A>,
-        args: HashMap.HashMap<string, ReadonlyArray<string>>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<
-        A,
-        ValidationError.ValidationError,
-        FileSystem.FileSystem
-    >
->(
-    3,
-    (self, args, config) =>
-        parseInternal(self as Instruction, args, config) as any,
-);
+export const parse = <A>(
+    self: Options.Options<A>,
+    args: HashMap.HashMap<string, ReadonlyArray<string>>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<A, ValidationError.ValidationError, FileSystem.FileSystem> =>
+    parseInternal(self as Instruction, args, config) as any;
 
 /** @internal */
-export const processCommandLine = dual<
-    (
-        args: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => <A>(
-        self: Options.Options<A>,
-    ) => Effect.Effect<
-        [Option.Option<ValidationError.ValidationError>, Array<string>, A],
-        ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >,
-    <A>(
-        self: Options.Options<A>,
-        args: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<
-        [Option.Option<ValidationError.ValidationError>, Array<string>, A],
-        ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >
->(3, (self, args, config) =>
+export const processCommandLine = <A>(
+    self: Options.Options<A>,
+    args: ReadonlyArray<string>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<
+    [Option.Option<ValidationError.ValidationError>, Array<string>, A],
+    ValidationError.ValidationError,
+    FileSystem.FileSystem | Path.Path | Terminal.Terminal
+> =>
     matchOptions(
         args,
         toParseableInstruction(self as Instruction),
@@ -690,8 +590,7 @@ export const processCommandLine = dual<
                 ]),
             ),
         ),
-    ),
-);
+    );
 
 /** @internal */
 export const repeated = <A>(
@@ -700,10 +599,10 @@ export const repeated = <A>(
     makeVariadic(self, Option.none(), Option.none());
 
 /** @internal */
-export const withAlias = dual<
-    (alias: string) => <A>(self: Options.Options<A>) => Options.Options<A>,
-    <A>(self: Options.Options<A>, alias: string) => Options.Options<A>
->(2, (self, alias) =>
+export const withAlias = <A>(
+    self: Options.Options<A>,
+    alias: string,
+): Options.Options<A> =>
     modifySingle(self as Instruction, (single) => {
         const aliases = Arr.append(single.aliases, alias);
         return makeSingle(
@@ -713,38 +612,19 @@ export const withAlias = dual<
             single.description,
             single.pseudoName,
         ) as Single;
-    }),
-);
+    });
 
 /** @internal */
-export const withDefault = dual<
-    <const B>(
-        fallback: B,
-    ) => <A>(self: Options.Options<A>) => Options.Options<A | B>,
-    <A, const B>(
-        self: Options.Options<A>,
-        fallback: B,
-    ) => Options.Options<A | B>
->(2, (self, fallback) => makeWithDefault(self, fallback));
+export const withDefault = <A, const B>(
+    self: Options.Options<A>,
+    fallback: B,
+): Options.Options<A | B> => makeWithDefault(self, fallback);
 
 /** @internal */
-export const withFallbackConfig: {
-    <B>(
-        config: Config.Config<B>,
-    ): <A>(self: Options.Options<A>) => Options.Options<B | A>;
-    <A, B>(
-        self: Options.Options<A>,
-        config: Config.Config<B>,
-    ): Options.Options<A | B>;
-} = dual<
-    <B>(
-        config: Config.Config<B>,
-    ) => <A>(self: Options.Options<A>) => Options.Options<A | B>,
-    <A, B>(
-        self: Options.Options<A>,
-        config: Config.Config<B>,
-    ) => Options.Options<A | B>
->(2, (self, config) => {
+export const withFallbackConfig = <A, B>(
+    self: Options.Options<A>,
+    config: Config.Config<B>,
+): Options.Options<A | B> => {
     if (isInstruction(self) && isWithDefault(self)) {
         return makeWithDefault(
             withFallbackConfig(self.options, config),
@@ -752,26 +632,13 @@ export const withFallbackConfig: {
         );
     }
     return makeWithFallback(self, config);
-});
+};
 
 /** @internal */
-export const withFallbackPrompt: {
-    <B>(
-        prompt: Prompt.Prompt<B>,
-    ): <A>(self: Options.Options<A>) => Options.Options<B | A>;
-    <A, B>(
-        self: Options.Options<A>,
-        prompt: Prompt.Prompt<B>,
-    ): Options.Options<A | B>;
-} = dual<
-    <B>(
-        prompt: Prompt.Prompt<B>,
-    ) => <A>(self: Options.Options<A>) => Options.Options<A | B>,
-    <A, B>(
-        self: Options.Options<A>,
-        prompt: Prompt.Prompt<B>,
-    ) => Options.Options<A | B>
->(2, (self, prompt) => {
+export const withFallbackPrompt = <A, B>(
+    self: Options.Options<A>,
+    prompt: Prompt.Prompt<B>,
+): Options.Options<A | B> => {
     if (isInstruction(self) && isWithDefault(self)) {
         return makeWithDefault(
             withFallbackPrompt(self.options, prompt),
@@ -779,15 +646,13 @@ export const withFallbackPrompt: {
         );
     }
     return makeWithFallback(self, prompt);
-});
+};
 
 /** @internal */
-export const withDescription = dual<
-    (
-        description: string,
-    ) => <A>(self: Options.Options<A>) => Options.Options<A>,
-    <A>(self: Options.Options<A>, description: string) => Options.Options<A>
->(2, (self, desc) =>
+export const withDescription = <A>(
+    self: Options.Options<A>,
+    desc: string,
+): Options.Options<A> =>
     modifySingle(self as Instruction, (single) => {
         const description = InternalHelpDoc.sequence(
             single.description,
@@ -800,14 +665,13 @@ export const withDescription = dual<
             description,
             single.pseudoName,
         ) as Single;
-    }),
-);
+    });
 
 /** @internal */
-export const withPseudoName = dual<
-    (pseudoName: string) => <A>(self: Options.Options<A>) => Options.Options<A>,
-    <A>(self: Options.Options<A>, pseudoName: string) => Options.Options<A>
->(2, (self, pseudoName) =>
+export const withPseudoName = <A>(
+    self: Options.Options<A>,
+    pseudoName: string,
+): Options.Options<A> =>
     modifySingle(
         self as Instruction,
         (single) =>
@@ -818,27 +682,17 @@ export const withPseudoName = dual<
                 single.description,
                 Option.some(pseudoName),
             ) as Single,
-    ),
-);
+    );
 
 /** @internal */
-export const withSchema = dual<
-    <A, I extends A, B>(
-        schema: Schema.Schema<
-            B,
-            I,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => (self: Options.Options<A>) => Options.Options<B>,
-    <A, I extends A, B>(
-        self: Options.Options<A>,
-        schema: Schema.Schema<
-            B,
-            I,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => Options.Options<B>
->(2, (self, schema) => {
+export const withSchema = <A, I extends A, B>(
+    self: Options.Options<A>,
+    schema: Schema.Schema<
+        B,
+        I,
+        FileSystem.FileSystem | Path.Path | Terminal.Terminal
+    >,
+): Options.Options<B> => {
     const decode = ParseResult.decode(schema);
     return mapEffect(self, (_) =>
         Effect.mapError(decode(_ as any), (issue) =>
@@ -849,28 +703,17 @@ export const withSchema = dual<
             ),
         ),
     );
-});
+};
 
 /** @internal */
-export const wizard = dual<
-    (
-        config: CliConfig.CliConfig,
-    ) => <A>(
-        self: Options.Options<A>,
-    ) => Effect.Effect<
-        Array<string>,
-        Terminal.QuitException | ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >,
-    <A>(
-        self: Options.Options<A>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<
-        Array<string>,
-        Terminal.QuitException | ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >
->(2, (self, config) => wizardInternal(self as Instruction, config));
+export const wizard = <A>(
+    self: Options.Options<A>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<
+    Array<string>,
+    Terminal.QuitException | ValidationError.ValidationError,
+    FileSystem.FileSystem | Path.Path | Terminal.Terminal
+> => wizardInternal(self as Instruction, config);
 
 // =============================================================================
 // Internals
@@ -938,8 +781,8 @@ const getHelpInternal = (self: Instruction): HelpDoc.HelpDoc => {
                     ]);
                     const newBlock = pipe(
                         oldBlock,
-                        InternalHelpDoc.sequence(header),
-                        InternalHelpDoc.sequence(description),
+                        (x) => InternalHelpDoc.sequence(x, header),
+                        (x) => InternalHelpDoc.sequence(x, description),
                     );
                     return [span, newBlock];
                 },
@@ -1806,9 +1649,8 @@ const wizardInternal = (
             const alternativeHelp = InternalHelpDoc.p(
                 "Select which option you would like to use",
             );
-            const message = pipe(
-                getHelpInternal(self),
-                InternalHelpDoc.sequence(alternativeHelp),
+            const message = pipe(getHelpInternal(self), (x) =>
+                InternalHelpDoc.sequence(x, alternativeHelp),
             );
             const makeChoice = (title: string, value: Instruction) => ({
                 title,
@@ -1833,9 +1675,8 @@ const wizardInternal = (
             const repeatHelp = InternalHelpDoc.p(
                 "How many times should this argument be repeated?",
             );
-            const message = pipe(
-                getHelpInternal(self),
-                InternalHelpDoc.sequence(repeatHelp),
+            const message = pipe(getHelpInternal(self), (x) =>
+                InternalHelpDoc.sequence(x, repeatHelp),
             );
             return InternalNumberPrompt.integer({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),
@@ -1871,7 +1712,7 @@ const wizardInternal = (
             );
             const message = pipe(
                 getHelpInternal(self.options as Instruction),
-                InternalHelpDoc.sequence(defaultHelp),
+                (x) => InternalHelpDoc.sequence(x, defaultHelp),
             );
             return InternalSelectPrompt.select({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),
@@ -1916,7 +1757,7 @@ const wizardInternal = (
             );
             const message = pipe(
                 getHelpInternal(self.options as Instruction),
-                InternalHelpDoc.sequence(defaultHelp),
+                (x) => InternalHelpDoc.sequence(x, defaultHelp),
             );
             return InternalSelectPrompt.select({
                 message: InternalHelpDoc.toAnsiText(message).trimEnd(),

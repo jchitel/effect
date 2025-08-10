@@ -19,31 +19,32 @@ const { createShip, moveShip, removeMine, setMine, shoot } =
 // naval_fate mine set <x> <y> [--moored]
 // naval_fate mine remove <x> <y> [--moored]
 
-const nameArg = Args.text({ name: "name" }).pipe(
-    Args.withDescription("The name of the ship"),
+const nameArg = Args.text({ name: "name" }).pipe((x) =>
+    Args.withDescription(x, "The name of the ship"),
 );
-const xArg = Args.integer({ name: "x" }).pipe(
-    Args.withDescription("The x coordinate"),
+const xArg = Args.integer({ name: "x" }).pipe((x) =>
+    Args.withDescription(x, "The x coordinate"),
 );
-const yArg = Args.integer({ name: "y" }).pipe(
-    Args.withDescription("The y coordinate"),
+const yArg = Args.integer({ name: "y" }).pipe((x) =>
+    Args.withDescription(x, "The y coordinate"),
 );
 const coordinatesArg = { x: xArg, y: yArg };
 const nameAndCoordinatesArg = { name: nameArg, ...coordinatesArg };
 
-const mooredOption = Options.boolean("moored").pipe(
+const mooredOption = Options.boolean("moored").pipe((x) =>
     Options.withDescription(
+        x,
         "Whether the mine is moored (anchored) or drifting",
     ),
 );
 const speedOption = Options.integer("speed").pipe(
-    Options.withDescription("Speed in knots"),
-    Options.withDefault(10),
+    (x) => Options.withDescription(x, "Speed in knots"),
+    (x) => Options.withDefault(x, 10),
 );
 
 const shipCommand = Command.make("ship", {
     verbose: Options.boolean("verbose"),
-}).pipe(Command.withDescription("Controls a ship in Naval Fate"));
+}).pipe((x) => Command.withDescription(x, "Controls a ship in Naval Fate"));
 
 const newShipCommand = Command.make(
     "new",
@@ -59,7 +60,7 @@ const newShipCommand = Command.make(
                 yield* Console.log(`Verbose mode enabled`);
             }
         }),
-).pipe(Command.withDescription("Create a new ship"));
+).pipe((x) => Command.withDescription(x, "Create a new ship"));
 
 const moveShipCommand = Command.make(
     "move",
@@ -74,7 +75,7 @@ const moveShipCommand = Command.make(
                 `Moving ship '${name}' to coordinates (${x}, ${y}) at ${speed} knots`,
             );
         }),
-).pipe(Command.withDescription("Move a ship"));
+).pipe((x) => Command.withDescription(x, "Move a ship"));
 
 const shootShipCommand = Command.make(
     "shoot",
@@ -84,10 +85,10 @@ const shootShipCommand = Command.make(
             yield* shoot(x, y);
             yield* Console.log(`Shot cannons at coordinates (${x}, ${y})`);
         }),
-).pipe(Command.withDescription("Shoot from a ship"));
+).pipe((x) => Command.withDescription(x, "Shoot from a ship"));
 
-const mineCommand = Command.make("mine").pipe(
-    Command.withDescription("Controls mines in Naval Fate"),
+const mineCommand = Command.make("mine").pipe((x) =>
+    Command.withDescription(x, "Controls mines in Naval Fate"),
 );
 
 const setMineCommand = Command.make(
@@ -103,7 +104,7 @@ const setMineCommand = Command.make(
                 `Set ${moored ? "moored" : "drifting"} mine at coordinates (${x}, ${y})`,
             );
         }),
-).pipe(Command.withDescription("Set a mine at specific coordinates"));
+).pipe((x) => Command.withDescription(x, "Set a mine at specific coordinates"));
 
 const removeMineCommand = Command.make(
     "remove",
@@ -117,24 +118,29 @@ const removeMineCommand = Command.make(
                 `Removing mine at coordinates (${x}, ${y}), if present`,
             );
         }),
-).pipe(Command.withDescription("Remove a mine at specific coordinates"));
+).pipe((x) =>
+    Command.withDescription(x, "Remove a mine at specific coordinates"),
+);
 
 const command = Command.make("naval_fate").pipe(
-    Command.withDescription(
-        "An implementation of the Naval Fate CLI application.",
-    ),
-    Command.withSubcommands([
-        shipCommand.pipe(
-            Command.withSubcommands([
-                newShipCommand,
-                moveShipCommand,
-                shootShipCommand,
-            ]),
+    (x) =>
+        Command.withDescription(
+            x,
+            "An implementation of the Naval Fate CLI application.",
         ),
-        mineCommand.pipe(
-            Command.withSubcommands([setMineCommand, removeMineCommand]),
-        ),
-    ]),
+    (x) =>
+        Command.withSubcommands(x, [
+            shipCommand.pipe((x) =>
+                Command.withSubcommands(x, [
+                    newShipCommand,
+                    moveShipCommand,
+                    shootShipCommand,
+                ]),
+            ),
+            mineCommand.pipe((x) =>
+                Command.withSubcommands(x, [setMineCommand, removeMineCommand]),
+            ),
+        ]),
 );
 
 const ConfigLive = CliConfig.layer({

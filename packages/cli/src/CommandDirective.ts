@@ -55,10 +55,10 @@ export const isUserDefined: <A>(
  * @since 1.0.0
  * @category mapping
  */
-export const map: {
-    <A, B>(f: (a: A) => B): (self: CommandDirective<A>) => CommandDirective<B>;
-    <A, B>(self: CommandDirective<A>, f: (a: A) => B): CommandDirective<B>;
-} = InternalCommandDirective.map;
+export const map: <A, B>(
+    self: CommandDirective<A>,
+    f: (a: A) => B,
+) => CommandDirective<B> = InternalCommandDirective.map;
 
 /**
  * @since 1.0.0

@@ -73,8 +73,8 @@ function compareBoth(self: unknown, that: unknown): boolean {
                 const keysThat = Object.keys(that as any);
                 if (keysSelf.length === keysThat.length) {
                     for (const key of keysSelf) {
-                        // @ts-expect-error
                         if (
+                            // @ts-expect-error
                             !(key in that && compareBoth(self[key], that[key]))
                         ) {
                             return structuralRegionState.tester

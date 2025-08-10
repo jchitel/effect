@@ -74,9 +74,9 @@ export const completionsOptions: Options.Options<
     ["bash", "bash" as const],
     ["fish", "fish" as const],
     ["zsh", "zsh" as const],
-]).pipe(
-    InternalOptions.optional,
+]).pipe(InternalOptions.optional, (x) =>
     InternalOptions.withDescription(
+        x,
         "Generate a completion script for a specific shell.",
     ),
 );
@@ -89,9 +89,9 @@ export const logLevelOptions: Options.Options<
     LogLevel.allLevels.map(
         (level) => [level._tag.toLowerCase(), level] as const,
     ),
-).pipe(
-    InternalOptions.optional,
+).pipe(InternalOptions.optional, (x) =>
     InternalOptions.withDescription(
+        x,
         "Sets the minimum log level for a command.",
     ),
 );
@@ -100,21 +100,27 @@ export const logLevelOptions: Options.Options<
 export const helpOptions: Options.Options<boolean> = InternalOptions.boolean(
     "help",
 ).pipe(
-    InternalOptions.withAlias("h"),
-    InternalOptions.withDescription(
-        "Show the help documentation for a command.",
-    ),
+    (x) => InternalOptions.withAlias(x, "h"),
+    (x) =>
+        InternalOptions.withDescription(
+            x,
+            "Show the help documentation for a command.",
+        ),
 );
 
 /** @internal */
 export const versionOptions: Options.Options<boolean> = InternalOptions.boolean(
     "version",
-).pipe(InternalOptions.withDescription("Show the version of the application."));
+).pipe((x) =>
+    InternalOptions.withDescription(x, "Show the version of the application."),
+);
 
 /** @internal */
 export const wizardOptions: Options.Options<boolean> = InternalOptions.boolean(
     "wizard",
-).pipe(InternalOptions.withDescription("Start wizard mode for a command."));
+).pipe((x) =>
+    InternalOptions.withDescription(x, "Start wizard mode for a command."),
+);
 
 /** @internal */
 export const builtIns = InternalOptions.all({

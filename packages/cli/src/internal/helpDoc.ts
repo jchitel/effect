@@ -2,7 +2,7 @@ import * as Ansi from "@effect/printer-ansi/Ansi";
 import * as Doc from "@effect/printer-ansi/AnsiDoc";
 import * as Optimize from "@effect/printer/Optimize";
 import * as Arr from "effect/Array";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import type * as HelpDoc from "../HelpDoc.js";
 import type * as Span from "../HelpDoc/Span.js";
 import * as InternalSpan from "./helpDoc/span.js";
@@ -41,10 +41,10 @@ export const empty: HelpDoc.HelpDoc = {
 };
 
 /** @internal */
-export const sequence = dual<
-    (that: HelpDoc.HelpDoc) => (self: HelpDoc.HelpDoc) => HelpDoc.HelpDoc,
-    (self: HelpDoc.HelpDoc, that: HelpDoc.HelpDoc) => HelpDoc.HelpDoc
->(2, (self, that) => {
+export const sequence = (
+    self: HelpDoc.HelpDoc,
+    that: HelpDoc.HelpDoc,
+): HelpDoc.HelpDoc => {
     if (isEmpty(self)) {
         return that;
     }
@@ -56,13 +56,13 @@ export const sequence = dual<
         left: self,
         right: that,
     };
-});
+};
 
 /** @internal */
-export const orElse = dual<
-    (that: HelpDoc.HelpDoc) => (self: HelpDoc.HelpDoc) => HelpDoc.HelpDoc,
-    (self: HelpDoc.HelpDoc, that: HelpDoc.HelpDoc) => HelpDoc.HelpDoc
->(2, (self, that) => (isEmpty(self) ? that : self));
+export const orElse = (
+    self: HelpDoc.HelpDoc,
+    that: HelpDoc.HelpDoc,
+): HelpDoc.HelpDoc => (isEmpty(self) ? that : self);
 
 /** @internal */
 export const blocks = (
@@ -123,27 +123,18 @@ export const p = (value: string | Span.Span): HelpDoc.HelpDoc => ({
 });
 
 /** @internal */
-export const mapDescriptionList = dual<
-    (
-        f: (
-            span: Span.Span,
-            helpDoc: HelpDoc.HelpDoc,
-        ) => [Span.Span, HelpDoc.HelpDoc],
-    ) => (self: HelpDoc.HelpDoc) => HelpDoc.HelpDoc,
-    (
-        self: HelpDoc.HelpDoc,
-        f: (
-            span: Span.Span,
-            helpDoc: HelpDoc.HelpDoc,
-        ) => [Span.Span, HelpDoc.HelpDoc],
-    ) => HelpDoc.HelpDoc
->(2, (self, f) =>
+export const mapDescriptionList = (
+    self: HelpDoc.HelpDoc,
+    f: (
+        span: Span.Span,
+        helpDoc: HelpDoc.HelpDoc,
+    ) => [Span.Span, HelpDoc.HelpDoc],
+): HelpDoc.HelpDoc =>
     isDescriptionList(self)
         ? descriptionList(
               Arr.map(self.definitions, ([span, helpDoc]) => f(span, helpDoc)),
           )
-        : self,
-);
+        : self;
 
 /** @internal */
 export const toAnsiDoc = (self: HelpDoc.HelpDoc): Doc.AnsiDoc =>

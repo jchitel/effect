@@ -2,7 +2,6 @@ import * as Ansi from "@effect/printer-ansi/Ansi";
 import * as Doc from "@effect/printer-ansi/AnsiDoc";
 import * as Color from "@effect/printer-ansi/Color";
 import * as Arr from "effect/Array";
-import { dual } from "effect/Function";
 import type * as Span from "../../HelpDoc/Span.js";
 
 /** @internal */
@@ -73,17 +72,11 @@ export const isWeak = (self: Span.Span): self is Span.Weak =>
     self._tag === "Weak";
 
 /** @internal */
-export const concat = dual<
-    (that: Span.Span) => (self: Span.Span) => Span.Span,
-    (self: Span.Span, that: Span.Span) => Span.Span
->(
-    2,
-    (self, that): Span.Span => ({
-        _tag: "Sequence",
-        left: self,
-        right: that,
-    }),
-);
+export const concat = (self: Span.Span, that: Span.Span): Span.Span => ({
+    _tag: "Sequence",
+    left: self,
+    right: that,
+});
 
 export const getText = (self: Span.Span): string => {
     switch (self._tag) {

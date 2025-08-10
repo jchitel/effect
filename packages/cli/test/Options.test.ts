@@ -16,15 +16,17 @@ import * as HashMap from "effect/HashMap";
 import * as Option from "effect/Option";
 import * as Schema from "effect/Schema";
 
-const firstName = Options.text("firstName").pipe(Options.withAlias("f"));
+const firstName = Options.text("firstName").pipe((x) =>
+    Options.withAlias(x, "f"),
+);
 const lastName = Options.text("lastName");
 const age = Options.integer("age");
-const balance = Options.text("balance").pipe(
-    Options.withSchema(Schema.BigDecimal),
+const balance = Options.text("balance").pipe((x) =>
+    Options.withSchema(x, Schema.BigDecimal),
 );
 const ageOptional = Options.optional(age);
 const verbose = Options.boolean("verbose", { ifPresent: true });
-const defs = Options.keyValueMap("defs").pipe(Options.withAlias("d"));
+const defs = Options.keyValueMap("defs").pipe((x) => Options.withAlias(x, "d"));
 
 const runEffect = <E, A>(
     self: Effect.Effect<A, E, NodeContext.NodeContext>,
@@ -110,8 +112,8 @@ describe("Options", () => {
     it("should return a HelpDoc if there is a collision between arguments", () =>
         Effect.gen(function* (_) {
             const options = Options.orElse(
-                Options.text("a").pipe(Options.map(identity)),
-                Options.text("b").pipe(Options.map(identity)),
+                Options.text("a").pipe((x) => Options.map(x, identity)),
+                Options.text("b").pipe((x) => Options.map(x, identity)),
             );
             const args = Array.make("-a", "a", "-b", "b");
             const result = yield* _(
@@ -398,8 +400,8 @@ describe("Options", () => {
                 isCaseSensitive: true,
                 autoCorrectLimit: 2,
             });
-            const option = Options.text("Firstname").pipe(
-                Options.withAlias("F"),
+            const option = Options.text("Firstname").pipe((x) =>
+                Options.withAlias(x, "F"),
             );
             const args1 = Array.make("--Firstname", "John");
             const args2 = Array.make("-F", "John");
@@ -496,7 +498,9 @@ describe("Options", () => {
 
     it("validate provides a suggestion if a provided option with a default is close to a specified option", () =>
         Effect.gen(function* (_) {
-            const option = firstName.pipe(Options.withDefault("Jack"));
+            const option = firstName.pipe((x) =>
+                Options.withDefault(x, "Jack"),
+            );
             const args = Array.make("--firstme", "Alice");
             const result = yield* _(
                 Effect.flip(process(option, args, CliConfig.defaultConfig)),
@@ -513,10 +517,14 @@ describe("Options", () => {
     it("orElse - two options", () =>
         Effect.gen(function* (_) {
             const option = Options.text("string").pipe(
-                Options.map(Either.left),
-                Options.orElse(
-                    Options.integer("integer").pipe(Options.map(Either.right)),
-                ),
+                (x) => Options.map(x, Either.left),
+                (x) =>
+                    Options.orElse(
+                        x,
+                        Options.integer("integer").pipe((x) =>
+                            Options.map(x, Either.right),
+                        ),
+                    ),
             );
             const args1 = Array.make("--integer", "2");
             const args2 = Array.make("--string", "two");
@@ -571,8 +579,8 @@ describe("Options", () => {
     it("orElse - invalid option provided with a default", () =>
         Effect.gen(function* (_) {
             const option = Options.integer("min").pipe(
-                Options.orElse(Options.integer("max")),
-                Options.withDefault(0),
+                (x) => Options.orElse(x, Options.integer("max")),
+                (x) => Options.withDefault(x, 0),
             );
             const args = Array.make("--min", "abc");
             const result = yield* _(
@@ -798,7 +806,9 @@ describe("Options", () => {
 
     it("atLeast", () =>
         Effect.gen(function* (_) {
-            const option = Options.integer("foo").pipe(Options.atLeast(2));
+            const option = Options.integer("foo").pipe((x) =>
+                Options.atLeast(x, 2),
+            );
             const args1 = ["--foo", "1", "--foo", "2"];
             const args2 = ["--foo", "1"];
             const result1 = yield* _(
@@ -819,7 +829,9 @@ describe("Options", () => {
 
     it("atMost", () =>
         Effect.gen(function* (_) {
-            const option = Options.integer("foo").pipe(Options.atMost(2));
+            const option = Options.integer("foo").pipe((x) =>
+                Options.atMost(x, 2),
+            );
             const args1 = ["--foo", "1", "--foo", "2"];
             const args2 = ["--foo", "1", "--foo", "2", "--foo", "3"];
             const result1 = yield* _(
@@ -840,7 +852,9 @@ describe("Options", () => {
 
     it("between", () =>
         Effect.gen(function* (_) {
-            const option = Options.integer("foo").pipe(Options.between(2, 3));
+            const option = Options.integer("foo").pipe((x) =>
+                Options.between(x, 2, 3),
+            );
             const args1 = ["--foo", "1"];
             const args2 = ["--foo", "1", "--foo", "2"];
             const args3 = ["--foo", "1", "--foo", "2", "--foo", "3"];

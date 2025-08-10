@@ -34,9 +34,7 @@ export const bindDiscard: {
     <N extends string, A extends object, B>(
         name: Exclude<N, keyof A>,
         that: Predicate.Predicate<B>,
-    ): (
-        self: Predicate.Predicate<A>,
-    ) => Predicate.Predicate<{
+    ): (self: Predicate.Predicate<A>) => Predicate.Predicate<{
         readonly [K in N | keyof A]: K extends keyof A ? A[K] : B;
     }>;
     <A extends object, N extends string, B>(

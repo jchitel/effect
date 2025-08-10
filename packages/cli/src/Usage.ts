@@ -88,19 +88,14 @@ export interface Concat {
  * @since 1.0.0
  * @category combinators
  */
-export const alternation: {
-    (that: Usage): (self: Usage) => Usage;
-    (self: Usage, that: Usage): Usage;
-} = InternalUsage.alternation;
+export const alternation: (self: Usage, that: Usage) => Usage =
+    InternalUsage.alternation;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const concat: {
-    (that: Usage): (self: Usage) => Usage;
-    (self: Usage, that: Usage): Usage;
-} = InternalUsage.concat;
+export const concat: (self: Usage, that: Usage) => Usage = InternalUsage.concat;
 
 /**
  * @since 1.0.0
@@ -112,10 +107,8 @@ export const empty: Usage = InternalUsage.empty;
  * @since 1.0.0
  * @category constructors
  */
-export const enumerate: {
-    (config: CliConfig): (self: Usage) => Array<Span>;
-    (self: Usage, config: CliConfig): Array<Span>;
-} = InternalUsage.enumerate;
+export const enumerate: (self: Usage, config: CliConfig) => Array<Span> =
+    InternalUsage.enumerate;
 
 /**
  * @since 1.0.0

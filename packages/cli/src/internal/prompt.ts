@@ -3,7 +3,6 @@ import * as Doc from "@effect/printer-ansi/AnsiDoc";
 import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Effectable from "effect/Effectable";
-import { dual } from "effect/Function";
 import type * as Mailbox from "effect/Mailbox";
 import * as Pipeable from "effect/Pipeable";
 import type * as Prompt from "../Prompt.js";
@@ -128,10 +127,10 @@ export const all: <
             }
             const rest = entries.slice(1);
             for (const [key, prompt] of rest) {
-                result = result.pipe(
-                    flatMap((record) =>
-                        prompt.pipe(
-                            map((value) => ({
+                result = result.pipe((x) =>
+                    flatMap(x, (record) =>
+                        prompt.pipe((x) =>
+                            map(x, (value) => ({
                                 ...record,
                                 [key]: value,
                             })),
@@ -162,32 +161,22 @@ export const custom = <State, Output>(
 };
 
 /** @internal */
-export const map = dual<
-    <Output, Output2>(
-        f: (output: Output) => Output2,
-    ) => (self: Prompt.Prompt<Output>) => Prompt.Prompt<Output2>,
-    <Output, Output2>(
-        self: Prompt.Prompt<Output>,
-        f: (output: Output) => Output2,
-    ) => Prompt.Prompt<Output2>
->(2, (self, f) => flatMap(self, (a) => succeed(f(a))));
+export const map = <Output, Output2>(
+    self: Prompt.Prompt<Output>,
+    f: (output: Output) => Output2,
+): Prompt.Prompt<Output2> => flatMap(self, (a) => succeed(f(a)));
 
 /** @internal */
-export const flatMap = dual<
-    <Output, Output2>(
-        f: (output: Output) => Prompt.Prompt<Output2>,
-    ) => (self: Prompt.Prompt<Output>) => Prompt.Prompt<Output2>,
-    <Output, Output2>(
-        self: Prompt.Prompt<Output>,
-        f: (output: Output) => Prompt.Prompt<Output2>,
-    ) => Prompt.Prompt<Output2>
->(2, (self, f) => {
+export const flatMap = <Output, Output2>(
+    self: Prompt.Prompt<Output>,
+    f: (output: Output) => Prompt.Prompt<Output2>,
+): Prompt.Prompt<Output2> => {
     const op = Object.create(proto);
     op._tag = "OnSuccess";
     op.prompt = self;
     op.onSuccess = f;
     return op;
-});
+};
 
 /** @internal */
 export const run: <Output>(

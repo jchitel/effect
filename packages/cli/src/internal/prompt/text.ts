@@ -348,13 +348,17 @@ function basePrompt(
 export const hidden = (
     options: Prompt.Prompt.TextOptions,
 ): Prompt.Prompt<Redacted.Redacted> =>
-    basePrompt(options, "hidden").pipe(InternalPrompt.map(Redacted.make));
+    basePrompt(options, "hidden").pipe((x) =>
+        InternalPrompt.map(x, Redacted.make),
+    );
 
 /** @internal */
 export const password = (
     options: Prompt.Prompt.TextOptions,
 ): Prompt.Prompt<Redacted.Redacted> =>
-    basePrompt(options, "password").pipe(InternalPrompt.map(Redacted.make));
+    basePrompt(options, "password").pipe((x) =>
+        InternalPrompt.map(x, Redacted.make),
+    );
 
 /** @internal */
 export const text = (

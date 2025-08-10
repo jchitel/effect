@@ -6,7 +6,7 @@ import * as Arr from "effect/Array";
 import * as Console from "effect/Console";
 import * as Effect from "effect/Effect";
 import * as Either from "effect/Either";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as HashMap from "effect/HashMap";
 import * as HashSet from "effect/HashSet";
 import * as Option from "effect/Option";
@@ -215,115 +215,65 @@ export const getUsage = <A>(self: Descriptor.Command<A>): Usage.Usage =>
     getUsageInternal(self as Instruction);
 
 /** @internal */
-export const map = dual<
-    <A, B>(
-        f: (a: A) => B,
-    ) => (self: Descriptor.Command<A>) => Descriptor.Command<B>,
-    <A, B>(self: Descriptor.Command<A>, f: (a: A) => B) => Descriptor.Command<B>
->(2, (self, f) => mapEffect(self, (a) => Either.right(f(a))));
+export const map = <A, B>(
+    self: Descriptor.Command<A>,
+    f: (a: A) => B,
+): Descriptor.Command<B> => mapEffect(self, (a) => Either.right(f(a)));
 
 /** @internal */
-export const mapEffect = dual<
-    <A, B>(
-        f: (
-            a: A,
-        ) => Effect.Effect<
-            B,
-            ValidationError.ValidationError,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => (self: Descriptor.Command<A>) => Descriptor.Command<B>,
-    <A, B>(
-        self: Descriptor.Command<A>,
-        f: (
-            a: A,
-        ) => Effect.Effect<
-            B,
-            ValidationError.ValidationError,
-            FileSystem.FileSystem | Path.Path | Terminal.Terminal
-        >,
-    ) => Descriptor.Command<B>
->(2, (self, f) => {
+export const mapEffect = <A, B>(
+    self: Descriptor.Command<A>,
+    f: (
+        a: A,
+    ) => Effect.Effect<
+        B,
+        ValidationError.ValidationError,
+        FileSystem.FileSystem | Path.Path | Terminal.Terminal
+    >,
+): Descriptor.Command<B> => {
     const op = Object.create(proto);
     op._tag = "Map";
     op.command = self;
     op.f = f;
     return op;
-});
+};
 
 /** @internal */
-export const parse = dual<
-    (
-        args: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => <A>(
-        self: Descriptor.Command<A>,
-    ) => Effect.Effect<
-        Directive.CommandDirective<A>,
-        ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
+export const parse = <A>(
+    self: Descriptor.Command<A>,
+    args: ReadonlyArray<string>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<
+    Directive.CommandDirective<A>,
+    ValidationError.ValidationError,
+    FileSystem.FileSystem | Path.Path | Terminal.Terminal
+> => parseInternal(self as Instruction, args, config);
+
+/** @internal */
+export const withDescription = <A>(
+    self: Descriptor.Command<A>,
+    help: string | HelpDoc.HelpDoc,
+): Descriptor.Command<A> => withDescriptionInternal(self as Instruction, help);
+
+/** @internal */
+export const withSubcommands = <
+    A,
+    const Subcommands extends Arr.NonEmptyReadonlyArray<
+        readonly [id: unknown, command: Descriptor.Command<any>]
     >,
-    <A>(
-        self: Descriptor.Command<A>,
-        args: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<
-        Directive.CommandDirective<A>,
-        ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
+>(
+    self: Descriptor.Command<A>,
+    subcommands: [...Subcommands],
+): Descriptor.Command<
+    Descriptor.Command.ComputeParsedType<
+        A &
+            Readonly<{
+                subcommand: Option.Option<
+                    Descriptor.Command.Subcommands<Subcommands>
+                >;
+            }>
     >
->(3, (self, args, config) => parseInternal(self as Instruction, args, config));
-
-/** @internal */
-export const withDescription = dual<
-    (
-        help: string | HelpDoc.HelpDoc,
-    ) => <A>(self: Descriptor.Command<A>) => Descriptor.Command<A>,
-    <A>(
-        self: Descriptor.Command<A>,
-        help: string | HelpDoc.HelpDoc,
-    ) => Descriptor.Command<A>
->(2, (self, help) => withDescriptionInternal(self as Instruction, help));
-
-/** @internal */
-export const withSubcommands = dual<
-    <
-        const Subcommands extends Arr.NonEmptyReadonlyArray<
-            readonly [id: unknown, command: Descriptor.Command<any>]
-        >,
-    >(
-        subcommands: [...Subcommands],
-    ) => <A>(
-        self: Descriptor.Command<A>,
-    ) => Descriptor.Command<
-        Descriptor.Command.ComputeParsedType<
-            A &
-                Readonly<{
-                    subcommand: Option.Option<
-                        Descriptor.Command.Subcommands<Subcommands>
-                    >;
-                }>
-        >
-    >,
-    <
-        A,
-        const Subcommands extends Arr.NonEmptyReadonlyArray<
-            readonly [id: unknown, command: Descriptor.Command<any>]
-        >,
-    >(
-        self: Descriptor.Command<A>,
-        subcommands: [...Subcommands],
-    ) => Descriptor.Command<
-        Descriptor.Command.ComputeParsedType<
-            A &
-                Readonly<{
-                    subcommand: Option.Option<
-                        Descriptor.Command.Subcommands<Subcommands>
-                    >;
-                }>
-        >
-    >
->(2, (self, subcommands) => {
+> => {
     const op = Object.create(proto);
     op._tag = "Subcommands";
     op.parent = self;
@@ -331,32 +281,18 @@ export const withSubcommands = dual<
         map(command, (a) => [id, a]),
     );
     return op;
-});
+};
 
 /** @internal */
-export const wizard = dual<
-    (
-        prefix: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => <A>(
-        self: Descriptor.Command<A>,
-    ) => Effect.Effect<
-        Array<string>,
-        Terminal.QuitException | ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >,
-    <A>(
-        self: Descriptor.Command<A>,
-        prefix: ReadonlyArray<string>,
-        config: CliConfig.CliConfig,
-    ) => Effect.Effect<
-        Array<string>,
-        Terminal.QuitException | ValidationError.ValidationError,
-        FileSystem.FileSystem | Path.Path | Terminal.Terminal
-    >
->(3, (self, prefix, config) =>
-    wizardInternal(self as Instruction, prefix, config),
-);
+export const wizard = <A>(
+    self: Descriptor.Command<A>,
+    prefix: ReadonlyArray<string>,
+    config: CliConfig.CliConfig,
+): Effect.Effect<
+    Array<string>,
+    Terminal.QuitException | ValidationError.ValidationError,
+    FileSystem.FileSystem | Path.Path | Terminal.Terminal
+> => wizardInternal(self as Instruction, prefix, config);
 
 // =============================================================================
 // Internals
@@ -976,8 +912,9 @@ const parseInternal = (
                                                 }
                                                 return err;
                                             },
-                                            onSuccess:
+                                            onSuccess: (x) =>
                                                 InternalCommandDirective.map(
+                                                    x,
                                                     (subcommand) => ({
                                                         ...(directive.value as any),
                                                         subcommand:
@@ -1099,13 +1036,19 @@ const wizardInternal = (
                                             Color.cyan,
                                         ),
                                     ),
-                                    InternalSpan.concat(InternalSpan.space),
-                                    InternalSpan.concat(
-                                        InternalSpan.highlight(
-                                            Arr.join(commandLine, " "),
-                                            Color.magenta,
+                                    (s) =>
+                                        InternalSpan.concat(
+                                            s,
+                                            InternalSpan.space,
                                         ),
-                                    ),
+                                    (s) =>
+                                        InternalSpan.concat(
+                                            s,
+                                            InternalSpan.highlight(
+                                                Arr.join(commandLine, " "),
+                                                Color.magenta,
+                                            ),
+                                        ),
                                 ),
                             );
                             return Console.log(
@@ -1333,13 +1276,13 @@ const traverseCommand = <S>(
         }),
     );
 
-const indentAll = dual<
-    (indent: number) => (self: ReadonlyArray<string>) => Array<string>,
-    (self: ReadonlyArray<string>, indent: number) => Array<string>
->(2, (self: ReadonlyArray<string>, indent: number): Array<string> => {
+const indentAll = (
+    self: ReadonlyArray<string>,
+    indent: number,
+): Array<string> => {
     const indentation = Arr.allocate(indent + 1).join(" ");
     return Arr.map(self, (line) => `${indentation}${line}`);
-});
+};
 
 const getBashCompletionsInternal = (
     self: Instruction,

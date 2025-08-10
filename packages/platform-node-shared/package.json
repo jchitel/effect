@@ -53,16 +53,12 @@
         "ws": "^8.18.2"
     },
     "peerDependencies": {
-        "@effect/cluster": "workspace:^",
         "@effect/platform": "workspace:^",
-        "@effect/rpc": "workspace:^",
         "@effect/sql": "workspace:^",
         "effect": "workspace:^"
     },
     "devDependencies": {
-        "@effect/cluster": "workspace:^",
         "@effect/platform": "workspace:^",
-        "@effect/rpc": "workspace:^",
         "@effect/sql": "workspace:^",
         "@types/tar": "^6.1.12",
         "@types/ws": "^8.18.1",
