@@ -25,8 +25,8 @@ function handleClear(options: ToggleOptions) {
             columns,
         );
         return clearOutput.pipe(
-            Doc.cat(clearPrompt),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, clearPrompt),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -68,11 +68,11 @@ function renderOutput(
     if (Arr.isNonEmptyReadonlyArray(promptLines)) {
         const lines = Arr.map(promptLines, (line) => annotateLine(line));
         return prefix.pipe(
-            Doc.cat(Doc.nest(Doc.vsep(lines), 2)),
-            Doc.cat(Doc.space),
-            Doc.cat(trailingSymbol),
-            Doc.cat(Doc.space),
-            Doc.cat(toggle),
+            (x) => Doc.cat(x, Doc.nest(Doc.vsep(lines), 2)),
+            (x) => Doc.cat(x, Doc.space),
+            (x) => Doc.cat(x, trailingSymbol),
+            (x) => Doc.cat(x, Doc.space),
+            (x) => Doc.cat(x, toggle),
         );
     }
     return Doc.hsep([prefix, trailingSymbol, toggle]);
@@ -96,8 +96,8 @@ function renderNextFrame(state: State, options: ToggleOptions) {
             options,
         );
         return Doc.cursorHide.pipe(
-            Doc.cat(promptMsg),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, promptMsg),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -122,8 +122,8 @@ function renderSubmission(value: boolean, options: ToggleOptions) {
             options,
         );
         return promptMsg.pipe(
-            Doc.cat(Doc.hardLine),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, Doc.hardLine),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",

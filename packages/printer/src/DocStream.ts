@@ -258,37 +258,33 @@ export const empty: DocStream<never> = internal.empty;
  * @since 1.0.0
  * @category constructors
  */
-export const char: {
-    (char: string): <A>(self: DocStream<A>) => DocStream<A>;
-    <A>(self: DocStream<A>, char: string): DocStream<A>;
-} = internal.char;
+export const char: <A>(self: DocStream<A>, char: string) => DocStream<A> =
+    internal.char;
 
 /**
  * @since 1.0.0
  * @category constructors
  */
-export const text: {
-    (text: string): <A>(self: DocStream<A>) => DocStream<A>;
-    <A>(self: DocStream<A>, text: string): DocStream<A>;
-} = internal.text;
+export const text: <A>(self: DocStream<A>, text: string) => DocStream<A> =
+    internal.text;
 
 /**
  * @since 1.0.0
  * @category constructors
  */
-export const line: {
-    (indentation: number): <A>(self: DocStream<A>) => DocStream<A>;
-    <A>(self: DocStream<A>, indentation: number): DocStream<A>;
-} = internal.line;
+export const line: <A>(
+    self: DocStream<A>,
+    indentation: number,
+) => DocStream<A> = internal.line;
 
 /**
  * @since 1.0.0
  * @category constructors
  */
-export const pushAnnotation: {
-    <B>(annotation: B): <A>(self: DocStream<A>) => DocStream<B | A>;
-    <A, B>(self: DocStream<A>, annotation: B): DocStream<A | B>;
-} = internal.pushAnnotation;
+export const pushAnnotation: <A, B>(
+    self: DocStream<A>,
+    annotation: B,
+) => DocStream<A | B> = internal.pushAnnotation;
 
 /**
  * @since 1.0.0
@@ -308,10 +304,10 @@ export const popAnnotation: <A>(stream: DocStream<A>) => DocStream<A> =
  * @since 1.0.0
  * @category annotations
  */
-export const alterAnnotations: {
-    <A, B>(f: (a: A) => Option<B>): (self: DocStream<A>) => DocStream<B>;
-    <A, B>(self: DocStream<A>, f: (a: A) => Option<B>): DocStream<B>;
-} = internal.alterAnnotations;
+export const alterAnnotations: <A, B>(
+    self: DocStream<A>,
+    f: (a: A) => Option<B>,
+) => DocStream<B> = internal.alterAnnotations;
 
 /**
  * Modify the annotations of a document.
@@ -319,10 +315,10 @@ export const alterAnnotations: {
  * @since 1.0.0
  * @category annotations
  */
-export const reAnnotate: {
-    <A, B>(f: (a: A) => B): (self: DocStream<A>) => DocStream<B>;
-    <A, B>(self: DocStream<A>, f: (a: A) => B): DocStream<B>;
-} = internal.reAnnotate;
+export const reAnnotate: <A, B>(
+    self: DocStream<A>,
+    f: (a: A) => B,
+) => DocStream<B> = internal.reAnnotate;
 
 /**
  * Remove all annotations from a document.
@@ -341,17 +337,19 @@ export const unAnnotate: <A>(self: DocStream<A>) => DocStream<never> =
  * @since 1.0.0
  * @category folding
  */
-export const foldMap: {
-    <A, M>(M: monoid.Monoid<M>, f: (a: A) => M): (self: DocStream<A>) => M;
-    <A, M>(self: DocStream<A>, M: monoid.Monoid<M>, f: (a: A) => M): M;
-} = internal.foldMap;
+export const foldMap: <A, M>(
+    self: DocStream<A>,
+    M: monoid.Monoid<M>,
+    f: (a: A) => M,
+) => M = internal.foldMap;
 
 /**
  * @since 1.0.0
  * @category folding
  */
-export const match: {
-    <A, R>(patterns: {
+export const match: <A, R>(
+    self: DocStream<A>,
+    patterns: {
         readonly FailedStream: () => R;
         readonly EmptyStream: () => R;
         readonly CharStream: (char: string, stream: DocStream<A>) => R;
@@ -362,35 +360,15 @@ export const match: {
             stream: DocStream<A>,
         ) => R;
         readonly PopAnnotationStream: (stream: DocStream<A>) => R;
-    }): (self: DocStream<A>) => R;
-    <A, R>(
-        self: DocStream<A>,
-        patterns: {
-            readonly FailedStream: () => R;
-            readonly EmptyStream: () => R;
-            readonly CharStream: (char: string, stream: DocStream<A>) => R;
-            readonly TextStream: (text: string, stream: DocStream<A>) => R;
-            readonly LineStream: (
-                indentation: number,
-                stream: DocStream<A>,
-            ) => R;
-            readonly PushAnnotationStream: (
-                annotation: A,
-                stream: DocStream<A>,
-            ) => R;
-            readonly PopAnnotationStream: (stream: DocStream<A>) => R;
-        },
-    ): R;
-} = internal.match;
+    },
+) => R = internal.match;
 
 /**
  * @since 1.0.0
  * @category mapping
  */
-export const map: {
-    <A, B>(f: (a: A) => B): (self: DocStream<A>) => DocStream<B>;
-    <A, B>(self: DocStream<A>, f: (a: A) => B): DocStream<B>;
-} = internal.map;
+export const map: <A, B>(self: DocStream<A>, f: (a: A) => B) => DocStream<B> =
+    internal.map;
 
 /**
  * @since 1.0.0

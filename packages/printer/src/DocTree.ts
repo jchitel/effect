@@ -233,10 +233,10 @@ export const line: <A>(indentation: number) => DocTree<A> = internal.line;
  * @since 1.0.0
  * @category constructors
  */
-export const annotation: {
-    <A>(annotation: A): <B>(self: DocTree<B>) => DocTree<A | B>;
-    <A, B>(self: DocTree<A>, annotation: B): DocTree<A | B>;
-} = internal.annotation;
+export const annotation: <A, B>(
+    self: DocTree<A>,
+    annotation: B,
+) => DocTree<A | B> = internal.annotation;
 
 /**
  * Horizontally concatenates multiple `DocTree`s.
@@ -258,10 +258,10 @@ export const concat: <A>(trees: ReadonlyArray<DocTree<A>>) => DocTree<A> =
  * @since 1.0.0
  * @category annotations
  */
-export const alterAnnotations: {
-    <A, B>(f: (a: A) => Iterable<B>): (self: DocTree<A>) => DocTree<B>;
-    <A, B>(self: DocTree<A>, f: (a: A) => Iterable<B>): DocTree<B>;
-} = internal.alterAnnotations;
+export const alterAnnotations: <A, B>(
+    self: DocTree<A>,
+    f: (a: A) => Iterable<B>,
+) => DocTree<B> = internal.alterAnnotations;
 
 /**
  * Change the annotation of a `DocTree`.
@@ -269,10 +269,10 @@ export const alterAnnotations: {
  * @since 1.0.0
  * @category annotations
  */
-export const reAnnotate: {
-    <A, B>(f: (a: A) => B): (self: DocTree<A>) => DocTree<B>;
-    <A, B>(self: DocTree<A>, f: (a: A) => B): DocTree<B>;
-} = internal.reAnnotate;
+export const reAnnotate: <A, B>(
+    self: DocTree<A>,
+    f: (a: A) => B,
+) => DocTree<B> = internal.reAnnotate;
 
 /**
  * Remove all annotations from a `DocTree`.
@@ -291,10 +291,11 @@ export const unAnnotate: <A>(self: DocTree<A>) => DocTree<never> =
  * @since 1.0.0
  * @category folding
  */
-export const foldMap: {
-    <A, M>(M: monoid.Monoid<M>, f: (a: A) => M): (self: DocTree<A>) => M;
-    <A, M>(self: DocTree<A>, M: monoid.Monoid<M>, f: (a: A) => M): M;
-} = internal.foldMap;
+export const foldMap: <A, M>(
+    self: DocTree<A>,
+    M: monoid.Monoid<M>,
+    f: (a: A) => M,
+) => M = internal.foldMap;
 
 // -----------------------------------------------------------------------------
 // Instances
@@ -340,19 +341,12 @@ export const foldMap: {
  * @since 1.0.0
  * @category rendering
  */
-export const renderSimplyDecorated: {
-    <A, M>(
-        M: monoid.Monoid<M>,
-        renderText: (text: string) => M,
-        renderAnnotation: (annotation: A, out: M) => M,
-    ): (self: DocTree<A>) => M;
-    <A, M>(
-        self: DocTree<A>,
-        M: monoid.Monoid<M>,
-        renderText: (text: string) => M,
-        renderAnnotation: (annotation: A, out: M) => M,
-    ): M;
-} = internal.renderSimplyDecorated;
+export const renderSimplyDecorated: <A, M>(
+    self: DocTree<A>,
+    M: monoid.Monoid<M>,
+    renderText: (text: string) => M,
+    renderAnnotation: (annotation: A, out: M) => M,
+) => M = internal.renderSimplyDecorated;
 
 // -----------------------------------------------------------------------------
 // Conversions

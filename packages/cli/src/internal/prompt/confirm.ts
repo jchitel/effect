@@ -28,8 +28,8 @@ function handleClear(options: Options) {
         );
         const resetCurrentLine = Doc.cat(Doc.eraseLine, Doc.cursorLeft);
         return clearOutput.pipe(
-            Doc.cat(resetCurrentLine),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, resetCurrentLine),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -55,11 +55,11 @@ function renderOutput(
         onNonEmpty: (promptLines) => {
             const lines = Arr.map(promptLines, (line) => annotateLine(line));
             return prefix.pipe(
-                Doc.cat(Doc.nest(Doc.vsep(lines), 2)),
-                Doc.cat(Doc.space),
-                Doc.cat(trailingSymbol),
-                Doc.cat(Doc.space),
-                Doc.cat(confirm),
+                (x) => Doc.cat(x, Doc.nest(Doc.vsep(lines), 2)),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, trailingSymbol),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, confirm),
             );
         },
     });
@@ -92,8 +92,8 @@ function renderNextFrame(state: State, options: Options) {
             options,
         );
         return Doc.cursorHide.pipe(
-            Doc.cat(promptMsg),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, promptMsg),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -121,8 +121,8 @@ function renderSubmission(value: boolean, options: Options) {
             options,
         );
         return promptMsg.pipe(
-            Doc.cat(Doc.hardLine),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, Doc.hardLine),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",

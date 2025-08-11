@@ -79,7 +79,9 @@ describe.concurrent("SemiProduct", () => {
                         const args = [self, ...Array.from(collection)];
                         const len = args.length;
                         const f = getCurriedTupleConstructor(len);
-                        let fas = pipe(args[0], SemiApplicative.map(f));
+                        let fas = pipe(args[0], (x) =>
+                            SemiApplicative.map(x, f),
+                        );
                         for (let i = 1; i < len; i++) {
                             fas = pipe(fas, ap(args[i]));
                         }

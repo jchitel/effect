@@ -1,5 +1,4 @@
 import * as Effect from "effect/Effect";
-import { dual } from "effect/Function";
 import type * as Doc from "../Doc.js";
 import type * as DocStream from "../DocStream.js";
 import * as layout from "./layout.js";
@@ -10,10 +9,10 @@ import * as pageWidth from "./pageWidth.js";
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const render = dual<
-    (config: Doc.Doc.RenderConfig) => <A>(self: Doc.Doc<A>) => string,
-    <A>(self: Doc.Doc<A>, config: Doc.Doc.RenderConfig) => string
->(2, (self, config) => {
+export const render = <A>(
+    self: Doc.Doc<A>,
+    config: Doc.Doc.RenderConfig,
+): string => {
     switch (config.style) {
         case "compact": {
             return renderStream(layout.compact(self));
@@ -35,7 +34,7 @@ export const render = dual<
             return renderStream(layout.smart(self, layout.options(width)));
         }
     }
-});
+};
 
 /** @internal */
 export const renderStream = <A>(self: DocStream.DocStream<A>): string =>

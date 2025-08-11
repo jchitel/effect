@@ -1,14 +1,13 @@
 import * as Effect from "effect/Effect";
-import { dual } from "effect/Function";
 import type * as Doc from "../Doc.js";
 import type * as Optimize from "../Optimize.js";
 import * as InternalDoc from "./doc.js";
 
 /** @internal */
-export const optimize = dual<
-    (depth: Optimize.Optimize.Depth) => <A>(self: Doc.Doc<A>) => Doc.Doc<A>,
-    <A>(self: Doc.Doc<A>, depth: Optimize.Optimize.Depth) => Doc.Doc<A>
->(2, (self, depth) => Effect.runSync(optimizeSafe(self, depth)));
+export const optimize = <A>(
+    self: Doc.Doc<A>,
+    depth: Optimize.Optimize.Depth,
+): Doc.Doc<A> => Effect.runSync(optimizeSafe(self, depth));
 
 const optimizeSafe = <A>(
     self: Doc.Doc<A>,

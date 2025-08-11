@@ -1,5 +1,4 @@
 import * as Equal from "effect/Equal";
-import { dual } from "effect/Function";
 import * as Hash from "effect/Hash";
 import type * as Flatten from "../Flatten.js";
 
@@ -103,10 +102,10 @@ export const neverFlat: Flatten.Flatten<never> = (() => {
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const map = dual<
-    <A, B>(f: (a: A) => B) => (self: Flatten.Flatten<A>) => Flatten.Flatten<B>,
-    <A, B>(self: Flatten.Flatten<A>, f: (a: A) => B) => Flatten.Flatten<B>
->(2, <A, B>(self: Flatten.Flatten<A>, f: (a: A) => B) => {
+export const map = <A, B>(
+    self: Flatten.Flatten<A>,
+    f: (a: A) => B,
+): Flatten.Flatten<B> => {
     switch (self._tag) {
         case "Flattened": {
             return flattened(f(self.value));
@@ -118,4 +117,4 @@ export const map = dual<
             return neverFlat;
         }
     }
-});
+};

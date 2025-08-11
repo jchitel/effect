@@ -116,9 +116,9 @@ function handleClear(options: FileOptions) {
             );
             const clearOptions = InternalAnsiUtils.eraseText(text, columns);
             return clearOptions.pipe(
-                Doc.cat(clearPath),
-                Doc.cat(clearPrompt),
-                Optimize.optimize(Optimize.Deep),
+                (x) => Doc.cat(x, clearPath),
+                (x) => Doc.cat(x, clearPrompt),
+                (x) => Optimize.optimize(x, Optimize.Deep),
                 (x) =>
                     Doc.render(x, {
                         style: "pretty",
@@ -145,11 +145,11 @@ function renderPrompt(
         onNonEmpty: (promptLines) => {
             const lines = Arr.map(promptLines, (line) => annotateLine(line));
             return prefix.pipe(
-                Doc.cat(Doc.nest(Doc.vsep(lines), 2)),
-                Doc.cat(Doc.space),
-                Doc.cat(trailingSymbol),
-                Doc.cat(Doc.space),
-                Doc.cat(confirm),
+                (x) => Doc.cat(x, Doc.nest(Doc.vsep(lines), 2)),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, trailingSymbol),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, confirm),
             );
         },
     });
@@ -172,8 +172,11 @@ function renderPrefix(
         prefix = figures.arrowDown;
     }
     return state.cursor === currentIndex
-        ? figures.pointer.pipe(Doc.annotate(Ansi.cyanBright), Doc.cat(prefix))
-        : prefix.pipe(Doc.cat(Doc.space));
+        ? figures.pointer.pipe(
+              (x) => Doc.annotate(x, Ansi.cyanBright),
+              (x) => Doc.cat(x, prefix),
+          )
+        : prefix.pipe((x) => Doc.cat(x, Doc.space));
 }
 
 function renderFileName(file: string, isSelected: boolean) {
@@ -221,9 +224,9 @@ function renderNextFrame(state: State, options: FileOptions) {
         const selectedPath = state.files[state.cursor];
         const resolvedPath = path.resolve(currentPath, selectedPath);
         const resolvedPathMsg = figures.pointerSmall.pipe(
-            Doc.cat(Doc.space),
-            Doc.cat(Doc.text(resolvedPath)),
-            Doc.annotate(Ansi.blackBright),
+            (x) => Doc.cat(x, Doc.space),
+            (x) => Doc.cat(x, Doc.text(resolvedPath)),
+            (x) => Doc.annotate(x, Ansi.blackBright),
         );
         if (showConfirmation(state.confirm)) {
             const leadingSymbol = Doc.annotate(Doc.text("?"), Ansi.cyanBright);
@@ -239,10 +242,10 @@ function renderNextFrame(state: State, options: FileOptions) {
                 trailingSymbol,
             );
             return Doc.cursorHide.pipe(
-                Doc.cat(promptMsg),
-                Doc.cat(Doc.hardLine),
-                Doc.cat(resolvedPathMsg),
-                Optimize.optimize(Optimize.Deep),
+                (x) => Doc.cat(x, promptMsg),
+                (x) => Doc.cat(x, Doc.hardLine),
+                (x) => Doc.cat(x, resolvedPathMsg),
+                (x) => Optimize.optimize(x, Optimize.Deep),
                 (x) =>
                     Doc.render(x, {
                         style: "pretty",
@@ -260,12 +263,12 @@ function renderNextFrame(state: State, options: FileOptions) {
         );
         const files = renderFiles(state, state.files, figures, options);
         return Doc.cursorHide.pipe(
-            Doc.cat(promptMsg),
-            Doc.cat(Doc.hardLine),
-            Doc.cat(resolvedPathMsg),
-            Doc.cat(Doc.hardLine),
-            Doc.cat(files),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, promptMsg),
+            (x) => Doc.cat(x, Doc.hardLine),
+            (x) => Doc.cat(x, resolvedPathMsg),
+            (x) => Doc.cat(x, Doc.hardLine),
+            (x) => Doc.cat(x, files),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -289,9 +292,9 @@ function renderSubmission(value: string, options: FileOptions) {
             trailingSymbol,
         );
         return promptMsg.pipe(
-            Doc.cat(Doc.space),
-            Doc.cat(Doc.annotate(Doc.text(value), Ansi.white)),
-            Doc.cat(Doc.hardLine),
+            (x) => Doc.cat(x, Doc.space),
+            (x) => Doc.cat(x, Doc.annotate(Doc.text(value), Ansi.white)),
+            (x) => Doc.cat(x, Doc.hardLine),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",

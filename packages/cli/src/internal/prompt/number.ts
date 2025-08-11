@@ -41,8 +41,9 @@ function handleClear(options: IntegerOptions) {
                 onSome: (error) =>
                     Doc.cursorDown(
                         InternalAnsiUtils.lines(error, columns),
-                    ).pipe(
+                    ).pipe((x) =>
                         Doc.cat(
+                            x,
                             InternalAnsiUtils.eraseText(`\n${error}`, columns),
                         ),
                     ),
@@ -52,9 +53,9 @@ function handleClear(options: IntegerOptions) {
                 columns,
             );
             return clearError.pipe(
-                Doc.cat(clearOutput),
-                Doc.cat(resetCurrentLine),
-                Optimize.optimize(Optimize.Deep),
+                (x) => Doc.cat(x, clearOutput),
+                (x) => Doc.cat(x, resetCurrentLine),
+                (x) => Optimize.optimize(x, Optimize.Deep),
                 (x) =>
                     Doc.render(x, {
                         style: "pretty",
@@ -96,10 +97,10 @@ function renderError(state: State, pointer: Doc.AnsiDoc) {
                         annotateLine(str),
                     );
                     return Doc.cursorSavePosition.pipe(
-                        Doc.cat(Doc.hardLine),
-                        Doc.cat(prefix),
-                        Doc.cat(Doc.align(Doc.vsep(lines))),
-                        Doc.cat(Doc.cursorRestorePosition),
+                        (x) => Doc.cat(x, Doc.hardLine),
+                        (x) => Doc.cat(x, prefix),
+                        (x) => Doc.cat(x, Doc.align(Doc.vsep(lines))),
+                        (x) => Doc.cat(x, Doc.cursorRestorePosition),
                     );
                 },
             }),
@@ -122,11 +123,11 @@ function renderOutput(
         onNonEmpty: (promptLines) => {
             const lines = Arr.map(promptLines, (line) => annotateLine(line));
             return prefix.pipe(
-                Doc.cat(Doc.nest(Doc.vsep(lines), 2)),
-                Doc.cat(Doc.space),
-                Doc.cat(trailingSymbol),
-                Doc.cat(Doc.space),
-                Doc.cat(renderInput(state, submitted)),
+                (x) => Doc.cat(x, Doc.nest(Doc.vsep(lines), 2)),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, trailingSymbol),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, renderInput(state, submitted)),
             );
         },
     });
@@ -150,8 +151,8 @@ function renderNextFrame(state: State, options: IntegerOptions) {
             options,
         );
         return promptMsg.pipe(
-            Doc.cat(errorMsg),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, errorMsg),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -176,8 +177,8 @@ function renderSubmission(nextState: State, options: IntegerOptions) {
             true,
         );
         return promptMsg.pipe(
-            Doc.cat(Doc.hardLine),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, Doc.hardLine),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",

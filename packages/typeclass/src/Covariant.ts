@@ -10,15 +10,10 @@ import type { Invariant } from "./Invariant.js";
  * @since 0.24.0
  */
 export interface Covariant<F extends TypeLambda> extends Invariant<F> {
-    readonly map: {
-        <A, B>(
-            f: (a: A) => B,
-        ): <R, O, E>(self: Kind<F, R, O, E, A>) => Kind<F, R, O, E, B>;
-        <R, O, E, A, B>(
-            self: Kind<F, R, O, E, A>,
-            f: (a: A) => B,
-        ): Kind<F, R, O, E, B>;
-    };
+    readonly map: <R, O, E, A, B>(
+        self: Kind<F, R, O, E, A>,
+        f: (a: A) => B,
+    ) => Kind<F, R, O, E, B>;
 }
 
 /**
@@ -35,7 +30,7 @@ export const mapComposition =
         f: (a: A) => B,
     ) => Kind<F, FR, FO, FE, Kind<G, GR, GO, GE, B>>) =>
     (self, f) =>
-        F.map(self, G.map(f));
+        F.map(self, (x) => G.map(x, f));
 
 /**
  * Returns a default `imap` implementation.

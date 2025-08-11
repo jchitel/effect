@@ -31,8 +31,8 @@ describe.concurrent("DocTree", () => {
             const tree = DocTree.treeForm(
                 pipe(
                     DocStream.popAnnotation(DocStream.empty),
-                    DocStream.char("a"),
-                    DocStream.pushAnnotation(1),
+                    (x) => DocStream.char(x, "a"),
+                    (x) => DocStream.pushAnnotation(x, 1),
                 ),
             );
             expect(DocTree.isAnnotationTree(tree)).toBe(true);
@@ -40,7 +40,9 @@ describe.concurrent("DocTree", () => {
 
         it("concat", () => {
             const tree = DocTree.treeForm(
-                pipe(DocStream.char(DocStream.empty, "c"), DocStream.char("a")),
+                pipe(DocStream.char(DocStream.empty, "c"), (x) =>
+                    DocStream.char(x, "a"),
+                ),
             );
             expect(DocTree.isConcatTree(tree)).toBe(true);
         });

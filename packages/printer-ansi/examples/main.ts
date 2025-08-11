@@ -7,12 +7,14 @@ const doc = Doc.hsep([
         Doc.vsep([
             Doc.hsep([
                 Doc.text("blue+u"),
-                Doc.text("bold").pipe(Doc.annotate(Ansi.bold)),
+                Doc.text("bold").pipe((x) => Doc.annotate(x, Ansi.bold)),
                 Doc.text("blue+u"),
-            ]).pipe(Doc.annotate(Ansi.combine(Ansi.blue, Ansi.underlined))),
+            ]).pipe((x) =>
+                Doc.annotate(x, Ansi.combine(Ansi.blue, Ansi.underlined)),
+            ),
             Doc.text("red"),
         ]),
     ),
-]).pipe(Doc.annotate(Ansi.red));
+]).pipe((x) => Doc.annotate(x, Ansi.red));
 
 console.log(Doc.render(doc, { style: "pretty" }));

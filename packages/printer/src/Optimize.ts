@@ -126,7 +126,5 @@ export const Deep: FusionDepth = {
  * @since 1.0.0
  * @category optimization
  */
-export const optimize: {
-    (depth: FusionDepth): <A>(self: Doc<A>) => Doc<A>;
-    <A>(self: Doc<A>, depth: FusionDepth): Doc<A>;
-} = internal.optimize;
+export const optimize: <A>(self: Doc<A>, depth: FusionDepth) => Doc<A> =
+    internal.optimize;

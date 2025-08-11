@@ -45,7 +45,11 @@ function renderClearScreen(state: State, options: Options) {
                 Doc.cursorDown(InternalAnsiUtils.lines(error, columns)).pipe(
                     // Add a leading newline to the error message to ensure that the corrrect
                     // number of error lines are erased
-                    Doc.cat(InternalAnsiUtils.eraseText(`\n${error}`, columns)),
+                    (x) =>
+                        Doc.cat(
+                            x,
+                            InternalAnsiUtils.eraseText(`\n${error}`, columns),
+                        ),
                 ),
         });
         // Ensure that the prior prompt output is cleaned up
@@ -55,9 +59,9 @@ function renderClearScreen(state: State, options: Options) {
         );
         // Concatenate and render all documents
         return clearError.pipe(
-            Doc.cat(clearOutput),
-            Doc.cat(resetCurrentLine),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, clearOutput),
+            (x) => Doc.cat(x, resetCurrentLine),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -106,8 +110,9 @@ function renderError(nextState: State, pointer: Doc.AnsiDoc) {
                 onEmpty: () => Doc.empty,
                 onNonEmpty: (errorLines) => {
                     const annotateLine = (line: string): Doc.AnsiDoc =>
-                        Doc.text(line).pipe(
+                        Doc.text(line).pipe((x) =>
                             Doc.annotate(
+                                x,
                                 Ansi.combine(Ansi.italicized, Ansi.red),
                             ),
                         );
@@ -119,10 +124,10 @@ function renderError(nextState: State, pointer: Doc.AnsiDoc) {
                         annotateLine(str),
                     );
                     return Doc.cursorSavePosition.pipe(
-                        Doc.cat(Doc.hardLine),
-                        Doc.cat(prefix),
-                        Doc.cat(Doc.align(Doc.vsep(lines))),
-                        Doc.cat(Doc.cursorRestorePosition),
+                        (x) => Doc.cat(x, Doc.hardLine),
+                        (x) => Doc.cat(x, prefix),
+                        (x) => Doc.cat(x, Doc.align(Doc.vsep(lines))),
+                        (x) => Doc.cat(x, Doc.cursorRestorePosition),
                     );
                 },
             }),
@@ -143,11 +148,11 @@ function renderOutput(
     if (Arr.isNonEmptyReadonlyArray(promptLines)) {
         const lines = Arr.map(promptLines, (line) => annotateLine(line));
         return prefix.pipe(
-            Doc.cat(Doc.nest(Doc.vsep(lines), 2)),
-            Doc.cat(Doc.space),
-            Doc.cat(trailingSymbol),
-            Doc.cat(Doc.space),
-            Doc.cat(renderInput(nextState, options, submitted)),
+            (x) => Doc.cat(x, Doc.nest(Doc.vsep(lines), 2)),
+            (x) => Doc.cat(x, Doc.space),
+            (x) => Doc.cat(x, trailingSymbol),
+            (x) => Doc.cat(x, Doc.space),
+            (x) => Doc.cat(x, renderInput(nextState, options, submitted)),
         );
     }
     return Doc.hsep([
@@ -176,9 +181,9 @@ function renderNextFrame(state: State, options: Options) {
         const errorMsg = renderError(state, figures.pointerSmall);
         const offset = state.cursor - state.value.length;
         return promptMsg.pipe(
-            Doc.cat(errorMsg),
-            Doc.cat(Doc.cursorMove(offset)),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, errorMsg),
+            (x) => Doc.cat(x, Doc.cursorMove(offset)),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -203,8 +208,8 @@ function renderSubmission(state: State, options: Options) {
             true,
         );
         return promptMsg.pipe(
-            Doc.cat(Doc.hardLine),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, Doc.hardLine),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",

@@ -5,7 +5,7 @@ import type * as semigroup from "@effect/typeclass/Semigroup";
 import * as Arr from "effect/Array";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as Hash from "effect/Hash";
 import { pipeArguments } from "effect/Pipeable";
 import type * as Doc from "../Doc.js";
@@ -210,40 +210,40 @@ export const text = (text: string): Doc.Doc<never> => {
 };
 
 /** @internal */
-export const flatAlt = dual<
-    <B>(that: Doc.Doc<B>) => <A>(self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(self: Doc.Doc<A>, that: Doc.Doc<B>) => Doc.Doc<A | B>
->(2, (self, that) => {
+export const flatAlt = <A, B>(
+    self: Doc.Doc<A>,
+    that: Doc.Doc<B>,
+): Doc.Doc<A | B> => {
     const op = Object.create(proto);
     op._tag = "FlatAlt";
     op.left = self;
     op.right = that;
     return op;
-});
+};
 
 /** @internal */
-export const union = dual<
-    <B>(that: Doc.Doc<B>) => <A>(self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(self: Doc.Doc<A>, that: Doc.Doc<B>) => Doc.Doc<A | B>
->(2, (self, that) => {
+export const union = <A, B>(
+    self: Doc.Doc<A>,
+    that: Doc.Doc<B>,
+): Doc.Doc<A | B> => {
     const op = Object.create(proto);
     op._tag = "Union";
     op.left = self;
     op.right = that;
     return op;
-});
+};
 
 /** @internal */
-export const cat = dual<
-    <B>(that: Doc.Doc<B>) => <A>(self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(self: Doc.Doc<A>, that: Doc.Doc<B>) => Doc.Doc<A | B>
->(2, (self, that) => {
+export const cat = <A, B>(
+    self: Doc.Doc<A>,
+    that: Doc.Doc<B>,
+): Doc.Doc<A | B> => {
     const op = Object.create(proto);
     op._tag = "Cat";
     op.left = self;
     op.right = that;
     return op;
-});
+};
 
 /** @internal */
 export const empty: Doc.Doc<never> = (() => {
@@ -340,51 +340,45 @@ export const cats = <A>(docs: Iterable<Doc.Doc<A>>): Doc.Doc<A> =>
     group(vcat(docs));
 
 /** @internal */
-export const catWithLine = dual<
-    <B>(that: Doc.Doc<B>) => <A>(self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(self: Doc.Doc<A>, that: Doc.Doc<B>) => Doc.Doc<A | B>
->(2, (self, that) => cat(self, cat(line, that)));
+export const catWithLine = <A, B>(
+    self: Doc.Doc<A>,
+    that: Doc.Doc<B>,
+): Doc.Doc<A | B> => cat(self, cat(line, that));
 
 /** @internal */
-export const catWithLineBreak = dual<
-    <B>(that: Doc.Doc<B>) => <A>(self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(self: Doc.Doc<A>, that: Doc.Doc<B>) => Doc.Doc<A | B>
->(2, (self, that) => cat(self, cat(lineBreak, that)));
+export const catWithLineBreak = <A, B>(
+    self: Doc.Doc<A>,
+    that: Doc.Doc<B>,
+): Doc.Doc<A | B> => cat(self, cat(lineBreak, that));
 
 /** @internal */
-export const catWithSoftLine = dual<
-    <B>(that: Doc.Doc<B>) => <A>(self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(self: Doc.Doc<A>, that: Doc.Doc<B>) => Doc.Doc<A | B>
->(2, (self, that) => cat(self, cat(softLine, that)));
+export const catWithSoftLine = <A, B>(
+    self: Doc.Doc<A>,
+    that: Doc.Doc<B>,
+): Doc.Doc<A | B> => cat(self, cat(softLine, that));
 
 /** @internal */
-export const catWithSoftLineBreak = dual<
-    <B>(that: Doc.Doc<B>) => <A>(self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(self: Doc.Doc<A>, that: Doc.Doc<B>) => Doc.Doc<A | B>
->(2, (self, that) => cat(self, cat(softLineBreak, that)));
+export const catWithSoftLineBreak = <A, B>(
+    self: Doc.Doc<A>,
+    that: Doc.Doc<B>,
+): Doc.Doc<A | B> => cat(self, cat(softLineBreak, that));
 
 /** @internal */
-export const catWithSpace = dual<
-    <B>(that: Doc.Doc<B>) => <A>(self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(self: Doc.Doc<A>, that: Doc.Doc<B>) => Doc.Doc<A | B>
->(2, (self, that) => cat(self, cat(space, that)));
+export const catWithSpace = <A, B>(
+    self: Doc.Doc<A>,
+    that: Doc.Doc<B>,
+): Doc.Doc<A | B> => cat(self, cat(space, that));
 
 /** @internal */
-export const concatWith = dual<
-    <A>(
-        f: (left: Doc.Doc<A>, right: Doc.Doc<A>) => Doc.Doc<A>,
-    ) => (docs: Iterable<Doc.Doc<A>>) => Doc.Doc<A>,
-    <A>(
-        docs: Iterable<Doc.Doc<A>>,
-        f: (left: Doc.Doc<A>, right: Doc.Doc<A>) => Doc.Doc<A>,
-    ) => Doc.Doc<A>
->(2, (docs, f) =>
+export const concatWith = <A>(
+    docs: Iterable<Doc.Doc<A>>,
+    f: (left: Doc.Doc<A>, right: Doc.Doc<A>) => Doc.Doc<A>,
+): Doc.Doc<A> =>
     Arr.matchRight(Arr.fromIterable(docs), {
         onEmpty: () => empty,
         onNonEmpty: (init, last) =>
             Arr.reduceRight(init, last, (curr, acc) => f(acc, curr)),
-    }),
-);
+    });
 
 /** @internal */
 export const vcat = <A>(docs: Iterable<Doc.Doc<A>>): Doc.Doc<A> =>
@@ -472,22 +466,16 @@ export const nesting = <A>(
 };
 
 /** @internal */
-export const width = dual<
-    <A, B>(
-        react: (width: number) => Doc.Doc<B>,
-    ) => (self: Doc.Doc<A>) => Doc.Doc<A | B>,
-    <A, B>(
-        self: Doc.Doc<A>,
-        react: (width: number) => Doc.Doc<B>,
-    ) => Doc.Doc<A | B>
->(2, (self, react) =>
+export const width = <A, B>(
+    self: Doc.Doc<A>,
+    react: (width: number) => Doc.Doc<B>,
+): Doc.Doc<A | B> =>
     column((colStart) =>
         cat(
             self,
             column((colEnd) => react(colEnd - colStart)),
         ),
-    ),
-);
+    );
 
 /** @internal */
 export const pageWidth = <A>(
@@ -504,10 +492,7 @@ export const pageWidth = <A>(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const nest = dual<
-    (indent: number) => <A>(self: Doc.Doc<A>) => Doc.Doc<A>,
-    <A>(self: Doc.Doc<A>, indent: number) => Doc.Doc<A>
->(2, (self, indent) =>
+export const nest = <A>(self: Doc.Doc<A>, indent: number): Doc.Doc<A> =>
     indent === 0
         ? self
         : (() => {
@@ -516,63 +501,43 @@ export const nest = dual<
               op.indent = indent;
               op.doc = self;
               return op;
-          })(),
-);
+          })();
 
 /** @internal */
 export const align = <A>(self: Doc.Doc<A>): Doc.Doc<A> =>
     column((position) => nesting((level) => nest(self, position - level)));
 
 /** @internal */
-export const hang = dual<
-    (indent: number) => <A>(self: Doc.Doc<A>) => Doc.Doc<A>,
-    <A>(self: Doc.Doc<A>, indent: number) => Doc.Doc<A>
->(2, (self, indent) => align(nest(self, indent)));
+export const hang = <A>(self: Doc.Doc<A>, indent: number): Doc.Doc<A> =>
+    align(nest(self, indent));
 
 /** @internal */
-export const indent = dual<
-    (indent: number) => <A>(self: Doc.Doc<A>) => Doc.Doc<A>,
-    <A>(self: Doc.Doc<A>, indent: number) => Doc.Doc<A>
->(2, (self, indent) => hang(cat(spaces(indent), self), indent));
+export const indent = <A>(self: Doc.Doc<A>, indent: number): Doc.Doc<A> =>
+    hang(cat(spaces(indent), self), indent);
 
 /** @internal */
-export const encloseSep = dual<
-    <A, B, C>(
-        left: Doc.Doc<A>,
-        right: Doc.Doc<B>,
-        sep: Doc.Doc<C>,
-    ) => <D>(docs: Iterable<Doc.Doc<D>>) => Doc.Doc<A | B | C | D>,
-    <A, B, C, D>(
-        docs: Iterable<Doc.Doc<D>>,
-        left: Doc.Doc<A>,
-        right: Doc.Doc<B>,
-        sep: Doc.Doc<C>,
-    ) => Doc.Doc<A | B | C | D>
->(
-    4,
-    <A, B, C, D>(
-        docs: Iterable<Doc.Doc<D>>,
-        left: Doc.Doc<A>,
-        right: Doc.Doc<B>,
-        sep: Doc.Doc<C>,
-    ) => {
-        const documents = Arr.fromIterable(docs);
-        if (Arr.isEmptyReadonlyArray(documents)) {
-            return cat(left, right);
-        }
-        if (documents.length === 1) {
-            return cat(left, cat(documents[0]!, right));
-        }
-        const xs = pipe(
-            Arr.makeBy(documents.length - 1, () => sep),
-            Arr.prepend(left),
-            Arr.zipWith(documents, (left: Doc.Doc<A | C>, right) =>
-                cat(left, right),
-            ),
-        );
-        return cat(cats(xs), right);
-    },
-);
+export const encloseSep = <A, B, C, D>(
+    docs: Iterable<Doc.Doc<D>>,
+    left: Doc.Doc<A>,
+    right: Doc.Doc<B>,
+    sep: Doc.Doc<C>,
+): Doc.Doc<A | B | C | D> => {
+    const documents = Arr.fromIterable(docs);
+    if (Arr.isEmptyReadonlyArray(documents)) {
+        return cat(left, right);
+    }
+    if (documents.length === 1) {
+        return cat(left, cat(documents[0]!, right));
+    }
+    const xs = pipe(
+        Arr.makeBy(documents.length - 1, () => sep),
+        Arr.prepend(left),
+        Arr.zipWith(documents, (left: Doc.Doc<A | C>, right) =>
+            cat(left, right),
+        ),
+    );
+    return cat(cats(xs), right);
+};
 
 /** @internal */
 export const list = <A>(docs: Iterable<Doc.Doc<A>>): Doc.Doc<A> =>
@@ -601,18 +566,12 @@ export const tupled = <A>(docs: Iterable<Doc.Doc<A>>): Doc.Doc<A> =>
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const fill = dual<
-    (w: number) => <A>(self: Doc.Doc<A>) => Doc.Doc<A>,
-    <A>(self: Doc.Doc<A>, w: number) => Doc.Doc<A>
->(2, (self, w) => width(self, (i) => spaces(w - i)));
+export const fill = <A>(self: Doc.Doc<A>, w: number): Doc.Doc<A> =>
+    width(self, (i) => spaces(w - i));
 
 /** @internal */
-export const fillBreak = dual<
-    (w: number) => <A>(self: Doc.Doc<A>) => Doc.Doc<A>,
-    <A>(self: Doc.Doc<A>, w: number) => Doc.Doc<A>
->(2, (self, w) =>
-    width(self, (i) => (i > w ? nest(lineBreak, w) : spaces(w - i))),
-);
+export const fillBreak = <A>(self: Doc.Doc<A>, w: number): Doc.Doc<A> =>
+    width(self, (i) => (i > w ? nest(lineBreak, w) : spaces(w - i)));
 
 // -----------------------------------------------------------------------------
 // Flattening
@@ -742,8 +701,8 @@ const changesUponFlatteningSafe = <A>(
             case "Nest": {
                 return yield* pipe(
                     changesUponFlatteningSafe(self.doc),
-                    Effect.map(
-                        InternalFlatten.map((doc) => nest(doc, self.indent)),
+                    Effect.map((x) =>
+                        InternalFlatten.map(x, (doc) => nest(doc, self.indent)),
                     ),
                 );
             }
@@ -771,8 +730,8 @@ const changesUponFlatteningSafe = <A>(
             case "Annotated": {
                 return yield* pipe(
                     changesUponFlatteningSafe(self.doc),
-                    Effect.map(
-                        InternalFlatten.map((doc) =>
+                    Effect.map((x) =>
+                        InternalFlatten.map(x, (doc) =>
                             annotate(doc, self.annotation),
                         ),
                     ),
@@ -786,22 +745,19 @@ const changesUponFlatteningSafe = <A>(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const annotate = dual<
-    <A>(annotation: A) => (self: Doc.Doc<A>) => Doc.Doc<A>,
-    <A>(self: Doc.Doc<A>, annotation: A) => Doc.Doc<A>
->(2, (self, annotation) => {
+export const annotate = <A>(self: Doc.Doc<A>, annotation: A): Doc.Doc<A> => {
     const op = Object.create(proto);
     op._tag = "Annotated";
     op.doc = self;
     op.annotation = annotation;
     return op;
-});
+};
 
 /** @internal */
-export const alterAnnotations = dual<
-    <A, B>(f: (a: A) => Iterable<B>) => (self: Doc.Doc<A>) => Doc.Doc<B>,
-    <A, B>(self: Doc.Doc<A>, f: (a: A) => Iterable<B>) => Doc.Doc<B>
->(2, (self, f) => Effect.runSync(alterAnnotationsSafe(self, f)));
+export const alterAnnotations = <A, B>(
+    self: Doc.Doc<A>,
+    f: (a: A) => Iterable<B>,
+): Doc.Doc<B> => Effect.runSync(alterAnnotationsSafe(self, f));
 
 const alterAnnotationsSafe = <A, B>(
     self: Doc.Doc<A>,
@@ -832,7 +788,7 @@ const alterAnnotationsSafe = <A, B>(
         case "Nest": {
             return Effect.map(
                 Effect.suspend(() => alterAnnotationsSafe(self.doc, f)),
-                nest(self.indent),
+                (x) => nest(x, self.indent),
             );
         }
         case "Column": {
@@ -876,24 +832,22 @@ const alterAnnotationsSafe = <A, B>(
 };
 
 /** @internal */
-export const reAnnotate = dual<
-    <A, B>(f: (a: A) => B) => (self: Doc.Doc<A>) => Doc.Doc<B>,
-    <A, B>(self: Doc.Doc<A>, f: (a: A) => B) => Doc.Doc<B>
->(2, (self, f) => alterAnnotations(self, (a) => [f(a)]));
+export const reAnnotate = <A, B>(
+    self: Doc.Doc<A>,
+    f: (a: A) => B,
+): Doc.Doc<B> => alterAnnotations(self, (a) => [f(a)]);
 
 /** @internal */
 export const unAnnotate = <A>(self: Doc.Doc<A>): Doc.Doc<never> =>
-    alterAnnotations(() => [])(self);
+    alterAnnotations(self, () => []);
 
 // -----------------------------------------------------------------------------
 // Instances
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const map: {
-    <A, B>(f: (a: A) => B): (self: Doc.Doc<A>) => Doc.Doc<B>;
-    <A, B>(self: Doc.Doc<A>, f: (a: A) => B): Doc.Doc<B>;
-} = reAnnotate;
+export const map: <A, B>(self: Doc.Doc<A>, f: (a: A) => B) => Doc.Doc<B> =
+    reAnnotate;
 
 /** @internal */
 export const imap = covariant.imap<Doc.Doc.TypeLambda>(map);
@@ -939,17 +893,11 @@ export const string = (str: string): Doc.Doc<never> => {
 };
 
 /** @internal */
-export const surround = dual<
-    <A, B, C>(
-        left: Doc.Doc<A>,
-        right: Doc.Doc<B>,
-    ) => (self: Doc.Doc<C>) => Doc.Doc<A | B | C>,
-    <A, B, C>(
-        self: Doc.Doc<C>,
-        left: Doc.Doc<A>,
-        right: Doc.Doc<B>,
-    ) => Doc.Doc<A | B | C>
->(3, (self, left, right) => cat(left, cat(self, right)));
+export const surround = <A, B, C>(
+    self: Doc.Doc<C>,
+    left: Doc.Doc<A>,
+    right: Doc.Doc<B>,
+): Doc.Doc<A | B | C> => cat(left, cat(self, right));
 
 /** @internal */
 export const singleQuoted = <A>(self: Doc.Doc<A>): Doc.Doc<A> =>
@@ -1009,24 +957,20 @@ export const reflow = (s: string, char = " "): Doc.Doc<never> =>
     fillSep(words(s, char));
 
 /** @internal */
-export const punctuate = dual<
-    <A, B>(
-        punctuator: Doc.Doc<A>,
-    ) => (docs: Iterable<Doc.Doc<B>>) => ReadonlyArray<Doc.Doc<A | B>>,
-    <A, B>(
-        docs: Iterable<Doc.Doc<B>>,
-        punctuator: Doc.Doc<A>,
-    ) => ReadonlyArray<Doc.Doc<A | B>>
->(2, (docs, punctuator) => {
+export const punctuate = <A, B>(
+    docs: Iterable<Doc.Doc<B>>,
+    punctuator: Doc.Doc<A>,
+): ReadonlyArray<Doc.Doc<A | B>> => {
     const documents = Arr.fromIterable(docs);
     return Arr.map(documents, (x, i) =>
         documents.length - 1 === i ? x : cat(x, punctuator),
     );
-});
+};
 
 /** @internal */
-export const match = dual<
-    <A, R>(patterns: {
+export const match = <A, R>(
+    self: Doc.Doc<A>,
+    patterns: {
         readonly Fail: () => R;
         readonly Empty: () => R;
         readonly Char: (char: string) => R;
@@ -1042,28 +986,8 @@ export const match = dual<
         ) => R;
         readonly Nesting: (react: (level: number) => Doc.Doc<A>) => R;
         readonly Annotated: (annotation: A, doc: Doc.Doc<A>) => R;
-    }) => (self: Doc.Doc<A>) => R,
-    <A, R>(
-        self: Doc.Doc<A>,
-        patterns: {
-            readonly Fail: () => R;
-            readonly Empty: () => R;
-            readonly Char: (char: string) => R;
-            readonly Text: (text: string) => R;
-            readonly Line: () => R;
-            readonly FlatAlt: (x: Doc.Doc<A>, y: Doc.Doc<A>) => R;
-            readonly Cat: (x: Doc.Doc<A>, y: Doc.Doc<A>) => R;
-            readonly Nest: (indent: number, doc: Doc.Doc<A>) => R;
-            readonly Union: (x: Doc.Doc<A>, y: Doc.Doc<A>) => R;
-            readonly Column: (react: (position: number) => Doc.Doc<A>) => R;
-            readonly WithPageWidth: (
-                react: (pageWidth: PageWidth.PageWidth) => Doc.Doc<A>,
-            ) => R;
-            readonly Nesting: (react: (level: number) => Doc.Doc<A>) => R;
-            readonly Annotated: (annotation: A, doc: Doc.Doc<A>) => R;
-        },
-    ) => R
->(2, (self, patterns) => {
+    },
+): R => {
     switch (self._tag) {
         case "Fail": {
             return patterns.Fail();
@@ -1105,7 +1029,7 @@ export const match = dual<
             return patterns.Annotated(self.annotation, self.doc);
         }
     }
-});
+};
 
 /** @internal */
 export const textSpaces = (n: number): string => {

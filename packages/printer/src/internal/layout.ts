@@ -1,6 +1,5 @@
 import * as Effect from "effect/Effect";
 import type { LazyArg } from "effect/Function";
-import { dual } from "effect/Function";
 import * as List from "effect/List";
 import * as Option from "effect/Option";
 import type * as Doc from "../Doc.js";
@@ -26,17 +25,11 @@ export const defaultOptions: Layout.Layout.Options = options(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const wadlerLeijen = dual<
-    <A>(
-        fits: Layout.Layout.FittingPredicate<A>,
-        options: Layout.Layout.Options,
-    ) => (self: Doc.Doc<A>) => DocStream.DocStream<A>,
-    <A>(
-        self: Doc.Doc<A>,
-        fits: Layout.Layout.FittingPredicate<A>,
-        options: Layout.Layout.Options,
-    ) => DocStream.DocStream<A>
->(3, (self, fits, options) =>
+export const wadlerLeijen = <A>(
+    self: Doc.Doc<A>,
+    fits: Layout.Layout.FittingPredicate<A>,
+    options: Layout.Layout.Options,
+): DocStream.DocStream<A> =>
     Effect.runSync(
         wadlerLeijenSafe(
             InternalPipeline.cons(0, self, InternalPipeline.nil),
@@ -45,8 +38,7 @@ export const wadlerLeijen = dual<
             fits,
             options,
         ),
-    ),
-);
+    );
 
 const wadlerLeijenSafe = <A>(
     self: InternalPipeline.LayoutPipeline<A>,
@@ -306,15 +298,10 @@ const compactSafe = <A>(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const pretty = dual<
-    (
-        options: Layout.Layout.Options,
-    ) => <A>(self: Doc.Doc<A>) => DocStream.DocStream<A>,
-    <A>(
-        self: Doc.Doc<A>,
-        options: Layout.Layout.Options,
-    ) => DocStream.DocStream<A>
->(2, (self, options) => {
+export const pretty = <A>(
+    self: Doc.Doc<A>,
+    options: Layout.Layout.Options,
+): DocStream.DocStream<A> => {
     const width = options.pageWidth;
     if (width._tag === "AvailablePerLine") {
         return wadlerLeijen(
@@ -332,7 +319,7 @@ export const pretty = dual<
         );
     }
     return unbounded(self);
-});
+};
 
 const fitsPretty = <A>(
     self: DocStream.DocStream<A>,
@@ -379,15 +366,10 @@ const fitsPretty = <A>(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const smart = dual<
-    (
-        options: Layout.Layout.Options,
-    ) => <A>(self: Doc.Doc<A>) => DocStream.DocStream<A>,
-    <A>(
-        self: Doc.Doc<A>,
-        options: Layout.Layout.Options,
-    ) => DocStream.DocStream<A>
->(2, (self, options) => {
+export const smart = <A>(
+    self: Doc.Doc<A>,
+    options: Layout.Layout.Options,
+): DocStream.DocStream<A> => {
     const width = options.pageWidth;
     if (width._tag === "AvailablePerLine") {
         return wadlerLeijen(
@@ -397,7 +379,7 @@ export const smart = dual<
         );
     }
     return unbounded(self);
-});
+};
 
 const fitsSmart = (pageWidth: number, ribbonFraction: number) => {
     return <A>(

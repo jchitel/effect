@@ -156,13 +156,12 @@ const toAnsiDocInternal = (self: HelpDoc.HelpDoc): Doc.AnsiDoc => {
         case "Header": {
             return pipe(
                 Doc.annotate(InternalSpan.toAnsiDoc(self.value), Ansi.bold),
-                Doc.cat(Doc.hardLine),
+                (x) => Doc.cat(x, Doc.hardLine),
             );
         }
         case "Paragraph": {
-            return pipe(
-                InternalSpan.toAnsiDoc(self.value),
-                Doc.cat(Doc.hardLine),
+            return pipe(InternalSpan.toAnsiDoc(self.value), (x) =>
+                Doc.cat(x, Doc.hardLine),
             );
         }
         case "DescriptionList": {

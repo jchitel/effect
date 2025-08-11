@@ -17,8 +17,14 @@ describe.concurrent("Bicovariant", () => {
     it("map", () => {
         const map = _.map(EitherInstances.Bicovariant);
         const g = (n: number) => n * 2;
-        U.deepStrictEqual(pipe(E.right(1), map(g)), E.right(2));
-        U.deepStrictEqual(pipe(E.left("eee"), map(g)), E.left("eee"));
+        U.deepStrictEqual(
+            pipe(E.right(1), (x) => map(x, g)),
+            E.right(2),
+        );
+        U.deepStrictEqual(
+            pipe(E.left("eee"), (x) => map(x, g)),
+            E.left("eee"),
+        );
     });
 
     it("bimapComposition", () => {

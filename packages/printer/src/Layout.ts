@@ -79,17 +79,11 @@ export const defaultOptions: Layout.Options = options(defaultPageWidth);
  * @since 1.0.0
  * @category layout algorithms
  */
-export const wadlerLeijen: {
-    <A>(
-        fits: Layout.FittingPredicate<A>,
-        options: Layout.Options,
-    ): (self: Doc<A>) => DocStream<A>;
-    <A>(
-        self: Doc<A>,
-        fits: Layout.FittingPredicate<A>,
-        options: Layout.Options,
-    ): DocStream<A>;
-} = internal.wadlerLeijen;
+export const wadlerLeijen: <A>(
+    self: Doc<A>,
+    fits: Layout.FittingPredicate<A>,
+    options: Layout.Options,
+) => DocStream<A> = internal.wadlerLeijen;
 
 /**
  * A layout algorithm which will lay out a document without adding any
@@ -159,10 +153,10 @@ export const compact: <A>(self: Doc<A>) => DocStream<A> = internal.compact;
  * @since 1.0.0
  * @category layout algorithms
  */
-export const pretty: {
-    (options: Layout.Options): <A>(self: Doc<A>) => DocStream<A>;
-    <A>(self: Doc<A>, options: Layout.Options): DocStream<A>;
-} = internal.pretty;
+export const pretty: <A>(
+    self: Doc<A>,
+    options: Layout.Options,
+) => DocStream<A> = internal.pretty;
 
 /**
  * A layout algorithm with more look ahead than `pretty`, which will introduce
@@ -260,10 +254,8 @@ export const pretty: {
  * @since 1.0.0
  * @category layout algorithms
  */
-export const smart: {
-    (options: Layout.Options): <A>(self: Doc<A>) => DocStream<A>;
-    <A>(self: Doc<A>, options: Layout.Options): DocStream<A>;
-} = internal.smart;
+export const smart: <A>(self: Doc<A>, options: Layout.Options) => DocStream<A> =
+    internal.smart;
 
 /**
  * The `unbounded` layout algorithm will lay out a document an `Unbounded`

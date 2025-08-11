@@ -34,8 +34,9 @@ function handleClear(options: DateOptions) {
                 onSome: (error) =>
                     Doc.cursorDown(
                         InternalAnsiUtils.lines(error, columns),
-                    ).pipe(
+                    ).pipe((x) =>
                         Doc.cat(
+                            x,
                             InternalAnsiUtils.eraseText(`\n${error}`, columns),
                         ),
                     ),
@@ -45,9 +46,9 @@ function handleClear(options: DateOptions) {
                 columns,
             );
             return clearError.pipe(
-                Doc.cat(clearOutput),
-                Doc.cat(resetCurrentLine),
-                Optimize.optimize(Optimize.Deep),
+                (x) => Doc.cat(x, clearOutput),
+                (x) => Doc.cat(x, resetCurrentLine),
+                (x) => Optimize.optimize(x, Optimize.Deep),
                 (x) =>
                     Doc.render(x, {
                         style: "pretty",
@@ -77,10 +78,10 @@ function renderError(state: State, pointer: Doc.AnsiDoc) {
                 );
                 const lines = Arr.map(errorLines, (str) => annotateLine(str));
                 return Doc.cursorSavePosition.pipe(
-                    Doc.cat(Doc.hardLine),
-                    Doc.cat(prefix),
-                    Doc.cat(Doc.align(Doc.vsep(lines))),
-                    Doc.cat(Doc.cursorRestorePosition),
+                    (x) => Doc.cat(x, Doc.hardLine),
+                    (x) => Doc.cat(x, prefix),
+                    (x) => Doc.cat(x, Doc.align(Doc.vsep(lines))),
+                    (x) => Doc.cat(x, Doc.cursorRestorePosition),
                 );
             }
             return Doc.empty;
@@ -120,11 +121,11 @@ function renderOutput(
         onNonEmpty: (promptLines) => {
             const lines = Arr.map(promptLines, (line) => annotateLine(line));
             return prefix.pipe(
-                Doc.cat(Doc.nest(Doc.vsep(lines), 2)),
-                Doc.cat(Doc.space),
-                Doc.cat(trailingSymbol),
-                Doc.cat(Doc.space),
-                Doc.cat(parts),
+                (x) => Doc.cat(x, Doc.nest(Doc.vsep(lines), 2)),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, trailingSymbol),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, parts),
             );
         },
     });
@@ -149,9 +150,9 @@ function renderNextFrame(state: State, options: DateOptions) {
         );
         const errorMsg = renderError(state, figures.pointerSmall);
         return Doc.cursorHide.pipe(
-            Doc.cat(promptMsg),
-            Doc.cat(errorMsg),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, promptMsg),
+            (x) => Doc.cat(x, errorMsg),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -176,8 +177,8 @@ function renderSubmission(state: State, options: DateOptions) {
             options,
         );
         return promptMsg.pipe(
-            Doc.cat(Doc.hardLine),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, Doc.hardLine),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",

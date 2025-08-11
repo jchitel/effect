@@ -31,10 +31,10 @@ function renderOutput<A>(
         onNonEmpty: (promptLines) => {
             const lines = Arr.map(promptLines, (line) => annotateLine(line));
             return prefix.pipe(
-                Doc.cat(Doc.nest(Doc.vsep(lines), 2)),
-                Doc.cat(Doc.space),
-                Doc.cat(trailingSymbol),
-                Doc.cat(Doc.space),
+                (x) => Doc.cat(x, Doc.nest(Doc.vsep(lines), 2)),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, trailingSymbol),
+                (x) => Doc.cat(x, Doc.space),
             );
         },
     });
@@ -59,12 +59,18 @@ function renderChoicePrefix<A>(
     if (choices[currentIndex].disabled) {
         const annotation = Ansi.combine(Ansi.bold, Ansi.blackBright);
         return state === currentIndex
-            ? figures.pointer.pipe(Doc.annotate(annotation), Doc.cat(prefix))
-            : prefix.pipe(Doc.cat(Doc.space));
+            ? figures.pointer.pipe(
+                  (x) => Doc.annotate(x, annotation),
+                  (x) => Doc.cat(x, prefix),
+              )
+            : prefix.pipe((x) => Doc.cat(x, Doc.space));
     }
     return state === currentIndex
-        ? figures.pointer.pipe(Doc.annotate(Ansi.cyanBright), Doc.cat(prefix))
-        : prefix.pipe(Doc.cat(Doc.space));
+        ? figures.pointer.pipe(
+              (x) => Doc.annotate(x, Ansi.cyanBright),
+              (x) => Doc.cat(x, prefix),
+          )
+        : prefix.pipe((x) => Doc.cat(x, Doc.space));
 }
 
 function renderChoiceTitle<A>(
@@ -97,9 +103,9 @@ function renderChoiceDescription<A>(
 ) {
     if (!choice.disabled && choice.description && isSelected) {
         return Doc.char("-").pipe(
-            Doc.cat(Doc.space),
-            Doc.cat(Doc.text(choice.description)),
-            Doc.annotate(Ansi.blackBright),
+            (x) => Doc.cat(x, Doc.space),
+            (x) => Doc.cat(x, Doc.text(choice.description!)),
+            (x) => Doc.annotate(x, Ansi.blackBright),
         );
     }
     return Doc.empty;
@@ -135,9 +141,9 @@ function renderChoices<A>(
         const description = renderChoiceDescription(choice, isSelected);
         documents.push(
             prefix.pipe(
-                Doc.cat(title),
-                Doc.cat(Doc.space),
-                Doc.cat(description),
+                (x) => Doc.cat(x, title),
+                (x) => Doc.cat(x, Doc.space),
+                (x) => Doc.cat(x, description),
             ),
         );
     }
@@ -157,9 +163,9 @@ function renderNextFrame<A>(state: State, options: SelectOptions<A>) {
         );
         const promptMsg = renderOutput(leadingSymbol, trailingSymbol, options);
         return Doc.cursorHide.pipe(
-            Doc.cat(promptMsg),
-            Doc.cat(Doc.hardLine),
-            Doc.cat(choices),
+            (x) => Doc.cat(x, promptMsg),
+            (x) => Doc.cat(x, Doc.hardLine),
+            (x) => Doc.cat(x, choices),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -179,9 +185,9 @@ function renderSubmission<A>(state: State, options: SelectOptions<A>) {
         const trailingSymbol = Doc.annotate(figures.ellipsis, Ansi.blackBright);
         const promptMsg = renderOutput(leadingSymbol, trailingSymbol, options);
         return promptMsg.pipe(
-            Doc.cat(Doc.space),
-            Doc.cat(Doc.annotate(selected, Ansi.white)),
-            Doc.cat(Doc.hardLine),
+            (x) => Doc.cat(x, Doc.space),
+            (x) => Doc.cat(x, Doc.annotate(selected, Ansi.white)),
+            (x) => Doc.cat(x, Doc.hardLine),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",
@@ -240,8 +246,8 @@ export function handleClear<A>(options: SelectOptions<A>) {
             options.message;
         const clearOutput = InternalAnsiUtils.eraseText(text, columns);
         return clearOutput.pipe(
-            Doc.cat(clearPrompt),
-            Optimize.optimize(Optimize.Deep),
+            (x) => Doc.cat(x, clearPrompt),
+            (x) => Optimize.optimize(x, Optimize.Deep),
             (x) =>
                 Doc.render(x, {
                     style: "pretty",

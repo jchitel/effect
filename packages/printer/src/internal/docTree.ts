@@ -5,7 +5,7 @@ import type * as semigroup from "@effect/typeclass/Semigroup";
 import * as Arr from "effect/Array";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as Hash from "effect/Hash";
 import * as Option from "effect/Option";
 import type * as DocStream from "../DocStream.js";
@@ -169,18 +169,16 @@ export const line = <A>(indentation: number): DocTree.DocTree<A> => {
 };
 
 /** @internal */
-export const annotation = dual<
-    <A>(
-        annotation: A,
-    ) => <B>(self: DocTree.DocTree<B>) => DocTree.DocTree<A | B>,
-    <A, B>(self: DocTree.DocTree<A>, annotation: B) => DocTree.DocTree<A | B>
->(2, (self, annotation) => {
+export const annotation = <A, B>(
+    self: DocTree.DocTree<A>,
+    annotation: B,
+): DocTree.DocTree<A | B> => {
     const op = Object.create(proto);
     op._tag = "AnnotationTree";
     op.annotation = annotation;
     op.tree = self;
     return op;
-});
+};
 
 /** @internal */
 export const concat = <A>(
@@ -197,15 +195,10 @@ export const concat = <A>(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const alterAnnotations = dual<
-    <A, B>(
-        f: (a: A) => Iterable<B>,
-    ) => (self: DocTree.DocTree<A>) => DocTree.DocTree<B>,
-    <A, B>(
-        self: DocTree.DocTree<A>,
-        f: (a: A) => Iterable<B>,
-    ) => DocTree.DocTree<B>
->(2, (self, f) => Effect.runSync(alterAnnotationsSafe(self, f)));
+export const alterAnnotations = <A, B>(
+    self: DocTree.DocTree<A>,
+    f: (a: A) => Iterable<B>,
+): DocTree.DocTree<B> => Effect.runSync(alterAnnotationsSafe(self, f));
 
 const alterAnnotationsSafe = <A, B>(
     self: DocTree.DocTree<A>,
@@ -228,7 +221,7 @@ const alterAnnotationsSafe = <A, B>(
             return Arr.reduce(
                 Arr.fromIterable(f(self.annotation)),
                 Effect.suspend(() => alterAnnotationsSafe(self.tree, f)),
-                (acc, b) => Effect.map(acc, annotation(b)),
+                (acc, b) => Effect.map(acc, (x) => annotation(x, b)),
             );
         }
         case "ConcatTree": {
@@ -243,10 +236,10 @@ const alterAnnotationsSafe = <A, B>(
 };
 
 /** @internal */
-export const reAnnotate = dual<
-    <A, B>(f: (a: A) => B) => (self: DocTree.DocTree<A>) => DocTree.DocTree<B>,
-    <A, B>(self: DocTree.DocTree<A>, f: (a: A) => B) => DocTree.DocTree<B>
->(2, (self, f) => alterAnnotations(self, (a) => [f(a)]));
+export const reAnnotate = <A, B>(
+    self: DocTree.DocTree<A>,
+    f: (a: A) => B,
+): DocTree.DocTree<B> => alterAnnotations(self, (a) => [f(a)]);
 
 /** @internal */
 export const unAnnotate = <A>(
@@ -258,13 +251,11 @@ export const unAnnotate = <A>(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const foldMap = dual<
-    <A, M>(
-        M: monoid.Monoid<M>,
-        f: (a: A) => M,
-    ) => (self: DocTree.DocTree<A>) => M,
-    <A, M>(self: DocTree.DocTree<A>, M: monoid.Monoid<M>, f: (a: A) => M) => M
->(3, (self, M, f) => Effect.runSync(foldMapSafe(self, M, f)));
+export const foldMap = <A, M>(
+    self: DocTree.DocTree<A>,
+    M: monoid.Monoid<M>,
+    f: (a: A) => M,
+): M => Effect.runSync(foldMapSafe(self, M, f));
 
 const foldMapSafe = <A, M>(
     self: DocTree.DocTree<A>,
@@ -305,23 +296,15 @@ const foldMapSafe = <A, M>(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const renderSimplyDecorated = dual<
-    <A, M>(
-        M: monoid.Monoid<M>,
-        renderText: (text: string) => M,
-        renderAnnotation: (annotation: A, out: M) => M,
-    ) => (self: DocTree.DocTree<A>) => M,
-    <A, M>(
-        self: DocTree.DocTree<A>,
-        M: monoid.Monoid<M>,
-        renderText: (text: string) => M,
-        renderAnnotation: (annotation: A, out: M) => M,
-    ) => M
->(4, (self, M, renderText, renderAnnotation) =>
+export const renderSimplyDecorated = <A, M>(
+    self: DocTree.DocTree<A>,
+    M: monoid.Monoid<M>,
+    renderText: (text: string) => M,
+    renderAnnotation: (annotation: A, out: M) => M,
+): M =>
     Effect.runSync(
         renderSimplyDecoratedSafe(self, M, renderText, renderAnnotation),
-    ),
-);
+    );
 
 const renderSimplyDecoratedSafe = <A, M>(
     self: DocTree.DocTree<A>,
@@ -570,10 +553,10 @@ export const parser = <A>(): DocTreeParser<
 // Instances
 // -----------------------------------------------------------------------------
 
-export const map: {
-    <A, B>(f: (a: A) => B): (self: DocTree.DocTree<A>) => DocTree.DocTree<B>;
-    <A, B>(self: DocTree.DocTree<A>, f: (a: A) => B): DocTree.DocTree<B>;
-} = reAnnotate;
+export const map: <A, B>(
+    self: DocTree.DocTree<A>,
+    f: (a: A) => B,
+) => DocTree.DocTree<B> = reAnnotate;
 
 const imap = covariant.imap<DocTree.DocTree.TypeLambda>(map);
 

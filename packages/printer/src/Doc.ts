@@ -868,10 +868,8 @@ export const vbar: Doc<never> = internal.vbar;
  * @since 1.0.0
  * @category concatenation
  */
-export const cat: {
-    <B>(that: Doc<B>): <A>(self: Doc<A>) => Doc<B | A>;
-    <A, B>(self: Doc<A>, that: Doc<B>): Doc<A | B>;
-} = internal.cat;
+export const cat: <A, B>(self: Doc<A>, that: Doc<B>) => Doc<A | B> =
+    internal.cat;
 
 /**
  * The `cats` combinator will attempt to lay out a collection of documents
@@ -943,10 +941,8 @@ export const cats: <A>(docs: Iterable<Doc<A>>) => Doc<A> = internal.cats;
  * @since 1.0.0
  * @category concatenation
  */
-export const catWithLine: {
-    <B>(that: Doc<B>): <A>(self: Doc<A>) => Doc<B | A>;
-    <A, B>(self: Doc<A>, that: Doc<B>): Doc<A | B>;
-} = internal.catWithLine;
+export const catWithLine: <A, B>(self: Doc<A>, that: Doc<B>) => Doc<A | B> =
+    internal.catWithLine;
 
 /**
  * The `catWithLineBreak` combinator concatenates two documents by placing a
@@ -981,10 +977,10 @@ export const catWithLine: {
  * @since 1.0.0
  * @category concatenation
  */
-export const catWithLineBreak: {
-    <B>(that: Doc<B>): <A>(self: Doc<A>) => Doc<B | A>;
-    <A, B>(self: Doc<A>, that: Doc<B>): Doc<A | B>;
-} = internal.catWithLineBreak;
+export const catWithLineBreak: <A, B>(
+    self: Doc<A>,
+    that: Doc<B>,
+) => Doc<A | B> = internal.catWithLineBreak;
 
 /**
  * The `catWithSoftLine` combinator concatenates two documents by placing a
@@ -1022,10 +1018,8 @@ export const catWithLineBreak: {
  * @since 1.0.0
  * @category concatenation
  */
-export const catWithSoftLine: {
-    <B>(that: Doc<B>): <A>(self: Doc<A>) => Doc<B | A>;
-    <A, B>(self: Doc<A>, that: Doc<B>): Doc<A | B>;
-} = internal.catWithSoftLine;
+export const catWithSoftLine: <A, B>(self: Doc<A>, that: Doc<B>) => Doc<A | B> =
+    internal.catWithSoftLine;
 
 /**
  * The `catWithSoftLineBreak` combinator concatenates two documents by
@@ -1063,10 +1057,10 @@ export const catWithSoftLine: {
  * @since 1.0.0
  * @category concatenation
  */
-export const catWithSoftLineBreak: {
-    <B>(that: Doc<B>): <A>(self: Doc<A>) => Doc<B | A>;
-    <A, B>(self: Doc<A>, that: Doc<B>): Doc<A | B>;
-} = internal.catWithSoftLineBreak;
+export const catWithSoftLineBreak: <A, B>(
+    self: Doc<A>,
+    that: Doc<B>,
+) => Doc<A | B> = internal.catWithSoftLineBreak;
 
 /**
  * The `catWithSpace` combinator concatenates two documents by placing a
@@ -1092,10 +1086,8 @@ export const catWithSoftLineBreak: {
  * @since 1.0.0
  * @category concatenation
  */
-export const catWithSpace: {
-    <B>(that: Doc<B>): <A>(self: Doc<A>) => Doc<B | A>;
-    <A, B>(self: Doc<A>, that: Doc<B>): Doc<A | B>;
-} = internal.catWithSpace;
+export const catWithSpace: <A, B>(self: Doc<A>, that: Doc<B>) => Doc<A | B> =
+    internal.catWithSpace;
 
 /**
  * The `concatWith` combinator concatenates all documents in a collection
@@ -1121,15 +1113,10 @@ export const catWithSpace: {
  * @since 1.0.0
  * @category concatenation
  */
-export const concatWith: {
-    <A>(
-        f: (left: Doc<A>, right: Doc<A>) => Doc<A>,
-    ): (docs: Iterable<Doc<A>>) => Doc<A>;
-    <A>(
-        docs: Iterable<Doc<A>>,
-        f: (left: Doc<A>, right: Doc<A>) => Doc<A>,
-    ): Doc<A>;
-} = internal.concatWith;
+export const concatWith: <A>(
+    docs: Iterable<Doc<A>>,
+    f: (left: Doc<A>, right: Doc<A>) => Doc<A>,
+) => Doc<A> = internal.concatWith;
 
 /**
  * The `vcat` combinator concatenates all documents in a collection vertically.
@@ -1427,19 +1414,15 @@ export const seps: <A>(docs: Iterable<Doc<A>>) => Doc<A> = internal.seps;
  * @since 1.0.0
  * @category alternative layouts
  */
-export const flatAlt: {
-    <B>(that: Doc<B>): <A>(self: Doc<A>) => Doc<B | A>;
-    <A, B>(self: Doc<A>, that: Doc<B>): Doc<A | B>;
-} = internal.flatAlt;
+export const flatAlt: <A, B>(self: Doc<A>, that: Doc<B>) => Doc<A | B> =
+    internal.flatAlt;
 
 /**
  * @since 1.0.0
  * @category alternative layouts
  */
-export const union: {
-    <B>(that: Doc<B>): <A>(self: Doc<A>) => Doc<B | A>;
-    <A, B>(self: Doc<A>, that: Doc<B>): Doc<A | B>;
-} = internal.union;
+export const union: <A, B>(self: Doc<A>, that: Doc<B>) => Doc<A | B> =
+    internal.union;
 
 /**
  * The `group` combinator attempts to lay out a document onto a single line by
@@ -1575,10 +1558,10 @@ export const nesting: <A>(react: (level: number) => Doc<A>) => Doc<A> =
  * @since 1.0.0
  * @category reactive layouts
  */
-export const width: {
-    <A, B>(react: (width: number) => Doc<B>): (self: Doc<A>) => Doc<A | B>;
-    <A, B>(self: Doc<A>, react: (width: number) => Doc<B>): Doc<A | B>;
-} = internal.width;
+export const width: <A, B>(
+    self: Doc<A>,
+    react: (width: number) => Doc<B>,
+) => Doc<A | B> = internal.width;
 
 /**
  * Lays out a document according to the document"s`PageWidth`.
@@ -1673,10 +1656,7 @@ export const pageWidth: <A>(react: (pageWidth: PageWidth) => Doc<A>) => Doc<A> =
  * @since 1.0.0
  * @category alignment
  */
-export const nest: {
-    (indent: number): <A>(self: Doc<A>) => Doc<A>;
-    <A>(self: Doc<A>, indent: number): Doc<A>;
-} = internal.nest;
+export const nest: <A>(self: Doc<A>, indent: number) => Doc<A> = internal.nest;
 
 /**
  * The `align` combinator lays out a document with the nesting level set to the
@@ -1763,10 +1743,7 @@ export const align: <A>(self: Doc<A>) => Doc<A> = internal.align;
  * @since 1.0.0
  * @category alignment
  */
-export const hang: {
-    (indent: number): <A>(self: Doc<A>) => Doc<A>;
-    <A>(self: Doc<A>, indent: number): Doc<A>;
-} = internal.hang;
+export const hang: <A>(self: Doc<A>, indent: number) => Doc<A> = internal.hang;
 
 /**
  * The `indent` combinator indents a document by the specified `indent`
@@ -1801,10 +1778,8 @@ export const hang: {
  * @since 1.0.0
  * @category alignment
  */
-export const indent: {
-    (indent: number): <A>(self: Doc<A>) => Doc<A>;
-    <A>(self: Doc<A>, indent: number): Doc<A>;
-} = internal.indent;
+export const indent: <A>(self: Doc<A>, indent: number) => Doc<A> =
+    internal.indent;
 
 /**
  * The `encloseSep` combinator concatenates a collection of documents,
@@ -1858,19 +1833,12 @@ export const indent: {
  * @since 1.0.0
  * @category alignment
  */
-export const encloseSep: {
-    <A, B, C>(
-        left: Doc<A>,
-        right: Doc<B>,
-        sep: Doc<C>,
-    ): <D>(docs: Iterable<Doc<D>>) => Doc<A | B | C | D>;
-    <A, B, C, D>(
-        docs: Iterable<Doc<D>>,
-        left: Doc<A>,
-        right: Doc<B>,
-        sep: Doc<C>,
-    ): Doc<A | B | C | D>;
-} = internal.encloseSep;
+export const encloseSep: <A, B, C, D>(
+    docs: Iterable<Doc<D>>,
+    left: Doc<A>,
+    right: Doc<B>,
+    sep: Doc<C>,
+) => Doc<A | B | C | D> = internal.encloseSep;
 
 /**
  * A Haskell-inspired variant of `encloseSep` that uses a comma as the separator
@@ -1974,10 +1942,7 @@ export const tupled: <A>(docs: Iterable<Doc<A>>) => Doc<A> = internal.tupled;
  * @since 1.0.0
  * @category filling
  */
-export const fill: {
-    (w: number): <A>(self: Doc<A>) => Doc<A>;
-    <A>(self: Doc<A>, w: number): Doc<A>;
-} = internal.fill;
+export const fill: <A>(self: Doc<A>, w: number) => Doc<A> = internal.fill;
 
 /**
  * The `fillBreak` combinator first lays out the document `x` and then appends
@@ -2026,10 +1991,8 @@ export const fill: {
  * @since 1.0.0
  * @category filling
  */
-export const fillBreak: {
-    (w: number): <A>(self: Doc<A>) => Doc<A>;
-    <A>(self: Doc<A>, w: number): Doc<A>;
-} = internal.fillBreak;
+export const fillBreak: <A>(self: Doc<A>, w: number) => Doc<A> =
+    internal.fillBreak;
 
 // -----------------------------------------------------------------------------
 // Flattening
@@ -2077,10 +2040,8 @@ export const changesUponFlattening: <A>(self: Doc<A>) => Flatten<Doc<A>> =
  * @since 1.0.0
  * @category annotations
  */
-export const annotate: {
-    <A>(annotation: A): (self: Doc<A>) => Doc<A>;
-    <A>(self: Doc<A>, annotation: A): Doc<A>;
-} = internal.annotate;
+export const annotate: <A>(self: Doc<A>, annotation: A) => Doc<A> =
+    internal.annotate;
 
 /**
  * Change the annotations of a document. Individual annotations can be removed,
@@ -2103,10 +2064,10 @@ export const annotate: {
  * @since 1.0.0
  * @category annotations
  */
-export const alterAnnotations: {
-    <A, B>(f: (a: A) => Iterable<B>): (self: Doc<A>) => Doc<B>;
-    <A, B>(self: Doc<A>, f: (a: A) => Iterable<B>): Doc<B>;
-} = internal.alterAnnotations;
+export const alterAnnotations: <A, B>(
+    self: Doc<A>,
+    f: (a: A) => Iterable<B>,
+) => Doc<B> = internal.alterAnnotations;
 
 /**
  * Changes the annotation of a document. Useful for modifying documents embedded
@@ -2119,10 +2080,8 @@ export const alterAnnotations: {
  * @since 1.0.0
  * @category annotations
  */
-export const reAnnotate: {
-    <A, B>(f: (a: A) => B): (self: Doc<A>) => Doc<B>;
-    <A, B>(self: Doc<A>, f: (a: A) => B): Doc<B>;
-} = internal.reAnnotate;
+export const reAnnotate: <A, B>(self: Doc<A>, f: (a: A) => B) => Doc<B> =
+    internal.reAnnotate;
 
 /**
  * Removes all annotations from a document.
@@ -2144,8 +2103,9 @@ export const unAnnotate: <A>(self: Doc<A>) => Doc<never> = internal.unAnnotate;
  * @since 1.0.0
  * @category folding
  */
-export const match: {
-    <A, R>(patterns: {
+export const match: <A, R>(
+    self: Doc<A>,
+    patterns: {
         readonly Fail: () => R;
         readonly Empty: () => R;
         readonly Char: (char: string) => R;
@@ -2159,28 +2119,8 @@ export const match: {
         readonly WithPageWidth: (react: (pageWidth: PageWidth) => Doc<A>) => R;
         readonly Nesting: (react: (level: number) => Doc<A>) => R;
         readonly Annotated: (annotation: A, doc: Doc<A>) => R;
-    }): (self: Doc<A>) => R;
-    <A, R>(
-        self: Doc<A>,
-        patterns: {
-            readonly Fail: () => R;
-            readonly Empty: () => R;
-            readonly Char: (char: string) => R;
-            readonly Text: (text: string) => R;
-            readonly Line: () => R;
-            readonly FlatAlt: (x: Doc<A>, y: Doc<A>) => R;
-            readonly Cat: (x: Doc<A>, y: Doc<A>) => R;
-            readonly Nest: (indent: number, doc: Doc<A>) => R;
-            readonly Union: (x: Doc<A>, y: Doc<A>) => R;
-            readonly Column: (react: (position: number) => Doc<A>) => R;
-            readonly WithPageWidth: (
-                react: (pageWidth: PageWidth) => Doc<A>,
-            ) => R;
-            readonly Nesting: (react: (level: number) => Doc<A>) => R;
-            readonly Annotated: (annotation: A, doc: Doc<A>) => R;
-        },
-    ): R;
-} = internal.match;
+    },
+) => R = internal.match;
 
 // -----------------------------------------------------------------------------
 // Instances
@@ -2190,10 +2130,8 @@ export const match: {
  * @since 1.0.0
  * @category rendering
  */
-export const render: {
-    (config: Doc.RenderConfig): <A>(self: Doc<A>) => string;
-    <A>(self: Doc<A>, config: Doc.RenderConfig): string;
-} = InternalRender.render;
+export const render: <A>(self: Doc<A>, config: Doc.RenderConfig) => string =
+    InternalRender.render;
 
 /**
  * @since 1.0.0
@@ -2210,10 +2148,7 @@ export const renderStream: <A>(self: DocStream<A>) => string =
  * @since 1.0.0
  * @category combinators
  */
-export const map: {
-    <A, B>(f: (a: A) => B): (self: Doc<A>) => Doc<B>;
-    <A, B>(self: Doc<A>, f: (a: A) => B): Doc<B>;
-} = internal.map;
+export const map: <A, B>(self: Doc<A>, f: (a: A) => B) => Doc<B> = internal.map;
 
 /**
  * @since 1.0.0
@@ -2270,10 +2205,11 @@ export const Invariant: invariant.Invariant<Doc.TypeLambda> =
  * @since 1.0.0
  * @category utilities
  */
-export const surround: {
-    <A, B, C>(left: Doc<A>, right: Doc<B>): (self: Doc<C>) => Doc<A | B | C>;
-    <A, B, C>(self: Doc<C>, left: Doc<A>, right: Doc<B>): Doc<A | B | C>;
-} = internal.surround;
+export const surround: <A, B, C>(
+    self: Doc<C>,
+    left: Doc<A>,
+    right: Doc<B>,
+) => Doc<A | B | C> = internal.surround;
 
 /**
  * Encloses the input document in single quotes (`""`).
@@ -2454,12 +2390,7 @@ export const reflow: (s: string, char?: string) => Doc<never> = internal.reflow;
  * @since 1.0.0
  * @category utilities
  */
-export const punctuate: {
-    <A, B>(
-        punctuator: Doc<A>,
-    ): (docs: Iterable<Doc<B>>) => ReadonlyArray<Doc<A | B>>;
-    <A, B>(
-        docs: Iterable<Doc<B>>,
-        punctuator: Doc<A>,
-    ): ReadonlyArray<Doc<A | B>>;
-} = internal.punctuate;
+export const punctuate: <A, B>(
+    docs: Iterable<Doc<B>>,
+    punctuator: Doc<A>,
+) => ReadonlyArray<Doc<A | B>> = internal.punctuate;

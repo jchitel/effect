@@ -3,7 +3,7 @@ import type * as invariant from "@effect/typeclass/Invariant";
 import type * as monoid from "@effect/typeclass/Monoid";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
-import { dual, pipe } from "effect/Function";
+import { pipe } from "effect/Function";
 import * as Hash from "effect/Hash";
 import * as List from "effect/List";
 import * as Option from "effect/Option";
@@ -176,66 +176,52 @@ export const empty: DocStream.DocStream<never> = (() => {
 })();
 
 /** @internal */
-export const char = dual<
-    (
-        char: string,
-    ) => <A>(self: DocStream.DocStream<A>) => DocStream.DocStream<A>,
-    <A>(self: DocStream.DocStream<A>, char: string) => DocStream.DocStream<A>
->(2, (self, char) => {
+export const char = <A>(
+    self: DocStream.DocStream<A>,
+    char: string,
+): DocStream.DocStream<A> => {
     const op = Object.create(proto);
     op._tag = "CharStream";
     op.char = char;
     op.stream = self;
     return op;
-});
+};
 
 /** @internal */
-export const text = dual<
-    (
-        text: string,
-    ) => <A>(self: DocStream.DocStream<A>) => DocStream.DocStream<A>,
-    <A>(self: DocStream.DocStream<A>, text: string) => DocStream.DocStream<A>
->(2, (self, text) => {
+export const text = <A>(
+    self: DocStream.DocStream<A>,
+    text: string,
+): DocStream.DocStream<A> => {
     const op = Object.create(proto);
     op._tag = "TextStream";
     op.text = text;
     op.stream = self;
     return op;
-});
+};
 
 /** @internal */
-export const line = dual<
-    (
-        indentation: number,
-    ) => <A>(self: DocStream.DocStream<A>) => DocStream.DocStream<A>,
-    <A>(
-        self: DocStream.DocStream<A>,
-        indentation: number,
-    ) => DocStream.DocStream<A>
->(2, (self, indentation) => {
+export const line = <A>(
+    self: DocStream.DocStream<A>,
+    indentation: number,
+): DocStream.DocStream<A> => {
     const op = Object.create(proto);
     op._tag = "LineStream";
     op.indentation = indentation;
     op.stream = self;
     return op;
-});
+};
 
 /** @internal */
-export const pushAnnotation = dual<
-    <B>(
-        annotation: B,
-    ) => <A>(self: DocStream.DocStream<A>) => DocStream.DocStream<A | B>,
-    <A, B>(
-        self: DocStream.DocStream<A>,
-        annotation: B,
-    ) => DocStream.DocStream<A | B>
->(2, (self, annotation) => {
+export const pushAnnotation = <A, B>(
+    self: DocStream.DocStream<A>,
+    annotation: B,
+): DocStream.DocStream<A | B> => {
     const op = Object.create(proto);
     op._tag = "PushAnnotationStream";
     op.annotation = annotation;
     op.stream = self;
     return op;
-});
+};
 
 /** @internal */
 export const popAnnotation = <A>(
@@ -258,15 +244,11 @@ const Remove: AnnotationRemoval = "Remove";
 const DontRemove: AnnotationRemoval = "DontRemove";
 
 /** @internal */
-export const alterAnnotations = dual<
-    <A, B>(
-        f: (a: A) => Option.Option<B>,
-    ) => (self: DocStream.DocStream<A>) => DocStream.DocStream<B>,
-    <A, B>(
-        self: DocStream.DocStream<A>,
-        f: (a: A) => Option.Option<B>,
-    ) => DocStream.DocStream<B>
->(2, (self, f) => Effect.runSync(alterAnnotationSafe(self, f, List.nil())));
+export const alterAnnotations = <A, B>(
+    self: DocStream.DocStream<A>,
+    f: (a: A) => Option.Option<B>,
+): DocStream.DocStream<B> =>
+    Effect.runSync(alterAnnotationSafe(self, f, List.nil()));
 
 const alterAnnotationSafe = <A, B>(
     self: DocStream.DocStream<A>,
@@ -279,7 +261,7 @@ const alterAnnotationSafe = <A, B>(
                 Effect.suspend(() =>
                     alterAnnotationSafe(self.stream, f, stack),
                 ),
-                char(self.char),
+                (x) => char(x, self.char),
             );
         }
         case "TextStream": {
@@ -287,7 +269,7 @@ const alterAnnotationSafe = <A, B>(
                 Effect.suspend(() =>
                     alterAnnotationSafe(self.stream, f, stack),
                 ),
-                text(self.text),
+                (x) => text(x, self.text),
             );
         }
         case "LineStream": {
@@ -295,7 +277,7 @@ const alterAnnotationSafe = <A, B>(
                 Effect.suspend(() =>
                     alterAnnotationSafe(self.stream, f, stack),
                 ),
-                line(self.indentation),
+                (x) => line(x, self.indentation),
             );
         }
         case "PushAnnotationStream": {
@@ -309,7 +291,7 @@ const alterAnnotationSafe = <A, B>(
                             List.prepend(stack, DontRemove),
                         ),
                     ),
-                    pushAnnotation(altered.value),
+                    (x) => pushAnnotation(x, altered.value),
                 );
             }
             return Effect.suspend(() =>
@@ -346,15 +328,10 @@ const alterAnnotationSafe = <A, B>(
 };
 
 /** @internal */
-export const reAnnotate = dual<
-    <A, B>(
-        f: (a: A) => B,
-    ) => (self: DocStream.DocStream<A>) => DocStream.DocStream<B>,
-    <A, B>(
-        self: DocStream.DocStream<A>,
-        f: (a: A) => B,
-    ) => DocStream.DocStream<B>
->(2, (self, f) => Effect.runSync(reAnnotateSafe(self, f)));
+export const reAnnotate = <A, B>(
+    self: DocStream.DocStream<A>,
+    f: (a: A) => B,
+): DocStream.DocStream<B> => Effect.runSync(reAnnotateSafe(self, f));
 
 const reAnnotateSafe = <A, B>(
     self: DocStream.DocStream<A>,
@@ -364,25 +341,25 @@ const reAnnotateSafe = <A, B>(
         case "CharStream": {
             return Effect.map(
                 Effect.suspend(() => reAnnotateSafe(self.stream, f)),
-                char(self.char),
+                (x) => char(x, self.char),
             );
         }
         case "TextStream": {
             return Effect.map(
                 Effect.suspend(() => reAnnotateSafe(self.stream, f)),
-                text(self.text),
+                (x) => text(x, self.text),
             );
         }
         case "LineStream": {
             return Effect.map(
                 Effect.suspend(() => reAnnotateSafe(self.stream, f)),
-                line(self.indentation),
+                (x) => line(x, self.indentation),
             );
         }
         case "PushAnnotationStream": {
             return Effect.map(
                 Effect.suspend(() => reAnnotateSafe(self.stream, f)),
-                pushAnnotation(f(self.annotation)),
+                (x) => pushAnnotation(x, f(self.annotation)),
             );
         }
         case "PopAnnotationStream": {
@@ -406,19 +383,19 @@ const unAnnotateSafe = <A>(
         case "CharStream": {
             return Effect.map(
                 Effect.suspend(() => unAnnotateSafe(self.stream)),
-                char(self.char),
+                (x) => char(x, self.char),
             );
         }
         case "TextStream": {
             return Effect.map(
                 Effect.suspend(() => unAnnotateSafe(self.stream)),
-                text(self.text),
+                (x) => text(x, self.text),
             );
         }
         case "LineStream": {
             return Effect.map(
                 Effect.suspend(() => unAnnotateSafe(self.stream)),
-                line(self.indentation),
+                (x) => line(x, self.indentation),
             );
         }
         case "PushAnnotationStream":
@@ -438,17 +415,11 @@ const unAnnotateSafe = <A>(
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const foldMap = dual<
-    <A, M>(
-        M: monoid.Monoid<M>,
-        f: (a: A) => M,
-    ) => (self: DocStream.DocStream<A>) => M,
-    <A, M>(
-        self: DocStream.DocStream<A>,
-        M: monoid.Monoid<M>,
-        f: (a: A) => M,
-    ) => M
->(3, (self, M, f) => Effect.runSync(foldMapSafe(self, M, f)));
+export const foldMap = <A, M>(
+    self: DocStream.DocStream<A>,
+    M: monoid.Monoid<M>,
+    f: (a: A) => M,
+): M => Effect.runSync(foldMapSafe(self, M, f));
 
 const foldMapSafe = <A, M>(
     self: DocStream.DocStream<A>,
@@ -481,10 +452,12 @@ const foldMapSafe = <A, M>(
 };
 
 /** @internal */
-export const match = dual<
-    <A, R>(patterns: {
+export const match = <A, R>(
+    self: DocStream.DocStream<A>,
+    patterns: {
         readonly FailedStream: () => R;
         readonly EmptyStream: () => R;
+
         readonly CharStream: (
             char: string,
             stream: DocStream.DocStream<A>,
@@ -502,33 +475,8 @@ export const match = dual<
             stream: DocStream.DocStream<A>,
         ) => R;
         readonly PopAnnotationStream: (stream: DocStream.DocStream<A>) => R;
-    }) => (self: DocStream.DocStream<A>) => R,
-    <A, R>(
-        self: DocStream.DocStream<A>,
-        patterns: {
-            readonly FailedStream: () => R;
-            readonly EmptyStream: () => R;
-
-            readonly CharStream: (
-                char: string,
-                stream: DocStream.DocStream<A>,
-            ) => R;
-            readonly TextStream: (
-                text: string,
-                stream: DocStream.DocStream<A>,
-            ) => R;
-            readonly LineStream: (
-                indentation: number,
-                stream: DocStream.DocStream<A>,
-            ) => R;
-            readonly PushAnnotationStream: (
-                annotation: A,
-                stream: DocStream.DocStream<A>,
-            ) => R;
-            readonly PopAnnotationStream: (stream: DocStream.DocStream<A>) => R;
-        },
-    ) => R
->(2, (self, patterns) => {
+    },
+): R => {
     switch (self._tag) {
         case "FailedStream": {
             return patterns.FailedStream();
@@ -552,22 +500,17 @@ export const match = dual<
             return patterns.PopAnnotationStream(self.stream);
         }
     }
-});
+};
 
 // -----------------------------------------------------------------------------
 // Instances
 // -----------------------------------------------------------------------------
 
 /** @internal */
-export const map: {
-    <A, B>(
-        f: (a: A) => B,
-    ): (self: DocStream.DocStream<A>) => DocStream.DocStream<B>;
-    <A, B>(
-        self: DocStream.DocStream<A>,
-        f: (a: A) => B,
-    ): DocStream.DocStream<B>;
-} = reAnnotate;
+export const map: <A, B>(
+    self: DocStream.DocStream<A>,
+    f: (a: A) => B,
+) => DocStream.DocStream<B> = reAnnotate;
 
 /** @internal */
 export const imap = covariant.imap<DocStream.DocStream.TypeLambda>(map);
