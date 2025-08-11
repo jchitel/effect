@@ -1,7 +1,3 @@
-import * as covariant from "@effect/typeclass/Covariant";
-import type * as invariant from "@effect/typeclass/Invariant";
-import type * as monoid from "@effect/typeclass/Monoid";
-import type * as semigroup from "@effect/typeclass/Semigroup";
 import * as Arr from "effect/Array";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
@@ -840,42 +836,6 @@ export const reAnnotate = <A, B>(
 /** @internal */
 export const unAnnotate = <A>(self: Doc.Doc<A>): Doc.Doc<never> =>
     alterAnnotations(self, () => []);
-
-// -----------------------------------------------------------------------------
-// Instances
-// -----------------------------------------------------------------------------
-
-/** @internal */
-export const map: <A, B>(self: Doc.Doc<A>, f: (a: A) => B) => Doc.Doc<B> =
-    reAnnotate;
-
-/** @internal */
-export const imap = covariant.imap<Doc.Doc.TypeLambda>(map);
-
-/** @internal */
-export const getSemigroup = <A>(): semigroup.Semigroup<Doc.Doc<A>> => ({
-    combine: cat,
-    combineMany: (self, others) => cat(self, cats(others)),
-});
-
-/** @internal */
-export const getMonoid = <A>(): monoid.Monoid<Doc.Doc<A>> => ({
-    empty,
-    combine: cat,
-    combineMany: (self, others) => cat(self, cats(others)),
-    combineAll: cats,
-});
-
-/** @internal */
-export const Covariant: covariant.Covariant<Doc.Doc.TypeLambda> = {
-    map,
-    imap,
-};
-
-/** @internal */
-export const Invariant: invariant.Invariant<Doc.Doc.TypeLambda> = {
-    imap,
-};
 
 // -----------------------------------------------------------------------------
 // Utilities

@@ -1,10 +1,3 @@
-/**
- * @since 1.0.0
- */
-import type * as covariant from "@effect/typeclass/Covariant";
-import type * as invariant from "@effect/typeclass/Invariant";
-import type * as monoid from "@effect/typeclass/Monoid";
-import type * as semigroup from "@effect/typeclass/Semigroup";
 import type { Equal } from "effect/Equal";
 import type { TypeLambda } from "effect/HKT";
 import type * as DocStream from "./DocStream.js";
@@ -284,71 +277,6 @@ export const unAnnotate: <A>(self: DocTree<A>) => DocTree<never> =
     internal.unAnnotate;
 
 // -----------------------------------------------------------------------------
-// Folding
-// -----------------------------------------------------------------------------
-
-/**
- * @since 1.0.0
- * @category folding
- */
-export const foldMap: <A, M>(
-    self: DocTree<A>,
-    M: monoid.Monoid<M>,
-    f: (a: A) => M,
-) => M = internal.foldMap;
-
-// -----------------------------------------------------------------------------
-// Instances
-// -----------------------------------------------------------------------------
-
-/**
- * The simplest possible tree-based renderer.
- *
- * For example, here is a document annotated with `void` and thee behavior is
- * to surround annotated regions with »>>>« and »<<<«.
- *
- * @example
- * ```ts
- * import * as assert from "node:assert"
- * import * as Doc from "@effect/printer/Doc"
- * import * as DocTree from "@effect/printer/DocTree"
- * import * as Layout from "@effect/printer/Layout"
- * import { identity, pipe } from "effect/Function"
- * import * as String from "@effect/typeclass/data/String"
- *
- * const doc: Doc.Doc<void> = Doc.hsep([
- *   Doc.text("hello"),
- *   pipe(
- *     Doc.text("world"),
- *     Doc.annotate(undefined),
- *     Doc.cat(Doc.char("!"))
- *   )
- * ])
- *
- * const tree = DocTree.treeForm(Layout.pretty(Layout.defaultOptions)(doc))
- *
- * const rendered = pipe(
- *   tree,
- *   DocTree.renderSimplyDecorated(String.Monoid, identity, (_, x) => `>>>${x}<<<`)
- * )
- *
- * assert.strictEqual(
- *   rendered,
- *   "hello >>>world<<<!"
- * )
- * ```
- *
- * @since 1.0.0
- * @category rendering
- */
-export const renderSimplyDecorated: <A, M>(
-    self: DocTree<A>,
-    M: monoid.Monoid<M>,
-    renderText: (text: string) => M,
-    renderAnnotation: (annotation: A, out: M) => M,
-) => M = internal.renderSimplyDecorated;
-
-// -----------------------------------------------------------------------------
 // Conversions
 // -----------------------------------------------------------------------------
 
@@ -360,35 +288,3 @@ export const renderSimplyDecorated: <A, M>(
  */
 export const treeForm: <A>(stream: DocStream.DocStream<A>) => DocTree<A> =
     internal.treeForm;
-
-// -----------------------------------------------------------------------------
-// Instances
-// -----------------------------------------------------------------------------
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const getSemigroup: <A>(_: void) => semigroup.Semigroup<DocTree<A>> =
-    internal.getSemigroup;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const getMonoid: <A>(_: void) => monoid.Monoid<DocTree<A>> =
-    internal.getMonoid;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const Covariant: covariant.Covariant<DocTree.TypeLambda> =
-    internal.Covariant;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const Invariant: invariant.Invariant<DocTree.TypeLambda> =
-    internal.Invariant;

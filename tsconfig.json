@@ -12,7 +12,6 @@
         { "path": "packages/platform-node-shared" },
         { "path": "packages/printer" },
         { "path": "packages/printer-ansi" },
-        { "path": "packages/typeclass" },
         { "path": "packages/vitest" }
     ]
 }

@@ -27,8 +27,6 @@
             "@effect/printer/*": ["../../../printer/src/*.js"],
             "@effect/printer-ansi": ["../../../printer-ansi/src/index.js"],
             "@effect/printer-ansi/*": ["../../../printer-ansi/src/*.js"],
-            "@effect/typeclass": ["../../../typeclass/src/index.js"],
-            "@effect/typeclass/*": ["../../../typeclass/src/*.js"],
             "@effect/cli": ["../../../cli/src/index.js"],
             "@effect/cli/*": ["../../../cli/src/*.js"]
         }

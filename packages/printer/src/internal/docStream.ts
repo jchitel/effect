@@ -1,6 +1,3 @@
-import * as covariant from "@effect/typeclass/Covariant";
-import type * as invariant from "@effect/typeclass/Invariant";
-import type * as monoid from "@effect/typeclass/Monoid";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
 import { pipe } from "effect/Function";
@@ -410,47 +407,6 @@ const unAnnotateSafe = <A>(
     }
 };
 
-// -----------------------------------------------------------------------------
-// Folding
-// -----------------------------------------------------------------------------
-
-/** @internal */
-export const foldMap = <A, M>(
-    self: DocStream.DocStream<A>,
-    M: monoid.Monoid<M>,
-    f: (a: A) => M,
-): M => Effect.runSync(foldMapSafe(self, M, f));
-
-const foldMapSafe = <A, M>(
-    self: DocStream.DocStream<A>,
-    M: monoid.Monoid<M>,
-    f: (a: A) => M,
-): Effect.Effect<M> => {
-    switch (self._tag) {
-        case "CharStream": {
-            return Effect.suspend(() => foldMapSafe(self.stream, M, f));
-        }
-        case "TextStream": {
-            return Effect.suspend(() => foldMapSafe(self.stream, M, f));
-        }
-        case "LineStream": {
-            return Effect.suspend(() => foldMapSafe(self.stream, M, f));
-        }
-        case "PushAnnotationStream": {
-            return Effect.map(
-                Effect.suspend(() => foldMapSafe(self.stream, M, f)),
-                (that) => M.combine(f(self.annotation), that),
-            );
-        }
-        case "PopAnnotationStream": {
-            return Effect.suspend(() => foldMapSafe(self.stream, M, f));
-        }
-        default: {
-            return Effect.succeed(M.empty);
-        }
-    }
-};
-
 /** @internal */
 export const match = <A, R>(
     self: DocStream.DocStream<A>,
@@ -500,28 +456,4 @@ export const match = <A, R>(
             return patterns.PopAnnotationStream(self.stream);
         }
     }
-};
-
-// -----------------------------------------------------------------------------
-// Instances
-// -----------------------------------------------------------------------------
-
-/** @internal */
-export const map: <A, B>(
-    self: DocStream.DocStream<A>,
-    f: (a: A) => B,
-) => DocStream.DocStream<B> = reAnnotate;
-
-/** @internal */
-export const imap = covariant.imap<DocStream.DocStream.TypeLambda>(map);
-
-/** @internal */
-export const Covariant: covariant.Covariant<DocStream.DocStream.TypeLambda> = {
-    map,
-    imap,
-};
-
-/** @internal */
-export const Invariant: invariant.Invariant<DocStream.DocStream.TypeLambda> = {
-    imap,
 };

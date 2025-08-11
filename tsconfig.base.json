@@ -48,7 +48,6 @@
                     "@effect/platform-node-shared",
                     "@effect/printer",
                     "@effect/printer-ansi",
-                    "@effect/typeclass",
                     "@effect/vitest"
                 ]
             }

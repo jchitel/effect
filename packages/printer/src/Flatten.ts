@@ -1,8 +1,3 @@
-/**
- * @since 1.0.0
- */
-
-import type { Covariant as _Functor } from "@effect/typeclass/Covariant";
 import type { Equal } from "effect/Equal";
 import type { TypeLambda } from "effect/HKT";
 import * as internal from "./internal/flatten.js";

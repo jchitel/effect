@@ -12,17 +12,18 @@ const complex = Doc.hsep([
         Doc.vsep([
             Doc.hsep([
                 Doc.text("blue+u"),
-                Doc.text("bold").pipe(Doc.annotate(Ansi.bold)),
+                Doc.text("bold").pipe((x) => Doc.annotate(x, Ansi.bold)),
                 Doc.text("blue+u"),
-            ]).pipe(
+            ]).pipe((x) =>
                 Doc.annotate(
+                    x,
                     Ansi.combine(Ansi.color(Color.blue), Ansi.underlined),
                 ),
             ),
             Doc.text("red"),
         ]),
     ),
-]).pipe(Doc.annotate(Ansi.red));
+]).pipe((x) => Doc.annotate(x, Ansi.red));
 
 const render = (doc: Doc.AnsiDoc): string =>
     Doc.render(doc, { style: "pretty" });
@@ -311,7 +312,7 @@ describe("Terminal", () => {
 
     describe("Annotations", () => {
         it("should re-annotate a document", () => {
-            const doc = Doc.map(complex, (style) =>
+            const doc = Doc.reAnnotate(complex, (style) =>
                 Ansi.combine(Ansi.bgColor(Color.white), style),
             );
             expect(render(doc)).toBe(

@@ -307,11 +307,6 @@ export type {
      * @since 1.0.0
      * @category model
      */
-    Covariant,
-    /**
-     * @since 1.0.0
-     * @category model
-     */
     Doc,
     /**
      * @since 1.0.0
@@ -586,11 +581,6 @@ export {
     indent,
     /**
      * @since 1.0.0
-     * @category instances
-     */
-    Invariant,
-    /**
-     * @since 1.0.0
      * @category refinements
      */
     isAnnotated,
@@ -694,11 +684,6 @@ export {
      * @category primitives
      */
     lparen,
-    /**
-     * @since 1.0.0
-     * @category combinators
-     */
-    map,
     /**
      * @since 1.0.0
      * @category matching

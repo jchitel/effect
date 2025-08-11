@@ -4,8 +4,7 @@
     "references": [
         { "path": "tsconfig.build.json" },
         { "path": "../printer/tsconfig.build.json" },
-        { "path": "../effect/tsconfig.build.json" },
-        { "path": "../typeclass/tsconfig.build.json" }
+        { "path": "../effect/tsconfig.build.json" }
     ],
     "compilerOptions": {
         "tsBuildInfoFile": ".tsbuildinfo/examples.tsbuildinfo",

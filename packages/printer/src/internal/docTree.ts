@@ -1,7 +1,3 @@
-import * as covariant from "@effect/typeclass/Covariant";
-import type * as invariant from "@effect/typeclass/Invariant";
-import type * as monoid from "@effect/typeclass/Monoid";
-import type * as semigroup from "@effect/typeclass/Semigroup";
 import * as Arr from "effect/Array";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
@@ -10,7 +6,6 @@ import * as Hash from "effect/Hash";
 import * as Option from "effect/Option";
 import type * as DocStream from "../DocStream.js";
 import type * as DocTree from "../DocTree.js";
-import * as doc from "./doc.js";
 import * as docTreeToken from "./docTreeToken.js";
 
 // -----------------------------------------------------------------------------
@@ -247,137 +242,6 @@ export const unAnnotate = <A>(
 ): DocTree.DocTree<never> => alterAnnotations(self, () => []);
 
 // -----------------------------------------------------------------------------
-// Folding
-// -----------------------------------------------------------------------------
-
-/** @internal */
-export const foldMap = <A, M>(
-    self: DocTree.DocTree<A>,
-    M: monoid.Monoid<M>,
-    f: (a: A) => M,
-): M => Effect.runSync(foldMapSafe(self, M, f));
-
-const foldMapSafe = <A, M>(
-    self: DocTree.DocTree<A>,
-    M: monoid.Monoid<M>,
-    f: (a: A) => M,
-): Effect.Effect<M> => {
-    switch (self._tag) {
-        case "EmptyTree":
-        case "CharTree":
-        case "TextTree":
-        case "LineTree": {
-            return Effect.succeed(M.empty);
-        }
-        case "AnnotationTree": {
-            return Effect.map(
-                Effect.suspend(() => foldMapSafe(self.tree, M, f)),
-                (that) => M.combine(f(self.annotation), that),
-            );
-        }
-        case "ConcatTree": {
-            if (Arr.isEmptyReadonlyArray(self.trees)) {
-                return Effect.succeed(M.empty);
-            }
-            return Effect.map(
-                Effect.forEach(self.trees, (tree) => foldMapSafe(tree, M, f)),
-                (trees) => {
-                    const head = trees[0];
-                    const tail = trees.slice(1);
-                    return Arr.reduce(tail, head, M.combine);
-                },
-            );
-        }
-    }
-};
-
-// -----------------------------------------------------------------------------
-// Rendering
-// -----------------------------------------------------------------------------
-
-/** @internal */
-export const renderSimplyDecorated = <A, M>(
-    self: DocTree.DocTree<A>,
-    M: monoid.Monoid<M>,
-    renderText: (text: string) => M,
-    renderAnnotation: (annotation: A, out: M) => M,
-): M =>
-    Effect.runSync(
-        renderSimplyDecoratedSafe(self, M, renderText, renderAnnotation),
-    );
-
-const renderSimplyDecoratedSafe = <A, M>(
-    self: DocTree.DocTree<A>,
-    M: monoid.Monoid<M>,
-    renderText: (text: string) => M,
-    renderAnnotation: (annotation: A, out: M) => M,
-): Effect.Effect<M> => {
-    switch (self._tag) {
-        case "EmptyTree": {
-            return Effect.succeed(M.empty);
-        }
-        case "CharTree": {
-            return Effect.succeed(renderText(self.char));
-        }
-        case "TextTree": {
-            return Effect.succeed(renderText(self.text));
-        }
-        case "LineTree": {
-            return Effect.succeed(
-                M.combine(
-                    renderText("\n"),
-                    renderText(doc.textSpaces(self.indentation)),
-                ),
-            );
-        }
-        case "AnnotationTree": {
-            return Effect.map(
-                Effect.suspend(() =>
-                    renderSimplyDecoratedSafe(
-                        self.tree,
-                        M,
-                        renderText,
-                        renderAnnotation,
-                    ),
-                ),
-                (out) => renderAnnotation(self.annotation, out),
-            );
-        }
-        case "ConcatTree": {
-            if (Arr.isEmptyReadonlyArray(self.trees)) {
-                return Effect.succeed(M.empty);
-            }
-            const head = self.trees[0];
-            const tail = self.trees.slice(1);
-            return Arr.reduce(
-                tail,
-                Effect.suspend(() =>
-                    renderSimplyDecoratedSafe(
-                        head,
-                        M,
-                        renderText,
-                        renderAnnotation,
-                    ),
-                ),
-                (acc, tree) =>
-                    Effect.zipWith(
-                        acc,
-                        Effect.suspend(() =>
-                            renderSimplyDecoratedSafe(
-                                tree,
-                                M,
-                                renderText,
-                                renderAnnotation,
-                            ),
-                        ),
-                        M.combine,
-                    ),
-            );
-        }
-    }
-};
-
-// -----------------------------------------------------------------------------
 // Conversions
 // -----------------------------------------------------------------------------
 
@@ -552,42 +416,3 @@ export const parser = <A>(): DocTreeParser<
 // -----------------------------------------------------------------------------
 // Instances
 // -----------------------------------------------------------------------------
-
-export const map: <A, B>(
-    self: DocTree.DocTree<A>,
-    f: (a: A) => B,
-) => DocTree.DocTree<B> = reAnnotate;
-
-const imap = covariant.imap<DocTree.DocTree.TypeLambda>(map);
-
-/** @internal */
-export const getSemigroup = <A>(
-    _: void,
-): semigroup.Semigroup<DocTree.DocTree<A>> => {
-    return {
-        combine: (self, that) => concat(Arr.make(self, that)),
-        combineMany: (self, trees) =>
-            concat(Arr.fromIterable([self, ...trees])),
-    };
-};
-
-/** @internal */
-export const getMonoid = <A>(_: void): monoid.Monoid<DocTree.DocTree<A>> => {
-    return {
-        empty,
-        combine: (self, that) => concat(Arr.make(self, that)),
-        combineMany: (self, trees) =>
-            concat(Arr.fromIterable([self, ...trees])),
-        combineAll: (trees) => concat(Arr.fromIterable(trees)),
-    };
-};
-
-/** @internal */
-export const Covariant: covariant.Covariant<DocTree.DocTree.TypeLambda> = {
-    map,
-    imap,
-};
-
-export const Invariant: invariant.Invariant<DocTree.DocTree.TypeLambda> = {
-    imap,
-};

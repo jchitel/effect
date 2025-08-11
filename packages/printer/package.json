@@ -46,11 +46,9 @@
         "coverage": "vitest --coverage"
     },
     "devDependencies": {
-        "@effect/typeclass": "workspace:^",
         "effect": "workspace:^"
     },
     "peerDependencies": {
-        "@effect/typeclass": "workspace:^",
         "effect": "workspace:^"
     }
 }

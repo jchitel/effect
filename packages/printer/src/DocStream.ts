@@ -1,10 +1,3 @@
-/**
- * @since 1.0.0
- */
-
-import type * as covariant from "@effect/typeclass/Covariant";
-import type * as invariant from "@effect/typeclass/Invariant";
-import type * as monoid from "@effect/typeclass/Monoid";
 import type { Equal } from "effect/Equal";
 import type { TypeLambda } from "effect/HKT";
 import type { Option } from "effect/Option";
@@ -337,16 +330,6 @@ export const unAnnotate: <A>(self: DocStream<A>) => DocStream<never> =
  * @since 1.0.0
  * @category folding
  */
-export const foldMap: <A, M>(
-    self: DocStream<A>,
-    M: monoid.Monoid<M>,
-    f: (a: A) => M,
-) => M = internal.foldMap;
-
-/**
- * @since 1.0.0
- * @category folding
- */
 export const match: <A, R>(
     self: DocStream<A>,
     patterns: {
@@ -362,24 +345,3 @@ export const match: <A, R>(
         readonly PopAnnotationStream: (stream: DocStream<A>) => R;
     },
 ) => R = internal.match;
-
-/**
- * @since 1.0.0
- * @category mapping
- */
-export const map: <A, B>(self: DocStream<A>, f: (a: A) => B) => DocStream<B> =
-    internal.map;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const Functor: covariant.Covariant<DocStreamTypeLambda> =
-    internal.Covariant;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const Invariant: invariant.Invariant<DocStreamTypeLambda> =
-    internal.Invariant;

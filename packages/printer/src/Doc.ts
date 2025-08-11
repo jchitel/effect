@@ -17,10 +17,6 @@
  * @since 1.0.0
  */
 
-import type * as covariant from "@effect/typeclass/Covariant";
-import type * as invariant from "@effect/typeclass/Invariant";
-import type { Monoid } from "@effect/typeclass/Monoid";
-import type { Semigroup } from "@effect/typeclass/Semigroup";
 import type { Equal } from "effect/Equal";
 import type { TypeLambda } from "effect/HKT";
 import type { Pipeable } from "effect/Pipeable";
@@ -2139,43 +2135,6 @@ export const render: <A>(self: Doc<A>, config: Doc.RenderConfig) => string =
  */
 export const renderStream: <A>(self: DocStream<A>) => string =
     InternalRender.renderStream;
-
-// -----------------------------------------------------------------------------
-// Instances
-// -----------------------------------------------------------------------------
-
-/**
- * @since 1.0.0
- * @category combinators
- */
-export const map: <A, B>(self: Doc<A>, f: (a: A) => B) => Doc<B> = internal.map;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const getSemigroup: <A>(_: void) => Semigroup<Doc<A>> =
-    internal.getSemigroup;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const getMonoid: <A>(_: void) => Monoid<Doc<A>> = internal.getMonoid;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const Covariant: covariant.Covariant<Doc.TypeLambda> =
-    internal.Covariant;
-
-/**
- * @since 1.0.0
- * @category instances
- */
-export const Invariant: invariant.Invariant<Doc.TypeLambda> =
-    internal.Invariant;
 
 // -----------------------------------------------------------------------------
 // Utilities

@@ -1,5 +1,3 @@
-import * as Monoid from "@effect/typeclass/Monoid";
-import * as Semigroup from "@effect/typeclass/Semigroup";
 import * as Arr from "effect/Array";
 import * as Option from "effect/Option";
 import type * as Ansi from "../Ansi.js";
@@ -35,47 +33,23 @@ const make = (
         readonly underlined: Option.Option<SGR.SGR>;
     }>,
 ): Ansi.Ansi => ({
-    ...AnsiMonoid.empty,
+    ...none,
     ...params,
 });
 
-// -----------------------------------------------------------------------------
-// Instances
-// -----------------------------------------------------------------------------
-
-const typeIdSemigroup = Semigroup.first<Ansi.AnsiTypeId>();
-
-const getFirstSomeSemigroup: Semigroup.Semigroup<Option.Option<SGR.SGR>> =
-    Semigroup.make((self, that) => (Option.isSome(self) ? self : that));
-
-const AnsiSemigroup: Semigroup.Semigroup<AnsiImpl> = Semigroup.struct({
-    [AnsiTypeId]: typeIdSemigroup,
-    commands: Semigroup.array<string>(),
-    foreground: getFirstSomeSemigroup,
-    background: getFirstSomeSemigroup,
-    bold: getFirstSomeSemigroup,
-    italicized: getFirstSomeSemigroup,
-    strikethrough: getFirstSomeSemigroup,
-    underlined: getFirstSomeSemigroup,
-});
-
-const typeIdMonoid = Monoid.fromSemigroup(typeIdSemigroup, AnsiTypeId);
-
-const monoidOrElse = Monoid.fromSemigroup(getFirstSomeSemigroup, Option.none());
-
-const AnsiMonoid: Monoid.Monoid<AnsiImpl> = Monoid.struct({
-    [AnsiTypeId]: typeIdMonoid,
-    commands: Monoid.array<string>(),
-    foreground: monoidOrElse,
-    background: monoidOrElse,
-    bold: monoidOrElse,
-    italicized: monoidOrElse,
-    strikethrough: monoidOrElse,
-    underlined: monoidOrElse,
-});
+const noneImpl: AnsiImpl = {
+    [AnsiTypeId]: AnsiTypeId,
+    commands: [],
+    foreground: Option.none(),
+    background: Option.none(),
+    bold: Option.none(),
+    italicized: Option.none(),
+    strikethrough: Option.none(),
+    underlined: Option.none(),
+};
 
 /** @internal */
-export const none: Ansi.Ansi = AnsiMonoid.empty;
+export const none: Ansi.Ansi = noneImpl;
 
 const ESC = "\u001B[";
 const BEL = "\u0007";
@@ -357,8 +331,18 @@ export const combine = (self: Ansi.Ansi, that: Ansi.Ansi): Ansi.Ansi =>
 // Internal
 // -----------------------------------------------------------------------------
 
-const combineInternal = (self: AnsiImpl, that: AnsiImpl): Ansi.Ansi =>
-    AnsiSemigroup.combine(self, that);
+const combineInternal = (self: AnsiImpl, that: AnsiImpl): AnsiImpl => ({
+    [AnsiTypeId]: AnsiTypeId,
+    commands: [...self.commands, ...that.commands],
+    foreground: self.foreground.pipe(Option.orElse(() => that.foreground)),
+    background: self.background.pipe(Option.orElse(() => that.background)),
+    bold: self.bold.pipe(Option.orElse(() => that.bold)),
+    italicized: self.italicized.pipe(Option.orElse(() => that.italicized)),
+    strikethrough: self.strikethrough.pipe(
+        Option.orElse(() => that.strikethrough),
+    ),
+    underlined: self.underlined.pipe(Option.orElse(() => that.underlined)),
+});
 
 const stringifyInternal = (self: AnsiImpl): string => {
     const displaySequence = SGR.toEscapeSequence(

@@ -19,9 +19,7 @@
             "@effect/printer": ["../../../printer/src/index.js"],
             "@effect/printer/*": ["../../../printer/src/*.js"],
             "@effect/printer-ansi": ["../../../printer-ansi/src/index.js"],
-            "@effect/printer-ansi/*": ["../../../printer-ansi/src/*.js"],
-            "@effect/typeclass": ["../../../typeclass/src/index.js"],
-            "@effect/typeclass/*": ["../../../typeclass/src/*.js"]
+            "@effect/printer-ansi/*": ["../../../printer-ansi/src/*.js"]
         }
     }
 }

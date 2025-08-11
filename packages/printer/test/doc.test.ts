@@ -860,22 +860,4 @@ describe.concurrent("Doc", () => {
             expect(Doc.textSpaces(4)).toBe("    ");
         });
     });
-
-    describe.concurrent("instances", () => {
-        it("Semigroup", () => {
-            const S = Doc.getSemigroup<never>();
-            const doc = S.combine(Doc.text("hello"), Doc.text("world"));
-
-            expect(Doc.render(doc, { style: "pretty" })).toBe("helloworld");
-        });
-
-        it("Monoid", () => {
-            const M = Doc.getMonoid<never>();
-            const doc = M.combine(
-                M.combine(Doc.text("hello"), Doc.parenthesized(M.empty)),
-                Doc.text("world"),
-            );
-            expect(Doc.render(doc, { style: "pretty" })).toBe("hello()world");
-        });
-    });
 });
