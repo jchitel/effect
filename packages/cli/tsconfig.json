@@ -1,9 +1,16 @@
 {
     "extends": "../../tsconfig.base.json",
-    "include": [],
+    "include": ["src"],
     "references": [
-        { "path": "tsconfig.src.json" },
-        { "path": "tsconfig.test.json" },
-        { "path": "tsconfig.examples.json" }
-    ]
+        { "path": "../effect/tsconfig.json" },
+        { "path": "../printer/tsconfig.json" },
+        { "path": "../printer-ansi/tsconfig.json" },
+        { "path": "../platform/tsconfig.json" }
+    ],
+    "compilerOptions": {
+        "types": ["node"],
+        "outDir": "build/src",
+        "tsBuildInfoFile": ".tsbuildinfo/src.tsbuildinfo",
+        "rootDir": "src"
+    }
 }

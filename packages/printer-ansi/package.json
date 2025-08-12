@@ -10,8 +10,6 @@
         "./internal/*": null
     },
     "scripts": {
-        "build": "pnpm build-esm && pnpm build-annotate && pnpm build-cjs && build-utils pack-v3",
-        "build-esm": "tsc -b tsconfig.build.json",
         "check": "tsc -b tsconfig.json"
     },
     "dependencies": {
