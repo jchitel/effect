@@ -40,12 +40,8 @@
                 "namespaceImportPackages": [
                     "effect",
                     "@effect/cli",
-                    "@effect/opentelemetry",
                     "@effect/platform",
-                    "@effect/platform-browser",
                     "@effect/platform-bun",
-                    "@effect/platform-node",
-                    "@effect/platform-node-shared",
                     "@effect/printer",
                     "@effect/printer-ansi",
                     "@effect/vitest"

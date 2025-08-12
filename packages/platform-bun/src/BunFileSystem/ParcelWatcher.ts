@@ -1,12 +1,8 @@
-/**
- * @since 1.0.0
- */
-import * as ParcelWatcher from "@effect/platform-node-shared/NodeFileSystem/ParcelWatcher";
 import type { WatchBackend } from "@effect/platform/FileSystem";
 import type { Layer } from "effect/Layer";
+import * as internal from "../internal/fileSystem/parcelWatcher.js";
 
 /**
- * @since 1.0.0
- * @category layer
+ * You can provide this Layer to use `@parcel/watcher` as the backend for watching files.
  */
-export const layer: Layer<WatchBackend> = ParcelWatcher.layer;
+export const layer: Layer<WatchBackend> = internal.layer;

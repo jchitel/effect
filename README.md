@@ -14,18 +14,15 @@ Effect consists of several packages that work together to help build robust Type
 
 The Effect monorepo is organized into multiple packages, each extending the core functionality. Below is an overview of the packages included:
 
-| Package                        | Description                                          |                                                                                                 |
-| ------------------------------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `effect`                       | Core package                                         | [README](https://github.com/Effect-TS/effect/blob/main/packages/effect/README.md)               |
-| `@effect/cli`                  | CLI utilities                                        | [README](https://github.com/Effect-TS/effect/blob/main/packages/cli/README.md)                  |
-| `@effect/platform`             | Cross-platform runtime utilities                     | [README](https://github.com/Effect-TS/effect/blob/main/packages/platform/README.md)             |
-| `@effect/platform-browser`     | Platform utilities for the browser                   | [README](https://github.com/Effect-TS/effect/blob/main/packages/platform-browser/README.md)     |
-| `@effect/platform-bun`         | Platform utilities for [Bun](https://bun.sh/)        | [README](https://github.com/Effect-TS/effect/blob/main/packages/platform-bun/README.md)         |
-| `@effect/platform-node`        | Platform utilities for [Node.js](https://nodejs.org) | [README](https://github.com/Effect-TS/effect/blob/main/packages/platform-node/README.md)        |
-| `@effect/platform-node-shared` | Shared utilities for [Node.js](https://nodejs.org)   | [README](https://github.com/Effect-TS/effect/blob/main/packages/platform-node-shared/README.md) |
-| `@effect/printer`              | General-purpose printing utilities                   | [README](https://github.com/Effect-TS/effect/blob/main/packages/printer/README.md)              |
-| `@effect/printer-ansi`         | ANSI-compatible printing utilities                   | [README](https://github.com/Effect-TS/effect/blob/main/packages/printer-ansi/README.md)         |
-| `@effect/vitest`               | Testing utilities for [Vitest](https://vitest.dev/)  | [README](https://github.com/Effect-TS/effect/blob/main/packages/vitest/README.md)               |
+| Package                | Description                                         |                                                                                         |
+| ---------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `effect`               | Core package                                        | [README](https://github.com/Effect-TS/effect/blob/main/packages/effect/README.md)       |
+| `@effect/cli`          | CLI utilities                                       | [README](https://github.com/Effect-TS/effect/blob/main/packages/cli/README.md)          |
+| `@effect/platform`     | Cross-platform runtime utilities                    | [README](https://github.com/Effect-TS/effect/blob/main/packages/platform/README.md)     |
+| `@effect/platform-bun` | Platform utilities for [Bun](https://bun.sh/)       | [README](https://github.com/Effect-TS/effect/blob/main/packages/platform-bun/README.md) |
+| `@effect/printer`      | General-purpose printing utilities                  | [README](https://github.com/Effect-TS/effect/blob/main/packages/printer/README.md)      |
+| `@effect/printer-ansi` | ANSI-compatible printing utilities                  | [README](https://github.com/Effect-TS/effect/blob/main/packages/printer-ansi/README.md) |
+| `@effect/vitest`       | Testing utilities for [Vitest](https://vitest.dev/) | [README](https://github.com/Effect-TS/effect/blob/main/packages/vitest/README.md)       |
 
 # Documentation
 

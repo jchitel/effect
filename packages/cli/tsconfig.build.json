@@ -4,8 +4,7 @@
         { "path": "../effect/tsconfig.build.json" },
         { "path": "../printer/tsconfig.build.json" },
         { "path": "../printer-ansi/tsconfig.build.json" },
-        { "path": "../platform/tsconfig.build.json" },
-        { "path": "../platform-node/tsconfig.build.json" }
+        { "path": "../platform/tsconfig.build.json" }
     ],
     "compilerOptions": {
         "types": ["node"],

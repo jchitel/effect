@@ -11,13 +11,8 @@
 
 /packages/cli/ @IMax153
 
-/packages/opentelemetry/ @tim-smart
-
 /packages/platform/ @tim-smart
-/packages/platform-browser/ @tim-smart
 /packages/platform-bun/ @tim-smart
-/packages/platform-node/ @tim-smart
-/packages/platform-node-shared/ @tim-smart
 
 /packages/printer/ @IMax153
 /packages/printer-ansi/ @IMax153
