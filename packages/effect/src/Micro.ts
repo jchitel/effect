@@ -15,11 +15,9 @@ import type { LazyArg } from "./Function.js";
 import { constTrue, constVoid, dual, identity } from "./Function.js";
 import { globalValue } from "./GlobalValue.js";
 import * as Hash from "./Hash.js";
-import type { TypeLambda } from "./HKT.js";
 import type { Inspectable } from "./Inspectable.js";
 import { format, NodeInspectSymbol, toStringUnknown } from "./Inspectable.js";
 import * as InternalContext from "./internal/context.js";
-import * as doNotation from "./internal/doNotation.js";
 import { StructuralPrototype } from "./internal/effectable.js";
 import * as Option from "./Option.js";
 import type { Pipeable } from "./Pipeable.js";
@@ -34,7 +32,6 @@ import type {
     Equals,
     NoExcessProperties,
     NotFunction,
-    Simplify,
 } from "./Types.js";
 import type * as Unify from "./Unify.js";
 import { SingleShotGen, YieldWrap, yieldWrapGet } from "./Utils.js";
@@ -104,13 +101,6 @@ export interface MicroUnify<A extends { [Unify.typeSymbol]?: any }>
  */
 export interface MicroUnifyIgnore extends EffectUnifyIgnore {
     Effect?: true;
-}
-/**
- * @category type lambdas
- * @since 3.4.1
- */
-export interface MicroTypeLambda extends TypeLambda {
-    readonly type: Micro<this["Target"], this["Out1"], this["Out2"]>;
 }
 
 /**
@@ -4530,82 +4520,6 @@ export const filterMap = <A, B, E, R>(
             out,
         );
     });
-
-// ----------------------------------------------------------------------------
-// do notation
-// ----------------------------------------------------------------------------
-
-/**
- * Start a do notation block.
- *
- * @since 3.4.0
- * @experimental
- * @category do notation
- */
-export const Do: Micro<{}> = succeed({});
-
-/**
- * Bind the success value of this `Micro` effect to the provided name.
- *
- * @since 3.4.0
- * @experimental
- * @category do notation
- */
-export const bindTo: {
-    <N extends string>(
-        name: N,
-    ): <A, E, R>(self: Micro<A, E, R>) => Micro<{ [K in N]: A }, E, R>;
-    <A, E, R, N extends string>(
-        self: Micro<A, E, R>,
-        name: N,
-    ): Micro<{ [K in N]: A }, E, R>;
-} = doNotation.bindTo<MicroTypeLambda>(map);
-
-/**
- * Bind the success value of this `Micro` effect to the provided name.
- *
- * @since 3.4.0
- * @experimental
- * @category do notation
- */
-export const bind: {
-    <N extends string, A extends Record<string, any>, B, E2, R2>(
-        name: N,
-        f: (a: NoInfer<A>) => Micro<B, E2, R2>,
-    ): <E, R>(
-        self: Micro<A, E, R>,
-    ) => Micro<Simplify<Omit<A, N> & { [K in N]: B }>, E | E2, R | R2>;
-    <A extends Record<string, any>, E, R, B, E2, R2, N extends string>(
-        self: Micro<A, E, R>,
-        name: N,
-        f: (a: NoInfer<A>) => Micro<B, E2, R2>,
-    ): Micro<Simplify<Omit<A, N> & { [K in N]: B }>, E | E2, R | R2>;
-} = doNotation.bind<MicroTypeLambda>(map, flatMap);
-
-const let_: {
-    <N extends string, A extends Record<string, any>, B>(
-        name: N,
-        f: (a: NoInfer<A>) => B,
-    ): <E, R>(
-        self: Micro<A, E, R>,
-    ) => Micro<Simplify<Omit<A, N> & { [K in N]: B }>, E, R>;
-    <A extends Record<string, any>, E, R, B, N extends string>(
-        self: Micro<A, E, R>,
-        name: N,
-        f: (a: NoInfer<A>) => B,
-    ): Micro<Simplify<Omit<A, N> & { [K in N]: B }>, E, R>;
-} = doNotation.let_<MicroTypeLambda>(map);
-
-export {
-    /**
-     * Bind the result of a synchronous computation to the given name.
-     *
-     * @since 3.4.0
-     * @experimental
-     * @category do notation
-     */
-    let_ as let,
-};
 
 // ----------------------------------------------------------------------------
 // fibers & forking

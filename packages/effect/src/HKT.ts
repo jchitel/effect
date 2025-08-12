@@ -1,11 +1,5 @@
 import type * as Types from "./Types.js";
 
-declare const URI: unique symbol;
-
-export interface TypeClass<F extends TypeLambda> {
-    readonly [URI]?: F;
-}
-
 export interface TypeLambda {
     readonly In: unknown;
     readonly Out2: unknown;

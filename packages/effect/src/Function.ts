@@ -1,12 +1,3 @@
-import type { TypeLambda } from "./HKT.js";
-
-/**
- * @category type lambdas
- */
-export interface FunctionTypeLambda extends TypeLambda {
-    readonly type: (a: this["In"]) => this["Target"];
-}
-
 /**
  * Tests if a value is a `function`.
  *

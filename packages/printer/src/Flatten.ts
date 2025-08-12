@@ -1,5 +1,4 @@
 import type { Equal } from "effect/Equal";
-import type { TypeLambda } from "effect/HKT";
 import * as internal from "./internal/flatten.js";
 
 /**
@@ -40,19 +39,6 @@ export declare namespace Flatten {
             readonly _A: (_: never) => A;
         };
     }
-
-    /**
-     * @since 1.0.0
-     */
-    export type TypeLambda = FlattenTypeLambda;
-}
-
-/**
- * @since 1.0.0
- * @category model
- */
-export interface FlattenTypeLambda extends TypeLambda {
-    readonly type: Flatten<this["Target"]>;
 }
 
 /**

@@ -42,7 +42,6 @@ import * as channel from "./channel.js";
 import * as channelExecutor from "./channel/channelExecutor.js";
 import * as MergeStrategy from "./channel/mergeStrategy.js";
 import * as core from "./core-stream.js";
-import * as doNotation from "./doNotation.js";
 import { RingBuffer } from "./ringBuffer.js";
 import * as InternalSchedule from "./schedule.js";
 import * as sink_ from "./sink.js";
@@ -12520,101 +12519,6 @@ const zipChunks = <A, B, C>(
         Either.right(pipe(right, Chunk.drop(left.length))),
     ];
 };
-
-// Do notation
-
-/** @internal */
-export const Do: Stream.Stream<{}> = succeed({});
-
-/** @internal */
-export const bind = dual<
-    <N extends string, A, B, E2, R2>(
-        tag: Exclude<N, keyof A>,
-        f: (_: Types.NoInfer<A>) => Stream.Stream<B, E2, R2>,
-        options?: {
-            readonly concurrency?: number | "unbounded" | undefined;
-            readonly bufferSize?: number | undefined;
-        },
-    ) => <E, R>(
-        self: Stream.Stream<A, E, R>,
-    ) => Stream.Stream<
-        { [K in keyof A | N]: K extends keyof A ? A[K] : B },
-        E | E2,
-        R | R2
-    >,
-    <A, E, R, N extends string, B, E2, R2>(
-        self: Stream.Stream<A, E, R>,
-        tag: Exclude<N, keyof A>,
-        f: (_: Types.NoInfer<A>) => Stream.Stream<B, E2, R2>,
-        options?: {
-            readonly concurrency?: number | "unbounded" | undefined;
-            readonly bufferSize?: number | undefined;
-        },
-    ) => Stream.Stream<
-        { [K in keyof A | N]: K extends keyof A ? A[K] : B },
-        E | E2,
-        R | R2
-    >
->(
-    (args) => typeof args[0] !== "string",
-    <A, E, R, N extends string, B, E2, R2>(
-        self: Stream.Stream<A, E, R>,
-        tag: Exclude<N, keyof A>,
-        f: (_: A) => Stream.Stream<B, E2, R2>,
-        options?: {
-            readonly concurrency?: number | "unbounded" | undefined;
-            readonly bufferSize?: number | undefined;
-        },
-    ) =>
-        flatMap(
-            self,
-            (k) =>
-                map(
-                    f(k),
-                    (a) =>
-                        ({ ...k, [tag]: a }) as {
-                            [K in keyof A | N]: K extends keyof A ? A[K] : B;
-                        },
-                ),
-            options,
-        ),
-);
-
-/* @internal */
-export const bindTo: {
-    <N extends string>(
-        name: N,
-    ): <A, E, R>(
-        self: Stream.Stream<A, E, R>,
-    ) => Stream.Stream<{ [K in N]: A }, E, R>;
-    <A, E, R, N extends string>(
-        self: Stream.Stream<A, E, R>,
-        name: N,
-    ): Stream.Stream<{ [K in N]: A }, E, R>;
-} = doNotation.bindTo<Stream.StreamTypeLambda>(map);
-
-/* @internal */
-export const let_: {
-    <N extends string, A extends object, B>(
-        name: Exclude<N, keyof A>,
-        f: (a: Types.NoInfer<A>) => B,
-    ): <E, R>(
-        self: Stream.Stream<A, E, R>,
-    ) => Stream.Stream<
-        { [K in N | keyof A]: K extends keyof A ? A[K] : B },
-        E,
-        R
-    >;
-    <A extends object, E, R, N extends string, B>(
-        self: Stream.Stream<A, E, R>,
-        name: Exclude<N, keyof A>,
-        f: (a: Types.NoInfer<A>) => B,
-    ): Stream.Stream<
-        { [K in N | keyof A]: K extends keyof A ? A[K] : B },
-        E,
-        R
-    >;
-} = doNotation.let_<Stream.StreamTypeLambda>(map);
 
 // Circular with Channel
 

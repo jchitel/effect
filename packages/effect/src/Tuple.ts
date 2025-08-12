@@ -5,17 +5,8 @@
  */
 import * as Equivalence from "./Equivalence.js";
 import { dual } from "./Function.js";
-import type { TypeLambda } from "./HKT.js";
 import * as order from "./Order.js";
 import type { TupleOf } from "./Types.js";
-
-/**
- * @category type lambdas
- * @since 2.0.0
- */
-export interface TupleTypeLambda extends TypeLambda {
-    readonly type: [this["Out1"], this["Target"]];
-}
 
 /**
  * Constructs a new tuple from the provided values.

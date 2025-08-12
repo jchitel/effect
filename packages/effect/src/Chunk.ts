@@ -8,7 +8,6 @@ import * as Equal from "./Equal.js";
 import * as Equivalence from "./Equivalence.js";
 import { dual, identity, pipe } from "./Function.js";
 import * as Hash from "./Hash.js";
-import type { TypeLambda } from "./HKT.js";
 import {
     format,
     type Inspectable,
@@ -60,14 +59,6 @@ export interface Chunk<out A>
  * @since 2.0.0
  */
 export interface NonEmptyChunk<out A> extends Chunk<A>, NonEmptyIterable<A> {}
-
-/**
- * @category type lambdas
- * @since 2.0.0
- */
-export interface ChunkTypeLambda extends TypeLambda {
-    readonly type: Chunk<this["Target"]>;
-}
 
 type Backing<A> = IArray<A> | IConcat<A> | ISingleton<A> | IEmpty | ISlice<A>;
 

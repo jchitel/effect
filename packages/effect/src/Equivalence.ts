@@ -6,7 +6,6 @@
  * @since 2.0.0
  */
 import { dual } from "./Function.js";
-import type { TypeLambda } from "./HKT.js";
 
 /**
  * @category type class
@@ -14,14 +13,6 @@ import type { TypeLambda } from "./HKT.js";
  */
 export interface Equivalence<in A> {
     (self: A, that: A): boolean;
-}
-
-/**
- * @category type lambdas
- * @since 2.0.0
- */
-export interface EquivalenceTypeLambda extends TypeLambda {
-    readonly type: Equivalence<this["Target"]>;
 }
 
 /**

@@ -18,7 +18,6 @@
  */
 
 import type { Equal } from "effect/Equal";
-import type { TypeLambda } from "effect/HKT";
 import type { Pipeable } from "effect/Pipeable";
 import type { DocStream } from "./DocStream.js";
 import type { Flatten } from "./Flatten.js";
@@ -80,11 +79,6 @@ export declare namespace Doc {
 
     /**
      * @since 1.0.0
-     */
-    export type TypeLambda = DocTypeLambda;
-
-    /**
-     * @since 1.0.0
      * @category model
      */
     export type RenderConfig = Compact | Pretty | Smart;
@@ -113,14 +107,6 @@ export declare namespace Doc {
         readonly style: "smart";
         readonly options?: Partial<Omit<AvailablePerLine, "_tag">>;
     }
-}
-
-/**
- * @since 1.0.0
- * @category model
- */
-export interface DocTypeLambda extends TypeLambda {
-    readonly type: Doc<this["Target"]>;
 }
 
 /**

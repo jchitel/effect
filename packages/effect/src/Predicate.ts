@@ -17,7 +17,6 @@
  * @since 2.0.0
  */
 import { dual, isFunction as isFunction_ } from "./Function.js";
-import type { TypeLambda } from "./HKT.js";
 import type { TupleOf, TupleOfAtLeast } from "./Types.js";
 
 /**
@@ -40,17 +39,6 @@ import type { TupleOf, TupleOfAtLeast } from "./Types.js";
  */
 export interface Predicate<in A> {
     (a: A): boolean;
-}
-
-/**
- * A `TypeLambda` for `Predicate`. This is used to support higher-kinded types
- * and allows `Predicate` to be used in generic contexts within the `effect` ecosystem.
- *
- * @category type lambdas
- * @since 2.0.0
- */
-export interface PredicateTypeLambda extends TypeLambda {
-    readonly type: Predicate<this["Target"]>;
 }
 
 /**

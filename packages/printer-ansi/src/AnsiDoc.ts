@@ -317,11 +317,6 @@ export type {
      * @since 1.0.0
      * @category model
      */
-    DocTypeLambda,
-    /**
-     * @since 1.0.0
-     * @category model
-     */
     Empty,
     /**
      * @since 1.0.0

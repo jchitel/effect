@@ -8,19 +8,6 @@ import { getBugErrorMessage } from "./internal/errors.js";
 import { isNullable, isObject } from "./Predicate.js";
 import type * as Types from "./Types.js";
 
-/*
- * Copyright 2014 Thom Chiovoloni, released under the MIT license.
- *
- * A random number generator based on the basic implementation of the PCG algorithm,
- * as described here: http://www.pcg-random.org/
- *
- * Adapted for TypeScript from Thom's original code at https://github.com/thomcc/pcg-random
- *
- * forked from https://github.com/frptools
- *
- * @since 2.0.0
- */
-
 /**
  * @category symbols
  * @since 2.0.0

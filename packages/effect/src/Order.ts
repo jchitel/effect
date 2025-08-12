@@ -17,7 +17,6 @@
  * @since 2.0.0
  */
 import { dual } from "./Function.js";
-import type { TypeLambda } from "./HKT.js";
 
 /**
  * @category type class
@@ -25,14 +24,6 @@ import type { TypeLambda } from "./HKT.js";
  */
 export interface Order<in A> {
     (self: A, that: A): -1 | 0 | 1;
-}
-
-/**
- * @category type lambdas
- * @since 2.0.0
- */
-export interface OrderTypeLambda extends TypeLambda {
-    readonly type: Order<this["Target"]>;
 }
 
 /**

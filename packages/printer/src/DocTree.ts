@@ -1,5 +1,4 @@
 import type { Equal } from "effect/Equal";
-import type { TypeLambda } from "effect/HKT";
 import type * as DocStream from "./DocStream.js";
 import * as internal from "./internal/docTree.js";
 
@@ -55,19 +54,6 @@ export declare namespace DocTree {
             readonly _A: (_: never) => A;
         };
     }
-
-    /**
-     * @since 1.0.0
-     */
-    export type TypeLambda = DocTreeTypeLambda;
-}
-
-/**
- * @since 1.0.0
- * @category model
- */
-export interface DocTreeTypeLambda extends TypeLambda {
-    readonly type: DocTree<this["Target"]>;
 }
 
 /**

@@ -8,7 +8,6 @@ import type * as Effect from "./Effect.js";
 import type * as Either from "./Either.js";
 import type * as FiberId from "./FiberId.js";
 import type { LazyArg } from "./Function.js";
-import type { TypeLambda } from "./HKT.js";
 import * as core from "./internal/stm/core.js";
 import * as stm from "./internal/stm/stm.js";
 import type * as Option from "./Option.js";
@@ -101,14 +100,6 @@ export interface STMUnify<A extends { [Unify.typeSymbol]?: any }>
  */
 export interface STMUnifyIgnore extends Effect.EffectUnifyIgnore {
     Effect?: true;
-}
-
-/**
- * @category type lambdas
- * @since 2.0.0
- */
-export interface STMTypeLambda extends TypeLambda {
-    readonly type: STM<this["Target"], this["Out1"], this["Out2"]>;
 }
 
 /**
