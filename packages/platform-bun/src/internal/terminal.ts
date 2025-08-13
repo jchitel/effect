@@ -1,11 +1,11 @@
 import * as Error from "@effect/platform/Error";
 import * as Terminal from "@effect/platform/Terminal";
+import { RcRef } from "effect";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Layer from "effect/Layer";
 import * as Mailbox from "effect/Mailbox";
 import * as Option from "effect/Option";
-import * as RcRef from "effect/RcRef";
 import * as readline from "node:readline";
 
 const defaultShouldQuit = (input: Terminal.UserInput) =>

@@ -61,7 +61,6 @@ export * as Scope from "./Scope.js";
 export * as Secret from "./Secret.js";
 export * as Sink from "./Sink.js";
 export * as Stream from "./Stream.js";
-export * as String from "./String.js";
 export * as SynchronizedRef from "./SynchronizedRef.js";
 export * as TestContext from "./TestContext.js";
 export * as TestServices from "./TestServices.js";

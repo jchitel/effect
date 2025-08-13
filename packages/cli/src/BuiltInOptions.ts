@@ -2,7 +2,7 @@
  * @since 1.0.0
  */
 
-import type { LogLevel } from "effect/LogLevel";
+import type { LogLevel } from "effect";
 import type { Option } from "effect/Option";
 import type { Command } from "./CommandDescriptor.js";
 import type { HelpDoc } from "./HelpDoc.js";
@@ -27,7 +27,7 @@ export type BuiltInOptions =
  */
 export interface SetLogLevel {
     readonly _tag: "SetLogLevel";
-    readonly level: LogLevel;
+    readonly level: LogLevel.LogLevel;
 }
 
 /**

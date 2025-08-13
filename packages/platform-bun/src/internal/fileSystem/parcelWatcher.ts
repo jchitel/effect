@@ -1,7 +1,7 @@
 import * as Error from "@effect/platform/Error";
 import * as FileSystem from "@effect/platform/FileSystem";
 import * as ParcelWatcher from "@parcel/watcher";
-import * as Chunk from "effect/Chunk";
+import { Chunk } from "effect";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";

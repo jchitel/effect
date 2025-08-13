@@ -2,7 +2,7 @@ import * as Terminal from "@effect/platform/Terminal";
 import * as Ansi from "@effect/printer-ansi/Ansi";
 import * as Doc from "@effect/printer-ansi/AnsiDoc";
 import * as Optimize from "@effect/printer/Optimize";
-import * as Arr from "effect/Array";
+import { Array as Arr } from "effect";
 import * as Effect from "effect/Effect";
 import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";

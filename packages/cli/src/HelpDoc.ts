@@ -2,7 +2,7 @@
  * @since 1.0.0
  */
 import type { AnsiDoc } from "@effect/printer-ansi/AnsiDoc";
-import type { NonEmptyReadonlyArray } from "effect/Array";
+import type { Array as Arr } from "effect";
 import type { Span } from "./HelpDoc/Span.js";
 import * as InternalHelpDoc from "./internal/helpDoc.js";
 
@@ -61,7 +61,7 @@ export interface Paragraph {
  */
 export interface DescriptionList {
     readonly _tag: "DescriptionList";
-    readonly definitions: NonEmptyReadonlyArray<readonly [Span, HelpDoc]>;
+    readonly definitions: Arr.NonEmptyReadonlyArray<readonly [Span, HelpDoc]>;
 }
 
 /**
@@ -70,7 +70,7 @@ export interface DescriptionList {
  */
 export interface Enumeration {
     readonly _tag: "Enumeration";
-    readonly elements: NonEmptyReadonlyArray<HelpDoc>;
+    readonly elements: Arr.NonEmptyReadonlyArray<HelpDoc>;
 }
 
 /**
@@ -168,7 +168,7 @@ export const p: (value: string | Span) => HelpDoc = InternalHelpDoc.p;
  * @category constructors
  */
 export const descriptionList: (
-    definitions: NonEmptyReadonlyArray<[Span, HelpDoc]>,
+    definitions: Arr.NonEmptyReadonlyArray<[Span, HelpDoc]>,
 ) => HelpDoc = InternalHelpDoc.descriptionList;
 
 /**
@@ -176,7 +176,7 @@ export const descriptionList: (
  * @category constructors
  */
 export const enumeration: (
-    elements: NonEmptyReadonlyArray<HelpDoc>,
+    elements: Arr.NonEmptyReadonlyArray<HelpDoc>,
 ) => HelpDoc = InternalHelpDoc.enumeration;
 
 /**

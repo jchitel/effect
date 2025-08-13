@@ -4,7 +4,7 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { QuitException, Terminal } from "@effect/platform/Terminal";
-import type { NonEmptyArray } from "effect/Array";
+import type { Array as Arr } from "effect";
 import type { Config } from "effect/Config";
 import type { Effect } from "effect/Effect";
 import type { Either } from "effect/Either";
@@ -391,7 +391,7 @@ export const atMost: <A>(self: Options<A>, times: number) => Options<Array<A>> =
  */
 export const atLeast: {
     <A>(self: Options<A>, times: 0): Options<Array<A>>;
-    <A>(self: Options<A>, times: number): Options<NonEmptyArray<A>>;
+    <A>(self: Options<A>, times: number): Options<Arr.NonEmptyArray<A>>;
 } = InternalOptions.atLeast;
 
 /**
@@ -400,7 +400,11 @@ export const atLeast: {
  */
 export const between: {
     <A>(self: Options<A>, min: 0, max: number): Options<Array<A>>;
-    <A>(self: Options<A>, min: number, max: number): Options<NonEmptyArray<A>>;
+    <A>(
+        self: Options<A>,
+        min: number,
+        max: number,
+    ): Options<Arr.NonEmptyArray<A>>;
 } = InternalOptions.between;
 
 /**

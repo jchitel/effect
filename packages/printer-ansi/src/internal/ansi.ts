@@ -1,4 +1,4 @@
-import * as Arr from "effect/Array";
+import { Array as Arr } from "effect";
 import * as Option from "effect/Option";
 import type * as Ansi from "../Ansi.js";
 import type * as Color from "../Color.js";

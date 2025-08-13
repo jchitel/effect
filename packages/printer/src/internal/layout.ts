@@ -1,6 +1,6 @@
+import { List } from "effect";
 import * as Effect from "effect/Effect";
 import type { LazyArg } from "effect/Function";
-import * as List from "effect/List";
 import * as Option from "effect/Option";
 import type * as Doc from "../Doc.js";
 import type * as DocStream from "../DocStream.js";

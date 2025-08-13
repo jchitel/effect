@@ -4,7 +4,7 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { QuitException, Terminal } from "@effect/platform/Terminal";
-import type { NonEmptyReadonlyArray } from "effect/Array";
+import type { Array as Arr } from "effect";
 import type { Effect } from "effect/Effect";
 import type { HashMap } from "effect/HashMap";
 import type { HashSet } from "effect/HashSet";
@@ -103,7 +103,7 @@ export declare namespace Command {
      * @category models
      */
     export type Subcommands<
-        A extends NonEmptyReadonlyArray<
+        A extends Arr.NonEmptyReadonlyArray<
             readonly [id: unknown, command: Command<any>]
         >,
     > = {

@@ -1,7 +1,7 @@
 import * as Ansi from "@effect/printer-ansi/Ansi";
 import * as Doc from "@effect/printer-ansi/AnsiDoc";
 import * as Color from "@effect/printer-ansi/Color";
-import * as Arr from "effect/Array";
+import { Array as Arr } from "effect";
 import type * as Span from "../../HelpDoc/Span.js";
 
 /** @internal */

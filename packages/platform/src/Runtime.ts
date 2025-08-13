@@ -1,13 +1,8 @@
-/**
- * @since 1.0.0
- */
+import type { Fiber, FiberId } from "effect";
+import { FiberRef, FiberRefs } from "effect";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import type * as Fiber from "effect/Fiber";
-import type * as FiberId from "effect/FiberId";
-import * as FiberRef from "effect/FiberRef";
-import * as FiberRefs from "effect/FiberRefs";
 import { dual } from "effect/Function";
 import * as HashSet from "effect/HashSet";
 import * as Logger from "effect/Logger";

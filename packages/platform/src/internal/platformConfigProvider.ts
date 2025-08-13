@@ -1,8 +1,8 @@
+import { FiberRef } from "effect";
 import * as ConfigProvider from "effect/ConfigProvider";
 import * as Context from "effect/Context";
 import * as DefaultServices from "effect/DefaultServices";
 import * as Effect from "effect/Effect";
-import * as FiberRef from "effect/FiberRef";
 import * as Layer from "effect/Layer";
 import type { PlatformError } from "../Error.js";
 import * as FileSystem from "../FileSystem.js";

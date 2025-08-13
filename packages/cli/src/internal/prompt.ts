@@ -1,8 +1,8 @@
 import * as Terminal from "@effect/platform/Terminal";
 import * as Doc from "@effect/printer-ansi/AnsiDoc";
+import { Effectable } from "effect";
 import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
-import * as Effectable from "effect/Effectable";
 import type * as Mailbox from "effect/Mailbox";
 import * as Pipeable from "effect/Pipeable";
 import type * as Prompt from "../Prompt.js";

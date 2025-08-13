@@ -1,4 +1,4 @@
-import * as Arr from "effect/Array";
+import { Array as Arr } from "effect";
 import { pipe } from "effect/Function";
 import * as Option from "effect/Option";
 import type * as CliConfig from "../CliConfig.js";

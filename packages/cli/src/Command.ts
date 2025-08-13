@@ -4,6 +4,7 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { QuitException, Terminal } from "@effect/platform/Terminal";
+import type { Types } from "effect";
 import type { Tag } from "effect/Context";
 import type { Effect } from "effect/Effect";
 import type { HashMap } from "effect/HashMap";
@@ -11,7 +12,6 @@ import type { HashSet } from "effect/HashSet";
 import type { Layer } from "effect/Layer";
 import type { Option } from "effect/Option";
 import { type Pipeable } from "effect/Pipeable";
-import type * as Types from "effect/Types";
 import type { Args } from "./Args.js";
 import type { CliApp } from "./CliApp.js";
 import type { CliConfig } from "./CliConfig.js";

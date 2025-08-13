@@ -1,7 +1,7 @@
+import { Encoding } from "effect";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Either from "effect/Either";
-import * as Encoding from "effect/Encoding";
 import type { LazyArg } from "effect/Function";
 import { dual, identity, pipe } from "effect/Function";
 import * as Layer from "effect/Layer";

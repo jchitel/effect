@@ -1,7 +1,7 @@
 import * as Ansi from "@effect/printer-ansi/Ansi";
 import * as Doc from "@effect/printer-ansi/AnsiDoc";
 import * as Optimize from "@effect/printer/Optimize";
-import * as Arr from "effect/Array";
+import { Array as Arr } from "effect";
 import { pipe } from "effect/Function";
 import type * as HelpDoc from "../HelpDoc.js";
 import type * as Span from "../HelpDoc/Span.js";

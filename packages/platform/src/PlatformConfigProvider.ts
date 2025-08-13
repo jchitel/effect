@@ -1,12 +1,11 @@
 /**
  * @since 1.0.0
  */
-import * as Arr from "effect/Array";
+import { Array as Arr, ConfigProviderPathPatch } from "effect";
 import * as Cause from "effect/Cause";
 import type * as Config from "effect/Config";
 import * as ConfigError from "effect/ConfigError";
 import * as ConfigProvider from "effect/ConfigProvider";
-import * as PathPatch from "effect/ConfigProviderPathPatch";
 import * as Context from "effect/Context";
 import * as DefaultServices from "effect/DefaultServices";
 import * as Effect from "effect/Effect";
@@ -97,7 +96,7 @@ export const fromFileTree = (options?: {
                                 handlePlatformError(pathSegments),
                             ),
                         ),
-                    patch: PathPatch.empty,
+                    patch: ConfigProviderPathPatch.empty,
                 }),
             );
         }),

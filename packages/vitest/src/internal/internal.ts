@@ -2,24 +2,26 @@
  * @since 1.0.0
  */
 import type { Tester, TesterContext } from "@vitest/expect";
-import * as Arbitrary from "effect/Arbitrary";
+import {
+    Arbitrary,
+    FastCheck as fc,
+    Fiber,
+    Schedule,
+    TestContext as TestEnvironment,
+    Utils,
+} from "effect";
+import type { TestServices } from "effect";
 import * as Cause from "effect/Cause";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
 import * as Exit from "effect/Exit";
-import * as fc from "effect/FastCheck";
-import * as Fiber from "effect/Fiber";
 import { flow, identity, pipe } from "effect/Function";
 import * as Layer from "effect/Layer";
 import * as Logger from "effect/Logger";
 import { isObject } from "effect/Predicate";
-import * as Schedule from "effect/Schedule";
 import * as Schema from "effect/Schema";
 import * as Scope from "effect/Scope";
-import * as TestEnvironment from "effect/TestContext";
-import type * as TestServices from "effect/TestServices";
-import * as Utils from "effect/Utils";
 import * as V from "vitest";
 import type * as Vitest from "../index.js";
 

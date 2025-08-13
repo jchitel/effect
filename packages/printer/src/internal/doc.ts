@@ -1,4 +1,4 @@
-import * as Arr from "effect/Array";
+import { Array as Arr } from "effect";
 import * as Effect from "effect/Effect";
 import * as Equal from "effect/Equal";
 import { pipe } from "effect/Function";

@@ -1,4 +1,4 @@
-import * as LogLevel from "effect/LogLevel";
+import { LogLevel } from "effect";
 import * as Option from "effect/Option";
 import type * as BuiltInOptions from "../BuiltInOptions.js";
 import type * as Command from "../CommandDescriptor.js";

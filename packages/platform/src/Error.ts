@@ -1,11 +1,11 @@
 /**
  * @since 1.0.0
  */
+import type { Types } from "effect";
 import type * as Cause from "effect/Cause";
 import * as Data from "effect/Data";
 import * as Predicate from "effect/Predicate";
 import * as Schema from "effect/Schema";
-import type { Simplify } from "effect/Types";
 
 /**
  * @since 1.0.0
@@ -37,7 +37,7 @@ export const TypeIdError = <
     typeId: TypeId,
     tag: Tag,
 ): new <A extends Record<string, any>>(
-    args: Simplify<A>,
+    args: Types.Simplify<A>,
 ) => Cause.YieldableError &
     Record<TypeId, TypeId> & { readonly _tag: Tag } & Readonly<A> => {
     class Base extends Data.Error<{}> {

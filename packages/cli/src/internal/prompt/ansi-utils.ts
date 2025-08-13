@@ -1,5 +1,5 @@
 import * as Doc from "@effect/printer-ansi/AnsiDoc";
-import * as Arr from "effect/Array";
+import { Array as Arr } from "effect";
 import * as Effect from "effect/Effect";
 import { pipe } from "effect/Function";
 

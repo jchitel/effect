@@ -4,7 +4,7 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { QuitException, Terminal } from "@effect/platform/Terminal";
-import type { NonEmptyArray } from "effect/Array";
+import type { Array as Arr } from "effect";
 import type { Config } from "effect/Config";
 import type { Effect } from "effect/Effect";
 import type { Option } from "effect/Option";
@@ -161,7 +161,7 @@ export const all: <
  */
 export const atLeast: {
     <A>(self: Args<A>, times: 0): Args<Array<A>>;
-    <A>(self: Args<A>, times: number): Args<NonEmptyArray<A>>;
+    <A>(self: Args<A>, times: number): Args<Arr.NonEmptyArray<A>>;
 } = InternalArgs.atLeast;
 
 /**
@@ -177,7 +177,7 @@ export const atMost: <A>(self: Args<A>, times: number) => Args<Array<A>> =
  */
 export const between: {
     <A>(self: Args<A>, min: 0, max: number): Args<Array<A>>;
-    <A>(self: Args<A>, min: number, max: number): Args<NonEmptyArray<A>>;
+    <A>(self: Args<A>, min: number, max: number): Args<Arr.NonEmptyArray<A>>;
 } = InternalArgs.between;
 
 /**

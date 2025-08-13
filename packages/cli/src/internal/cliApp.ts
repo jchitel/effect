@@ -1,6 +1,6 @@
 import type * as Terminal from "@effect/platform/Terminal";
 import * as Color from "@effect/printer-ansi/Color";
-import * as Arr from "effect/Array";
+import { Array as Arr, Unify } from "effect";
 import * as Console from "effect/Console";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
@@ -9,7 +9,6 @@ import * as HashMap from "effect/HashMap";
 import * as Logger from "effect/Logger";
 import * as Option from "effect/Option";
 import { pipeArguments } from "effect/Pipeable";
-import * as Unify from "effect/Unify";
 import type * as BuiltInOptions from "../BuiltInOptions.js";
 import type * as CliApp from "../CliApp.js";
 import type * as CliConfig from "../CliConfig.js";

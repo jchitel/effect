@@ -1,7 +1,8 @@
 /**
  * @since 1.0.0
  */
-import * as Brand from "effect/Brand";
+import { Brand } from "effect";
+import type { Sink } from "effect";
 import type { Tag } from "effect/Context";
 import * as Context from "effect/Context";
 import * as Data from "effect/Data";
@@ -9,7 +10,6 @@ import type * as Effect from "effect/Effect";
 import type { Layer } from "effect/Layer";
 import type { Option } from "effect/Option";
 import type { Scope } from "effect/Scope";
-import type { Sink } from "effect/Sink";
 import type { Stream } from "effect/Stream";
 import type { PlatformError } from "./Error.js";
 import * as internal from "./internal/fileSystem.js";
@@ -177,7 +177,7 @@ export interface FileSystem {
     readonly sink: (
         path: string,
         options?: SinkOptions,
-    ) => Sink<void, Uint8Array, never, PlatformError>;
+    ) => Sink.Sink<void, Uint8Array, never, PlatformError>;
     /**
      * Get information about a file at `path`.
      */
