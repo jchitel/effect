@@ -1,13 +1,11 @@
 import { identity } from "./Function.js";
 
 export declare const unifySymbol: unique symbol;
-export type unifySymbol = typeof unifySymbol;
 
 export declare const typeSymbol: unique symbol;
 export type typeSymbol = typeof typeSymbol;
 
 export declare const ignoreSymbol: unique symbol;
-export type ignoreSymbol = typeof ignoreSymbol;
 
 type MaybeReturn<F> = F extends () => infer R ? R : NonNullable<F>;
 

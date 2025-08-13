@@ -28,12 +28,7 @@ export type TSetTypeId = typeof TSetTypeId;
  * @since 2.0.0
  * @category models
  */
-export interface TSet<in out A> extends TSet.Variance<A> {}
-/**
- * @internal
- * @since 2.0.0
- */
-export interface TSet<in out A> {
+export interface TSet<in out A> extends TSet.Variance<A> {
     /** @internal */
     readonly tMap: TMap.TMap<A, void>;
 }

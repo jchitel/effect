@@ -1,5 +1,4 @@
 import * as RA from "../Array.js";
-import * as Boolean from "../Boolean.js";
 import type * as Cause from "../Cause.js";
 import * as Chunk from "../Chunk.js";
 import type * as Clock from "../Clock.js";
@@ -2116,7 +2115,7 @@ export const filter = dual<
         },
     ) => {
         const predicate_ = options?.negate
-            ? (a: A, i: number) => core.map(predicate(a, i), Boolean.not)
+            ? (a: A, i: number) => core.map(predicate(a, i), b => !b)
             : predicate;
         return concurrency.matchSimple(
             options?.concurrency,

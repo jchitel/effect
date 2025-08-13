@@ -22,10 +22,8 @@ import * as fiberRuntime from "./fiberRuntime.js";
 
 /**
  * The `CacheState` represents the mutable state underlying the cache.
- *
- * @internal
  */
-export interface CacheState<in out Key, out Value, out Error = never> {
+interface CacheState<in out Key, out Value, out Error = never> {
     map: MutableHashMap.MutableHashMap<Key, MapValue<Key, Value, Error>>; // mutable by design
     keys: cache_.KeySet<Key>; // mutable by design
     accesses: MutableQueue.MutableQueue<cache_.MapKey<Key>>; // mutable by design
@@ -34,8 +32,7 @@ export interface CacheState<in out Key, out Value, out Error = never> {
     misses: number; // mutable by design
 }
 
-/** @internal */
-export const makeCacheState = <Key, Value, Error = never>(
+const makeCacheState = <Key, Value, Error = never>(
     map: MutableHashMap.MutableHashMap<Key, MapValue<Key, Value, Error>>,
     keys: cache_.KeySet<Key>,
     accesses: MutableQueue.MutableQueue<cache_.MapKey<Key>>,
@@ -53,10 +50,8 @@ export const makeCacheState = <Key, Value, Error = never>(
 
 /**
  * Constructs an initial cache state.
- *
- * @internal
  */
-export const initialCacheState = <Key, Value, Error = never>(): CacheState<
+const initialCacheState = <Key, Value, Error = never>(): CacheState<
     Key,
     Value,
     Error
@@ -75,16 +70,13 @@ export const initialCacheState = <Key, Value, Error = never>(): CacheState<
  * `Pending` with a `Promise` that will contain the result of computing the
  * lookup function, when it is available, or `Complete` with an `Exit` value
  * that contains the result of computing the lookup function.
- *
- * @internal
  */
-export type MapValue<Key, Value, Error> =
+type MapValue<Key, Value, Error> =
     | Complete<Key, Value, Error>
     | Pending<Key, Value, Error>
     | Refreshing<Key, Value, Error>;
 
-/** @internal */
-export interface Complete<out Key, out Value, out Error> {
+interface Complete<out Key, out Value, out Error> {
     readonly _tag: "Complete";
     readonly key: cache_.MapKey<Key>;
     readonly exit: Exit.Exit<readonly [Value, Scope.Scope.Finalizer], Error>;
@@ -93,22 +85,19 @@ export interface Complete<out Key, out Value, out Error> {
     readonly timeToLive: number;
 }
 
-/** @internal */
-export interface Pending<out Key, out Value, out Error> {
+interface Pending<out Key, out Value, out Error> {
     readonly _tag: "Pending";
     readonly key: cache_.MapKey<Key>;
     readonly scoped: Effect.Effect<Effect.Effect<Value, Error, Scope.Scope>>;
 }
 
-/** @internal */
-export interface Refreshing<out Key, out Value, out Error> {
+interface Refreshing<out Key, out Value, out Error> {
     readonly _tag: "Refreshing";
     readonly scoped: Effect.Effect<Effect.Effect<Value, Error, Scope.Scope>>;
     readonly complete: Complete<Key, Value, Error>;
 }
 
-/** @internal */
-export const complete = <Key, Value, Error = never>(
+const complete = <Key, Value, Error = never>(
     key: cache_.MapKey<Key>,
     exit: Exit.Exit<readonly [Value, Scope.Scope.Finalizer], Error>,
     ownerCount: MutableRef.MutableRef<number>,
@@ -124,8 +113,7 @@ export const complete = <Key, Value, Error = never>(
         timeToLive,
     });
 
-/** @internal */
-export const pending = <Key, Value, Error = never>(
+const pending = <Key, Value, Error = never>(
     key: cache_.MapKey<Key>,
     scoped: Effect.Effect<Effect.Effect<Value, Error, Scope.Scope>>,
 ): Pending<Key, Value, Error> =>
@@ -135,8 +123,7 @@ export const pending = <Key, Value, Error = never>(
         scoped,
     });
 
-/** @internal */
-export const refreshing = <Key, Value, Error = never>(
+const refreshing = <Key, Value, Error = never>(
     scoped: Effect.Effect<Effect.Effect<Value, Error, Scope.Scope>>,
     complete: Complete<Key, Value, Error>,
 ): Refreshing<Key, Value, Error> =>
@@ -146,8 +133,7 @@ export const refreshing = <Key, Value, Error = never>(
         complete,
     });
 
-/** @internal */
-export const toScoped = <Key, Value, Error = never>(
+const toScoped = <Key, Value, Error = never>(
     self: Complete<Key, Value, Error>,
 ): Effect.Effect<Value, Error, Scope.Scope> =>
     Exit.matchEffect(self.exit, {
@@ -164,8 +150,7 @@ export const toScoped = <Key, Value, Error = never>(
             ),
     });
 
-/** @internal */
-export const releaseOwner = <Key, Value, Error = never>(
+const releaseOwner = <Key, Value, Error = never>(
     self: Complete<Key, Value, Error>,
 ): Effect.Effect<void> =>
     Exit.matchEffect(self.exit, {
@@ -178,7 +163,6 @@ export const releaseOwner = <Key, Value, Error = never>(
             ),
     });
 
-/** @internal */
 const ScopedCacheSymbolKey = "effect/ScopedCache";
 
 /** @internal */

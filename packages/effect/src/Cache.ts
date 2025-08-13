@@ -1,6 +1,3 @@
-/**
- * @since 2.0.0
- */
 import type * as Duration from "./Duration.js";
 import type * as Effect from "./Effect.js";
 import type { Either } from "./Either.js";
@@ -8,30 +5,11 @@ import type * as Exit from "./Exit.js";
 import * as internal from "./internal/cache.js";
 import type * as Option from "./Option.js";
 import type * as Predicate from "./Predicate.js";
-import type * as Types from "./Types.js";
 
-/**
- * @since 2.0.0
- * @category symbols
- */
-export const CacheTypeId: unique symbol = internal.CacheTypeId;
-
-/**
- * @since 2.0.0
- * @category symbols
- */
+const CacheTypeId: unique symbol = internal.CacheTypeId;
 export type CacheTypeId = typeof CacheTypeId;
 
-/**
- * @since 3.6.4
- * @category symbols
- */
-export const ConsumerCacheTypeId: unique symbol = internal.ConsumerCacheTypeId;
-
-/**
- * @since 3.6.4
- * @category symbols
- */
+const ConsumerCacheTypeId: unique symbol = internal.ConsumerCacheTypeId;
 export type ConsumerCacheTypeId = typeof ConsumerCacheTypeId;
 
 /**
@@ -56,8 +34,7 @@ export type ConsumerCacheTypeId = typeof ConsumerCacheTypeId;
  * @category models
  */
 export interface Cache<in out Key, in out Value, out Error = never>
-    extends ConsumerCache<Key, Value, Error>,
-        Cache.Variance<Key, Value, Error> {
+    extends ConsumerCache<Key, Value, Error> {
     /**
      * Retrieves the value associated with the specified key if it exists.
      * Otherwise computes the value with the lookup function, puts it in the
@@ -97,8 +74,7 @@ export interface Cache<in out Key, in out Value, out Error = never>
  * @since 2.0.0
  * @category models
  */
-export interface ConsumerCache<in out Key, out Value, out Error = never>
-    extends Cache.ConsumerVariance<Key, Value, Error> {
+export interface ConsumerCache<in out Key, out Value, out Error = never> {
     /**
      * Retrieves the value associated with the specified key if it exists.
      * Otherwise returns `Option.none`.
@@ -164,34 +140,6 @@ export interface ConsumerCache<in out Key, out Value, out Error = never>
      * Returns an approximation of the values in the cache.
      */
     readonly entries: Effect.Effect<Array<[Key, Value]>>;
-}
-
-/**
- * @since 2.0.0
- */
-export declare namespace Cache {
-    /**
-     * @since 2.0.0
-     * @category models
-     */
-    export interface Variance<in out Key, in out Value, out Error> {
-        readonly [CacheTypeId]: {
-            readonly _Key: Types.Invariant<Key>;
-            readonly _Error: Types.Covariant<Error>;
-            readonly _Value: Types.Invariant<Value>;
-        };
-    }
-    /**
-     * @since 3.6.4
-     * @category models
-     */
-    export interface ConsumerVariance<in out Key, out Value, out Error> {
-        readonly [ConsumerCacheTypeId]: {
-            readonly _Key: Types.Invariant<Key>;
-            readonly _Error: Types.Covariant<Error>;
-            readonly _Value: Types.Covariant<Value>;
-        };
-    }
 }
 
 /**

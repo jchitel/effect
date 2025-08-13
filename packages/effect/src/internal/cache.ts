@@ -26,16 +26,13 @@ import * as fiberRuntime from "./fiberRuntime.js";
  * `Pending` with a `Promise` that will contain the result of computing the
  * lookup function, when it is available, or `Complete` with an `Exit` value
  * that contains the result of computing the lookup function.
- *
- * @internal
  */
-export type MapValue<Key, Value, Error> =
+type MapValue<Key, Value, Error> =
     | Complete<Key, Value, Error>
     | Pending<Key, Value, Error>
     | Refreshing<Key, Value, Error>;
 
-/** @internal */
-export interface Complete<out Key, out Value, out Error> {
+interface Complete<out Key, out Value, out Error> {
     readonly _tag: "Complete";
     readonly key: MapKey<Key>;
     readonly exit: Exit.Exit<Value, Error>;
@@ -43,22 +40,19 @@ export interface Complete<out Key, out Value, out Error> {
     readonly timeToLiveMillis: number;
 }
 
-/** @internal */
-export interface Pending<out Key, in out Value, in out Error> {
+interface Pending<out Key, in out Value, in out Error> {
     readonly _tag: "Pending";
     readonly key: MapKey<Key>;
     readonly deferred: Deferred.Deferred<Value, Error>;
 }
 
-/** @internal */
-export interface Refreshing<out Key, in out Value, in out Error> {
+interface Refreshing<out Key, in out Value, in out Error> {
     readonly _tag: "Refreshing";
     readonly deferred: Deferred.Deferred<Value, Error>;
     readonly complete: Complete<Key, Value, Error>;
 }
 
-/** @internal */
-export const complete = <Key, Value, Error>(
+const complete = <Key, Value, Error>(
     key: MapKey<Key>,
     exit: Exit.Exit<Value, Error>,
     entryStats: Cache.EntryStats,
@@ -72,8 +66,7 @@ export const complete = <Key, Value, Error>(
         timeToLiveMillis,
     });
 
-/** @internal */
-export const pending = <Key, Value, Error>(
+const pending = <Key, Value, Error>(
     key: MapKey<Key>,
     deferred: Deferred.Deferred<Value, Error>,
 ): MapValue<Key, Value, Error> =>
@@ -83,8 +76,7 @@ export const pending = <Key, Value, Error>(
         deferred,
     });
 
-/** @internal */
-export const refreshing = <Key, Value, Error>(
+const refreshing = <Key, Value, Error>(
     deferred: Deferred.Deferred<Value, Error>,
     complete: Complete<Key, Value, Error>,
 ): MapValue<Key, Value, Error> =>
@@ -94,11 +86,9 @@ export const refreshing = <Key, Value, Error>(
         complete,
     });
 
-/** @internal */
-export const MapKeyTypeId = Symbol.for("effect/Cache/MapKey");
+const MapKeyTypeId = Symbol.for("effect/Cache/MapKey");
 
-/** @internal */
-export type MapKeyTypeId = typeof MapKeyTypeId;
+type MapKeyTypeId = typeof MapKeyTypeId;
 
 /**
  * A `MapKey` represents a key in the cache. It contains mutable references

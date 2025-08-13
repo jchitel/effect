@@ -91,8 +91,6 @@
  *
  * @module Number
  * @since 2.0.0
- * @see {@link module:BigInt} for more similar operations on `bigint` types
- * @see {@link module:BigDecimal} for more similar operations on `BigDecimal` types
  */
 
 import * as equivalence from "./Equivalence.js";

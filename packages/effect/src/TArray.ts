@@ -13,7 +13,7 @@ import type * as Types from "./Types.js";
  * @since 2.0.0
  * @category symbols
  */
-export const TArrayTypeId: unique symbol = internal.TArrayTypeId;
+const TArrayTypeId: unique symbol = internal.TArrayTypeId;
 
 /**
  * @since 2.0.0
@@ -25,12 +25,7 @@ export type TArrayTypeId = typeof TArrayTypeId;
  * @since 2.0.0
  * @category models
  */
-export interface TArray<in out A> extends TArray.Variance<A> {}
-/**
- * @internal
- * @since 2.0.0
- */
-export interface TArray<in out A> {
+export interface TArray<in out A> extends TArray.Variance<A> {
     /** @internal */
     readonly chunk: Array<TRef.TRef<A>>;
 }

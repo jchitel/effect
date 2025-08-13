@@ -46,10 +46,6 @@ export type DurationValue =
           readonly millis: number;
       }
     | {
-          readonly _tag: "Nanos";
-          readonly nanos: bigint;
-      }
-    | {
           readonly _tag: "Infinity";
       };
 
@@ -58,8 +54,6 @@ export type DurationValue =
  * @category models
  */
 export type Unit =
-    | "nano"
-    | "nanos"
     | "micro"
     | "micros"
     | "milli"
@@ -185,12 +179,6 @@ const DurationProto: Omit<Duration, "value"> = {
                     _tag: "Millis",
                     millis: this.value.millis,
                 };
-            case "Nanos":
-                return {
-                    _id: "Duration",
-                    _tag: "Nanos",
-                    hrtime: toHrTime(this),
-                };
             case "Infinity":
                 return { _id: "Duration", _tag: "Infinity" };
         }
@@ -247,9 +235,6 @@ export const isZero = (self: Duration): boolean => {
     switch (self.value._tag) {
         case "Millis": {
             return self.value.millis === 0;
-        }
-        case "Nanos": {
-            return self.value.nanos === bigint0;
         }
         case "Infinity": {
             return false;
@@ -390,8 +375,6 @@ export const toNanos = (self: DurationInput): Option.Option<bigint> => {
     switch (_self.value._tag) {
         case "Infinity":
             return Option.none();
-        case "Nanos":
-            return Option.some(_self.value.nanos);
         case "Millis":
             return Option.some(
                 BigInt(Math.round(_self.value.millis * 1_000_000)),
@@ -412,8 +395,6 @@ export const unsafeToNanos = (self: DurationInput): bigint => {
     switch (_self.value._tag) {
         case "Infinity":
             throw new Error("Cannot convert infinite duration to nanos");
-        case "Nanos":
-            return _self.value.nanos;
         case "Millis":
             return BigInt(Math.round(_self.value.millis * 1_000_000));
     }
@@ -430,11 +411,6 @@ export const toHrTime = (
     switch (_self.value._tag) {
         case "Infinity":
             return [Infinity, 0];
-        case "Nanos":
-            return [
-                Number(_self.value.nanos / bigint1e9),
-                Number(_self.value.nanos % bigint1e9),
-            ];
         case "Millis":
             return [
                 Math.floor(_self.value.millis / 1000),
@@ -470,8 +446,6 @@ export const match: {
     ): A | B => {
         const _self = decode(self);
         switch (_self.value._tag) {
-            case "Nanos":
-                return options.onNanos(_self.value.nanos);
             case "Infinity":
                 return options.onMillis(Infinity);
             case "Millis":
@@ -517,19 +491,6 @@ export const matchWith: {
             _that.value._tag === "Infinity"
         ) {
             return options.onMillis(toMillis(_self), toMillis(_that));
-        } else if (
-            _self.value._tag === "Nanos" ||
-            _that.value._tag === "Nanos"
-        ) {
-            const selfNanos =
-                _self.value._tag === "Nanos"
-                    ? _self.value.nanos
-                    : BigInt(Math.round(_self.value.millis * 1_000_000));
-            const thatNanos =
-                _that.value._tag === "Nanos"
-                    ? _that.value.nanos
-                    : BigInt(Math.round(_that.value.millis * 1_000_000));
-            return options.onNanos(selfNanos, thatNanos);
         }
 
         return options.onMillis(_self.value.millis, _that.value.millis);

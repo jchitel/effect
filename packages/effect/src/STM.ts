@@ -26,7 +26,7 @@ import type { YieldWrap } from "./Utils.js";
  * @since 2.0.0
  * @category symbols
  */
-export const STMTypeId: unique symbol = core.STMTypeId;
+const STMTypeId: unique symbol = core.STMTypeId;
 
 /**
  * @since 2.0.0

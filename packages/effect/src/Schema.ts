@@ -9,9 +9,6 @@ import type {
     LazyArbitrary,
 } from "./Arbitrary.js";
 import * as array_ from "./Array.js";
-import * as bigDecimal_ from "./BigDecimal.js";
-import * as bigInt_ from "./BigInt.js";
-import * as boolean_ from "./Boolean.js";
 import type { Brand } from "./Brand.js";
 import * as cause_ from "./Cause.js";
 import * as chunk_ from "./Chunk.js";
@@ -6710,8 +6707,8 @@ export class Not extends transform(
     Boolean$,
     {
         strict: true,
-        decode: (i) => boolean_.not(i),
-        encode: (a) => boolean_.not(a),
+        decode: (i) => !i,
+        encode: (a) => !a,
     },
 ) {}
 
@@ -6990,172 +6987,6 @@ export const nonPositiveBigInt = <S extends Schema.Any>(
 ) => filter<S>) =>
     lessThanOrEqualToBigInt(0n, { title: "nonPositiveBigInt", ...annotations });
 
-/**
- * Clamps a bigint between a minimum and a maximum value.
- *
- * @category bigint transformations
- * @since 3.10.0
- */
-export const clampBigInt =
-    (minimum: bigint, maximum: bigint) =>
-    <S extends Schema.Any, A extends bigint>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): transform<S, filter<SchemaClass<A>>> =>
-        transform(
-            self,
-            self.pipe(typeSchema, betweenBigInt(minimum, maximum)),
-            {
-                strict: false,
-                decode: (i) => bigInt_.clamp(i, { minimum, maximum }),
-                encode: identity,
-            },
-        );
-
-/** @ignore */
-class BigInt$ extends transformOrFail(
-    String$.annotations({
-        description: "a string to be decoded into a bigint",
-    }),
-    BigIntFromSelf,
-    {
-        strict: true,
-        decode: (i, _, ast) =>
-            ParseResult.fromOption(
-                bigInt_.fromString(i),
-                () =>
-                    new ParseResult.Type(
-                        ast,
-                        i,
-                        `Unable to decode ${JSON.stringify(i)} into a bigint`,
-                    ),
-            ),
-        encode: (a) => ParseResult.succeed(String(a)),
-    },
-).annotations({ identifier: "BigInt" }) {}
-
-export {
-    /**
-     * This schema transforms a `string` into a `bigint` by parsing the string using the `BigInt` function.
-     *
-     * It returns an error if the value can't be converted (for example when non-numeric characters are provided).
-     *
-     * @category bigint transformations
-     * @since 3.10.0
-     */
-    BigInt$ as BigInt,
-};
-
-/**
- * @category bigint constructors
- * @since 3.10.0
- */
-export const PositiveBigIntFromSelf: filter<Schema<bigint>> =
-    BigIntFromSelf.pipe(
-        positiveBigInt({ identifier: "PositiveBigintFromSelf" }),
-    );
-
-/**
- * @category bigint constructors
- * @since 3.10.0
- */
-export const PositiveBigInt: filter<Schema<bigint, string>> = BigInt$.pipe(
-    positiveBigInt({ identifier: "PositiveBigint" }),
-);
-
-/**
- * @category bigint constructors
- * @since 3.10.0
- */
-export const NegativeBigIntFromSelf: filter<Schema<bigint>> =
-    BigIntFromSelf.pipe(
-        negativeBigInt({ identifier: "NegativeBigintFromSelf" }),
-    );
-
-/**
- * @category bigint constructors
- * @since 3.10.0
- */
-export const NegativeBigInt: filter<Schema<bigint, string>> = BigInt$.pipe(
-    negativeBigInt({ identifier: "NegativeBigint" }),
-);
-
-/**
- * @category bigint constructors
- * @since 3.10.0
- */
-export const NonPositiveBigIntFromSelf: filter<Schema<bigint>> =
-    BigIntFromSelf.pipe(
-        nonPositiveBigInt({ identifier: "NonPositiveBigintFromSelf" }),
-    );
-
-/**
- * @category bigint constructors
- * @since 3.10.0
- */
-export const NonPositiveBigInt: filter<Schema<bigint, string>> = BigInt$.pipe(
-    nonPositiveBigInt({ identifier: "NonPositiveBigint" }),
-);
-
-/**
- * @category bigint constructors
- * @since 3.10.0
- */
-export const NonNegativeBigIntFromSelf: filter<Schema<bigint>> =
-    BigIntFromSelf.pipe(
-        nonNegativeBigInt({ identifier: "NonNegativeBigintFromSelf" }),
-    );
-
-/**
- * @category bigint constructors
- * @since 3.10.0
- */
-export const NonNegativeBigInt: filter<Schema<bigint, string>> = BigInt$.pipe(
-    nonNegativeBigInt({ identifier: "NonNegativeBigint" }),
-);
-
-/**
- * This schema transforms a `number` into a `bigint` by parsing the number using the `BigInt` function.
- *
- * It returns an error if the value can't be safely encoded as a `number` due to being out of range.
- *
- * @category bigint transformations
- * @since 3.10.0
- */
-export class BigIntFromNumber extends transformOrFail(
-    Number$.annotations({
-        description: "a number to be decoded into a bigint",
-    }),
-    BigIntFromSelf.pipe(
-        betweenBigInt(
-            BigInt(Number.MIN_SAFE_INTEGER),
-            BigInt(Number.MAX_SAFE_INTEGER),
-        ),
-    ),
-    {
-        strict: true,
-        decode: (i, _, ast) =>
-            ParseResult.fromOption(
-                bigInt_.fromNumber(i),
-                () =>
-                    new ParseResult.Type(
-                        ast,
-                        i,
-                        `Unable to decode ${i} into a bigint`,
-                    ),
-            ),
-        encode: (a, _, ast) =>
-            ParseResult.fromOption(
-                bigInt_.toNumber(a),
-                () =>
-                    new ParseResult.Type(
-                        ast,
-                        a,
-                        `Unable to encode ${a}n into a number`,
-                    ),
-            ),
-    },
-).annotations({ identifier: "BigIntFromNumber" }) {}
-
 const redactedArbitrary =
     <A>(value: LazyArbitrary<A>): LazyArbitrary<redacted_.Redacted<A>> =>
     (fc) =>
@@ -7264,40 +7095,6 @@ export class DurationFromSelf extends declare(duration_.isDuration, {
 }) {}
 
 /**
- * A schema that transforms a non negative `bigint` into a `Duration`. Treats
- * the value as the number of nanoseconds.
- *
- * @category Duration transformations
- * @since 3.10.0
- */
-export class DurationFromNanos extends transformOrFail(
-    NonNegativeBigIntFromSelf.annotations({
-        description: "a bigint to be decoded into a Duration",
-    }),
-    DurationFromSelf.pipe(
-        filter((duration) => duration_.isFinite(duration), {
-            description: "a finite duration",
-        }),
-    ),
-    {
-        strict: true,
-        decode: (i) => ParseResult.succeed(duration_.nanos(i)),
-        encode: (a, _, ast) =>
-            option_.match(duration_.toNanos(a), {
-                onNone: () =>
-                    ParseResult.fail(
-                        new ParseResult.Type(
-                            ast,
-                            a,
-                            `Unable to encode ${a} into a bigint`,
-                        ),
-                    ),
-                onSome: (nanos) => ParseResult.succeed(nanos),
-            }),
-    },
-).annotations({ identifier: "DurationFromNanos" }) {}
-
-/**
  * A non-negative integer. +Infinity is excluded.
  *
  * @category number constructors
@@ -7327,7 +7124,6 @@ export class DurationFromMillis extends transform(
 ).annotations({ identifier: "DurationFromMillis" }) {}
 
 const DurationValueMillis = TaggedStruct("Millis", { millis: NonNegativeInt });
-const DurationValueNanos = TaggedStruct("Nanos", { nanos: BigInt$ });
 const DurationValueInfinity = TaggedStruct("Infinity", {});
 const durationValueInfinity = DurationValueInfinity.make({});
 
@@ -7341,16 +7137,11 @@ export type DurationEncoded =
           readonly millis: number;
       }
     | {
-          readonly _tag: "Nanos";
-          readonly nanos: string;
-      }
-    | {
           readonly _tag: "Infinity";
       };
 
 const DurationValue: Schema<duration_.DurationValue, DurationEncoded> = Union(
     DurationValueMillis,
-    DurationValueNanos,
     DurationValueInfinity,
 ).annotations({
     identifier: "DurationValue",
@@ -7396,8 +7187,6 @@ export class Duration extends transform(
                 switch (i._tag) {
                     case "Millis":
                         return duration_.millis(i.millis);
-                    case "Nanos":
-                        return duration_.nanos(i.nanos);
                     case "Infinity":
                         return duration_.infinity;
                 }
@@ -7413,8 +7202,6 @@ export class Duration extends transform(
             switch (a.value._tag) {
                 case "Millis":
                     return DurationValueMillis.make({ millis: a.value.millis });
-                case "Nanos":
-                    return DurationValueNanos.make({ nanos: a.value.nanos });
                 case "Infinity":
                     return durationValueInfinity;
             }
@@ -9582,402 +9369,6 @@ export {
      */
     set as Set,
 };
-
-const bigDecimalPretty = (): pretty_.Pretty<bigDecimal_.BigDecimal> => (val) =>
-    `BigDecimal(${bigDecimal_.format(bigDecimal_.normalize(val))})`;
-
-const bigDecimalArbitrary = (): LazyArbitrary<bigDecimal_.BigDecimal> => (fc) =>
-    fc
-        .tuple(fc.bigInt(), fc.integer({ min: 0, max: 18 }))
-        .map(([value, scale]) => bigDecimal_.make(value, scale));
-
-/**
- * @category BigDecimal constructors
- * @since 3.10.0
- */
-export class BigDecimalFromSelf extends declare(bigDecimal_.isBigDecimal, {
-    identifier: "BigDecimalFromSelf",
-    pretty: bigDecimalPretty,
-    arbitrary: bigDecimalArbitrary,
-    equivalence: () => bigDecimal_.Equivalence,
-}) {}
-
-/**
- * @category BigDecimal transformations
- * @since 3.10.0
- */
-export class BigDecimal extends transformOrFail(
-    String$.annotations({
-        description: "a string to be decoded into a BigDecimal",
-    }),
-    BigDecimalFromSelf,
-    {
-        strict: true,
-        decode: (i, _, ast) =>
-            bigDecimal_.fromString(i).pipe(
-                option_.match({
-                    onNone: () =>
-                        ParseResult.fail(
-                            new ParseResult.Type(
-                                ast,
-                                i,
-                                `Unable to decode ${JSON.stringify(i)} into a BigDecimal`,
-                            ),
-                        ),
-                    onSome: (val) =>
-                        ParseResult.succeed(bigDecimal_.normalize(val)),
-                }),
-            ),
-        encode: (a) =>
-            ParseResult.succeed(bigDecimal_.format(bigDecimal_.normalize(a))),
-    },
-).annotations({ identifier: "BigDecimal" }) {}
-
-/**
- * A schema that transforms a `number` into a `BigDecimal`.
- * When encoding, this Schema will produce incorrect results if the BigDecimal exceeds the 64-bit range of a number.
- *
- * @category BigDecimal transformations
- * @since 3.10.0
- */
-export class BigDecimalFromNumber extends transform(
-    Number$.annotations({
-        description: "a number to be decoded into a BigDecimal",
-    }),
-    BigDecimalFromSelf,
-    {
-        strict: true,
-        decode: (i) => bigDecimal_.unsafeFromNumber(i),
-        encode: (a) => bigDecimal_.unsafeToNumber(a),
-    },
-).annotations({ identifier: "BigDecimalFromNumber" }) {}
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const GreaterThanBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/SchemaId/GreaterThanBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const greaterThanBigDecimal =
-    <S extends Schema.Any>(
-        min: bigDecimal_.BigDecimal,
-        annotations?: Annotations.Filter<Schema.Type<S>>,
-    ) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> => {
-        const formatted = bigDecimal_.format(min);
-        return self.pipe(
-            filter((a) => bigDecimal_.greaterThan(a, min), {
-                schemaId: GreaterThanBigDecimalSchemaId,
-                [GreaterThanBigDecimalSchemaId]: { min },
-                title: `greaterThanBigDecimal(${formatted})`,
-                description: `a BigDecimal greater than ${formatted}`,
-                ...annotations,
-            }),
-        );
-    };
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const GreaterThanOrEqualToBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/schema/GreaterThanOrEqualToBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const greaterThanOrEqualToBigDecimal =
-    <S extends Schema.Any>(
-        min: bigDecimal_.BigDecimal,
-        annotations?: Annotations.Filter<Schema.Type<S>>,
-    ) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> => {
-        const formatted = bigDecimal_.format(min);
-        return self.pipe(
-            filter((a) => bigDecimal_.greaterThanOrEqualTo(a, min), {
-                schemaId: GreaterThanOrEqualToBigDecimalSchemaId,
-                [GreaterThanOrEqualToBigDecimalSchemaId]: { min },
-                title: `greaterThanOrEqualToBigDecimal(${formatted})`,
-                description: `a BigDecimal greater than or equal to ${formatted}`,
-                ...annotations,
-            }),
-        );
-    };
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const LessThanBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/SchemaId/LessThanBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const lessThanBigDecimal =
-    <S extends Schema.Any>(
-        max: bigDecimal_.BigDecimal,
-        annotations?: Annotations.Filter<Schema.Type<S>>,
-    ) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> => {
-        const formatted = bigDecimal_.format(max);
-        return self.pipe(
-            filter((a) => bigDecimal_.lessThan(a, max), {
-                schemaId: LessThanBigDecimalSchemaId,
-                [LessThanBigDecimalSchemaId]: { max },
-                title: `lessThanBigDecimal(${formatted})`,
-                description: `a BigDecimal less than ${formatted}`,
-                ...annotations,
-            }),
-        );
-    };
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const LessThanOrEqualToBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/schema/LessThanOrEqualToBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const lessThanOrEqualToBigDecimal =
-    <S extends Schema.Any>(
-        max: bigDecimal_.BigDecimal,
-        annotations?: Annotations.Filter<Schema.Type<S>>,
-    ) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> => {
-        const formatted = bigDecimal_.format(max);
-        return self.pipe(
-            filter((a) => bigDecimal_.lessThanOrEqualTo(a, max), {
-                schemaId: LessThanOrEqualToBigDecimalSchemaId,
-                [LessThanOrEqualToBigDecimalSchemaId]: { max },
-                title: `lessThanOrEqualToBigDecimal(${formatted})`,
-                description: `a BigDecimal less than or equal to ${formatted}`,
-                ...annotations,
-            }),
-        );
-    };
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const PositiveBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/schema/PositiveBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const positiveBigDecimal =
-    <S extends Schema.Any>(annotations?: Annotations.Filter<Schema.Type<S>>) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> =>
-        self.pipe(
-            filter((a) => bigDecimal_.isPositive(a), {
-                schemaId: PositiveBigDecimalSchemaId,
-                title: "positiveBigDecimal",
-                description: `a positive BigDecimal`,
-                ...annotations,
-            }),
-        );
-
-/**
- * @category BigDecimal constructors
- * @since 3.10.0
- */
-export const PositiveBigDecimalFromSelf: filter<
-    Schema<bigDecimal_.BigDecimal>
-> = BigDecimalFromSelf.pipe(
-    positiveBigDecimal({ identifier: "PositiveBigDecimalFromSelf" }),
-);
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const NonNegativeBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/schema/NonNegativeBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const nonNegativeBigDecimal =
-    <S extends Schema.Any>(annotations?: Annotations.Filter<Schema.Type<S>>) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> =>
-        self.pipe(
-            filter((a) => a.value >= 0n, {
-                schemaId: NonNegativeBigDecimalSchemaId,
-                title: "nonNegativeBigDecimal",
-                description: `a non-negative BigDecimal`,
-                ...annotations,
-            }),
-        );
-
-/**
- * @category BigDecimal constructors
- * @since 3.10.0
- */
-export const NonNegativeBigDecimalFromSelf: filter<
-    Schema<bigDecimal_.BigDecimal>
-> = BigDecimalFromSelf.pipe(
-    nonNegativeBigDecimal({ identifier: "NonNegativeBigDecimalFromSelf" }),
-);
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const NegativeBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/schema/NegativeBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const negativeBigDecimal =
-    <S extends Schema.Any>(annotations?: Annotations.Filter<Schema.Type<S>>) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> =>
-        self.pipe(
-            filter((a) => bigDecimal_.isNegative(a), {
-                schemaId: NegativeBigDecimalSchemaId,
-                title: "negativeBigDecimal",
-                description: `a negative BigDecimal`,
-                ...annotations,
-            }),
-        );
-
-/**
- * @category BigDecimal constructors
- * @since 3.10.0
- */
-export const NegativeBigDecimalFromSelf: filter<
-    Schema<bigDecimal_.BigDecimal>
-> = BigDecimalFromSelf.pipe(
-    negativeBigDecimal({ identifier: "NegativeBigDecimalFromSelf" }),
-);
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const NonPositiveBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/schema/NonPositiveBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const nonPositiveBigDecimal =
-    <S extends Schema.Any>(annotations?: Annotations.Filter<Schema.Type<S>>) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> =>
-        self.pipe(
-            filter((a) => a.value <= 0n, {
-                schemaId: NonPositiveBigDecimalSchemaId,
-                title: "nonPositiveBigDecimal",
-                description: `a non-positive BigDecimal`,
-                ...annotations,
-            }),
-        );
-
-/**
- * @category BigDecimal constructors
- * @since 3.10.0
- */
-export const NonPositiveBigDecimalFromSelf: filter<
-    Schema<bigDecimal_.BigDecimal>
-> = BigDecimalFromSelf.pipe(
-    nonPositiveBigDecimal({ identifier: "NonPositiveBigDecimalFromSelf" }),
-);
-
-/**
- * @category schema id
- * @since 3.10.0
- */
-export const BetweenBigDecimalSchemaId: unique symbol = Symbol.for(
-    "effect/SchemaId/BetweenBigDecimal",
-);
-
-/**
- * @category BigDecimal filters
- * @since 3.10.0
- */
-export const betweenBigDecimal =
-    <S extends Schema.Any>(
-        minimum: bigDecimal_.BigDecimal,
-        maximum: bigDecimal_.BigDecimal,
-        annotations?: Annotations.Filter<Schema.Type<S>>,
-    ) =>
-    <A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): filter<S> => {
-        const formattedMinimum = bigDecimal_.format(minimum);
-        const formattedMaximum = bigDecimal_.format(maximum);
-        return self.pipe(
-            filter((a) => bigDecimal_.between(a, { minimum, maximum }), {
-                schemaId: BetweenBigDecimalSchemaId,
-                [BetweenBigDecimalSchemaId]: { maximum, minimum },
-                title: `betweenBigDecimal(${formattedMinimum}, ${formattedMaximum})`,
-                description: `a BigDecimal between ${formattedMinimum} and ${formattedMaximum}`,
-                ...annotations,
-            }),
-        );
-    };
-
-/**
- * Clamps a `BigDecimal` between a minimum and a maximum value.
- *
- * @category BigDecimal transformations
- * @since 3.10.0
- */
-export const clampBigDecimal =
-    (minimum: bigDecimal_.BigDecimal, maximum: bigDecimal_.BigDecimal) =>
-    <S extends Schema.Any, A extends bigDecimal_.BigDecimal>(
-        self: S & Schema<A, Schema.Encoded<S>, Schema.Context<S>>,
-    ): transform<S, filter<SchemaClass<A>>> =>
-        transform(
-            self,
-            self.pipe(typeSchema, betweenBigDecimal(minimum, maximum)),
-            {
-                strict: false,
-                decode: (i) => bigDecimal_.clamp(i, { minimum, maximum }),
-                encode: identity,
-            },
-        );
 
 const chunkArbitrary =
     <A>(
