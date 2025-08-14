@@ -1,7 +1,7 @@
 /**
  * @since 1.0.0
  */
-import type * as Effect from "effect/Effect";
+import type { Effect } from "effect";
 import * as internal from "./internal/effectify.js";
 
 interface Callback<E, A> {

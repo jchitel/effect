@@ -4,14 +4,16 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { QuitException, Terminal } from "@effect/platform/Terminal";
-import type { Array as Arr } from "effect";
-import type { Config } from "effect/Config";
-import type { Effect } from "effect/Effect";
-import type { Option } from "effect/Option";
-import type { Pipeable } from "effect/Pipeable";
-import type { Redacted } from "effect/Redacted";
-import type { Schema } from "effect/Schema";
-import type { Secret } from "effect/Secret";
+import type {
+    Array as Arr,
+    Config,
+    Effect,
+    Option,
+    Pipeable,
+    Redacted,
+    Schema,
+    Secret,
+} from "effect";
 import type { CliConfig } from "./CliConfig.js";
 import type { HelpDoc } from "./HelpDoc.js";
 import * as InternalArgs from "./internal/args.js";
@@ -37,7 +39,7 @@ export type ArgsTypeId = typeof ArgsTypeId;
  * @since 1.0.0
  * @category models
  */
-export interface Args<A> extends Args.Variance<A>, Pipeable {}
+export interface Args<A> extends Args.Variance<A>, Pipeable.Pipeable {}
 
 /**
  * @since 1.0.0
@@ -271,7 +273,7 @@ export const fileParse: (
  * @category constructors
  */
 export const fileSchema: <I, A>(
-    schema: Schema<A, I, FileSystem | Path | Terminal>,
+    schema: Schema.Schema<A, I, FileSystem | Path | Terminal>,
     config?: Args.FormatArgsConfig | undefined,
 ) => Args<A> = InternalArgs.fileSchema;
 
@@ -308,7 +310,7 @@ export const getHelp: <A>(self: Args<A>) => HelpDoc = InternalArgs.getHelp;
  * @since 1.0.0
  * @category combinators
  */
-export const getIdentifier: <A>(self: Args<A>) => Option<string> =
+export const getIdentifier: <A>(self: Args<A>) => Option.Option<string> =
     InternalArgs.getIdentifier;
 
 /**
@@ -353,7 +355,7 @@ export const map: <A, B>(self: Args<A>, f: (a: A) => B) => Args<B> =
  */
 export const mapEffect: <A, B>(
     self: Args<A>,
-    f: (a: A) => Effect<B, HelpDoc, FileSystem | Path | Terminal>,
+    f: (a: A) => Effect.Effect<B, HelpDoc, FileSystem | Path | Terminal>,
 ) => Args<B> = InternalArgs.mapEffect;
 
 /**
@@ -370,7 +372,7 @@ export const mapTryCatch: <A, B>(
  * @since 1.0.0
  * @category combinators
  */
-export const optional: <A>(self: Args<A>) => Args<Option<A>> =
+export const optional: <A>(self: Args<A>) => Args<Option.Option<A>> =
     InternalArgs.optional;
 
 /**
@@ -407,8 +409,9 @@ export const repeated: <A>(self: Args<A>) => Args<Array<A>> =
  * @since 1.0.0
  * @category constructors
  */
-export const redacted: (config?: Args.BaseArgsConfig) => Args<Redacted> =
-    InternalArgs.redacted;
+export const redacted: (
+    config?: Args.BaseArgsConfig,
+) => Args<Redacted.Redacted> = InternalArgs.redacted;
 
 /**
  * Creates a text argument.
@@ -418,7 +421,7 @@ export const redacted: (config?: Args.BaseArgsConfig) => Args<Redacted> =
  * @since 1.0.0
  * @category constructors
  */
-export const secret: (config?: Args.BaseArgsConfig) => Args<Secret> =
+export const secret: (config?: Args.BaseArgsConfig) => Args<Secret.Secret> =
     InternalArgs.secret;
 
 /**
@@ -440,8 +443,11 @@ export const validate: <A>(
     self: Args<A>,
     args: ReadonlyArray<string>,
     config: CliConfig,
-) => Effect<[Array<string>, A], ValidationError, FileSystem | Path | Terminal> =
-    InternalArgs.validate;
+) => Effect.Effect<
+    [Array<string>, A],
+    ValidationError,
+    FileSystem | Path | Terminal
+> = InternalArgs.validate;
 
 /**
  * @since 1.0.0
@@ -458,7 +464,7 @@ export const withDefault: <A, const B>(
  */
 export const withFallbackConfig: <A, B>(
     self: Args<A>,
-    config: Config<B>,
+    config: Config.Config<B>,
 ) => Args<A | B> = InternalArgs.withFallbackConfig;
 
 /**
@@ -476,7 +482,7 @@ export const withDescription: <A>(
  */
 export const withSchema: <A, I extends A, B>(
     self: Args<A>,
-    schema: Schema<B, I, FileSystem | Path | Terminal>,
+    schema: Schema.Schema<B, I, FileSystem | Path | Terminal>,
 ) => Args<B> = InternalArgs.withSchema;
 
 /**
@@ -486,7 +492,7 @@ export const withSchema: <A, I extends A, B>(
 export const wizard: <A>(
     self: Args<A>,
     config: CliConfig,
-) => Effect<
+) => Effect.Effect<
     Array<string>,
     ValidationError | QuitException,
     FileSystem | Path | Terminal

@@ -3,7 +3,7 @@
  */
 
 import type { LogLevel } from "effect";
-import type { Option } from "effect/Option";
+import type { Option } from "effect";
 import type { Command } from "./CommandDescriptor.js";
 import type { HelpDoc } from "./HelpDoc.js";
 import * as InternalBuiltInOptions from "./internal/builtInOptions.js";
@@ -85,7 +85,8 @@ export const builtInOptions: <A>(
     command: Command<A>,
     usage: Usage,
     helpDoc: HelpDoc,
-) => Options<Option<BuiltInOptions>> = InternalBuiltInOptions.builtInOptions;
+) => Options<Option.Option<BuiltInOptions>> =
+    InternalBuiltInOptions.builtInOptions;
 
 /**
  * @since 1.0.0

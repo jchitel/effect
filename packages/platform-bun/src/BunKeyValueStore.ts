@@ -1,6 +1,6 @@
 import type * as PlatformError from "@effect/platform/Error";
 import * as KeyValueStore from "@effect/platform/KeyValueStore";
-import * as Layer from "effect/Layer";
+import { Layer } from "effect";
 import * as FileSystem from "./BunFileSystem.js";
 import * as Path from "./BunPath.js";
 

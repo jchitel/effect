@@ -1,9 +1,9 @@
 import { makeRunMain } from "@effect/platform/Runtime";
-import { constVoid } from "effect/Function";
+import { Function as FN } from "effect";
 
 /** @internal */
 export const runMain = makeRunMain(({ fiber, teardown }) => {
-    const keepAlive = setInterval(constVoid, 2 ** 31 - 1);
+    const keepAlive = setInterval(FN.constVoid, 2 ** 31 - 1);
     let receivedSignal = false;
 
     fiber.addObserver((exit) => {

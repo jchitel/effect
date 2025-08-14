@@ -2,7 +2,7 @@
  * @since 1.0.0
  */
 
-import type { LazyArg } from "effect/Function";
+import type { Function as FN } from "effect";
 import type { Doc } from "./Doc.js";
 import type { DocStream } from "./DocStream.js";
 import * as internal from "./internal/layout.js";
@@ -50,7 +50,7 @@ export declare namespace Layout {
             stream: DocStream<A>,
             indentation: number,
             currentColumn: number,
-            comparator: LazyArg<DocStream<A>>,
+            comparator: FN.LazyArg<DocStream<A>>,
         ): boolean;
     }
 }

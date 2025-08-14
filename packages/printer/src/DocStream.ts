@@ -1,5 +1,4 @@
-import type { Equal } from "effect/Equal";
-import type { Option } from "effect/Option";
+import type { Equal, Option } from "effect";
 import * as internal from "./internal/docStream.js";
 
 // -----------------------------------------------------------------------------
@@ -49,7 +48,7 @@ export declare namespace DocStream {
      * @since 1.0.0
      * @category model
      */
-    export interface Variance<A> extends Equal {
+    export interface Variance<A> extends Equal.Equal {
         readonly [DocStreamTypeId]: {
             readonly _A: (_: never) => A;
         };
@@ -284,7 +283,7 @@ export const popAnnotation: <A>(stream: DocStream<A>) => DocStream<A> =
  */
 export const alterAnnotations: <A, B>(
     self: DocStream<A>,
-    f: (a: A) => Option<B>,
+    f: (a: A) => Option.Option<B>,
 ) => DocStream<B> = internal.alterAnnotations;
 
 /**

@@ -1,7 +1,5 @@
 import * as Doc from "@effect/printer-ansi/AnsiDoc";
-import { Array as Arr } from "effect";
-import * as Effect from "effect/Effect";
-import { pipe } from "effect/Function";
+import { Array as Arr, Effect, pipe } from "effect";
 
 const defaultFigures = {
     arrowUp: Doc.text("↑"),

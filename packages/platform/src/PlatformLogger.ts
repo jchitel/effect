@@ -1,10 +1,7 @@
 /**
  * @since 1.0.0
  */
-import type { DurationInput } from "effect/Duration";
-import type { Effect } from "effect/Effect";
-import type * as Logger from "effect/Logger";
-import type { Scope } from "effect/Scope";
+import type { Duration, Effect, Logger, Scope } from "effect";
 import type { PlatformError } from "./Error.js";
 import type { FileSystem, OpenFileOptions } from "./FileSystem.js";
 import * as internal from "./internal/platformLogger.js";
@@ -41,23 +38,27 @@ export const toFile: {
         path: string,
         options?:
             | (OpenFileOptions & {
-                  readonly batchWindow?: DurationInput | undefined;
+                  readonly batchWindow?: Duration.DurationInput | undefined;
               })
             | undefined,
     ): <Message>(
         self: Logger.Logger<Message, string>,
-    ) => Effect<
+    ) => Effect.Effect<
         Logger.Logger<Message, void>,
         PlatformError,
-        Scope | FileSystem
+        Scope.Scope | FileSystem
     >;
     <Message>(
         self: Logger.Logger<Message, string>,
         path: string,
         options?:
             | (OpenFileOptions & {
-                  readonly batchWindow?: DurationInput | undefined;
+                  readonly batchWindow?: Duration.DurationInput | undefined;
               })
             | undefined,
-    ): Effect<Logger.Logger<Message, void>, PlatformError, Scope | FileSystem>;
+    ): Effect.Effect<
+        Logger.Logger<Message, void>,
+        PlatformError,
+        Scope.Scope | FileSystem
+    >;
 } = internal.toFile;

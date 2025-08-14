@@ -1,12 +1,14 @@
 import * as FileSystem from "@effect/platform/FileSystem";
-import { Array as Arr } from "effect";
-import * as Effect from "effect/Effect";
-import { pipe } from "effect/Function";
-import * as Option from "effect/Option";
-import { pipeArguments } from "effect/Pipeable";
-import * as EffectRedacted from "effect/Redacted";
-import * as Schema from "effect/Schema";
-import * as EffectSecret from "effect/Secret";
+import {
+    Array as Arr,
+    Effect,
+    Option,
+    Pipeable,
+    Redacted as EffectRedacted,
+    Schema,
+    Secret as EffectSecret,
+    pipe,
+} from "effect";
 import type * as CliConfig from "../CliConfig.js";
 import type * as HelpDoc from "../HelpDoc.js";
 import type * as Span from "../HelpDoc/Span.js";
@@ -41,7 +43,7 @@ const proto = {
         _A: (_: never) => _,
     },
     pipe() {
-        return pipeArguments(this, arguments);
+        return Pipeable.pipeArguments(this, arguments);
     },
 };
 

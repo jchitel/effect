@@ -1,4 +1,4 @@
-import * as Effect from "effect/Effect";
+import { Effect } from "effect";
 import type * as Doc from "../Doc.js";
 import type * as Optimize from "../Optimize.js";
 import * as InternalDoc from "./doc.js";

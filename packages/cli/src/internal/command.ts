@@ -2,15 +2,8 @@ import type * as FileSystem from "@effect/platform/FileSystem";
 import type * as Path from "@effect/platform/Path";
 import type * as Terminal from "@effect/platform/Terminal";
 import { Array as Arr, Effectable, GlobalValue } from "effect";
-import type { Types } from "effect";
-import * as Context from "effect/Context";
-import * as Effect from "effect/Effect";
-import { identity } from "effect/Function";
-import type * as HashMap from "effect/HashMap";
-import type * as HashSet from "effect/HashSet";
-import type * as Layer from "effect/Layer";
-import type * as Option from "effect/Option";
-import { pipeArguments } from "effect/Pipeable";
+import type { HashMap, HashSet, Layer, Option, Types } from "effect";
+import { Context, Effect, Pipeable, identity } from "effect";
 import type * as Args from "../Args.js";
 import type * as CliApp from "../CliApp.js";
 import type * as CliConfig from "../CliConfig.js";
@@ -123,7 +116,7 @@ const Prototype = {
         return this.tag;
     },
     pipe() {
-        return pipeArguments(this, arguments);
+        return Pipeable.pipeArguments(this, arguments);
     },
 };
 

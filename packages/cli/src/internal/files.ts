@@ -1,5 +1,5 @@
 import * as FileSystem from "@effect/platform/FileSystem";
-import * as Effect from "effect/Effect";
+import { Effect } from "effect";
 import * as Ini from "ini";
 import * as Toml from "toml";
 import * as Yaml from "yaml";

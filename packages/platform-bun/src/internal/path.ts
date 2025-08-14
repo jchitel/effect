@@ -1,7 +1,6 @@
 import { BadArgument } from "@effect/platform/Error";
 import { Path, TypeId } from "@effect/platform/Path";
-import * as Effect from "effect/Effect";
-import * as Layer from "effect/Layer";
+import { Effect, Layer } from "effect";
 import * as NodePath from "node:path";
 import * as NodeUrl from "node:url";
 

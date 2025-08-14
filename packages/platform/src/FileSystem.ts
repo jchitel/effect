@@ -1,16 +1,8 @@
 /**
  * @since 1.0.0
  */
-import { Brand } from "effect";
-import type { Sink } from "effect";
-import type { Tag } from "effect/Context";
-import * as Context from "effect/Context";
-import * as Data from "effect/Data";
-import type * as Effect from "effect/Effect";
-import type { Layer } from "effect/Layer";
-import type { Option } from "effect/Option";
-import type { Scope } from "effect/Scope";
-import type { Stream } from "effect/Stream";
+import { Brand, Context, Data } from "effect";
+import type { Effect, Layer, Option, Scope, Sink, Stream } from "effect";
 import type { PlatformError } from "./Error.js";
 import * as internal from "./internal/fileSystem.js";
 
@@ -99,7 +91,7 @@ export interface FileSystem {
      */
     readonly makeTempDirectoryScoped: (
         options?: MakeTempDirectoryOptions,
-    ) => Effect.Effect<string, PlatformError, Scope>;
+    ) => Effect.Effect<string, PlatformError, Scope.Scope>;
     /**
      * Create a temporary file.
      * The directory creation is functionally equivalent to `makeTempDirectory`.
@@ -116,7 +108,7 @@ export interface FileSystem {
      */
     readonly makeTempFileScoped: (
         options?: MakeTempFileOptions,
-    ) => Effect.Effect<string, PlatformError, Scope>;
+    ) => Effect.Effect<string, PlatformError, Scope.Scope>;
     /**
      * Open a file at `path` with the specified `options`.
      *
@@ -125,7 +117,7 @@ export interface FileSystem {
     readonly open: (
         path: string,
         options?: OpenFileOptions,
-    ) => Effect.Effect<File, PlatformError, Scope>;
+    ) => Effect.Effect<File, PlatformError, Scope.Scope>;
     /**
      * List the contents of a directory.
      *
@@ -197,7 +189,7 @@ export interface FileSystem {
     readonly stream: (
         path: string,
         options?: StreamOptions,
-    ) => Stream<Uint8Array, PlatformError>;
+    ) => Stream.Stream<Uint8Array, PlatformError>;
     /**
      * Create a symbolic link from `fromPath` to `toPath`.
      */
@@ -233,7 +225,7 @@ export interface FileSystem {
     readonly watch: (
         path: string,
         options?: WatchOptions,
-    ) => Stream<WatchEvent, PlatformError>;
+    ) => Stream.Stream<WatchEvent, PlatformError>;
     /**
      * Write data to a file at `path`.
      */
@@ -448,7 +440,7 @@ export interface WatchOptions {
  * @since 1.0.0
  * @category tag
  */
-export const FileSystem: Tag<FileSystem, FileSystem> = internal.tag;
+export const FileSystem: Context.Tag<FileSystem, FileSystem> = internal.tag;
 
 /**
  * @since 1.0.0
@@ -476,8 +468,9 @@ export const makeNoop: (fileSystem: Partial<FileSystem>) => FileSystem =
  * @since 1.0.0
  * @category layers
  */
-export const layerNoop: (fileSystem: Partial<FileSystem>) => Layer<FileSystem> =
-    internal.layerNoop;
+export const layerNoop: (
+    fileSystem: Partial<FileSystem>,
+) => Layer.Layer<FileSystem> = internal.layerNoop;
 
 /**
  * @since 1.0.0
@@ -513,7 +506,7 @@ export interface File {
     readonly read: (buffer: Uint8Array) => Effect.Effect<Size, PlatformError>;
     readonly readAlloc: (
         size: SizeInput,
-    ) => Effect.Effect<Option<Uint8Array>, PlatformError>;
+    ) => Effect.Effect<Option.Option<Uint8Array>, PlatformError>;
     readonly truncate: (
         length?: SizeInput,
     ) => Effect.Effect<void, PlatformError>;
@@ -553,19 +546,19 @@ export declare namespace File {
      */
     export interface Info {
         readonly type: Type;
-        readonly mtime: Option<Date>;
-        readonly atime: Option<Date>;
-        readonly birthtime: Option<Date>;
+        readonly mtime: Option.Option<Date>;
+        readonly atime: Option.Option<Date>;
+        readonly birthtime: Option.Option<Date>;
         readonly dev: number;
-        readonly ino: Option<number>;
+        readonly ino: Option.Option<number>;
         readonly mode: number;
-        readonly nlink: Option<number>;
-        readonly uid: Option<number>;
-        readonly gid: Option<number>;
-        readonly rdev: Option<number>;
+        readonly nlink: Option.Option<number>;
+        readonly uid: Option.Option<number>;
+        readonly gid: Option.Option<number>;
+        readonly rdev: Option.Option<number>;
         readonly size: Size;
-        readonly blksize: Option<Size>;
-        readonly blocks: Option<number>;
+        readonly blksize: Option.Option<Size>;
+        readonly blocks: Option.Option<number>;
     }
 }
 
@@ -663,6 +656,6 @@ export class WatchBackend extends Context.Tag(
             path: string,
             stat: File.Info,
             options?: WatchOptions,
-        ) => Option<Stream<WatchEvent, PlatformError>>;
+        ) => Option.Option<Stream.Stream<WatchEvent, PlatformError>>;
     }
 >() {}

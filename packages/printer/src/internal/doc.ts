@@ -1,9 +1,4 @@
-import { Array as Arr } from "effect";
-import * as Effect from "effect/Effect";
-import * as Equal from "effect/Equal";
-import { pipe } from "effect/Function";
-import * as Hash from "effect/Hash";
-import { pipeArguments } from "effect/Pipeable";
+import { Array as Arr, Effect, Equal, Hash, Pipeable, pipe } from "effect";
 import type * as Doc from "../Doc.js";
 import type * as Flatten from "../Flatten.js";
 import type * as PageWidth from "../PageWidth.js";
@@ -120,7 +115,7 @@ const proto = {
         return protoEqual[this._tag](this as any, that as any);
     },
     pipe() {
-        return pipeArguments(this, arguments);
+        return Pipeable.pipeArguments(this, arguments);
     },
 };
 

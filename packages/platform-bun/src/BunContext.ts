@@ -1,8 +1,7 @@
 import type * as FileSystem from "@effect/platform/FileSystem";
 import type * as Path from "@effect/platform/Path";
 import type * as Terminal from "@effect/platform/Terminal";
-import { pipe } from "effect/Function";
-import * as Layer from "effect/Layer";
+import { Layer, pipe } from "effect";
 import * as BunFileSystem from "./BunFileSystem.js";
 import * as BunPath from "./BunPath.js";
 import * as BunTerminal from "./BunTerminal.js";

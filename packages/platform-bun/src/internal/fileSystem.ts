@@ -1,12 +1,8 @@
 import { effectify } from "@effect/platform/Effectify";
 import * as Error from "@effect/platform/Error";
 import * as FileSystem from "@effect/platform/FileSystem";
-import type * as Context from "effect/Context";
-import * as Effect from "effect/Effect";
-import { pipe } from "effect/Function";
-import * as Layer from "effect/Layer";
-import * as Option from "effect/Option";
-import * as Stream from "effect/Stream";
+import type { Context } from "effect";
+import { Effect, Layer, Option, Stream, pipe } from "effect";
 import * as Crypto from "node:crypto";
 import * as NFS from "node:fs";
 import * as OS from "node:os";

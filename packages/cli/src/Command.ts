@@ -4,14 +4,16 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { QuitException, Terminal } from "@effect/platform/Terminal";
-import type { Types } from "effect";
-import type { Tag } from "effect/Context";
-import type { Effect } from "effect/Effect";
-import type { HashMap } from "effect/HashMap";
-import type { HashSet } from "effect/HashSet";
-import type { Layer } from "effect/Layer";
-import type { Option } from "effect/Option";
-import { type Pipeable } from "effect/Pipeable";
+import type {
+    Context,
+    Effect,
+    HashMap,
+    HashSet,
+    Layer,
+    Option,
+    Pipeable,
+    Types,
+} from "effect";
 import type { Args } from "./Args.js";
 import type { CliApp } from "./CliApp.js";
 import type { CliConfig } from "./CliConfig.js";
@@ -40,12 +42,12 @@ export type TypeId = typeof TypeId;
  * @category models
  */
 export interface Command<Name extends string, R, E, A>
-    extends Pipeable,
-        Effect<A, never, Command.Context<Name>> {
+    extends Pipeable.Pipeable,
+        Effect.Effect<A, never, Command.Context<Name>> {
     readonly [TypeId]: TypeId;
     readonly descriptor: Descriptor.Command<A>;
-    readonly handler: (_: A) => Effect<void, E, R>;
-    readonly tag: Tag<Command.Context<Name>, A>;
+    readonly handler: (_: A) => Effect.Effect<void, E, R>;
+    readonly tag: Context.Tag<Command.Context<Name>, A>;
     readonly transform: Command.Transform<R, E, A>;
 }
 
@@ -131,9 +133,9 @@ export declare namespace Command {
      * @category models
      */
     export type Transform<R, E, A> = (
-        effect: Effect<void, any, any>,
+        effect: Effect.Effect<void, any, any>,
         config: A,
-    ) => Effect<void, E, R>;
+    ) => Effect.Effect<void, E, R>;
 }
 
 /**
@@ -147,7 +149,7 @@ export const fromDescriptor: {
 
     <A extends { readonly name: string }, R, E>(
         descriptor: Descriptor.Command<A>,
-        handler: (_: A) => Effect<void, E, R>,
+        handler: (_: A) => Effect.Effect<void, E, R>,
     ): Command<A["name"], R, E, A>;
 } = Internal.fromDescriptor;
 
@@ -166,7 +168,7 @@ export const getHelp: <Name extends string, R, E, A>(
  */
 export const getNames: <Name extends string, R, E, A>(
     self: Command<Name, R, E, A>,
-) => HashSet<string> = Internal.getNames;
+) => HashSet.HashSet<string> = Internal.getNames;
 
 /**
  * @since 1.0.0
@@ -175,7 +177,7 @@ export const getNames: <Name extends string, R, E, A>(
 export const getBashCompletions: <Name extends string, R, E, A>(
     self: Command<Name, R, E, A>,
     programName: string,
-) => Effect<Array<string>> = Internal.getBashCompletions;
+) => Effect.Effect<Array<string>> = Internal.getBashCompletions;
 
 /**
  * @since 1.0.0
@@ -184,7 +186,7 @@ export const getBashCompletions: <Name extends string, R, E, A>(
 export const getFishCompletions: <Name extends string, R, E, A>(
     self: Command<Name, R, E, A>,
     programName: string,
-) => Effect<Array<string>> = Internal.getFishCompletions;
+) => Effect.Effect<Array<string>> = Internal.getFishCompletions;
 
 /**
  * @since 1.0.0
@@ -193,7 +195,7 @@ export const getFishCompletions: <Name extends string, R, E, A>(
 export const getZshCompletions: <Name extends string, R, E, A>(
     self: Command<Name, R, E, A>,
     programName: string,
-) => Effect<Array<string>> = Internal.getZshCompletions;
+) => Effect.Effect<Array<string>> = Internal.getZshCompletions;
 
 /**
  * @since 1.0.0
@@ -201,7 +203,8 @@ export const getZshCompletions: <Name extends string, R, E, A>(
  */
 export const getSubcommands: <Name extends string, R, E, A>(
     self: Command<Name, R, E, A>,
-) => HashMap<string, Descriptor.Command<unknown>> = Internal.getSubcommands;
+) => HashMap.HashMap<string, Descriptor.Command<unknown>> =
+    Internal.getSubcommands;
 
 /**
  * @since 1.0.0
@@ -228,7 +231,7 @@ export const make: {
         config: Config,
         handler: (
             _: Types.Simplify<Command.ParseConfig<Config>>,
-        ) => Effect<void, E, R>,
+        ) => Effect.Effect<void, E, R>,
     ): Command<Name, R, E, Types.Simplify<Command.ParseConfig<Config>>>;
 } = Internal.make;
 
@@ -239,7 +242,7 @@ export const make: {
 export const prompt: <Name extends string, A, R, E>(
     name: Name,
     prompt: Prompt<A>,
-    handler: (_: A) => Effect<void, E, R>,
+    handler: (_: A) => Effect.Effect<void, E, R>,
 ) => Command<string, R, E, A> = Internal.prompt;
 
 /**
@@ -248,7 +251,7 @@ export const prompt: <Name extends string, A, R, E>(
  */
 export const provide: <Name extends string, R, E, A, LR, LE, LA>(
     self: Command<Name, R, E, A>,
-    layer: Layer<LA, LE, LR> | ((_: A) => Layer<LA, LE, LR>),
+    layer: Layer.Layer<LA, LE, LR> | ((_: A) => Layer.Layer<LA, LE, LR>),
 ) => Command<Name, LR | Exclude<R, LA>, E | LE, A> = Internal.provide;
 
 /**
@@ -257,8 +260,8 @@ export const provide: <Name extends string, R, E, A, LR, LE, LA>(
  */
 export const provideEffect: <Name extends string, R, E, A, I, S, R2, E2>(
     self: Command<Name, R, E, A>,
-    tag: Tag<I, S>,
-    effect: Effect<S, E2, R2> | ((_: A) => Effect<S, E2, R2>),
+    tag: Context.Tag<I, S>,
+    effect: Effect.Effect<S, E2, R2> | ((_: A) => Effect.Effect<S, E2, R2>),
 ) => Command<Name, R2 | Exclude<R, I>, E | E2, A> = Internal.provideEffect;
 
 /**
@@ -267,7 +270,7 @@ export const provideEffect: <Name extends string, R, E, A, I, S, R2, E2>(
  */
 export const provideEffectDiscard: <Name extends string, R, E, A, R2, E2, _>(
     self: Command<Name, R, E, A>,
-    effect: Effect<_, E2, R2> | ((_: A) => Effect<_, E2, R2>),
+    effect: Effect.Effect<_, E2, R2> | ((_: A) => Effect.Effect<_, E2, R2>),
 ) => Command<Name, R | R2, E | E2, A> = Internal.provideEffectDiscard;
 
 /**
@@ -276,7 +279,7 @@ export const provideEffectDiscard: <Name extends string, R, E, A, R2, E2, _>(
  */
 export const provideSync: <Name extends string, R, E, A, I, S>(
     self: Command<Name, R, E, A>,
-    tag: Tag<I, S>,
+    tag: Context.Tag<I, S>,
     service: S | ((_: A) => S),
 ) => Command<Name, Exclude<R, I>, E, A> = Internal.provideSync;
 
@@ -286,7 +289,10 @@ export const provideSync: <Name extends string, R, E, A, I, S>(
  */
 export const transformHandler: <Name extends string, R, E, A, R2, E2>(
     self: Command<Name, R, E, A>,
-    f: (effect: Effect<void, E, R>, config: A) => Effect<void, E2, R2>,
+    f: (
+        effect: Effect.Effect<void, E, R>,
+        config: A,
+    ) => Effect.Effect<void, E2, R2>,
 ) => Command<Name, R | R2, E | E2, A> = Internal.transformHandler;
 
 /**
@@ -304,7 +310,7 @@ export const withDescription: <Name extends string, R, E, A>(
  */
 export const withHandler: <Name extends string, XR, XE, A, R, E>(
     self: Command<Name, XR, XE, A>,
-    handler: (_: A) => Effect<void, E, R>,
+    handler: (_: A) => Effect.Effect<void, E, R>,
 ) => Command<Name, R, E, A> = Internal.withHandler;
 
 /**
@@ -327,14 +333,14 @@ export const withSubcommands: <
     Name,
     | R
     | Exclude<
-          Effect.Context<ReturnType<Subcommand[number]["handler"]>>,
+          Effect.Effect.Context<ReturnType<Subcommand[number]["handler"]>>,
           Command.Context<Name>
       >,
-    E | Effect.Error<ReturnType<Subcommand[number]["handler"]>>,
+    E | Effect.Effect.Error<ReturnType<Subcommand[number]["handler"]>>,
     Descriptor.Command.ComputeParsedType<
         A &
             Readonly<{
-                subcommand: Option<
+                subcommand: Option.Option<
                     Descriptor.Command.GetParsedType<
                         Subcommand[number]["descriptor"]
                     >
@@ -351,7 +357,7 @@ export const wizard: <Name extends string, R, E, A>(
     self: Command<Name, R, E, A>,
     prefix: ReadonlyArray<string>,
     config: CliConfig,
-) => Effect<
+) => Effect.Effect<
     Array<string>,
     QuitException | ValidationError,
     FileSystem | Path | Terminal
@@ -366,4 +372,5 @@ export const run: <Name extends string, R, E, A>(
     config: Omit<CliApp.ConstructorArgs<never>, "command">,
 ) => (
     args: ReadonlyArray<string>,
-) => Effect<void, E | ValidationError, R | CliApp.Environment> = Internal.run;
+) => Effect.Effect<void, E | ValidationError, R | CliApp.Environment> =
+    Internal.run;

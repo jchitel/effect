@@ -2,9 +2,7 @@
  * @since 1.0.0
  */
 import type { FileSystem } from "@effect/platform/FileSystem";
-import type { Effect } from "effect/Effect";
-import type { Option } from "effect/Option";
-import type { Pipeable } from "effect/Pipeable";
+import type { Effect, Option, Pipeable } from "effect";
 import type { CliConfig } from "./CliConfig.js";
 import type { HelpDoc } from "./HelpDoc.js";
 import type { Span } from "./HelpDoc/Span.js";
@@ -42,7 +40,7 @@ export declare namespace Primitive {
      * @since 1.0.0
      * @category models
      */
-    export interface Variance<A> extends Pipeable {
+    export interface Variance<A> extends Pipeable.Pipeable {
         readonly [PrimitiveTypeId]: {
             readonly _A: (_: never) => A;
         };
@@ -91,8 +89,9 @@ export const isBool: <A>(self: Primitive<A>) => boolean =
  * @since 1.0.0
  * @category constructors
  */
-export const boolean: (defaultValue: Option<boolean>) => Primitive<boolean> =
-    InternalPrimitive.boolean;
+export const boolean: (
+    defaultValue: Option.Option<boolean>,
+) => Primitive<boolean> = InternalPrimitive.boolean;
 
 /**
  * @since 1.0.0
@@ -125,7 +124,7 @@ export const float: Primitive<number> = InternalPrimitive.float;
  * @since 1.0.0
  * @category combinators
  */
-export const getChoices: <A>(self: Primitive<A>) => Option<string> =
+export const getChoices: <A>(self: Primitive<A>) => Option.Option<string> =
     InternalPrimitive.getChoices;
 
 /**
@@ -171,9 +170,9 @@ export const text: Primitive<string> = InternalPrimitive.text;
  */
 export const validate: <A>(
     self: Primitive<A>,
-    value: Option<string>,
+    value: Option.Option<string>,
     config: CliConfig,
-) => Effect<A, string, FileSystem> = InternalPrimitive.validate;
+) => Effect.Effect<A, string, FileSystem> = InternalPrimitive.validate;
 
 /**
  * Runs a wizard that will prompt the user for input matching the specified

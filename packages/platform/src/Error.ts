@@ -1,11 +1,8 @@
 /**
  * @since 1.0.0
  */
-import type { Types } from "effect";
-import type * as Cause from "effect/Cause";
-import * as Data from "effect/Data";
-import * as Predicate from "effect/Predicate";
-import * as Schema from "effect/Schema";
+import type { Cause, Types } from "effect";
+import { Data, Predicate, Schema } from "effect";
 
 /**
  * @since 1.0.0

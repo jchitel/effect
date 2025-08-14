@@ -1,10 +1,15 @@
-import { Channel, Chunk, Sink } from "effect";
-import { GenericTag } from "effect/Context";
-import * as Effect from "effect/Effect";
-import { identity, pipe } from "effect/Function";
-import * as Layer from "effect/Layer";
-import * as Option from "effect/Option";
-import * as Stream from "effect/Stream";
+import {
+    Channel,
+    Chunk,
+    Context,
+    Effect,
+    Layer,
+    Option,
+    Sink,
+    Stream,
+    identity,
+    pipe,
+} from "effect";
 import * as Error from "../Error.js";
 import type {
     File,
@@ -15,7 +20,9 @@ import type {
 } from "../FileSystem.js";
 
 /** @internal */
-export const tag = GenericTag<FileSystem>("@effect/platform/FileSystem");
+export const tag = Context.GenericTag<FileSystem>(
+    "@effect/platform/FileSystem",
+);
 
 /** @internal */
 export const Size = (bytes: SizeInput) =>

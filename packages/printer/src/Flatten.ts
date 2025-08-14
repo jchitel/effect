@@ -1,4 +1,4 @@
-import type { Equal } from "effect/Equal";
+import type { Equal } from "effect";
 import * as internal from "./internal/flatten.js";
 
 /**
@@ -34,7 +34,7 @@ export declare namespace Flatten {
      * @since 1.0.0
      * @category model
      */
-    export interface Variance<A> extends Equal {
+    export interface Variance<A> extends Equal.Equal {
         readonly [FlattenTypeId]: {
             readonly _A: (_: never) => A;
         };

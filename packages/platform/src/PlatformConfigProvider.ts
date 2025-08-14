@@ -1,17 +1,20 @@
 /**
  * @since 1.0.0
  */
-import { Array as Arr, ConfigProviderPathPatch } from "effect";
-import * as Cause from "effect/Cause";
-import type * as Config from "effect/Config";
-import * as ConfigError from "effect/ConfigError";
-import * as ConfigProvider from "effect/ConfigProvider";
-import * as Context from "effect/Context";
-import * as DefaultServices from "effect/DefaultServices";
-import * as Effect from "effect/Effect";
-import * as Either from "effect/Either";
-import * as HashSet from "effect/HashSet";
-import * as Layer from "effect/Layer";
+import {
+    Array as Arr,
+    Cause,
+    ConfigError,
+    ConfigProvider,
+    ConfigProviderPathPatch,
+    Context,
+    DefaultServices,
+    Effect,
+    Either,
+    HashSet,
+    Layer,
+} from "effect";
+import type { Config } from "effect";
 import { isPlatformError, type PlatformError } from "./Error.js";
 import * as FileSystem from "./FileSystem.js";
 import * as internal from "./internal/platformConfigProvider.js";

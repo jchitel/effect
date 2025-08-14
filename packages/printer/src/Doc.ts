@@ -17,8 +17,7 @@
  * @since 1.0.0
  */
 
-import type { Equal } from "effect/Equal";
-import type { Pipeable } from "effect/Pipeable";
+import type { Equal, Pipeable } from "effect";
 import type { DocStream } from "./DocStream.js";
 import type { Flatten } from "./Flatten.js";
 import * as internal from "./internal/doc.js";
@@ -71,7 +70,7 @@ export declare namespace Doc {
      * @since 1.0.0
      * @category model
      */
-    export interface Variance<A> extends Equal, Pipeable {
+    export interface Variance<A> extends Equal.Equal, Pipeable.Pipeable {
         readonly [DocTypeId]: {
             readonly _A: () => A;
         };

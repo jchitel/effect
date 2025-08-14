@@ -1,6 +1,4 @@
-import * as Equal from "effect/Equal";
-import { pipe } from "effect/Function";
-import * as Hash from "effect/Hash";
+import { Equal, Hash, pipe } from "effect";
 import type * as PageWidth from "../PageWidth.js";
 
 // -----------------------------------------------------------------------------

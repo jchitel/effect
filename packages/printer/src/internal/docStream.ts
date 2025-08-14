@@ -1,9 +1,4 @@
-import { List } from "effect";
-import * as Effect from "effect/Effect";
-import * as Equal from "effect/Equal";
-import { pipe } from "effect/Function";
-import * as Hash from "effect/Hash";
-import * as Option from "effect/Option";
+import { Effect, Equal, Hash, List, Option, pipe } from "effect";
 import type * as DocStream from "../DocStream.js";
 
 // -----------------------------------------------------------------------------

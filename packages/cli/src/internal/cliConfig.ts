@@ -1,5 +1,4 @@
-import * as Context from "effect/Context";
-import * as Layer from "effect/Layer";
+import { Context, Layer } from "effect";
 import type * as CliConfig from "../CliConfig.js";
 
 /** @internal */

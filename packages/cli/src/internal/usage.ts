@@ -1,6 +1,4 @@
-import { Array as Arr } from "effect";
-import { pipe } from "effect/Function";
-import * as Option from "effect/Option";
+import { Array as Arr, Option, pipe } from "effect";
 import type * as CliConfig from "../CliConfig.js";
 import type * as HelpDoc from "../HelpDoc.js";
 import type * as Span from "../HelpDoc/Span.js";

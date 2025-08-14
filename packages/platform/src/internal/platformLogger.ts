@@ -1,11 +1,8 @@
 /**
  * @since 1.0.0
  */
-import type { DurationInput } from "effect/Duration";
-import * as Effect from "effect/Effect";
-import { dual } from "effect/Function";
-import * as Logger from "effect/Logger";
-import type * as Scope from "effect/Scope";
+import type { Duration, Scope } from "effect";
+import { Effect, Logger, dual } from "effect";
 import type { PlatformError } from "../Error.js";
 import * as FileSystem from "../FileSystem.js";
 
@@ -15,7 +12,7 @@ export const toFile = dual<
         path: string,
         options?:
             | (FileSystem.OpenFileOptions & {
-                  readonly batchWindow?: DurationInput | undefined;
+                  readonly batchWindow?: Duration.DurationInput | undefined;
               })
             | undefined,
     ) => <Message>(
@@ -30,7 +27,7 @@ export const toFile = dual<
         path: string,
         options?:
             | (FileSystem.OpenFileOptions & {
-                  readonly batchWindow?: DurationInput | undefined;
+                  readonly batchWindow?: Duration.DurationInput | undefined;
               })
             | undefined,
     ) => Effect.Effect<

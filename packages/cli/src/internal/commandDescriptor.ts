@@ -2,15 +2,20 @@ import type * as FileSystem from "@effect/platform/FileSystem";
 import type * as Path from "@effect/platform/Path";
 import type * as Terminal from "@effect/platform/Terminal";
 import * as Color from "@effect/printer-ansi/Color";
-import { Array as Arr, Order, Ref, SynchronizedRef } from "effect";
-import * as Console from "effect/Console";
-import * as Effect from "effect/Effect";
-import * as Either from "effect/Either";
-import { pipe } from "effect/Function";
-import * as HashMap from "effect/HashMap";
-import * as HashSet from "effect/HashSet";
-import * as Option from "effect/Option";
-import { pipeArguments } from "effect/Pipeable";
+import {
+    Array as Arr,
+    Console,
+    Effect,
+    Either,
+    HashMap,
+    HashSet,
+    Option,
+    Order,
+    Pipeable,
+    Ref,
+    SynchronizedRef,
+    pipe,
+} from "effect";
 import type * as Args from "../Args.js";
 import type * as CliConfig from "../CliConfig.js";
 import type * as Descriptor from "../CommandDescriptor.js";
@@ -51,7 +56,7 @@ const proto = {
         _A: (_: never) => _,
     },
     pipe() {
-        return pipeArguments(this, arguments);
+        return Pipeable.pipeArguments(this, arguments);
     },
 };
 

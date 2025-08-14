@@ -4,8 +4,7 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { Terminal } from "@effect/platform/Terminal";
-import type { Effect } from "effect/Effect";
-import type { Pipeable } from "effect/Pipeable";
+import type { Effect, Pipeable } from "effect";
 import type { Command } from "./CommandDescriptor.js";
 import type { HelpDoc } from "./HelpDoc.js";
 import type { Span } from "./HelpDoc/Span.js";
@@ -18,7 +17,7 @@ import type { ValidationError } from "./ValidationError.js";
  * @since 1.0.0
  * @category models
  */
-export interface CliApp<A> extends Pipeable {
+export interface CliApp<A> extends Pipeable.Pipeable {
     readonly name: string;
     readonly version: string;
     readonly executable: string;
@@ -65,6 +64,6 @@ export const make: <A>(config: CliApp.ConstructorArgs<A>) => CliApp<A> =
 export const run: <R, E, A>(
     self: CliApp<A>,
     args: ReadonlyArray<string>,
-    execute: (a: A) => Effect<void, E, R>,
-) => Effect<void, E | ValidationError, CliApp.Environment | R> =
+    execute: (a: A) => Effect.Effect<void, E, R>,
+) => Effect.Effect<void, E | ValidationError, CliApp.Environment | R> =
     InternalCliApp.run;

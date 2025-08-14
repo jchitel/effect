@@ -1,12 +1,8 @@
 /**
  * @since 0.21.0
  */
-import type * as Cause from "effect/Cause";
-import * as Either from "effect/Either";
-import * as Equal from "effect/Equal";
-import * as Exit from "effect/Exit";
-import * as Option from "effect/Option";
-import * as Predicate from "effect/Predicate";
+import type { Cause } from "effect";
+import { Either, Equal, Exit, Option, Predicate } from "effect";
 import * as assert from "node:assert";
 import { assert as vassert } from "vitest";
 

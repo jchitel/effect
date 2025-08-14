@@ -1,20 +1,8 @@
 import type * as FileSystem from "@effect/platform/FileSystem";
 import type * as Path from "@effect/platform/Path";
 import type * as Terminal from "@effect/platform/Terminal";
-import { Array as Arr, Inspectable, Order, ParseResult, Ref } from "effect";
-import * as Config from "effect/Config";
-import * as ConfigError from "effect/ConfigError";
-import * as Console from "effect/Console";
-import * as Effect from "effect/Effect";
-import * as Either from "effect/Either";
-import { pipe } from "effect/Function";
-import * as HashMap from "effect/HashMap";
-import * as Option from "effect/Option";
-import { pipeArguments } from "effect/Pipeable";
-import * as Predicate from "effect/Predicate";
-import type * as Redacted from "effect/Redacted";
-import type * as Schema from "effect/Schema";
-import type * as Secret from "effect/Secret";
+import { Array as Arr, Config, ConfigError, Console, Effect, Either, HashMap, Inspectable, Option, Order, ParseResult, Pipeable, Predicate, Ref, pipe } from "effect";
+import type { Redacted, Schema, Secret } from 'effect';
 import type * as CliConfig from "../CliConfig.js";
 import type * as HelpDoc from "../HelpDoc.js";
 import type * as Options from "../Options.js";
@@ -53,7 +41,7 @@ const proto = {
         _A: (_: never) => _,
     },
     pipe() {
-        return pipeArguments(this, arguments);
+        return Pipeable.pipeArguments(this, arguments);
     },
 };
 

@@ -1,4 +1,4 @@
-import type { Equal } from "effect/Equal";
+import type { Equal } from "effect";
 import type * as DocStream from "./DocStream.js";
 import * as internal from "./internal/docTree.js";
 
@@ -49,7 +49,7 @@ export declare namespace DocTree {
     /**
      * @since 1.0.0
      */
-    export interface Variance<A> extends Equal {
+    export interface Variance<A> extends Equal.Equal {
         readonly [DocTreeTypeId]: {
             readonly _A: (_: never) => A;
         };

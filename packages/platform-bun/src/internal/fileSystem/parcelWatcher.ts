@@ -1,11 +1,7 @@
 import * as Error from "@effect/platform/Error";
 import * as FileSystem from "@effect/platform/FileSystem";
 import * as ParcelWatcher from "@parcel/watcher";
-import { Chunk } from "effect";
-import * as Effect from "effect/Effect";
-import * as Layer from "effect/Layer";
-import * as Option from "effect/Option";
-import * as Stream from "effect/Stream";
+import { Chunk, Effect, Layer, Option, Stream } from "effect";
 
 const watchParcel = (path: string) =>
     Stream.asyncScoped<FileSystem.WatchEvent, Error.PlatformError>((emit) =>

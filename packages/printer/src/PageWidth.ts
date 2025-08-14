@@ -2,7 +2,7 @@
  * @since 1.0.0
  */
 
-import type { Equal } from "effect/Equal";
+import type { Equal } from "effect";
 import * as internal from "./internal/pageWidth.js";
 
 // -----------------------------------------------------------------------------
@@ -40,7 +40,7 @@ export declare namespace PageWidth {
      * @since 1.0.0
      * @category model
      */
-    export interface Proto extends Equal {
+    export interface Proto extends Equal.Equal {
         readonly [PageWidthTypeId]: PageWidthTypeId;
     }
 }

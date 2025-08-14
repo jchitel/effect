@@ -1,8 +1,7 @@
 import type * as DocStream from "@effect/printer/DocStream";
 import * as Layout from "@effect/printer/Layout";
 import * as PageWidth from "@effect/printer/PageWidth";
-import { List } from "effect";
-import * as Effect from "effect/Effect";
+import { Effect, List } from "effect";
 import type * as Ansi from "../Ansi.js";
 import type * as AnsiDoc from "../AnsiDoc.js";
 import * as InternalAnsi from "./ansi.js";

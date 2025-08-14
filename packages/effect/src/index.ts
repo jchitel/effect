@@ -1,5 +1,6 @@
 export {
     absurd,
+    dual,
     flow,
     hole,
     identity,

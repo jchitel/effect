@@ -4,12 +4,14 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { QuitException, Terminal } from "@effect/platform/Terminal";
-import type { Array as Arr } from "effect";
-import type { Effect } from "effect/Effect";
-import type { HashMap } from "effect/HashMap";
-import type { HashSet } from "effect/HashSet";
-import type { Option } from "effect/Option";
-import type { Pipeable } from "effect/Pipeable";
+import type {
+    Array as Arr,
+    Effect,
+    HashMap,
+    HashSet,
+    Option,
+    Pipeable,
+} from "effect";
 import type { Args } from "./Args.js";
 import type { CliConfig } from "./CliConfig.js";
 import type { CommandDirective } from "./CommandDirective.js";
@@ -42,7 +44,7 @@ export type TypeId = typeof TypeId;
  * @since 1.0.0
  * @category models
  */
-export interface Command<A> extends Command.Variance<A>, Pipeable {}
+export interface Command<A> extends Command.Variance<A>, Pipeable.Pipeable {}
 
 /**
  * @since 1.0.0
@@ -127,7 +129,7 @@ export const getHelp: <A>(self: Command<A>, config: CliConfig) => HelpDoc =
 export const getBashCompletions: <A>(
     self: Command<A>,
     programName: string,
-) => Effect<Array<string>> = Internal.getBashCompletions;
+) => Effect.Effect<Array<string>> = Internal.getBashCompletions;
 
 /**
  * @since 1.0.0
@@ -136,7 +138,7 @@ export const getBashCompletions: <A>(
 export const getFishCompletions: <A>(
     self: Command<A>,
     programName: string,
-) => Effect<Array<string>> = Internal.getFishCompletions;
+) => Effect.Effect<Array<string>> = Internal.getFishCompletions;
 
 /**
  * @since 1.0.0
@@ -145,13 +147,13 @@ export const getFishCompletions: <A>(
 export const getZshCompletions: <A>(
     self: Command<A>,
     programName: string,
-) => Effect<Array<string>> = Internal.getZshCompletions;
+) => Effect.Effect<Array<string>> = Internal.getZshCompletions;
 
 /**
  * @since 1.0.0
  * @category combinators
  */
-export const getNames: <A>(self: Command<A>) => HashSet<string> =
+export const getNames: <A>(self: Command<A>) => HashSet.HashSet<string> =
     Internal.getNames;
 
 /**
@@ -160,7 +162,7 @@ export const getNames: <A>(self: Command<A>) => HashSet<string> =
  */
 export const getSubcommands: <A>(
     self: Command<A>,
-) => HashMap<string, Command<unknown>> = Internal.getSubcommands;
+) => HashMap.HashMap<string, Command<unknown>> = Internal.getSubcommands;
 
 /**
  * @since 1.0.0
@@ -181,7 +183,9 @@ export const map: <A, B>(self: Command<A>, f: (a: A) => B) => Command<B> =
  */
 export const mapEffect: <A, B>(
     self: Command<A>,
-    f: (a: A) => Effect<B, ValidationError, FileSystem | Path | Terminal>,
+    f: (
+        a: A,
+    ) => Effect.Effect<B, ValidationError, FileSystem | Path | Terminal>,
 ) => Command<B> = Internal.mapEffect;
 
 /**
@@ -192,7 +196,7 @@ export const parse: <A>(
     self: Command<A>,
     args: ReadonlyArray<string>,
     config: CliConfig,
-) => Effect<
+) => Effect.Effect<
     CommandDirective<A>,
     ValidationError,
     FileSystem | Path | Terminal
@@ -247,7 +251,7 @@ export const withSubcommands: <
     Command.ComputeParsedType<
         A &
             Readonly<{
-                subcommand: Option<Command.Subcommands<Subcommands>>;
+                subcommand: Option.Option<Command.Subcommands<Subcommands>>;
             }>
     >
 > = Internal.withSubcommands;
@@ -260,7 +264,7 @@ export const wizard: <A>(
     self: Command<A>,
     prefix: ReadonlyArray<string>,
     config: CliConfig,
-) => Effect<
+) => Effect.Effect<
     Array<string>,
     ValidationError | QuitException,
     FileSystem | Path | Terminal

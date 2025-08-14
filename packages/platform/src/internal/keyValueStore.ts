@@ -1,12 +1,16 @@
-import { Encoding } from "effect";
-import * as Context from "effect/Context";
-import * as Effect from "effect/Effect";
-import * as Either from "effect/Either";
-import type { LazyArg } from "effect/Function";
-import { dual, identity, pipe } from "effect/Function";
-import * as Layer from "effect/Layer";
-import * as Option from "effect/Option";
-import * as Schema from "effect/Schema";
+import {
+    Context,
+    Effect,
+    Either,
+    Encoding,
+    Layer,
+    Option,
+    Schema,
+    dual,
+    identity,
+    pipe,
+} from "effect";
+import type { Function as FN } from "effect";
 import * as PlatformError from "../Error.js";
 import * as FileSystem from "../FileSystem.js";
 import type * as KeyValueStore from "../KeyValueStore.js";
@@ -291,7 +295,7 @@ const storageError = (
     });
 
 /** @internal */
-export const layerStorage = (evaluate: LazyArg<Storage>) =>
+export const layerStorage = (evaluate: FN.LazyArg<Storage>) =>
     Layer.sync(keyValueStoreTag, () => {
         const storage = evaluate();
         return makeStringOnly({

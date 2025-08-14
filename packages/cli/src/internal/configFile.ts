@@ -1,12 +1,14 @@
 import * as FileSystem from "@effect/platform/FileSystem";
 import * as Path from "@effect/platform/Path";
-import * as Cause from "effect/Cause";
-import * as ConfigProvider from "effect/ConfigProvider";
-import * as Context from "effect/Context";
-import * as DefaultServices from "effect/DefaultServices";
-import * as Effect from "effect/Effect";
-import { pipe } from "effect/Function";
-import * as Layer from "effect/Layer";
+import {
+    Cause,
+    ConfigProvider,
+    Context,
+    DefaultServices,
+    Effect,
+    Layer,
+    pipe,
+} from "effect";
 import type * as ConfigFile from "../ConfigFile.js";
 import * as InternalFiles from "./files.js";
 

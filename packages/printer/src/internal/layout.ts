@@ -1,7 +1,4 @@
-import { List } from "effect";
-import * as Effect from "effect/Effect";
-import type { LazyArg } from "effect/Function";
-import * as Option from "effect/Option";
+import { Effect, type Function as FN, List, Option } from "effect";
 import type * as Doc from "../Doc.js";
 import type * as DocStream from "../DocStream.js";
 import type * as Layout from "../Layout.js";
@@ -386,7 +383,7 @@ const fitsSmart = (pageWidth: number, ribbonFraction: number) => {
         stream: DocStream.DocStream<A>,
         indentation: number,
         currentColumn: number,
-        comparator: LazyArg<DocStream.DocStream<A>>,
+        comparator: FN.LazyArg<DocStream.DocStream<A>>,
     ): boolean => {
         const availableWidth = InternalPageWidth.remainingWidth(
             pageWidth,
@@ -406,7 +403,7 @@ const fitsSmart = (pageWidth: number, ribbonFraction: number) => {
 
 const fitsSmartLoop = <A>(
     self: DocStream.DocStream<A>,
-    comparator: LazyArg<DocStream.DocStream<A>>,
+    comparator: FN.LazyArg<DocStream.DocStream<A>>,
     pageWidth: number,
     currentColumn: number,
     availableWidth: number,

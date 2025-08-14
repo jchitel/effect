@@ -1,8 +1,7 @@
 /**
  * @since 1.0.0
  */
-import type * as Context from "effect/Context";
-import type * as Layer from "effect/Layer";
+import type { Context, Layer } from "effect";
 import * as InternalCliConfig from "./internal/cliConfig.js";
 
 /**

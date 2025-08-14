@@ -1,7 +1,4 @@
-import { GenericTag } from "effect/Context";
-import * as Effect from "effect/Effect";
-import { identity } from "effect/Function";
-import * as Layer from "effect/Layer";
+import { Context, Effect, Layer, identity } from "effect";
 import { BadArgument } from "../Error.js";
 import type * as Api from "../Path.js";
 
@@ -11,7 +8,7 @@ export const TypeId: Api.TypeId = Symbol.for(
 ) as Api.TypeId;
 
 /** @internal */
-export const Path = GenericTag<Api.Path>("@effect/platform/Path");
+export const Path = Context.GenericTag<Api.Path>("@effect/platform/Path");
 
 /**
  * The following functions are adapted from the Node.js source code:

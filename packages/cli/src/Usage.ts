@@ -1,7 +1,7 @@
 /**
  * @since 1.0.0
  */
-import type { Option } from "effect/Option";
+import type { Option } from "effect";
 import type { CliConfig } from "./CliConfig.js";
 import type { HelpDoc } from "./HelpDoc.js";
 import type { Span } from "./HelpDoc/Span.js";
@@ -43,7 +43,7 @@ export interface Mixed {
 export interface Named {
     readonly _tag: "Named";
     readonly names: ReadonlyArray<string>;
-    readonly acceptedValues: Option<string>;
+    readonly acceptedValues: Option.Option<string>;
 }
 
 /**
@@ -128,7 +128,7 @@ export const mixed: Usage = InternalUsage.mixed;
  */
 export const named: (
     names: ReadonlyArray<string>,
-    acceptedValues: Option<string>,
+    acceptedValues: Option.Option<string>,
 ) => Usage = InternalUsage.named;
 
 /**

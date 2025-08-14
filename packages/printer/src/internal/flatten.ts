@@ -1,5 +1,4 @@
-import * as Equal from "effect/Equal";
-import * as Hash from "effect/Hash";
+import { Equal, Hash } from "effect";
 import type * as Flatten from "../Flatten.js";
 
 // -----------------------------------------------------------------------------

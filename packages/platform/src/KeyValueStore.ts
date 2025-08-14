@@ -1,13 +1,15 @@
 /**
  * @since 1.0.0
  */
-import type { ParseResult } from "effect";
-import type * as Context from "effect/Context";
-import type * as Effect from "effect/Effect";
-import type { LazyArg } from "effect/Function";
-import type * as Layer from "effect/Layer";
-import type * as Option from "effect/Option";
-import type * as Schema from "effect/Schema";
+import type {
+    Context,
+    Effect,
+    Function as FN,
+    Layer,
+    Option,
+    ParseResult,
+    Schema,
+} from "effect";
 import type * as PlatformError from "./Error.js";
 import type * as FileSystem from "./FileSystem.js";
 import * as internal from "./internal/keyValueStore.js";
@@ -285,5 +287,5 @@ export const layerSchema: <A, I, R>(
  * @category layers
  */
 export const layerStorage: (
-    evaluate: LazyArg<Storage>,
+    evaluate: FN.LazyArg<Storage>,
 ) => Layer.Layer<KeyValueStore> = internal.layerStorage;

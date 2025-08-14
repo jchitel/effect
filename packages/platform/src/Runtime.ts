@@ -1,11 +1,14 @@
 import type { Fiber, FiberId } from "effect";
-import { FiberRef, FiberRefs } from "effect";
-import * as Cause from "effect/Cause";
-import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import { dual } from "effect/Function";
-import * as HashSet from "effect/HashSet";
-import * as Logger from "effect/Logger";
+import {
+    Cause,
+    Effect,
+    Exit,
+    FiberRef,
+    FiberRefs,
+    HashSet,
+    Logger,
+    dual,
+} from "effect";
 
 /**
  * @category model

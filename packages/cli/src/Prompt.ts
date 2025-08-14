@@ -8,10 +8,7 @@ import type {
     Terminal,
     UserInput,
 } from "@effect/platform/Terminal";
-import type { TaggedEnum } from "effect/Data";
-import type { Effect } from "effect/Effect";
-import type { Pipeable } from "effect/Pipeable";
-import type { Redacted } from "effect/Redacted";
+import type { Data, Effect, Pipeable, Redacted } from "effect";
 import * as InternalPrompt from "./internal/prompt.js";
 import * as InternalConfirmPrompt from "./internal/prompt/confirm.js";
 import * as InternalDatePrompt from "./internal/prompt/date.js";
@@ -42,8 +39,8 @@ export type PromptTypeId = typeof PromptTypeId;
  */
 export interface Prompt<Output>
     extends Prompt.Variance<Output>,
-        Pipeable,
-        Effect<Output, QuitException, Terminal> {}
+        Pipeable.Pipeable,
+        Effect.Effect<Output, QuitException, Terminal> {}
 
 /**
  * @since 1.0.0
@@ -80,7 +77,7 @@ export declare namespace Prompt {
      * @since 1.0.0
      * @category models
      */
-    export type Action<State, Output> = TaggedEnum<{
+    export type Action<State, Output> = Data.TaggedEnum<{
         readonly Beep: {};
         readonly NextFrame: { readonly state: State };
         readonly Submit: { readonly value: Output };
@@ -94,7 +91,7 @@ export declare namespace Prompt {
      * @since 1.0.0
      * @category models
      */
-    export interface ActionDefinition extends TaggedEnum.WithGenerics<2> {
+    export interface ActionDefinition extends Data.TaggedEnum.WithGenerics<2> {
         readonly taggedEnum: Action<this["A"], this["B"]>;
     }
 
@@ -119,7 +116,7 @@ export declare namespace Prompt {
         readonly render: (
             state: State,
             action: Action<State, Output>,
-        ) => Effect<string, never, Environment>;
+        ) => Effect.Effect<string, never, Environment>;
         /**
          * A function that is called to process user input and determine the next
          * `Prompt.Action` that should be taken.
@@ -131,7 +128,7 @@ export declare namespace Prompt {
         readonly process: (
             input: UserInput,
             state: State,
-        ) => Effect<Action<State, Output>, never, Environment>;
+        ) => Effect.Effect<Action<State, Output>, never, Environment>;
         /**
          * A function that is called to clear the terminal screen before rendering
          * the next frame of the `Prompt`.
@@ -143,7 +140,7 @@ export declare namespace Prompt {
         readonly clear: (
             state: State,
             action: Action<State, Output>,
-        ) => Effect<string, never, Environment>;
+        ) => Effect.Effect<string, never, Environment>;
     }
 
     /**
@@ -213,7 +210,7 @@ export declare namespace Prompt {
          */
         readonly validate?: (
             value: globalThis.Date,
-        ) => Effect<globalThis.Date, string>;
+        ) => Effect.Effect<globalThis.Date, string>;
         /**
          * Custom locales that can be used in place of the defaults.
          */
@@ -310,7 +307,7 @@ export declare namespace Prompt {
          * An effectful function that can be used to validate the value entered into
          * the prompt before final submission.
          */
-        readonly validate?: (value: number) => Effect<number, string>;
+        readonly validate?: (value: number) => Effect.Effect<number, string>;
     }
 
     /**
@@ -372,7 +369,7 @@ export declare namespace Prompt {
          */
         readonly filter?: (
             file: string,
-        ) => boolean | Effect<boolean, never, Environment>;
+        ) => boolean | Effect.Effect<boolean, never, Environment>;
     }
 
     /**
@@ -462,7 +459,7 @@ export declare namespace Prompt {
          * An effectful function that can be used to validate the value entered into
          * the prompt before final submission.
          */
-        readonly validate?: (value: string) => Effect<string, string>;
+        readonly validate?: (value: string) => Effect.Effect<string, string>;
     }
 
     /**
@@ -628,7 +625,7 @@ export const confirm: (options: Prompt.ConfirmOptions) => Prompt<boolean> =
  * @category constructors
  */
 export const custom: <State, Output>(
-    initialState: State | Effect<State, never, Prompt.Environment>,
+    initialState: State | Effect.Effect<State, never, Prompt.Environment>,
     handlers: Prompt.Handlers<State, Output>,
 ) => Prompt<Output> = InternalPrompt.custom;
 
@@ -666,8 +663,9 @@ export const float: (options: Prompt.FloatOptions) => Prompt<number> =
  * @since 1.0.0
  * @category constructors
  */
-export const hidden: (options: Prompt.TextOptions) => Prompt<Redacted> =
-    InternalTextPrompt.hidden;
+export const hidden: (
+    options: Prompt.TextOptions,
+) => Prompt<Redacted.Redacted> = InternalTextPrompt.hidden;
 
 /**
  * @since 1.0.0
@@ -696,8 +694,9 @@ export const map: <Output, Output2>(
  * @since 1.0.0
  * @category constructors
  */
-export const password: (options: Prompt.TextOptions) => Prompt<Redacted> =
-    InternalTextPrompt.password;
+export const password: (
+    options: Prompt.TextOptions,
+) => Prompt<Redacted.Redacted> = InternalTextPrompt.password;
 
 /**
  * Executes the specified `Prompt`.
@@ -707,7 +706,8 @@ export const password: (options: Prompt.TextOptions) => Prompt<Redacted> =
  */
 export const run: <Output>(
     self: Prompt<Output>,
-) => Effect<Output, QuitException, Prompt.Environment> = InternalPrompt.run;
+) => Effect.Effect<Output, QuitException, Prompt.Environment> =
+    InternalPrompt.run;
 
 /**
  * @since 1.0.0

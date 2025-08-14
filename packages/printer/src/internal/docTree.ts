@@ -1,9 +1,4 @@
-import { Array as Arr } from "effect";
-import * as Effect from "effect/Effect";
-import * as Equal from "effect/Equal";
-import { pipe } from "effect/Function";
-import * as Hash from "effect/Hash";
-import * as Option from "effect/Option";
+import { Array as Arr, Effect, Equal, Hash, Option, pipe } from "effect";
 import type * as DocStream from "../DocStream.js";
 import type * as DocTree from "../DocTree.js";
 import * as docTreeToken from "./docTreeToken.js";

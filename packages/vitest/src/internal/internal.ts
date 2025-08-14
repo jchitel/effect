@@ -4,24 +4,26 @@
 import type { Tester, TesterContext } from "@vitest/expect";
 import {
     Arbitrary,
+    Cause,
+    Duration,
+    Effect,
+    Equal,
+    Exit,
     FastCheck as fc,
     Fiber,
+    Layer,
+    Logger,
+    Predicate,
     Schedule,
+    Schema,
+    Scope,
     TestContext as TestEnvironment,
     Utils,
+    flow,
+    identity,
+    pipe,
 } from "effect";
 import type { TestServices } from "effect";
-import * as Cause from "effect/Cause";
-import * as Duration from "effect/Duration";
-import * as Effect from "effect/Effect";
-import * as Equal from "effect/Equal";
-import * as Exit from "effect/Exit";
-import { flow, identity, pipe } from "effect/Function";
-import * as Layer from "effect/Layer";
-import * as Logger from "effect/Logger";
-import { isObject } from "effect/Predicate";
-import * as Schema from "effect/Schema";
-import * as Scope from "effect/Scope";
 import * as V from "vitest";
 import type * as Vitest from "../index.js";
 
@@ -168,7 +170,7 @@ const makeTester = <R>(
                     fc.asyncProperty(...arbs, (...as) =>
                         run(ctx, [as as any, ctx], self),
                     ),
-                    isObject(timeout) ? timeout?.fastCheck : {},
+                    Predicate.isObject(timeout) ? timeout?.fastCheck : {},
                 ),
             );
         }
@@ -192,7 +194,7 @@ const makeTester = <R>(
                     // @ts-ignore
                     run(ctx, [as[0] as any, ctx], self),
                 ),
-                isObject(timeout) ? timeout?.fastCheck : {},
+                Predicate.isObject(timeout) ? timeout?.fastCheck : {},
             ),
         );
     };
@@ -216,7 +218,7 @@ export const prop: Vitest.Vitest.Methods["prop"] = (
             fc.assert(
                 // @ts-ignore
                 fc.property(...arbs, (...as) => self(as, ctx)),
-                isObject(timeout) ? timeout?.fastCheck : {},
+                Predicate.isObject(timeout) ? timeout?.fastCheck : {},
             ),
         );
     }
@@ -238,7 +240,7 @@ export const prop: Vitest.Vitest.Methods["prop"] = (
         fc.assert(
             // @ts-ignore
             fc.property(arbs, (as) => self(as, ctx)),
-            isObject(timeout) ? timeout?.fastCheck : {},
+            Predicate.isObject(timeout) ? timeout?.fastCheck : {},
         ),
     );
 };

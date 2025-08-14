@@ -4,16 +4,18 @@
 import type { FileSystem } from "@effect/platform/FileSystem";
 import type { Path } from "@effect/platform/Path";
 import type { QuitException, Terminal } from "@effect/platform/Terminal";
-import type { Array as Arr } from "effect";
-import type { Config } from "effect/Config";
-import type { Effect } from "effect/Effect";
-import type { Either } from "effect/Either";
-import type { HashMap } from "effect/HashMap";
-import type { Option } from "effect/Option";
-import type { Pipeable } from "effect/Pipeable";
-import type { Redacted } from "effect/Redacted";
-import type { Schema } from "effect/Schema";
-import type { Secret } from "effect/Secret";
+import type {
+    Array as Arr,
+    Config,
+    Effect,
+    Either,
+    HashMap,
+    Option,
+    Pipeable,
+    Redacted,
+    Schema,
+    Secret,
+} from "effect";
 import type { CliConfig } from "./CliConfig.js";
 import type { HelpDoc } from "./HelpDoc.js";
 import * as InternalOptions from "./internal/options.js";
@@ -38,7 +40,7 @@ export type OptionsTypeId = typeof OptionsTypeId;
  * @since 1.0.0
  * @category models
  */
-export interface Options<A> extends Options.Variance<A>, Pipeable {}
+export interface Options<A> extends Options.Variance<A>, Pipeable.Pipeable {}
 
 /**
  * @since 1.0.0
@@ -291,7 +293,7 @@ export const fileParse: (
  */
 export const fileSchema: <I, A>(
     name: string,
-    schema: Schema<A, I, FileSystem | Path | Terminal>,
+    schema: Schema.Schema<A, I, FileSystem | Path | Terminal>,
     format?: "json" | "yaml" | "ini" | "toml" | undefined,
 ) => Options<A> = InternalOptions.fileSchema;
 
@@ -323,7 +325,7 @@ export const getHelp: <A>(self: Options<A>) => HelpDoc =
  * @since 1.0.0
  * @category combinators
  */
-export const getIdentifier: <A>(self: Options<A>) => Option<string> =
+export const getIdentifier: <A>(self: Options<A>) => Option.Option<string> =
     InternalOptions.getIdentifier;
 
 /**
@@ -346,7 +348,7 @@ export const integer: (name: string) => Options<number> =
  */
 export const keyValueMap: (
     option: string | Options<string>,
-) => Options<HashMap<string, string>> = InternalOptions.keyValueMap;
+) => Options<HashMap.HashMap<string, string>> = InternalOptions.keyValueMap;
 
 /**
  * @since 1.0.0
@@ -358,7 +360,7 @@ export const none: Options<void> = InternalOptions.none;
  * @since 1.0.0
  * @category constructors
  */
-export const redacted: (name: string) => Options<Redacted> =
+export const redacted: (name: string) => Options<Redacted.Redacted> =
     InternalOptions.redacted;
 
 /**
@@ -366,7 +368,8 @@ export const redacted: (name: string) => Options<Redacted> =
  * @category constructors
  * @deprecated
  */
-export const secret: (name: string) => Options<Secret> = InternalOptions.secret;
+export const secret: (name: string) => Options<Secret.Secret> =
+    InternalOptions.secret;
 
 /**
  * @since 1.0.0
@@ -413,7 +416,7 @@ export const between: {
  */
 export const filterMap: <A, B>(
     self: Options<A>,
-    f: (a: A) => Option<B>,
+    f: (a: A) => Option.Option<B>,
     message: string,
 ) => Options<B> = InternalOptions.filterMap;
 
@@ -439,7 +442,9 @@ export const map: <A, B>(self: Options<A>, f: (a: A) => B) => Options<B> =
  */
 export const mapEffect: <A, B>(
     self: Options<A>,
-    f: (a: A) => Effect<B, ValidationError, FileSystem | Path | Terminal>,
+    f: (
+        a: A,
+    ) => Effect.Effect<B, ValidationError, FileSystem | Path | Terminal>,
 ) => Options<B> = InternalOptions.mapEffect;
 
 /**
@@ -456,7 +461,7 @@ export const mapTryCatch: <A, B>(
  * @since 1.0.0
  * @category combinators
  */
-export const optional: <A>(self: Options<A>) => Options<Option<A>> =
+export const optional: <A>(self: Options<A>) => Options<Option.Option<A>> =
     InternalOptions.optional;
 
 /**
@@ -475,7 +480,7 @@ export const orElse: <A, B>(
 export const orElseEither: <A, B>(
     self: Options<A>,
     that: Options<B>,
-) => Options<Either<B, A>> = InternalOptions.orElseEither;
+) => Options<Either.Either<B, A>> = InternalOptions.orElseEither;
 
 /**
  * @since 1.0.0
@@ -483,9 +488,9 @@ export const orElseEither: <A, B>(
  */
 export const parse: <A>(
     self: Options<A>,
-    args: HashMap<string, ReadonlyArray<string>>,
+    args: HashMap.HashMap<string, ReadonlyArray<string>>,
     config: CliConfig,
-) => Effect<A, ValidationError, FileSystem> = InternalOptions.parse;
+) => Effect.Effect<A, ValidationError, FileSystem> = InternalOptions.parse;
 
 /**
  * Indicates that the specified command-line option can be repeated `0` or more
@@ -518,8 +523,8 @@ export const processCommandLine: <A>(
     self: Options<A>,
     args: ReadonlyArray<string>,
     config: CliConfig,
-) => Effect<
-    [Option<ValidationError>, Array<string>, A],
+) => Effect.Effect<
+    [Option.Option<ValidationError>, Array<string>, A],
     ValidationError,
     FileSystem | Path | Terminal
 > = InternalOptions.processCommandLine;
@@ -546,7 +551,7 @@ export const withDefault: <A, const B>(
  */
 export const withFallbackConfig: <A, B>(
     self: Options<A>,
-    config: Config<B>,
+    config: Config.Config<B>,
 ) => Options<A | B> = InternalOptions.withFallbackConfig;
 
 /**
@@ -582,7 +587,7 @@ export const withPseudoName: <A>(
  */
 export const withSchema: <A, I extends A, B>(
     self: Options<A>,
-    schema: Schema<B, I, FileSystem | Path | Terminal>,
+    schema: Schema.Schema<B, I, FileSystem | Path | Terminal>,
 ) => Options<B> = InternalOptions.withSchema;
 
 /**
@@ -592,7 +597,7 @@ export const withSchema: <A, I extends A, B>(
 export const wizard: <A>(
     self: Options<A>,
     config: CliConfig,
-) => Effect<
+) => Effect.Effect<
     Array<string>,
     QuitException | ValidationError,
     FileSystem | Path | Terminal

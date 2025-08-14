@@ -1,4 +1,4 @@
-import * as Effect from "effect/Effect";
+import { Effect } from "effect";
 import type { Effectify, EffectifyError } from "../Effectify.js";
 
 /** @internal */

@@ -20,6 +20,8 @@ import type * as Schema from "./Schema.js";
 import * as AST from "./SchemaAST.js";
 import type { Concurrency } from "./Types.js";
 
+export { AST as _AST };
+
 /**
  * `ParseIssue` is a type that represents the different types of errors that can occur when decoding/encoding a value.
  *
